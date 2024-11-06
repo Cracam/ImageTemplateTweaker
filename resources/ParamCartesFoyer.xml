@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : Carte Model V3
+    V1 and V2 doen't exist on the soft
+    Recto pour la partie avec les consos
+    verso pour la partie avec les cases nom/prenom
+-->
+<Card_model name="Carte Foyer V3" size_x="88" size_y="58" >
+		<Verso><!-- Verso de la carte (côte nom prenom) --> 
+				<img_fixe name="Fond" png_name="fond test.png">
+					<pos pos_x="0" pos_y="0" />
+					<size size_x="88" size_y="58" />
+				</img_fixe>
+
+				<img_color name="Bordure" png_name="Verso_Bordure.png">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Color ID="1"/>
+				</img_color>
+
+				<img_custom name="Tasses">
+					<pos pos_x="15" pos_y="5"/>
+					<size size_x="40" size_y="20"/>
+				</img_custom>
+
+				<img_custom_shape name="consos Verte"> <!-- pas utilisé dans le modèle V3 --> 
+					<pos pos_x="25" pos_y="5"/>
+					<size size_x="10" size_y="10"/>
+					<Color color="#23EF34"/>
+				</img_custom_shape>
+
+
+				<img_custom name="Tasses">
+					<pos pos_x="15" pos_y="5"/>
+					<size size_x="40" size_y="20"/>
+				</img_custom>
+		</Verso>
+
+
+		<Recto><!-- Recto de la carte (côté consos)--> 
+				<img_fixe name="Fond" png_name="test.png">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+				</img_fixe>
+
+				<img_color name="Bordure" png_name="Verso_Bordure.png">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Color ID="1"/>
+				</img_color>
+
+				<img_custom name="Tasses">
+					<pos pos_x="15" pos_y="5"/>
+					<size size_x="40" size_y="20"/>
+				</img_custom>
+
+				<img_custom_shape name="consos Verte"> <!-- pas utilisé dans le modèle V3 --> 
+					<pos pos_x="25" pos_y="5"/>
+					<size size_x="10" size_y="10"/>
+					<Color color="#23EF34"/>
+				</img_custom_shape>
+
+
+				<img_Consos>
+					<size size_x="14.5" size_y="14.5"/>
+				</img_Consos>
+
+				<img_Items>
+				<size size_x="14.5" size_y="14.5"/>
+				</img_Items>
+
+				<img_custom name="Tasses">
+					<pos pos_x="15" pos_y="5"/>
+					<size size_x="40" size_y="20"/>
+				</img_custom>
+		</Recto>
+
+
+
+</Card_model>
+	

@@ -1,0 +1,13 @@
+<paramPanes>
+
+
+    <paramPane class="ParamPaneColor">
+        <preview_height>200</preview_height>
+    </paramPane>
+
+    <paramPane class="ParamPaneConso">
+        <preview_height>300</preview_height>
+    </paramPane>
+
+    
+</paramPanes>
