@@ -8,7 +8,7 @@ package InterfaceTest;
  *
  * @author LECOURT Camille
  */
-import Interface.ImageLoaderInterface;
+import imageloaderinterface.ImageLoaderInterface;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
