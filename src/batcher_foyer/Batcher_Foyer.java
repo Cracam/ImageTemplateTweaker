@@ -2,7 +2,7 @@ package batcher_foyer;
 
 import Exceptions.ACardModelIsLackingException;
 import Exceptions.ResourcesFileErrorException;
-import ImageBuilder.CardBuilder;
+import ImageBuilder.ImageBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -33,11 +33,11 @@ public class Batcher_Foyer extends Application {
 
          private String moduleAddress;
 
-         private CardBuilder CardRecto;
+         private ImageBuilder CardRecto;
          @FXML
          private ImageView imageViewRecto;
 
-         private CardBuilder CardVerso;
+         private ImageBuilder CardVerso;
          @FXML
          private ImageView imageViewVerso;
 
@@ -153,11 +153,11 @@ public class Batcher_Foyer extends Application {
                                     throw new ACardModelIsLackingException("Il n'y a pas les deux modèles de carte comme attendu");
                            }
 
-//                           this.CardRecto = new CardBuilder("Recto", this.size_x, this.size_y);
+//                           this.CardRecto = new ImageBuilder("Recto", this.size_x, this.size_y);
 //                           this.CardRecto.setLayers(rectoElementList);
 //                           this.CardRecto.setImageView(this.imageViewRecto);
 //
-//                           this.CardVerso = new CardBuilder("Verso", this.size_x, this.size_y);
+//                           this.CardVerso = new ImageBuilder("Verso", this.size_x, this.size_y);
 //                           this.CardVerso.setLayers(versoElementList);
 //                           this.CardVerso.setImageView(this.imageViewVerso);
 

@@ -18,7 +18,7 @@ import org.w3c.dom.Node;
  *
  * @author LECOURT Camille
  */
-public class CardBuilder {
+public class ImageBuilder {
          
          private final Batcher_Foyer batcher;
          private final float size_x;
@@ -30,7 +30,7 @@ public class CardBuilder {
 
          
 
-         public CardBuilder(Batcher_Foyer batcher,String Name, float size_x, float size_y) {
+         public ImageBuilder(Batcher_Foyer batcher,String Name, float size_x, float size_y) {
                   this.batcher=batcher;
                   this.Name = Name;
                   this.size_x = size_x;
