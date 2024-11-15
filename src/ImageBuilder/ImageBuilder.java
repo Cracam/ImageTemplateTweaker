@@ -19,20 +19,20 @@ import org.w3c.dom.Node;
  * @author LECOURT Camille
  */
 public class ImageBuilder {
-         
+         private final String name; // name the the Image Builder :  "Index of the windows" + "Name given in the model.XML file"
          private final Batcher_Foyer batcher;
          private final float size_x;
          private final float size_y;
          
 
-         private final String Name;
          private Layer[] layers;
 
          
 
-         public ImageBuilder(Batcher_Foyer batcher,String Name, float size_x, float size_y) {
+         public ImageBuilder(Batcher_Foyer batcher,String name, float size_x, float size_y) {
                   this.batcher=batcher;
-                  this.Name = Name;
+                  this.name=this.batcher.getIndex()+"_"+name;
+
                   this.size_x = size_x;
                   this.size_y = size_y;
          }
@@ -42,6 +42,9 @@ public class ImageBuilder {
          public float get_pixel_mm_Factor() {
                   return (float) ((float) (this.batcher.getDPI() )/ 24.5);
          }
+         //need to have a static list of active layer (on one interface)
+         
+         
          
 
 //         /**

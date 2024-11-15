@@ -126,7 +126,7 @@ public abstract class Layer extends TitledPane{
          
          
          /**
-          * this programm will retunr the image get (ready to be paste on the image_in to get image_out)
+          * this programm will retunr the image get (ready to be resized to be paste on the image_in to get image_out)
           * depending o fthe layer type it can be : 
           * - an image loaded by user 
           * - a locked image(get in the resources of the model)
@@ -197,11 +197,11 @@ public abstract class Layer extends TitledPane{
           * it use a static Map of layer class linked to a string (the string that the user will define in the XML file model)
           * 
           * @param layerNode 
-          * @param modelResources 
+          * @param templateResources 
           * @param designResources 
           * @return 
           */
-         public static Layer loadLayer(Node layerNode,ResourcesManager modelResources,ResourcesManager designResources) {
+         public static Layer loadLayer(Node layerNode,ResourcesManager templateResources,ResourcesManager designResources) {
                   try {
                            if (layerNode.getNodeType() != Node.ELEMENT_NODE) {
                                     throw new TheXmlElementIsNotANodeException(layerNode.getNodeName());
@@ -218,13 +218,13 @@ public abstract class Layer extends TitledPane{
 
                            Constructor<? extends Layer> constructor = subclass.getConstructor(String.class, ResourcesManager.class, ResourcesManager.class,float.class, float.class, float.class, float.class);
 
-                           String name = element.getAttribute("name");
+                           String name = element.getAttribute("name"); 
                            float pos_x = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_x").getNodeValue());
                            float pos_y = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_y").getNodeValue());
                            float size_x = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_x").getNodeValue());
                            float size_y = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_y").getNodeValue());
                            
-                           Layer layerToReturn=constructor.newInstance(name, modelResources,designResources, pos_x, pos_y, size_x, size_y);
+                           Layer layerToReturn=constructor.newInstance(name, templateResources,designResources, pos_x, pos_y, size_x, size_y);
                            
                            layerToReturn.readNode(layerNode);
                            return layerToReturn;

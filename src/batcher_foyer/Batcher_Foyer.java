@@ -30,7 +30,8 @@ import org.xml.sax.SAXException;
  * @author LECOURT Camille
  */
 public class Batcher_Foyer extends Application {
-
+         private static int index;
+         
          private String moduleAddress;
 
          private ImageBuilder CardRecto;
@@ -56,9 +57,12 @@ public class Batcher_Foyer extends Application {
                   launch(args);
          }
 
+         
          @Override
          public void start(Stage primarystage) throws Exception {
                   try {
+                           this.index++;
+                           
                            URL[] urlList = new URL[1];
                            URL inter_principalle = getClass().getClassLoader().getResource("InterfaceBatcher.fxml");
                            urlList[0] = inter_principalle;
@@ -109,6 +113,12 @@ public class Batcher_Foyer extends Application {
                   this.imageViewVerso.setFitWidth(this.size_x * scaleX);
                   this.imageViewVerso.setFitHeight(this.size_y * scaleY);
          }
+
+         public static int getIndex() {
+                  return index;
+         }
+         
+         
 
          /**
           * This function will load the data from the XML file and will pass it
