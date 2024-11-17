@@ -1,4 +1,4 @@
-package batcher_foyer;
+package designBuilder;
 
 import Exceptions.ACardModelIsLackingException;
 import Exceptions.ResourcesFileErrorException;
@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
  *
  * @author LECOURT Camille
  */
-public class Batcher_Foyer extends Application {
+public class DesignBuilder extends Application {
          private static int index;
          
          private String moduleAddress;
@@ -177,7 +177,7 @@ public class Batcher_Foyer extends Application {
                   } catch (IOException | ParserConfigurationException | SAXException e) {
                            System.out.println(e.getMessage());
                   } catch (ACardModelIsLackingException ex) {
-                           Logger.getLogger(Batcher_Foyer.class.getName()).log(Level.SEVERE, null, ex);
+                           Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                   }
 
          }

@@ -6,7 +6,7 @@ package ImageBuilder;
 
 import Layers.Layer;
 
-import batcher_foyer.Batcher_Foyer;
+import designBuilder.DesignBuilder;
 import java.util.List;
 import javafx.scene.image.ImageView;
 import org.w3c.dom.Element;
@@ -20,7 +20,7 @@ import org.w3c.dom.Node;
  */
 public class ImageBuilder {
          private final String name; // name the the Image Builder :  "Index of the windows" + "Name given in the model.XML file"
-         private final Batcher_Foyer batcher;
+         private final DesignBuilder batcher;
          private final float size_x;
          private final float size_y;
          
@@ -29,7 +29,7 @@ public class ImageBuilder {
 
          
 
-         public ImageBuilder(Batcher_Foyer batcher,String name, float size_x, float size_y) {
+         public ImageBuilder(DesignBuilder batcher,String name, float size_x, float size_y) {
                   this.batcher=batcher;
                   this.name=this.batcher.getIndex()+"_"+name;
 
@@ -43,6 +43,8 @@ public class ImageBuilder {
                   return (float) ((float) (this.batcher.getDPI() )/ 24.5);
          }
          //need to have a static list of active layer (on one interface)
+         
+         
          
          
          
@@ -110,6 +112,10 @@ public class ImageBuilder {
 //                  }
 //
 //         }
+
+    public String getName() {
+        return name;
+    }
 
 
 
