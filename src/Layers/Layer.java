@@ -13,6 +13,8 @@ import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.ResourcesManager;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.TitledPane;
+import javax.imageio.ImageIO;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -37,8 +40,8 @@ public abstract class Layer extends TitledPane {
 
         private List<ImageBuilder> linkedImagesBuilders = new ArrayList<>();
 
-        private final ResourcesManager modelResources;  // model conrrespont to the sceletton of the images we return
-        private final ResourcesManager designResources; // design correspontd to how the user create something from the model
+        final ResourcesManager modelResources;  // model conrrespont to the sceletton of the images we return
+        final ResourcesManager designResources; // design correspontd to how the user create something from the model
 
         // hashmap containing all the images of used by the layer. 
         // I use Hashmap in order ot habe allow multiple image in/out for having one interface that have multiple in and out 
@@ -78,12 +81,12 @@ public abstract class Layer extends TitledPane {
          *
          * @param anotherIamgeBuilder
          */
-        private void linkToAnotherImageBuilder(ImageBuilder anotherIamgeBuilder, float pos_x, float pos_y, float size_x, float size_y) {
-                this.linkedImagesBuilders.add(anotherIamgeBuilder);
-                String name = anotherIamgeBuilder.getName();
+        private void linkToAnotherImageBuilder(ImageBuilder anotherImageBuilder, float pos_x, float pos_y, float size_x, float size_y) {
+                this.linkedImagesBuilders.add(anotherImageBuilder);
+                String name = anotherImageBuilder.getName();
 
                 posSize.put(name, new QuadrupletFloat(pos_x, pos_y, size_x, size_y));
-                reComputePixelSizeAndPos(anotherIamgeBuilder.get_pixel_mm_Factor());
+                reComputePixelSizeAndPos(anotherImageBuilder.get_pixel_mm_Factor());
 
                 int pixelSize_x = pixelPosSize.get(name).getSize_x();
                 int pixelSize_y = pixelPosSize.get(name).getSize_y();
@@ -241,6 +244,27 @@ public abstract class Layer extends TitledPane {
          */
         abstract Node getLayerParameter();
 
+        
+        /**
+         * this program will save all the image get Raw in the doccument
+         * (it's make to keep originale file and avoid quality losses)
+         */
+        void saveImagesGetRaw(){
+                 this.image_getRaw.forEach((key, value) -> {
+                         try {
+                                 File outputFile = new File(key+this.layerName+".png");
+                                 ImageIO.write(image_getRaw.get(key), "png", outputFile);
+                                 designResources.set(key, outputFile);
+                         } catch (IOException ex) {
+                                 Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
+                         }
+                });
+        }
+        
+
+        
+        
+        
         /**
          * This method create a Layer of the good type it use a static Map of
          * layer class linked to a string (the string that the user will define
@@ -291,7 +315,13 @@ public abstract class Layer extends TitledPane {
                         float size_y = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_y").getNodeValue());
 
                         layerToReturn.linkToAnotherImageBuilder(imageBuilder, pos_x, pos_y, size_x, size_y); //this line it to inform the Layer of if master
-                        layerToReturn.readNode(layerNode);
+                        
+                        //This code verify if the <Param> element is really an element
+                        Element retElement=(Element) element.getElementsByTagName("Param").item(0);
+                         if (retElement.getNodeType() != Node.ELEMENT_NODE) {
+                                throw new TheXmlElementIsNotANodeException("Invalid Param for : "+layerNode.getNodeName());
+                        }
+                        layerToReturn.readNode(retElement); //read the specific parameter
 
                         return layerToReturn;
 
@@ -307,7 +337,7 @@ public abstract class Layer extends TitledPane {
          *
          * @param layerNode
          */
-        abstract void readNode(Node layerNode);
+        abstract void readNode(Element paramNode);
 
         //implement save return (for design)
 }
