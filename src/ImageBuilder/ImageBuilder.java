@@ -7,10 +7,7 @@ package ImageBuilder;
 import Layers.Layer;
 
 import designBuilder.DesignBuilder;
-import java.util.List;
-import javafx.scene.image.ImageView;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import java.util.ArrayList;
 
 /**
  * The role of this class is to build a image by piling it's differents layer
@@ -21,20 +18,14 @@ import org.w3c.dom.Node;
 public class ImageBuilder {
          private final String name; // name the the Image Builder :  "Index of the windows" + "Name given in the model.XML file"
          private final DesignBuilder batcher;
-         private final float size_x;
-         private final float size_y;
+     
+         ArrayList<Layer> layers=new ArrayList<>;
          
 
-         private Layer[] layers;
-
-         
-
-         public ImageBuilder(DesignBuilder batcher,String name, float size_x, float size_y) {
+         public ImageBuilder(DesignBuilder batcher,String name) {
                   this.batcher=batcher;
                   this.name=this.batcher.getIndex()+"_"+name;
 
-                  this.size_x = size_x;
-                  this.size_y = size_y;
          }
 
 
@@ -43,6 +34,25 @@ public class ImageBuilder {
                   return (float) ((float) (this.batcher.getDPI() )/ 24.5);
          }
          //need to have a static list of active layer (on one interface)
+         
+         
+         
+         public void refreshAll(){
+                 boolean changedPrecedently=false;
+                 for(Layer layer : layers){
+                         if (layer.isChanged()) {
+                                 changedPrecedently = true;
+                         }
+                         
+                         if (changedPrecedently) { //we will refresh the image out from there if the image is changed ot if a precedent imag is changed
+                                 layer.
+
+                                 
+                         }
+                 }
+         }
+         
+         
          
          
          

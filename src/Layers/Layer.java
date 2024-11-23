@@ -23,10 +23,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javax.imageio.ImageIO;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import previewimagebox.PreviewImageBox;
 
 /**
  *
@@ -58,8 +66,11 @@ public abstract class Layer extends TitledPane {
         //The Image size and parameter in pixel (adaptable to the image definition)
         private final HashMap<String, QuadrupletInt> pixelPosSize = new HashMap<>();
 
+        
         private static final Map<String, Class<? extends Layer>> layersTypesMap = Map.of("Fixed_Image", LayerFixedImage.class, "Custom_Image", LayerCustomImage.class);
 
+        // this variable will be use by the Image builder to detect a change and recompute the image accordingly.
+        private boolean changed=false;
         
         /**
          * the basic contructor
@@ -164,9 +175,16 @@ public abstract class Layer extends TitledPane {
                 }
         }
 
-        private void computeAllImageGet() {
+         void computeAllImageGet() {
                 this.image_get.forEach((key, value) -> {
                         computeImageGet(key);
+                });
+        }
+         
+         
+       void actualizePreview(PreviewImageBox box){
+                this.image_out.forEach((key, value) -> {
+                        box.addImageView(createImageView(image_out.get(key)));
                 });
         }
 
@@ -340,4 +358,30 @@ public abstract class Layer extends TitledPane {
         abstract void readNode(Element paramNode);
 
         //implement save return (for design)
+        
+        
+        /**
+     * Creates an ImageView from a BufferedImage.
+     *
+     * @param bufferedImage the BufferedImage to convert
+     * @return the ImageView containing the converted Image
+     */
+    public static ImageView createImageView(BufferedImage bufferedImage) {
+        WritableImage fxImage =SwingFXUtils.toFXImage(bufferedImage, null);
+        return new ImageView(fxImage);
+    }
+
+        public boolean isChanged() {
+                return changed;
+        }
+
+        public void setChanged(boolean changed) {
+                this.changed = changed;
+        }
+    
+    
+    
+    
+    
+       
 }
