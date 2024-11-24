@@ -1,8 +1,8 @@
 package designBuilder;
 
+import imageBuilder.ImageBuilder;
 import Exceptions.ACardModelIsLackingException;
 import Exceptions.ResourcesFileErrorException;
-import ImageBuilder.ImageBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -31,6 +31,7 @@ import org.xml.sax.SAXException;
  */
 public class DesignBuilder extends Application {
          private static int index;
+         private  int id;
          
          private String moduleAddress;
 
@@ -61,7 +62,8 @@ public class DesignBuilder extends Application {
          @Override
          public void start(Stage primarystage) throws Exception {
                   try {
-                           this.index++;
+                          this.id=DesignBuilder.index ;
+                          DesignBuilder.index++;
                            
                            URL[] urlList = new URL[1];
                            URL inter_principalle = getClass().getClassLoader().getResource("InterfaceBatcher.fxml");
@@ -114,9 +116,10 @@ public class DesignBuilder extends Application {
                   this.imageViewVerso.setFitHeight(this.size_y * scaleY);
          }
 
-         public static int getIndex() {
-                  return index;
-         }
+        public int getId() {
+                return id;
+        }
+
          
          
 
@@ -235,9 +238,11 @@ public class DesignBuilder extends Application {
                   moduleAddress = moduleAddress;
          }
 
-         public int getDPI() {
-                  return this.DPI;
-         }
+
+
+        public float get_pixel_mm_Factor() {
+                return (float) (this.DPI / 24.5);
+        }
 
    
 

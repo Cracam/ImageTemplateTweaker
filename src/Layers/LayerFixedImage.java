@@ -66,4 +66,10 @@ public class LayerFixedImage extends Layer {
                 this.imageName = paramNode.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
         }
 
+        @Override
+        void refreshPreview() {
+        }
+        
+        
+
 }

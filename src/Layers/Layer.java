@@ -4,10 +4,10 @@
  */
 package Layers;
 
+import imageBuilder.ImageBuilder;
 import Exceptions.TheXmlElementIsNotANodeException;
 import Exceptions.ThisImageBuilderNotExistInThisLayer;
 import Exceptions.ThisLayerDoesNotExistException;
-import ImageBuilder.ImageBuilder;
 import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.ResourcesManager;
@@ -28,10 +28,6 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javax.imageio.ImageIO;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
@@ -182,7 +178,7 @@ public abstract class Layer extends TitledPane {
         }
          
          
-       void actualizePreview(PreviewImageBox box){
+       void refreshPreview(PreviewImageBox box){
                 this.image_out.forEach((key, value) -> {
                         box.addImageView(createImageView(image_out.get(key)));
                 });
@@ -213,6 +209,7 @@ public abstract class Layer extends TitledPane {
 
         /**
          * Compute the image out using Image_in and image_get
+         * @param name
          */
         public void computeImage_Out(String name) {
                 try {
@@ -235,13 +232,18 @@ public abstract class Layer extends TitledPane {
 
                         // Update image_out with the new image
                         this.image_out.put(name, outputImage);
-
+                         this.refreshPreview();
+                                 
                 } catch (ThisImageBuilderNotExistInThisLayer ex) {
                         Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
 
-        // END image computation
+        
+        
+        abstract void refreshPreview();
+        
+       // end image computation
         //-----------------------------------------------------------------------------------------------------------
         // Interface management
         

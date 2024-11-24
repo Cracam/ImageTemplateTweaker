@@ -86,4 +86,9 @@ public class LayerCustomImage extends Layer {
         void readNode(Element paramNode) {
         }
 
+        @Override
+        void refreshPreview() {
+                this.refreshPreview(this.Preview);
+        }
+
 }
