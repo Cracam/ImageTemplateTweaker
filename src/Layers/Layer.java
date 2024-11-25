@@ -63,7 +63,7 @@ public abstract class Layer extends TitledPane {
         private final HashMap<String, QuadrupletInt> pixelPosSize = new HashMap<>();
 
         
-        private static final Map<String, Class<? extends Layer>> layersTypesMap = Map.of("Fixed_Image", LayerFixedImage.class, "Custom_Image", LayerCustomImage.class);
+        public static final Map<String, Class<? extends Layer>> layersTypesMap = Map.of("Fixed_Image", LayerFixedImage.class, "Custom_Image", LayerCustomImage.class);
 
         // this variable will be use by the Image builder to detect a change and recompute the image accordingly.
         private boolean changed=false;
@@ -179,8 +179,9 @@ public abstract class Layer extends TitledPane {
          
          
        void refreshPreview(PreviewImageBox box){
-                this.image_out.forEach((key, value) -> {
-                        box.addImageView(createImageView(image_out.get(key)));
+                this.image_get.forEach((key, value) -> {
+                        
+                        box.addImageView(createImageView(image_get.get(key)));
                 });
         }
 

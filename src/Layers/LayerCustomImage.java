@@ -62,6 +62,7 @@ public class LayerCustomImage extends Layer {
                                 if (newValue) {
                                         System.out.println("trigered");
                                         LoaderInterface.setChanged(false);
+                                        refreshPreview();
                                 }
                         });
 

@@ -3,6 +3,9 @@ package designBuilder;
 import imageBuilder.ImageBuilder;
 import Exceptions.ACardModelIsLackingException;
 import Exceptions.ResourcesFileErrorException;
+import Exceptions.TheXmlElementIsNotANodeException;
+import Layers.Layer;
+import ResourcesManager.ResourcesManager;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -21,6 +24,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -33,20 +37,23 @@ public class DesignBuilder extends Application {
          private static int index;
          private  int id;
          
-         private String moduleAddress;
+         private ResourcesManager modelResources;
+                 private ResourcesManager  designResources;
+                 
+         //Information on the model
+         private String name; // the model Name
+         private String description; // The description of themodel
+         private String defaultDesignName; // the default design name (inside the zip of the model) it's the file we will copy if the user use a model a reference for it's new Design.
+         
 
-         private ImageBuilder CardRecto;
-         @FXML
-         private ImageView imageViewRecto;
-
-         private ImageBuilder CardVerso;
-         @FXML
-         private ImageView imageViewVerso;
+         
+         private  ArrayList<ImageBuilder> imageBuilders = new ArrayList<>();
 
          private String name;
          private float size_x;
          private float size_y;
-
+         
+        
          private Scene scene;
          
          private int DPI;
@@ -58,6 +65,34 @@ public class DesignBuilder extends Application {
                   launch(args);
          }
 
+         
+         private void loadNewModel(String filepath){
+                 this.imageBuilders.clear();
+                 this.modelResources=new ResourcesManager(filepath);
+                 //gérer xml opening
+                 Node loaderNode=   ;
+                  try {
+                        Element element = (Element) loaderNode;
+                        if (loaderNode.getNodeType() != Node.ELEMENT_NODE) {
+                                throw new TheXmlElementIsNotANodeException(loaderNode.getNodeName());
+                        }
+                        this.name =element.getAttribute("name");
+                        
+                        this.description
+                           this.name
+                                   this.defaultDesignName
+
+                } catch (TheXmlElementIsNotANodeException ex) {
+                        Logger.getLogger(ImageBuilder.class.getName()).log(Level.SEVERE, null, ex);
+
+                }
+                 
+                 
+                 
+                 this.modelResources.add();
+         }
+         
+         
          
          @Override
          public void start(Stage primarystage) throws Exception {
@@ -98,6 +133,12 @@ public class DesignBuilder extends Application {
 
                   }
          }
+         
+         
+         
+         
+         
+         
 
          @Override
          public String toString() {
@@ -217,26 +258,7 @@ public class DesignBuilder extends Application {
                   return currentDir.getAbsolutePath() + "/resources/" + fileName;
          }
          
-                  /**
-          *
-          * @param fileName
-          * @return Return the absoute address of the fileName
-          */
-         public  URL getURLResourcesPath(String fileName) {
-                  return getClass().getClassLoader().getResource(fileName);
-         }
 
-         private String getModuleAddress() {
-                  return moduleAddress;
-         }
-
-         public String getModulePath(String fileName) {
-                  return moduleAddress + "/" + fileName;
-         }
-
-         private void setModuleAddress(String moduleAddress) {
-                  moduleAddress = moduleAddress;
-         }
 
 
 
@@ -244,6 +266,26 @@ public class DesignBuilder extends Application {
                 return (float) (this.DPI / 24.5);
         }
 
+        public ResourcesManager getTemplateResources() {
+                return modelResources;
+        }
+
+        private void setTemplateResources(ResourcesManager templateResources) {
+                this.modelResources = templateResources;
+        }
+
+        public ResourcesManager getDesignResources() {
+                return designResources;
+        }
+
+        private void setDesignResources(ResourcesManager designResources) {
+                this.designResources = designResources;
+        }
+
    
+        
+        
+        
+        
 
 }
