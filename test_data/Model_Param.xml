@@ -29,7 +29,7 @@
 					<Param>
 						<Image image_name="Verso_Bordure.png"/>
 						<Color ID="1"/>
-					<Param/>
+					</Param>
 				</img_color>
 
 
@@ -82,24 +82,24 @@
 					<Param>
 						<Image image_name="Verso_Bordure.png"/>
 						<Color ID="1"/>
-					<Param/>
+					</Param>
 				</img_color>
 
 
 				<img_custom name="Tasses">
 					<pos pos_x="15" pos_y="5"/>
 					<size size_x="40" size_y="20"/>
-					<Parma>
-					<Param/>
+					<Param>
+					</Param>
 				</img_custom>
 
 
 				<img_custom_shape name="consos Verte"> <!-- pas utilisé dans le modèle V3 --> 
 					<pos pos_x="25" pos_y="5"/>
 					<size size_x="10" size_y="10"/>
-					<Parma>
+					<Param>
 						<Color color="#23EF34"/>
-					</Parma>
+					</Param>
 				</img_custom_shape>
 
 

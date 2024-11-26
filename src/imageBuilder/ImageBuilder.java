@@ -48,7 +48,7 @@ public class ImageBuilder {
                 try {
                         Element element = (Element) loaderNode;
                         if (loaderNode.getNodeType() != Node.ELEMENT_NODE) {
-                                throw new TheXmlElementIsNotANodeException(loaderNode.getNodeName());
+                                throw new TheXmlElementIsNotANodeException("IN ImageBuilder"+loaderNode.getNodeName());
                         }
                         this.name = this.batcher.getId() + "_" + element.getAttribute("name");
                         this.x_size = Float.parseFloat(element.getAttribute("size_x"));
@@ -165,6 +165,7 @@ public class ImageBuilder {
         private void createLayers(){
                 NodeList nodeLayerList=this.loaderNode.getChildNodes();
                 for(int i=0;i<nodeLayerList.getLength();i++){
+                        System.out.println(nodeLayerList.item(i).getNodeName());
                         layers.add(Layer.loadLayer(this, nodeLayerList.item(i), this.batcher.getTemplateResources(), this.batcher.getDesignResources()));
                 }
         }

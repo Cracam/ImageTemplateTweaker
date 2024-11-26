@@ -300,7 +300,7 @@ public abstract class Layer extends TitledPane {
         public static Layer loadLayer(ImageBuilder imageBuilder, Node layerNode, ResourcesManager templateResources, ResourcesManager designResources) {
                 try {
                         if (layerNode.getNodeType() != Node.ELEMENT_NODE) {
-                                throw new TheXmlElementIsNotANodeException(layerNode.getNodeName());
+                                throw new TheXmlElementIsNotANodeException("IN Layer (1) "+layerNode.getNodeName());
                         }
                         Element element = (Element) layerNode;
                         String key = element.getNodeName();
@@ -340,7 +340,7 @@ public abstract class Layer extends TitledPane {
                         //This code verify if the <Param> element is really an element
                         Element retElement=(Element) element.getElementsByTagName("Param").item(0);
                          if (retElement.getNodeType() != Node.ELEMENT_NODE) {
-                                throw new TheXmlElementIsNotANodeException("Invalid Param for : "+layerNode.getNodeName());
+                                throw new TheXmlElementIsNotANodeException("IN Layer(2) "+layerNode.getNodeName());
                         }
                         layerToReturn.readNode(retElement); //read the specific parameter
 

@@ -1,24 +1,18 @@
 package designBuilder;
 
 import imageBuilder.ImageBuilder;
-import Exceptions.ACardModelIsLackingException;
 import Exceptions.ResourcesFileErrorException;
-import Exceptions.TheXmlElementIsNotANodeException;
-import Layers.Layer;
 import ResourcesManager.ResourcesManager;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,9 +41,8 @@ public class DesignBuilder extends Application {
          
 
          
-         private  ArrayList<ImageBuilder> imageBuilders = new ArrayList<>();
+         private final  ArrayList<ImageBuilder> imageBuilders = new ArrayList<>();
 
-         private String name;
          private float size_x;
          private float size_y;
          
@@ -65,33 +58,49 @@ public class DesignBuilder extends Application {
                   launch(args);
          }
 
-         
-         private void loadNewModel(String filepath){
-                 this.imageBuilders.clear();
-                 this.modelResources=new ResourcesManager(filepath);
-                 //gérer xml opening
-                 Node loaderNode=   ;
-                  try {
-                        Element element = (Element) loaderNode;
-                        if (loaderNode.getNodeType() != Node.ELEMENT_NODE) {
-                                throw new TheXmlElementIsNotANodeException(loaderNode.getNodeName());
-                        }
-                        this.name =element.getAttribute("name");
-                        
-                        this.description
-                           this.name
-                                   this.defaultDesignName
+        /**
+         * This program will be used to create a new model it will set a resource Manager element, (it will not save the design until the first save)
+         * 
+         * It will pen an xml file in order to
+         * @param filepath 
+         */
+        private void loadNewModel(String filepath) {
+                 try {
+                         this.imageBuilders.clear();
+                         this.modelResources = new ResourcesManager(filepath);
+                         //gérer xml opening
+                         // Create a DocumentBuilderFactory
+                         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                         // Create a DocumentBuilder
+                         DocumentBuilder builder = factory.newDocumentBuilder();
+                         // Parse the XML file and return a DOM Document object
+                         Document document = builder.parse(this.modelResources.get("Model_Param.xml"));
+                         // Get the root element
+                         Element rootElement = document.getDocumentElement();
+                         
+                         this.name = rootElement.getAttribute("name");
+                         
+                         Element informationsNode = (Element) rootElement.getElementsByTagName("Informations").item(0);
+                         this.description = informationsNode.getElementsByTagName("DefaultDesign").item(0).getAttributes().getNamedItem("name").getNodeValue();
+                         this.defaultDesignName = informationsNode.getElementsByTagName("Description").item(0).getAttributes().getNamedItem("Description").getNodeValue();
+                         
+                         // Get all "Output" nodes
+                         NodeList outputNodes = rootElement.getElementsByTagName("Output");
 
-                } catch (TheXmlElementIsNotANodeException ex) {
-                        Logger.getLogger(ImageBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                         // Print the names of all "Output" nodes
+                         for (int i = 1; i < outputNodes.getLength(); i++) {//we begin by one to avoid the description node
+                                 Node outputNode = outputNodes.item(i);
+                                 
+                                 System.out.println("Output Node: " + outputNode.getNodeName());
+                                 imageBuilders.add(new ImageBuilder(this, outputNode));
+                                 System.out.println(this.toString());
+                         }
+                         
+                 } catch (ParserConfigurationException | SAXException | IOException ex) {
+                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+        }
 
-                }
-                 
-                 
-                 
-                 this.modelResources.add();
-         }
-         
          
          
          @Override
@@ -112,23 +121,15 @@ public class DesignBuilder extends Application {
                            FXMLLoader loader = new FXMLLoader(inter_principalle);
                            loader.setController(this);
                            Parent root = loader.load();
-
-                          loadCardModel();
+                          loadNewModel("C:\\BACKUP\\ENSE3\\Foyer\\Programme_Java\\Batcher_Foyer\\test_data\\modelTest.zip");
 
                            primarystage.setTitle("Batcher FOYER");
                            scene = new Scene(root);
                            primarystage.setScene(scene);
                            primarystage.show();
 
-                           // Add a listener to the scene to listen for changes in the window size
-                           scene.widthProperty().addListener((observable, oldValue, newValue) -> {
-                                    adjustElementSize(newValue.doubleValue(), scene.getHeight());
-                           });
-                           scene.heightProperty().addListener((observable, oldValue, newValue) -> {
-                                    adjustElementSize(scene.getWidth(), newValue.doubleValue());
-                           });
+                         
 
-                           System.out.println("imageViewVerso :" + imageViewVerso.toString());
                   } catch (ResourcesFileErrorException e) {
 
                   }
@@ -142,20 +143,9 @@ public class DesignBuilder extends Application {
 
          @Override
          public String toString() {
-                  return "Batcher_Foyer{\nCardRecto=" + CardRecto.toString() + "\n\n CardVerso=" + CardVerso.toString() + "\n\n name=" + name + ", size_x=" + size_x + ", size_y=" + size_y + '}';
+                  return "Batcher_Foyer{ \n\n name=" + name + ", size_x=" + size_x + ", size_y=" + size_y + '}';
          }
 
-         private void adjustElementSize(double width, double height) {
-                  // Calculate the scaling factor based on the current screen definition (1920x1080)
-                  double scaleX = width / 1920;
-                  double scaleY = height / 1080;
-
-                  // Adjust the size of the image views based on the scaling factor
-                  this.imageViewRecto.setFitWidth(this.size_x * scaleX);
-                  this.imageViewRecto.setFitHeight(this.size_y * scaleY);
-                  this.imageViewVerso.setFitWidth(this.size_x * scaleX);
-                  this.imageViewVerso.setFitHeight(this.size_y * scaleY);
-         }
 
         public int getId() {
                 return id;
@@ -164,67 +154,7 @@ public class DesignBuilder extends Application {
          
          
 
-         /**
-          * This function will load the data from the XML file and will pass it
-          * to the 2 new cardBuilder object
-          */
-         private void loadCardModel() {
-                  try {
-                           File file = new File(getResourcesPath("ParamCartesFoyer.xml"));
-                           DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                           DocumentBuilder db = dbf.newDocumentBuilder();
-                           Document doc = db.parse(file);
-                           doc.getDocumentElement().normalize();
-
-                           this.name = doc.getDocumentElement().getAttribute("name");
-                           this.size_x = Float.parseFloat(doc.getDocumentElement().getAttribute("size_x"));
-                           this.size_y = Float.parseFloat(doc.getDocumentElement().getAttribute("size_y"));
-
-                           this.CardRecto = null;
-                           this.CardVerso = null;
-
-                           NodeList versoElements = doc.getElementsByTagName("Verso").item(0).getChildNodes();
-                           NodeList rectoElements = doc.getElementsByTagName("Recto").item(0).getChildNodes();
-
-                           List<Node> versoElementList = new ArrayList<>();
-                           List<Node> rectoElementList = new ArrayList<>();
-
-                           for (int i = 0; i < versoElements.getLength(); i++) {
-                                    Node node = versoElements.item(i);
-                                    if (node.getNodeType() == Node.ELEMENT_NODE) {
-                                             versoElementList.add(node);
-                                    }
-                           }
-
-                           for (int i = 0; i < rectoElements.getLength(); i++) {
-                                    Node node = rectoElements.item(i);
-                                    if (node.getNodeType() == Node.ELEMENT_NODE) {
-                                             rectoElementList.add(node);
-                                    }
-                           }
-
-                           if (rectoElementList.size() <= 0 | versoElementList.size() <= 0) {
-                                    throw new ACardModelIsLackingException("Il n'y a pas les deux modèles de carte comme attendu");
-                           }
-
-//                           this.CardRecto = new ImageBuilder("Recto", this.size_x, this.size_y);
-//                           this.CardRecto.setLayers(rectoElementList);
-//                           this.CardRecto.setImageView(this.imageViewRecto);
-//
-//                           this.CardVerso = new ImageBuilder("Verso", this.size_x, this.size_y);
-//                           this.CardVerso.setLayers(versoElementList);
-//                           this.CardVerso.setImageView(this.imageViewVerso);
-
-                           System.out.println(toString());
-                           // CardRecto et CardVerso à remplir
-
-                  } catch (IOException | ParserConfigurationException | SAXException e) {
-                           System.out.println(e.getMessage());
-                  } catch (ACardModelIsLackingException ex) {
-                           Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                  }
-
-         }
+        
 
          /**
           * This function retunr true if one or more null element is detected in
