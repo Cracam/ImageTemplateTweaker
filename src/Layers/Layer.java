@@ -79,6 +79,7 @@ public abstract class Layer extends TitledPane {
                 this.layerName = layerName;
                 this.modelResources = modelResources;
                 this.designResources = designResources;
+                
                 initialiseInterface();
         }
 
@@ -91,8 +92,9 @@ public abstract class Layer extends TitledPane {
         private void linkToAnotherImageBuilder(ImageBuilder anotherImageBuilder, float pos_x, float pos_y, float size_x, float size_y) {
                 this.linkedImagesBuilders.add(anotherImageBuilder);
                 String name = anotherImageBuilder.getName();
-
+                
                 posSize.put(name, new QuadrupletFloat(pos_x, pos_y, size_x, size_y));
+                pixelPosSize.put(name, new QuadrupletInt(0,0,0,0));
                 reComputePixelSizeAndPos(anotherImageBuilder.get_pixel_mm_Factor());
 
                 int pixelSize_x = pixelPosSize.get(name).getSize_x();
@@ -149,6 +151,7 @@ public abstract class Layer extends TitledPane {
          */
         public void reComputePixelSizeAndPos(float pixelPerMilimeterFactor) {
                 this.pixelPosSize.forEach((key, value) -> {
+                        System.out.println("clef :  "+key);
                         pixelPosSize.get(key).computePixelPosSize(posSize.get(key), pixelPerMilimeterFactor);
                 });
 
@@ -300,7 +303,7 @@ public abstract class Layer extends TitledPane {
         public static Layer loadLayer(ImageBuilder imageBuilder, Node layerNode, ResourcesManager templateResources, ResourcesManager designResources) {
                 try {
                         if (layerNode.getNodeType() != Node.ELEMENT_NODE) {
-                                throw new TheXmlElementIsNotANodeException("IN Layer (1) "+layerNode.getNodeName());
+                                throw new TheXmlElementIsNotANodeException(layerNode.getNodeType()+  "   IN Layer (1) "+layerNode.getNodeName());
                         }
                         Element element = (Element) layerNode;
                         String key = element.getNodeName();
@@ -325,7 +328,7 @@ public abstract class Layer extends TitledPane {
                         } else { // in this case we will create the good layer
 
                                 Class<? extends Layer> subclass = layersTypesMap.get(key);
-                                Constructor<? extends Layer> constructor = subclass.getConstructor(String.class, ResourcesManager.class, ResourcesManager.class, float.class, float.class, float.class, float.class);
+                                Constructor<? extends Layer> constructor = subclass.getConstructor(String.class, ResourcesManager.class, ResourcesManager.class);
 
                                 layerToReturn = constructor.newInstance(name, templateResources, designResources);
 

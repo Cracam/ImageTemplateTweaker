@@ -49,7 +49,7 @@ public class DesignBuilder extends Application {
         
          private Scene scene;
          
-         private int DPI;
+         private int DPI=300;
 
          /**
           * @param args the command line arguments
@@ -212,7 +212,6 @@ public class DesignBuilder extends Application {
                 this.designResources = designResources;
         }
 
-   
         
         
         

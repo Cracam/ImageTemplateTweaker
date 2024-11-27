@@ -162,11 +162,17 @@ public class ImageBuilder {
          * This function will create the layer using it's parameter XML
          *  it will mainly use the Layer class multi buider for it's work
          */
-        private void createLayers(){
-                NodeList nodeLayerList=this.loaderNode.getChildNodes();
-                for(int i=0;i<nodeLayerList.getLength();i++){
-                        System.out.println(nodeLayerList.item(i).getNodeName());
-                        layers.add(Layer.loadLayer(this, nodeLayerList.item(i), this.batcher.getTemplateResources(), this.batcher.getDesignResources()));
+        private void createLayers() {
+                NodeList nodeLayerList = this.loaderNode.getChildNodes();
+//                System.out.println("Name  "+this.loaderNode.getNodeName()+"longueru "+nodeLayerList.getLength());
+//                for(int i=0;i<nodeLayerList.getLength();i++){
+//                        System.out.println("nodeName "+i+"  "+nodeLayerList.item(i).getNodeName());
+//                }
+
+                for (int i = 0; i < nodeLayerList.getLength(); i++) {
+                        if (nodeLayerList.item(i).getNodeType() == Node.ELEMENT_NODE) { //To avoid text node and comment node
+                                layers.add(Layer.loadLayer(this, nodeLayerList.item(i), this.batcher.getTemplateResources(), this.batcher.getDesignResources()));
+                        }
                 }
         }
         
