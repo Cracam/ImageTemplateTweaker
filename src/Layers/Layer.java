@@ -333,13 +333,21 @@ public abstract class Layer extends TitledPane {
                                 layerToReturn = constructor.newInstance(name, templateResources, designResources);
 
                         }
+                        
                         float pos_x = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_x").getNodeValue());
                         float pos_y = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_y").getNodeValue());
                         float size_x = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_x").getNodeValue());
                         float size_y = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_y").getNodeValue());
 
-                        layerToReturn.linkToAnotherImageBuilder(imageBuilder, pos_x, pos_y, size_x, size_y); //this line it to inform the Layer of if master
+                        layerToReturn.linkToAnotherImageBuilder(imageBuilder,pos_x, pos_y, size_x, size_y); //this line it to inform the Layer of if master
                         
+                        String tabname = element.getAttribute("tab_name");
+                        if(tabname==null | "".equals(tabname)){
+                                 imageBuilder.assignLayerToTab(layerToReturn, "Non attribués");
+                        }else{
+                                 imageBuilder.assignLayerToTab(layerToReturn, tabname);
+                        }
+                       
                         //This code verify if the <Param> element is really an element
                         Element retElement=(Element) element.getElementsByTagName("Param").item(0);
                          if (retElement.getNodeType() != Node.ELEMENT_NODE) {

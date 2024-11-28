@@ -24,7 +24,7 @@ import org.w3c.dom.NodeList;
 public class ImageBuilder {
 
         private String name; // name the the Image Builder :  "Index of the windows" + "Name given in the model.XML file"
-        private final DesignBuilder batcher;
+        private final DesignBuilder designBuilder;
 
         private float x_size;
         private float y_size;
@@ -43,14 +43,14 @@ public class ImageBuilder {
          * @param loaderNode
          */
         public ImageBuilder(DesignBuilder batcher, Node loaderNode) {
-                this.batcher = batcher;
+                this.designBuilder = batcher;
                 this.loaderNode = loaderNode;
                 try {
                         Element element = (Element) loaderNode;
                         if (loaderNode.getNodeType() != Node.ELEMENT_NODE) {
                                 throw new TheXmlElementIsNotANodeException("IN ImageBuilder"+loaderNode.getNodeName());
                         }
-                        this.name = this.batcher.getId() + "_" + element.getAttribute("name");
+                        this.name = this.designBuilder.getId() + "_" + element.getAttribute("name");
                         this.x_size = Float.parseFloat(element.getAttribute("size_x"));
                         this.y_size = Float.parseFloat(element.getAttribute("size_y"));
 
@@ -68,7 +68,7 @@ public class ImageBuilder {
          * @return
          */
         public float get_pixel_mm_Factor() {
-                return this.batcher.get_pixel_mm_Factor();
+                return this.designBuilder.get_pixel_mm_Factor();
         }
 
         
@@ -171,7 +171,7 @@ public class ImageBuilder {
 
                 for (int i = 0; i < nodeLayerList.getLength(); i++) {
                         if (nodeLayerList.item(i).getNodeType() == Node.ELEMENT_NODE) { //To avoid text node and comment node
-                                layers.add(Layer.loadLayer(this, nodeLayerList.item(i), this.batcher.getTemplateResources(), this.batcher.getDesignResources()));
+                                layers.add(Layer.loadLayer(this, nodeLayerList.item(i), this.designBuilder.getTemplateResources(), this.designBuilder.getDesignResources()));
                         }
                 }
         }
@@ -181,5 +181,7 @@ public class ImageBuilder {
                 return this.name;
         }
 
-        
+        public void assignLayerToTab(Layer layer, String tabName) {
+                this.designBuilder.assignLayerToTab(layer,tabName);
+        }
 }

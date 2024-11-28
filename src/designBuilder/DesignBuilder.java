@@ -2,6 +2,7 @@ package designBuilder;
 
 import imageBuilder.ImageBuilder;
 import Exceptions.ResourcesFileErrorException;
+import Layers.Layer;
 import ResourcesManager.ResourcesManager;
 import java.io.File;
 import java.io.IOException;
@@ -10,9 +11,11 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,6 +25,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import previewimagebox.PreviewImageBox;
+import taboftiltedpane.TabOfTiltedPane;
 
 /**
  *
@@ -42,7 +47,9 @@ public class DesignBuilder extends Application {
 
          
          private final  ArrayList<ImageBuilder> imageBuilders = new ArrayList<>();
+                  private final  ArrayList<TabOfTiltedPane> tabs = new ArrayList<>();
 
+                  
          private float size_x;
          private float size_y;
          
@@ -51,6 +58,14 @@ public class DesignBuilder extends Application {
          
          private int DPI=300;
 
+         
+         @FXML
+         private TabPane tabPane;
+         
+         @FXML
+         private PreviewImageBox preview;
+         
+         
          /**
           * @param args the command line arguments
           */
@@ -187,6 +202,30 @@ public class DesignBuilder extends Application {
                   // Obtenir le chemin d'accès absolu du répertoire courant
                   return currentDir.getAbsolutePath() + "/resources/" + fileName;
          }
+         
+        /**
+         * This function assign a layer to a tab (in main interface)
+         * It can create one if the tab does not exist yet
+         * @param layer
+         * @param tabName
+         */
+        public void assignLayerToTab(Layer layer, String tabName) {
+                for (TabOfTiltedPane tab : tabs) {
+                                                        System.out.println("defeut_"+tab.getText()+"="+tabName+"result"+tab.getText().equals(tabName));
+
+                        if (tab.getText().equals(tabName)) {
+                                tab.addNodeToVBox(layer);
+                                return;
+                        }
+                }
+                //if the tab does not exist yet we create one and add the layer in it
+                TabOfTiltedPane tab = new TabOfTiltedPane(tabName);
+                tabPane.getTabs().add(tab);
+                tab.addNodeToVBox(layer);
+                tabs.add(tab);
+
+        }
+         
          
 
 
