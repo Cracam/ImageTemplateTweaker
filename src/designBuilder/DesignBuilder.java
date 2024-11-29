@@ -50,9 +50,7 @@ public class DesignBuilder extends Application {
                   private final  ArrayList<TabOfTiltedPane> tabs = new ArrayList<>();
 
                   
-         private float size_x;
-         private float size_y;
-         
+    
         
          private Scene scene;
          
@@ -103,7 +101,7 @@ public class DesignBuilder extends Application {
                          NodeList outputNodes = rootElement.getElementsByTagName("Output");
 
                          // Print the names of all "Output" nodes
-                         for (int i = 1; i < outputNodes.getLength(); i++) {//we begin by one to avoid the description node
+                         for (int i = 0; i < outputNodes.getLength(); i++) {//we begin by one to avoid the description node
                                  Node outputNode = outputNodes.item(i);
                                  
                                  System.out.println("Output Node: " + outputNode.getNodeName());
@@ -149,6 +147,11 @@ public class DesignBuilder extends Application {
 
                   }
          }
+
+        @Override
+        public String toString() {
+                return "DesignBuilder{" + "id=" + id + ", modelResources=" + modelResources + ", designResources=" + designResources + ", name=" + name + ", description=" + description + ", defaultDesignName=" + defaultDesignName + ", imageBuilders=" + imageBuilders + ", tabs=" + tabs + ", DPI=" + DPI + ", tabPane=" + tabPane + ", preview=" + preview + '}';
+        }
          
          
          
@@ -156,10 +159,7 @@ public class DesignBuilder extends Application {
          
          
 
-         @Override
-         public String toString() {
-                  return "Batcher_Foyer{ \n\n name=" + name + ", size_x=" + size_x + ", size_y=" + size_y + '}';
-         }
+   
 
 
         public int getId() {
@@ -211,7 +211,6 @@ public class DesignBuilder extends Application {
          */
         public void assignLayerToTab(Layer layer, String tabName) {
                 for (TabOfTiltedPane tab : tabs) {
-                                                        System.out.println("defeut_"+tab.getText()+"="+tabName+"result"+tab.getText().equals(tabName));
 
                         if (tab.getText().equals(tabName)) {
                                 tab.addNodeToVBox(layer);

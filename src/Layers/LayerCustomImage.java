@@ -7,6 +7,7 @@ package Layers;
 import Exeptions.ResourcesFileErrorException;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
+import imageBuilder.ImageBuilder;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -36,8 +37,8 @@ public class LayerCustomImage extends Layer {
         @FXML
         private TitledPane CustomImageTiledPane;
 
-        public LayerCustomImage(String layerName, ResourcesManager modelResources, ResourcesManager designResources) {
-                super(layerName, modelResources, designResources);
+        public LayerCustomImage(String layerName, String tabName,ResourcesManager modelResources, ResourcesManager designResources) {
+                super(layerName, tabName,modelResources, designResources);
         }
 
         @Override
@@ -62,7 +63,13 @@ public class LayerCustomImage extends Layer {
                                 if (newValue) {
                                         System.out.println("trigered");
                                         LoaderInterface.setChanged(false);
-                                        refreshPreview();
+                                        this.computeAllImageGet();
+                                        this.setChanged(true);
+                                        for(ImageBuilder imgBuilder  : this.getLinkedImagesBuilders()){
+                                               // imgBuilder.refresh();
+                                                imgBuilder.refresh();
+                                        };              
+                                        this.setChanged(false);
                                 }
                         });
 
@@ -71,6 +78,14 @@ public class LayerCustomImage extends Layer {
                 }
         }
 
+        
+        
+        
+        
+        
+        
+        
+        
         @Override
         Node getLayerParameter() {
                 XmlManager xmlManager = new XmlManager();

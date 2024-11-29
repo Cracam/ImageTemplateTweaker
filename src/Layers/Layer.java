@@ -46,7 +46,8 @@ public abstract class Layer extends TitledPane {
 
         final ResourcesManager modelResources;  // model conrrespont to the sceletton of the images we return
         final ResourcesManager designResources; // design correspontd to how the user create something from the model
-
+        
+        private final String tabName;
         // hashmap containing all the images of used by the layer. 
         // I use Hashmap in order ot habe allow multiple image in/out for having one interface that have multiple in and out 
         // List of the image (all this image have the 
@@ -65,6 +66,8 @@ public abstract class Layer extends TitledPane {
         
         public static final Map<String, Class<? extends Layer>> layersTypesMap = Map.of("Fixed_Image", LayerFixedImage.class, "Custom_Image", LayerCustomImage.class);
 
+        private boolean haveTiltlePane= true;
+        
         // this variable will be use by the Image builder to detect a change and recompute the image accordingly.
         private boolean changed=false;
         
@@ -72,14 +75,17 @@ public abstract class Layer extends TitledPane {
          * the basic contructor
          *
          * @param layerName
+         * @param tabName
          * @param modelResources
          * @param designResources
          */
-        public Layer(String layerName, ResourcesManager modelResources, ResourcesManager designResources) {
+        public Layer(String layerName, String tabName, ResourcesManager modelResources, ResourcesManager designResources) {
                 this.layerName = layerName;
+                this.tabName=tabName;
+                this.setText(layerName);
                 this.modelResources = modelResources;
                 this.designResources = designResources;
-                
+                Layer.createdLayers.put(this.layerName,this);
                 initialiseInterface();
         }
 
@@ -92,17 +98,19 @@ public abstract class Layer extends TitledPane {
         private void linkToAnotherImageBuilder(ImageBuilder anotherImageBuilder, float pos_x, float pos_y, float size_x, float size_y) {
                 this.linkedImagesBuilders.add(anotherImageBuilder);
                 String name = anotherImageBuilder.getName();
-                
+
                 posSize.put(name, new QuadrupletFloat(pos_x, pos_y, size_x, size_y));
                 pixelPosSize.put(name, new QuadrupletInt(0,0,0,0));
                 reComputePixelSizeAndPos(anotherImageBuilder.get_pixel_mm_Factor());
 
                 int pixelSize_x = pixelPosSize.get(name).getSize_x();
                 int pixelSize_y = pixelPosSize.get(name).getSize_y();
+               
+                System.out.println("Pos Image builder : "+anotherImageBuilder.getX_p_size()+"   "+anotherImageBuilder.getY_p_size());
                 this.image_get.put(name, new BufferedImage(pixelSize_x, pixelSize_y, BufferedImage.TYPE_INT_ARGB));
-                this.image_getRaw.put(name, new BufferedImage(pixelSize_x, pixelSize_y, BufferedImage.TYPE_INT_ARGB));
-                this.image_in.put(name, new BufferedImage(pixelSize_x, pixelSize_y, BufferedImage.TYPE_INT_ARGB));
-                this.image_out.put(name, new BufferedImage(pixelSize_x, pixelSize_y, BufferedImage.TYPE_INT_ARGB));
+                this.image_getRaw.put(name, new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
+                this.image_in.put(name, new BufferedImage(anotherImageBuilder.getX_p_size(), anotherImageBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB));
+                this.image_out.put(name, new BufferedImage(anotherImageBuilder.getX_p_size(), anotherImageBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB));
 
         }
 
@@ -182,9 +190,10 @@ public abstract class Layer extends TitledPane {
          
          
        void refreshPreview(PreviewImageBox box){
-                this.image_get.forEach((key, value) -> {
+               box.clearAllImagesViews();
+                this.image_out.forEach((key, value) -> {
                         
-                        box.addImageView(createImageView(image_get.get(key)));
+                        box.addImageView(createImageView(image_out.get(key)));
                 });
         }
 
@@ -229,7 +238,7 @@ public abstract class Layer extends TitledPane {
                         outputG2d.drawImage(image_in.get(name), 0, 0, null);
 
                         // Draw the resized image_get onto the output image at the specified position
-                        outputG2d.drawImage(image_get.get(name), this.pixelPosSize.get(name).getSize_x(), this.pixelPosSize.get(name).getSize_y(), null);
+                        outputG2d.drawImage(image_get.get(name),this.pixelPosSize.get(name).getPos_x(), this.pixelPosSize.get(name).getPos_y(), this.pixelPosSize.get(name).getSize_x(), this.pixelPosSize.get(name).getSize_y(), null);
 
                         // Dispose of the Graphics2D object
                         outputG2d.dispose();
@@ -299,8 +308,9 @@ public abstract class Layer extends TitledPane {
          * @param templateResources
          * @param designResources
          * @return
+         * @throws Exceptions.ThisLayerDoesNotExistException
          */
-        public static Layer loadLayer(ImageBuilder imageBuilder, Node layerNode, ResourcesManager templateResources, ResourcesManager designResources) {
+        public static Layer loadLayer(ImageBuilder imageBuilder, Node layerNode, ResourcesManager templateResources, ResourcesManager designResources) throws ThisLayerDoesNotExistException {
                 try {
                         if (layerNode.getNodeType() != Node.ELEMENT_NODE) {
                                 throw new TheXmlElementIsNotANodeException(layerNode.getNodeType()+  "   IN Layer (1) "+layerNode.getNodeName());
@@ -315,22 +325,28 @@ public abstract class Layer extends TitledPane {
                         Layer layerToReturn;
 
                         String name = element.getAttribute("name");
-
-                        if (Layer.createdLayers.containsKey(name)) { // in this case we will just give back the layer (we will make a test to ensure that the layers are from the smae type)
+                         String tabname = element.getAttribute("tab_name");
+                        
+                        
+                                if (Layer.createdLayers.containsKey(name) ) System.out.println("memem ELT ");
+                        
+                       if (Layer.createdLayers.containsKey(name) && (layersTypesMap.get(key)==Layer.createdLayers.get(name).getClass()) && tabname.equals(Layer.createdLayers.get(name).getTabName())) { // in this case we will just give back the layer (we will make a test to ensure that the layers are from the smae type)
                                 layerToReturn = Layer.createdLayers.get(name);
-                                 Class<?> expectedClass = layersTypesMap.get(key);
-
-                                // test if there is the 2 demanded layer are drom the same type
-                                if (! expectedClass.isInstance(layerToReturn.getClass())) {
-                                        throw new ThisLayerDoesNotExistException(layerNode.getNodeName()+"  the 2 demanded layer are drom the same type");
-                                }
 
                         } else { // in this case we will create the good layer
 
                                 Class<? extends Layer> subclass = layersTypesMap.get(key);
-                                Constructor<? extends Layer> constructor = subclass.getConstructor(String.class, ResourcesManager.class, ResourcesManager.class);
+                                Constructor<? extends Layer> constructor = subclass.getConstructor(String.class,String.class, ResourcesManager.class, ResourcesManager.class);
 
-                                layerToReturn = constructor.newInstance(name, templateResources, designResources);
+                                layerToReturn = constructor.newInstance(name, tabname,templateResources, designResources);
+
+                               
+
+                                if (tabname == null | "".equals(tabname)) {
+                                        imageBuilder.assignLayerToTab(layerToReturn, "Non attribués");
+                                } else {
+                                        imageBuilder.assignLayerToTab(layerToReturn, tabname);
+                                }
 
                         }
                         
@@ -338,15 +354,11 @@ public abstract class Layer extends TitledPane {
                         float pos_y = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_y").getNodeValue());
                         float size_x = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_x").getNodeValue());
                         float size_y = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_y").getNodeValue());
+                        //System.out.println(pos_x+" "+pos_y+" "+size_x+" "+size_y);
 
                         layerToReturn.linkToAnotherImageBuilder(imageBuilder,pos_x, pos_y, size_x, size_y); //this line it to inform the Layer of if master
                         
-                        String tabname = element.getAttribute("tab_name");
-                        if(tabname==null | "".equals(tabname)){
-                                 imageBuilder.assignLayerToTab(layerToReturn, "Non attribués");
-                        }else{
-                                 imageBuilder.assignLayerToTab(layerToReturn, tabname);
-                        }
+                    
                        
                         //This code verify if the <Param> element is really an element
                         Element retElement=(Element) element.getElementsByTagName("Param").item(0);
@@ -357,7 +369,7 @@ public abstract class Layer extends TitledPane {
 
                         return layerToReturn;
 
-                } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ThisLayerDoesNotExistException | TheXmlElementIsNotANodeException ex) {
+                } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException  | TheXmlElementIsNotANodeException ex) {
                         Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
                         return null;
                 }
@@ -382,7 +394,11 @@ public abstract class Layer extends TitledPane {
      */
     public static ImageView createImageView(BufferedImage bufferedImage) {
         WritableImage fxImage =SwingFXUtils.toFXImage(bufferedImage, null);
-        return new ImageView(fxImage);
+      ImageView imageView =new ImageView(fxImage);
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(1000);
+         imageView.setFitWidth(1000);
+        return imageView;
     }
 
         public boolean isChanged() {
@@ -391,6 +407,27 @@ public abstract class Layer extends TitledPane {
 
         public void setChanged(boolean changed) {
                 this.changed = changed;
+        }
+
+        public boolean isHaveTiltlePane() {
+                return haveTiltlePane;
+        }
+
+        public void setHaveTiltlePane(boolean haveTiltlePane) {
+                this.haveTiltlePane = haveTiltlePane;
+        }
+
+        public List<ImageBuilder> getLinkedImagesBuilders() {
+                return linkedImagesBuilders;
+        }
+
+        public String getTabName() {
+                return tabName;
+        }
+
+        @Override
+        public String toString() {
+                return "Layer{" + "layerName=" + layerName + ", tabName=" + tabName + ", image_out=" + image_out + ", image_in=" + image_in + ", image_get=" + image_get + ", posSize=" + posSize + ", pixelPosSize=" + pixelPosSize + '}';
         }
     
     

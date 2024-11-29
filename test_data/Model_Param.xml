@@ -14,11 +14,11 @@
 
 		<Output name="Recto" size_x="88" size_y="58" ><!-- Verso de la carte (côte nom prenom) -->
 
-				<Fixed_Image name="Fond">
+				<Fixed_Image name="Fond---">
 					<pos pos_x="0" pos_y="0" />
 					<size size_x="88" size_y="58" />
 					<Param>
-						<Image  image_name="fond test.png"/>
+						<Image  image_name="VERSO_Bordure.png"/>
 					</Param>
 				</Fixed_Image>
 
@@ -27,13 +27,13 @@
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>
 					<Param>
-						<Image image_name="Verso_Bordure.png"/>
+						<Image image_name="VERSO_Bordure.png"/>
 						<Color ID="1"/>
 					</Param>
 				</img_color>
 
 
-				<Custom_Image name="Tasses">
+				<Custom_Image name="Tasses" tab_name="Images" >
 					<pos pos_x="15" pos_y="5"/>
 					<size size_x="40" size_y="20"/>
 					<Param>
@@ -50,7 +50,7 @@
 				</img_custom_shape>
 
 
-				<Custom_Image name="Tasses_2">
+				<Custom_Image name="Tasses_2" tab_name="Images Recto" >
 					<pos pos_x="15" pos_y="5"/>
 					<size size_x="40" size_y="20"/>
 					<Param>
@@ -71,7 +71,7 @@
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>
 					<Param>
-						<Image image_name="test.png"/>
+						<Image image_name="VERSO_Bordure.png"/>
 					</Param>
 				</Fixed_Image>
 
@@ -80,13 +80,13 @@
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>
 					<Param>
-						<Image image_name="Verso_Bordure.png"/>
+						<Image image_name="VERSO_Bordure.png"/>
 						<Color ID="1"/>
 					</Param>
 				</img_color>
 
 
-				<Custom_Image name="Tasses">
+				<Custom_Image name="Tasses45" tab_name="Images Verso">
 					<pos pos_x="15" pos_y="5"/>
 					<size size_x="40" size_y="20"/>
 					<Param>
@@ -113,7 +113,7 @@
 				</img_Items>
 
 
-				<Custom_Image name="Tasses">
+				<Custom_Image name="Tasses" tab_name="Images" >
 					<pos pos_x="15" pos_y="5"/>
 					<size size_x="40" size_y="20"/>
 					<Param>

@@ -1,5 +1,6 @@
 package Layers;
 
+import Exceptions.ResourcesFileErrorException;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
 import java.awt.image.BufferedImage;
@@ -19,20 +20,25 @@ public class LayerFixedImage extends Layer {
 
         private String imageName;
 
-        public LayerFixedImage(String layerName, ResourcesManager modelResources, ResourcesManager designResources) {
-                super(layerName, modelResources, designResources);
+        public LayerFixedImage(String layerName,String tabName, ResourcesManager modelResources, ResourcesManager designResources) {
+                super(layerName, tabName, modelResources, designResources);
+                this.setHaveTiltlePane(false);
         }
 
         @Override
         BufferedImage generateImageget() {
                 try {
                         File imageFile = this.modelResources.get(this.imageName);
-
+                        
+                        if(imageFile==null){
+                                throw new ResourcesFileErrorException("This file dont exist : "+this.imageName);
+                        }
                         return ImageIO.read(imageFile);
-                } catch (IOException ex) {
+                } catch (IOException | ResourcesFileErrorException ex) {
                         Logger.getLogger(LayerFixedImage.class.getName()).log(Level.SEVERE, null, ex);
                         return null;
                 }
+           
         }
 
         /**
@@ -64,6 +70,7 @@ public class LayerFixedImage extends Layer {
         @Override
         void readNode(Element paramNode) {
                 this.imageName = paramNode.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
+                  this.computeAllImageGet();
         }
 
         @Override

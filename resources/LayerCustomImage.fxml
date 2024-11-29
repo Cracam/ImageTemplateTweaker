@@ -10,7 +10,7 @@
       <HBox>
          <children>
             <ImageLoaderInterface fx:id="LoaderInterface" />
-            <PreviewImageBox fx:id="Preview" minWidth="300.0" />
+            <PreviewImageBox fx:id="Preview" minWidth="300.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </content>

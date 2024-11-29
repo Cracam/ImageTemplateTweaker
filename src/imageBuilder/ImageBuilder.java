@@ -1,6 +1,7 @@
 package imageBuilder;
 
 import Exceptions.TheXmlElementIsNotANodeException;
+import Exceptions.ThisLayerDoesNotExistException;
 import Layers.Layer;
 
 import designBuilder.DesignBuilder;
@@ -171,9 +172,16 @@ public class ImageBuilder {
 
                 for (int i = 0; i < nodeLayerList.getLength(); i++) {
                         if (nodeLayerList.item(i).getNodeType() == Node.ELEMENT_NODE) { //To avoid text node and comment node
-                                layers.add(Layer.loadLayer(this, nodeLayerList.item(i), this.designBuilder.getTemplateResources(), this.designBuilder.getDesignResources()));
+                                try{
+                                Layer layerTocreate = Layer.loadLayer(this, nodeLayerList.item(i), this.designBuilder.getTemplateResources(), this.designBuilder.getDesignResources());
+                                        layers.add(layerTocreate);
+                                }catch(ThisLayerDoesNotExistException e){
+                                        System.out.println(e+" was detected ignoting it");
+                                }
+
                         }
                 }
+                this.refreshAll();
         }
         
         
@@ -182,6 +190,26 @@ public class ImageBuilder {
         }
 
         public void assignLayerToTab(Layer layer, String tabName) {
-                this.designBuilder.assignLayerToTab(layer,tabName);
+                if(layer.isHaveTiltlePane()) this.designBuilder.assignLayerToTab(layer,tabName);
         }
+        
+        
+
+        @Override
+        public String toString() {
+                return "ImageBuilder{" + "name=" + name  + ", x_size=" + x_size + ", y_size=" + y_size + ", x_p_size=" + x_p_size + ", y_p_size=" + y_p_size + ", layers=" + layers  + '}';
+        }
+
+        public int getX_p_size() {
+                return x_p_size;
+        }
+
+        public int getY_p_size() {
+                return y_p_size;
+        }
+        
+        
+        
+        
+        
 }
