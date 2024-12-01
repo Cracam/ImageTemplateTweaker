@@ -103,7 +103,7 @@ public class LayerCustomImage extends Layer {
         }
 
         @Override
-        void refreshPreview() {
+        public void refreshPreview() {
                 this.refreshPreview(this.Preview);
         }
 

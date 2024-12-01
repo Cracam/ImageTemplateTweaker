@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import imageloaderinterface.ImageLoaderInterface?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.HBox?>
 <?import previewimagebox.PreviewImageBox?>
@@ -10,7 +11,10 @@
       <HBox>
          <children>
             <ImageLoaderInterface fx:id="LoaderInterface" />
-            <PreviewImageBox fx:id="Preview" minWidth="300.0" HBox.hgrow="ALWAYS" />
+            <PreviewImageBox fx:id="Preview" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </HBox.margin></PreviewImageBox>
          </children>
       </HBox>
    </content>

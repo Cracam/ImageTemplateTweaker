@@ -34,8 +34,8 @@
 
 
 				<Custom_Image name="Tasses" tab_name="Images" >
-					<pos pos_x="15" pos_y="5"/>
-					<size size_x="40" size_y="20"/>
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
 					<Param>
 					</Param>
 				</Custom_Image>

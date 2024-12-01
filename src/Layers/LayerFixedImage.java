@@ -74,7 +74,7 @@ public class LayerFixedImage extends Layer {
         }
 
         @Override
-        void refreshPreview() {
+        public void refreshPreview() {
         }
         
         

@@ -254,7 +254,7 @@ public abstract class Layer extends TitledPane {
 
         
         
-        abstract void refreshPreview();
+       public abstract void refreshPreview();
         
        // end image computation
         //-----------------------------------------------------------------------------------------------------------

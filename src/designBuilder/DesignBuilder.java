@@ -141,7 +141,10 @@ public class DesignBuilder extends Application {
                            primarystage.setScene(scene);
                            primarystage.show();
 
-                         
+                         //refresh all the images
+                         for (ImageBuilder imageBuilder : imageBuilders) {
+                                         imageBuilder.refreshAll();
+                         }
 
                   } catch (ResourcesFileErrorException e) {
 

@@ -55,7 +55,7 @@ public class ImageBuilder {
                         this.x_size = Float.parseFloat(element.getAttribute("size_x"));
                         this.y_size = Float.parseFloat(element.getAttribute("size_y"));
 
-                } catch (TheXmlElementIsNotANodeException ex) {
+                }catch (TheXmlElementIsNotANodeException ex) {
                         Logger.getLogger(ImageBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 this.computeXY_p_size();
@@ -117,21 +117,24 @@ public class ImageBuilder {
          */
         public void refresh() {
                 boolean changedPrecedently = false;
-                BufferedImage imgBegining = createBufferedImage(this.x_p_size, this.y_p_size);
+                BufferedImage imgBegining=null ;
                 int indexBegining = 0;
                 for (int i = 0; i < layers.size(); i++) {
                         if (layers.get(i).isChanged()) {
                                 changedPrecedently = true;
                                 if (i != 0) {
                                         layers.get(i).computeImage_Out(this.name);
-                                        imgBegining = layers.get(i).getImage_out(this.name);
-                                        indexBegining = i;
+                                        imgBegining = layers.get(i-1).getImage_out(this.name);
+                                }else{
+                                     imgBegining   = createBufferedImage(this.x_p_size, this.y_p_size);
                                 }
+                                indexBegining = i;
                                 break;
                         }
                 }
-
-                if (changedPrecedently & indexBegining >= (layers.size() - 1)) { //we will refresh the image out from there if the image is changed ot if a precedent imag is changed
+                
+                if(!changedPrecedently) return;
+                
                         layers.get(indexBegining).setImage_in(this.name, imgBegining);
                         layers.get(indexBegining).computeImage_Out(this.name);
 
@@ -139,7 +142,6 @@ public class ImageBuilder {
                                 layers.get(j).setImage_in(this.name, layers.get(j - 1).getImage_out(this.name));
                                 layers.get(j).computeImage_Out(this.name);
                         }
-                }
         }
 
         
@@ -155,6 +157,7 @@ public class ImageBuilder {
                 for (int j = 1; j < layers.size(); j++) {
                         layers.get(j).setImage_in(this.name, layers.get(j - 1).getImage_out(this.name));
                         layers.get(j).computeImage_Out(this.name);
+                        layers.get(j).refreshPreview();
                 }
         }
         
@@ -165,10 +168,6 @@ public class ImageBuilder {
          */
         private void createLayers() {
                 NodeList nodeLayerList = this.loaderNode.getChildNodes();
-//                System.out.println("Name  "+this.loaderNode.getNodeName()+"longueru "+nodeLayerList.getLength());
-//                for(int i=0;i<nodeLayerList.getLength();i++){
-//                        System.out.println("nodeName "+i+"  "+nodeLayerList.item(i).getNodeName());
-//                }
 
                 for (int i = 0; i < nodeLayerList.getLength(); i++) {
                         if (nodeLayerList.item(i).getNodeType() == Node.ELEMENT_NODE) { //To avoid text node and comment node
@@ -178,10 +177,8 @@ public class ImageBuilder {
                                 }catch(ThisLayerDoesNotExistException e){
                                         System.out.println(e+" was detected ignoting it");
                                 }
-
                         }
                 }
-                this.refreshAll();
         }
         
         
