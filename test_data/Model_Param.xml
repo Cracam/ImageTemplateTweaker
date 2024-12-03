@@ -14,23 +14,103 @@
 
 		<Output name="Recto" size_x="88" size_y="58" ><!-- Verso de la carte (côte nom prenom) -->
 
-				<Fixed_Image name="Fond---">
-					<pos pos_x="0" pos_y="0" />
-					<size size_x="88" size_y="58" />
-					<Param>
-						<Image  image_name="VERSO_Bordure.png"/>
-					</Param>
-				</Fixed_Image>
-
-
-				<img_color name="Bordure">
+			<Custom_Color name="Fond" tab_name="Commun">
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>
 					<Param>
-						<Image image_name="VERSO_Bordure.png"/>
-						<Color ID="1"/>
+						<Image image_name="RECTO_fond.png"/>
 					</Param>
-				</img_color>
+				</Custom_Color>
+
+
+
+				<Custom_Image name="Arrière Plan" tab_name="Recto" >
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Param>
+					</Param>
+				</Custom_Image>
+
+
+<!-- Cadre pour mettre le nom prenom-->
+<Fixed_Image name="Zone Texte">
+					<pos pos_x="10" pos_y="20" />
+					<size size_x="30" size_y="10" />
+					<Param>
+						<Image  image_name="RECTO_ZoneTexte.png"/>
+					</Param>
+				</Fixed_Image>
+
+<Custom_Color name="Cadre Texte" tab_name="Recto">
+					<pos pos_x="10" pos_y="20"/>
+					<size size_x="30" size_y="10" />
+					<Param>
+						<Image image_name="RECTO_CadreTexte.png"/>
+					</Param>
+			</Custom_Color>
+
+<Fixed_Image name="Zone Texte">
+					<pos pos_x="10" pos_y="40" />
+					<size size_x="30" size_y="10" />
+					<Param>
+						<Image  image_name="RECTO_ZoneTexte.png"/>
+					</Param>
+				</Fixed_Image>
+
+<Custom_Color name="Cadre Texte" tab_name="Recto">
+					<pos pos_x="10" pos_y="40"/>
+					<size size_x="30" size_y="10" />
+					<Param>
+						<Image image_name="RECTO_CadreTexte.png"/>
+					</Param>
+			</Custom_Color>
+
+
+<!-- Premier plan de la carte-->
+<Custom_Image name="Premier Plan" tab_name="Recto" >
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Param>
+					</Param>
+				</Custom_Image>
+
+
+
+
+			<Custom_Color name="Arrière Plan" tab_name="Commun">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Param>
+						<Image image_name="RECTO_Bordure.png"/>
+					</Param>
+			</Custom_Color>
+
+
+
+			<Custom_Color name="Bordure" tab_name="Commun">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Param>
+						<Image image_name="RECTO_Bordure.png"/>
+					</Param>
+			</Custom_Color>
+
+
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 				<Custom_Image name="Tasses" tab_name="Images" >
@@ -41,21 +121,9 @@
 				</Custom_Image>
 
 
-				<img_custom_shape name="consos Verte"> <!-- pas utilisé dans le modèle V3 --> 
-					<pos pos_x="25" pos_y="5"/>
-					<size size_x="10" size_y="10"/>
-					<Param>
-						<Color color="#23EF34"/>
-					</Param>
-				</img_custom_shape>
 
 
-				<Custom_Image name="Tasses_2" tab_name="Images Recto" >
-					<pos pos_x="15" pos_y="5"/>
-					<size size_x="40" size_y="20"/>
-					<Param>
-					</Param>
-				</Custom_Image>
+				
 
 		</Output>
 
@@ -71,7 +139,7 @@
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>
 					<Param>
-						<Image image_name="VERSO_Bordure.png"/>
+						<Image image_name="RECTO_Bordure.png"/>
 					</Param>
 				</Fixed_Image>
 
@@ -80,7 +148,7 @@
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>
 					<Param>
-						<Image image_name="VERSO_Bordure.png"/>
+						<Image image_name="RECTO_Bordure.png"/>
 						<Color ID="1"/>
 					</Param>
 				</img_color>
@@ -119,6 +187,16 @@
 					<Param>
 					</Param>
 				</Custom_Image>
+
+
+
+				<img_custom_shape name="consos Verte"> <!-- pas utilisé dans le modèle V3 --> 
+					<pos pos_x="25" pos_y="5"/>
+					<size size_x="10" size_y="10"/>
+					<Param>
+						<Color color="#23EF34"/>
+					</Param>
+				</img_custom_shape>
 
 		</Output>
 

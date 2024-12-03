@@ -54,7 +54,7 @@ public abstract class Layer extends TitledPane {
         private final HashMap<String, BufferedImage> image_out = new HashMap<>(); // compilation of image in and the layer below
         private final HashMap<String, BufferedImage> image_in = new HashMap<>(); // compliation of all the lay below
         
-        private final HashMap<String, BufferedImage> image_getRaw = new HashMap<>();
+        protected final HashMap<String, BufferedImage> image_getRaw = new HashMap<>();
         private final HashMap<String, BufferedImage> image_get = new HashMap<>(); //the image that will containn the processing data 
 
         //Get Image parameter (real positions and size in milimeter
@@ -64,7 +64,7 @@ public abstract class Layer extends TitledPane {
         private final HashMap<String, QuadrupletInt> pixelPosSize = new HashMap<>();
 
         
-        public static final Map<String, Class<? extends Layer>> layersTypesMap = Map.of("Fixed_Image", LayerFixedImage.class, "Custom_Image", LayerCustomImage.class);
+        public static final Map<String, Class<? extends Layer>> layersTypesMap = Map.of("Fixed_Image", LayerFixedImage.class, "Custom_Image", LayerCustomImage.class,"Custom_Color", LayerCustomColor.class);
 
         private boolean haveTiltlePane= true;
         
@@ -175,13 +175,16 @@ public abstract class Layer extends TitledPane {
                                 throw new ThisImageBuilderNotExistInThisLayer("the key is not valid - It may  an error in image buider ");
                         }
 
-                        this.image_get.put(name, ResizeImage(generateImageget(), this.pixelPosSize.get(name).getSize_x(), this.pixelPosSize.get(name).getSize_y()));
+                        this.image_get.put(name, generateImageget(name));
 
                 } catch (ThisImageBuilderNotExistInThisLayer ex) {
                         Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
 
+        /**
+         * this compute all the image get
+         */
          void computeAllImageGet() {
                 this.image_get.forEach((key, value) -> {
                         computeImageGet(key);
@@ -206,7 +209,7 @@ public abstract class Layer extends TitledPane {
          *
          * @return
          */
-        abstract BufferedImage generateImageget();
+        abstract BufferedImage generateImageget(String key);
 
         /**
          * Tiis method will resize the image get to what we nedd
@@ -365,7 +368,7 @@ public abstract class Layer extends TitledPane {
                          if (retElement.getNodeType() != Node.ELEMENT_NODE) {
                                 throw new TheXmlElementIsNotANodeException("IN Layer(2) "+layerNode.getNodeName());
                         }
-                        layerToReturn.readNode(retElement); //read the specific parameter
+                        layerToReturn.readNode(retElement,imageBuilder); //read the specific parameter
 
                         return layerToReturn;
 
@@ -381,7 +384,7 @@ public abstract class Layer extends TitledPane {
          *
          * @param layerNode
          */
-        abstract void readNode(Element paramNode);
+        abstract void readNode(Element paramNode, ImageBuilder imageBuilder);
 
         //implement save return (for design)
         
@@ -431,8 +434,24 @@ public abstract class Layer extends TitledPane {
         }
     
     
+
+        public HashMap<String, BufferedImage> getImage_getRaw() {
+                return image_getRaw;
+        }
+
+        public HashMap<String, BufferedImage> getImage_get() {
+                return image_get;
+        }
+        
+        
     
+        public abstract void DPIChanged();
     
-    
+       public QuadrupletInt getPixelPosSize(String name){
+               return pixelPosSize.get(name);
+       }
+       
+       
+       
        
 }

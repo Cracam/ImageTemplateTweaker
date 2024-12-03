@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import GradientCreatorInterface.GradientCreatorInterface?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.HBox?>
+<?import previewimagebox.PreviewImageBox?>
+
+<fx:root fx:id="CustomImageTiledPane" type="TitledPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <HBox>
+         <children>
+            <GradientCreatorInterface fx:id="gradientPicker" />
+            <PreviewImageBox fx:id="Preview" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </HBox.margin></PreviewImageBox>
+         </children>
+      </HBox>
+   </content>
+</fx:root>

@@ -253,9 +253,15 @@ public class DesignBuilder extends Application {
                 this.designResources = designResources;
         }
 
+        /**
+         * This method will refresh the main preview
+         */
+        public void refreshPreview(){
+                this.preview.clearAllImagesViews();
+                for(ImageBuilder imageBuilder : imageBuilders){
+                        this.preview.addImageView(Layer.createImageView(imageBuilder.getImageOut()));
+                }
+        }
         
         
-        
-        
-
 }

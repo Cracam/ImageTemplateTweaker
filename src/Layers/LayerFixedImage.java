@@ -3,6 +3,7 @@ package Layers;
 import Exceptions.ResourcesFileErrorException;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
+import imageBuilder.ImageBuilder;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class LayerFixedImage extends Layer {
         }
 
         @Override
-        BufferedImage generateImageget() {
+        BufferedImage generateImageget(String key) {
                 try {
                         File imageFile = this.modelResources.get(this.imageName);
                         
@@ -68,7 +69,7 @@ public class LayerFixedImage extends Layer {
          * @param layerNode
          */
         @Override
-        void readNode(Element paramNode) {
+        void readNode(Element paramNode, ImageBuilder imageBuilder) {
                 this.imageName = paramNode.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
                   this.computeAllImageGet();
         }
@@ -76,7 +77,11 @@ public class LayerFixedImage extends Layer {
         @Override
         public void refreshPreview() {
         }
-        
+
+        @Override
+        public void DPIChanged() {
+        }
+
         
 
 }

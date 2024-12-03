@@ -37,12 +37,18 @@ public class LayerCustomImage extends Layer {
         @FXML
         private TitledPane CustomImageTiledPane;
 
+        
+        
+        
+        
+        
+        
         public LayerCustomImage(String layerName, String tabName,ResourcesManager modelResources, ResourcesManager designResources) {
                 super(layerName, tabName,modelResources, designResources);
         }
 
         @Override
-        BufferedImage generateImageget() {
+        BufferedImage generateImageget(String key) {
                 return LoaderInterface.getImage_out();
         }
 
@@ -99,12 +105,19 @@ public class LayerCustomImage extends Layer {
          * @param paramNode
          */
         @Override
-        void readNode(Element paramNode) {
+        void readNode(Element paramNode, ImageBuilder imageBuilder) {
         }
 
         @Override
         public void refreshPreview() {
                 this.refreshPreview(this.Preview);
         }
+
+        @Override
+        public void DPIChanged() {
+        }
+
+     
+        
 
 }

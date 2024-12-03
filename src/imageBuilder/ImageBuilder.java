@@ -142,6 +142,8 @@ public class ImageBuilder {
                                 layers.get(j).setImage_in(this.name, layers.get(j - 1).getImage_out(this.name));
                                 layers.get(j).computeImage_Out(this.name);
                         }
+                        
+                         this.designBuilder.refreshPreview();//refresh the main preview
         }
 
         
@@ -159,6 +161,7 @@ public class ImageBuilder {
                         layers.get(j).computeImage_Out(this.name);
                         layers.get(j).refreshPreview();
                 }
+                this.designBuilder.refreshPreview();
         }
         
         
@@ -205,7 +208,13 @@ public class ImageBuilder {
                 return y_p_size;
         }
         
-        
+        /**
+         * This method retunr the last image out
+         * @return 
+         */
+        public BufferedImage getImageOut(){
+                return layers.get(layers.size()-1).getImage_out(this.name);
+        }
         
         
         
