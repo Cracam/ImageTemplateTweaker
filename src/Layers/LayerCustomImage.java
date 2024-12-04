@@ -92,7 +92,7 @@ public class LayerCustomImage extends Layer {
         
         
         @Override
-        Node getLayerParameter() {
+        Node saveLayerData() {
                 XmlManager xmlManager = new XmlManager();
                 xmlManager.addChild("Image", Map.of("image_name", this.imagename));
                 return xmlManager.createDesignParamElement("DesignParam");

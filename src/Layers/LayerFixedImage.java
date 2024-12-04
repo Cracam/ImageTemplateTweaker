@@ -59,7 +59,7 @@ public class LayerFixedImage extends Layer {
          * @return
          */
         @Override
-        Node getLayerParameter() {
+        Node saveLayerData() {
                 XmlManager xmlManager = new XmlManager();
 
                 return xmlManager.createDesignParamElement("DesignParam");

@@ -268,10 +268,10 @@ public abstract class Layer extends TitledPane {
         /**
          * This function will return every parameter of the layer in the form of
          * a node (in order to save it)
-         *
+         *It also save the image that have been imported on the design
          * @return
          */
-        abstract Node getLayerParameter();
+        abstract Node saveLayerData();
 
         
  

@@ -93,7 +93,7 @@ public class LayerCustomColor extends Layer {
         }
 
         @Override
-        Node getLayerParameter() {
+        Node saveLayerData() {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
