@@ -35,15 +35,16 @@ public class LayerCustomColor extends Layer {
 
         @FXML
         private PreviewImageBox Preview;
-        
+
         @FXML
         private GradientCreatorInterface gradientPicker;
-        
+
         @FXML
         private TitledPane CustomImageTiledPane;
 
         private final HashMap<String, int[][]> opacityMap = new HashMap<>();
-
+        private final HashMap<String, BufferedImage> image_getRaw = new HashMap<>();
+        
         public LayerCustomColor(String layerName, String tabName, ResourcesManager modelResources, ResourcesManager designResources) {
                 super(layerName, tabName, modelResources, designResources);
         }
@@ -56,7 +57,7 @@ public class LayerCustomColor extends Layer {
         @Override
         public void refreshPreview() {
                 this.refreshPreview(this.Preview);
-                System.out.println(toString());
+                //   System.out.println(toString());
         }
 
         @Override
@@ -71,16 +72,17 @@ public class LayerCustomColor extends Layer {
 
                         fxmlLoader.load();
 
+                        System.out.println("gradientPicker initialized: " + (gradientPicker != null) + " value : " + gradientPicker.isChanged());
                         // Add a listener to the changed property
                         gradientPicker.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                                 if (newValue) {
-                                        System.out.println("triggered");
+                                       // System.out.println("trigered");
                                         gradientPicker.setChanged(false);
                                         this.computeAllImageGet();
                                         this.setChanged(true);
                                         for (ImageBuilder imgBuilder : this.getLinkedImagesBuilders()) {
                                                 imgBuilder.refresh();
-                                        }
+                                        };
                                         this.setChanged(false);
                                 }
                         });
@@ -101,10 +103,10 @@ public class LayerCustomColor extends Layer {
                 this.imageName = paramNode.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
                 try {
                         File imageFile = this.modelResources.get(this.imageName);
-                        this.getImage_getRaw().put(key, ImageIO.read(imageFile));
+                        this.image_getRaw.put(key, ImageIO.read(imageFile));
 
                         //set the default size of the image_raw
-                        BufferedImage resizedImageGetRaw = Layer.ResizeImage(this.getImage_getRaw().get(key), this.getPixelPosSize(key).getSize_x(), this.getPixelPosSize(key).getSize_y());
+                        BufferedImage resizedImageGetRaw = Layer.ResizeImage(this.image_getRaw.get(key), this.getPixelPosSize(key).getSize_x(), this.getPixelPosSize(key).getSize_y());
                         this.opacityMap.put(key, transformToOpacityArray(resizedImageGetRaw));
 
                 } catch (IOException ex) {
@@ -116,17 +118,24 @@ public class LayerCustomColor extends Layer {
          * This method chnage all the size of the images raw
          */
         @Override
-        public void DPIChanged() {
-                this.getImage_getRaw().forEach((key, value) -> {
-                        BufferedImage resizedImageGetRaw = Layer.ResizeImage(this.getImage_getRaw().get(key), this.getPixelPosSize(key).getSize_x(), this.getPixelPosSize(key).getSize_y());
+        public void DPIChanged() {       
+
+                this.image_getRaw.forEach((key, value) -> {
+                        BufferedImage resizedImageGetRaw = Layer.ResizeImage(this.image_getRaw.get(key), this.getPixelPosSize(key).getSize_x(), this.getPixelPosSize(key).getSize_y());
                         this.opacityMap.put(key, transformToOpacityArray(resizedImageGetRaw));
                 });
         }
-
+        
+        
+        /**
+         * This function extract the opacity data from the image to transform it into array.
+         * @param image
+         * @return 
+         */
         public static int[][] transformToOpacityArray(BufferedImage image) {
                 int width = image.getWidth();
                 int height = image.getHeight();
-                int[][] opacityArray = new int[height][width];
+                int[][] opacityArray = new int[width][height];
 
                 Raster raster = image.getAlphaRaster();
                 if (raster == null) {
@@ -136,20 +145,15 @@ public class LayerCustomColor extends Layer {
                 for (int y = 0; y < height; y++) {
                         for (int x = 0; x < width; x++) {
                                 int alpha = raster.getSample(x, y, 0);
-                                opacityArray[y][x] = alpha;
+                                opacityArray[x][y] = alpha;
                         }
                 }
-
                 return opacityArray;
         }
 
         @Override
         public String toString() {
-                return "LayerCustomColor{" + "imageName=" + imageName + ", opacityMap=" + opacityMap.get("0_Recto").length+ '}';
+                return "LayerCustomColor{" + "imageName=" + imageName + '}';
         }
 
-   
-        
-        
-        
 }

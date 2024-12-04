@@ -49,7 +49,7 @@ public class LayerCustomImage extends Layer {
 
         @Override
         BufferedImage generateImageget(String key) {
-                return LoaderInterface.getImage_out();
+                return ResizeImage(LoaderInterface.getImage_out(), this.imageGetPixelSizeX(key), this.imageGetPixelSizeY(key));
         }
 
         @Override
@@ -67,12 +67,11 @@ public class LayerCustomImage extends Layer {
                         // Add a listener to the changed property
                         LoaderInterface.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                                 if (newValue) {
-                                        System.out.println("trigered");
+                                    //    System.out.println("trigered");
                                         LoaderInterface.setChanged(false);
                                         this.computeAllImageGet();
                                         this.setChanged(true);
                                         for(ImageBuilder imgBuilder  : this.getLinkedImagesBuilders()){
-                                               // imgBuilder.refresh();
                                                 imgBuilder.refresh();
                                         };              
                                         this.setChanged(false);

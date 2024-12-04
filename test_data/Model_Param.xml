@@ -15,8 +15,8 @@
 		<Output name="Recto" size_x="88" size_y="58" ><!-- Verso de la carte (côte nom prenom) -->
 
 			<Custom_Color name="Fond" tab_name="Commun">
-					<pos pos_x="0" pos_y="0"/>
-					<size size_x="88" size_y="58"/>
+					<pos pos_x="6.72" pos_y="0"/>
+					<size size_x="74.55" size_y="58"/>
 					<Param>
 						<Image image_name="RECTO_fond.png"/>
 					</Param>
@@ -77,11 +77,11 @@
 
 
 
-			<Custom_Color name="Arrière Plan" tab_name="Commun">
+			<Custom_Color name="Arrière Plan Bords" tab_name="Commun">
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>
 					<Param>
-						<Image image_name="RECTO_Bordure.png"/>
+						<Image image_name="RECTO_arrierePlan.png"/>
 					</Param>
 			</Custom_Color>
 

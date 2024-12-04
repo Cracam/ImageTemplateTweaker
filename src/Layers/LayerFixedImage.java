@@ -26,6 +26,9 @@ public class LayerFixedImage extends Layer {
                 this.setHaveTiltlePane(false);
         }
 
+        
+        
+        
         @Override
         BufferedImage generateImageget(String key) {
                 try {
@@ -34,7 +37,7 @@ public class LayerFixedImage extends Layer {
                         if(imageFile==null){
                                 throw new ResourcesFileErrorException("This file dont exist : "+this.imageName);
                         }
-                        return ImageIO.read(imageFile);
+                        return ResizeImage(ImageIO.read(imageFile), this.imageGetPixelSizeX(key), this.imageGetPixelSizeY(key));
                 } catch (IOException | ResourcesFileErrorException ex) {
                         Logger.getLogger(LayerFixedImage.class.getName()).log(Level.SEVERE, null, ex);
                         return null;

@@ -13,8 +13,6 @@ import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.ResourcesManager;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -27,7 +25,6 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javax.imageio.ImageIO;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
@@ -53,8 +50,6 @@ public abstract class Layer extends TitledPane {
         // List of the image (all this image have the 
         private final HashMap<String, BufferedImage> image_out = new HashMap<>(); // compilation of image in and the layer below
         private final HashMap<String, BufferedImage> image_in = new HashMap<>(); // compliation of all the lay below
-        
-        protected final HashMap<String, BufferedImage> image_getRaw = new HashMap<>();
         private final HashMap<String, BufferedImage> image_get = new HashMap<>(); //the image that will containn the processing data 
 
         //Get Image parameter (real positions and size in milimeter
@@ -108,7 +103,6 @@ public abstract class Layer extends TitledPane {
                
                 System.out.println("Pos Image builder : "+anotherImageBuilder.getX_p_size()+"   "+anotherImageBuilder.getY_p_size());
                 this.image_get.put(name, new BufferedImage(pixelSize_x, pixelSize_y, BufferedImage.TYPE_INT_ARGB));
-                this.image_getRaw.put(name, new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
                 this.image_in.put(name, new BufferedImage(anotherImageBuilder.getX_p_size(), anotherImageBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB));
                 this.image_out.put(name, new BufferedImage(anotherImageBuilder.getX_p_size(), anotherImageBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB));
 
@@ -195,7 +189,6 @@ public abstract class Layer extends TitledPane {
        void refreshPreview(PreviewImageBox box){
                box.clearAllImagesViews();
                 this.image_out.forEach((key, value) -> {
-                        
                         box.addImageView(createImageView(image_out.get(key)));
                 });
         }
@@ -281,21 +274,7 @@ public abstract class Layer extends TitledPane {
         abstract Node getLayerParameter();
 
         
-        /**
-         * this program will save all the image get Raw in the doccument
-         * (it's make to keep originale file and avoid quality losses)
-         */
-        void saveImagesGetRaw(){
-                 this.image_getRaw.forEach((key, value) -> {
-                         try {
-                                 File outputFile = new File(key+this.layerName+".png");
-                                 ImageIO.write(image_getRaw.get(key), "png", outputFile);
-                                 designResources.set(key, outputFile);
-                         } catch (IOException ex) {
-                                 Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
-                         }
-                });
-        }
+ 
         
 
         
@@ -435,9 +414,6 @@ public abstract class Layer extends TitledPane {
     
     
 
-        public HashMap<String, BufferedImage> getImage_getRaw() {
-                return image_getRaw;
-        }
 
         public HashMap<String, BufferedImage> getImage_get() {
                 return image_get;
@@ -452,6 +428,11 @@ public abstract class Layer extends TitledPane {
        }
        
        
-       
+       public int imageGetPixelSizeX(String key){
+               return this.pixelPosSize.get(key).getSize_x();
+       }
+        public int imageGetPixelSizeY(String key){
+               return this.pixelPosSize.get(key).getSize_y();
+       }
        
 }
