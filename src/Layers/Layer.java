@@ -36,7 +36,7 @@ import previewimagebox.PreviewImageBox;
 public abstract class Layer extends TitledPane {
 
         // Variable of Interface management in the app 
-        private final String layerName;
+        protected final String layerName;
         private static HashMap<String, Layer> createdLayers = new HashMap<>();  //HashMap of all the created Layer (the key will be the name of the DesignBuider class +"_"+ name of the layer
 
         private List<ImageBuilder> linkedImagesBuilders = new ArrayList<>();
@@ -271,9 +271,14 @@ public abstract class Layer extends TitledPane {
          *It also save the image that have been imported on the design
          * @return
          */
-        abstract Node saveLayerData();
+        abstract Node saveLayerDesignData();
 
         
+        /**
+         * This method will be used to load all the data from a saving Design XML file
+         * @param dataOfTheLayer 
+         */
+        abstract void loadLayerdesignData(Element dataOfTheLayer);
  
         
 
@@ -434,5 +439,9 @@ public abstract class Layer extends TitledPane {
         public int imageGetPixelSizeY(String key){
                return this.pixelPosSize.get(key).getSize_y();
        }
+        
+        ResourcesManager getDesignResources(){
+                return this.designResources;
+        }
        
 }

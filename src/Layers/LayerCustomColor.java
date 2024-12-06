@@ -7,13 +7,16 @@ package Layers;
 import Exeptions.ResourcesFileErrorException;
 import GradientCreatorInterface.GradientCreatorInterface;
 import ResourcesManager.ResourcesManager;
+import ResourcesManager.XmlManager;
 import imageBuilder.ImageBuilder;
 import imageloaderinterface.ImageLoaderInterface;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -44,7 +47,7 @@ public class LayerCustomColor extends Layer {
 
         private final HashMap<String, int[][]> opacityMap = new HashMap<>();
         private final HashMap<String, BufferedImage> image_getRaw = new HashMap<>();
-        
+
         public LayerCustomColor(String layerName, String tabName, ResourcesManager modelResources, ResourcesManager designResources) {
                 super(layerName, tabName, modelResources, designResources);
         }
@@ -76,7 +79,7 @@ public class LayerCustomColor extends Layer {
                         // Add a listener to the changed property
                         gradientPicker.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                                 if (newValue) {
-                                       // System.out.println("trigered");
+                                        // System.out.println("trigered");
                                         gradientPicker.setChanged(false);
                                         this.computeAllImageGet();
                                         this.setChanged(true);
@@ -93,8 +96,10 @@ public class LayerCustomColor extends Layer {
         }
 
         @Override
-        Node saveLayerData() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Node saveLayerDesignData() {
+                XmlManager xmlManager = new XmlManager();
+                xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", colorToHex(gradientPicker.getColor1()), "Color_2", colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
+                return xmlManager.createDesignParamElement("DesignParam", "LayerName", layerName);
         }
 
         @Override
@@ -118,19 +123,20 @@ public class LayerCustomColor extends Layer {
          * This method chnage all the size of the images raw
          */
         @Override
-        public void DPIChanged() {       
+        public void DPIChanged() {
 
                 this.image_getRaw.forEach((key, value) -> {
                         BufferedImage resizedImageGetRaw = Layer.ResizeImage(this.image_getRaw.get(key), this.getPixelPosSize(key).getSize_x(), this.getPixelPosSize(key).getSize_y());
                         this.opacityMap.put(key, transformToOpacityArray(resizedImageGetRaw));
                 });
         }
-        
-        
+
         /**
-         * This function extract the opacity data from the image to transform it into array.
+         * This function extract the opacity data from the image to transform it
+         * into array.
+         *
          * @param image
-         * @return 
+         * @return
          */
         public static int[][] transformToOpacityArray(BufferedImage image) {
                 int width = image.getWidth();
@@ -156,4 +162,37 @@ public class LayerCustomColor extends Layer {
                 return "LayerCustomColor{" + "imageName=" + imageName + '}';
         }
 
+        public static String colorToHex(Color color) {
+                String hex = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+                return hex;
+        }
+
+        public static Color hexToColor(String hex) {
+                // Remove the '#' character if present
+                if (hex.startsWith("#")) {
+                        hex = hex.substring(1);
+                }
+
+                // Parse the hex string
+                int r = Integer.parseInt(hex.substring(0, 2));
+                int g = Integer.parseInt(hex.substring(2, 4));
+                int b = Integer.parseInt(hex.substring(4, 6));
+
+                return new Color(r, g, b);
+        }
+
+        @Override
+        void loadLayerdesignData(Element dataOfTheLayer) {
+
+                String gradientName = dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Gradient_Name").getNodeValue();
+
+                Color color1 = hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_1").getNodeValue());
+                Color color2 = hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_2").getNodeValue());
+
+                double colorIntensity = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("ColorIntensity").getNodeValue());
+                double param1 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_1").getNodeValue());
+                double param2 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_2").getNodeValue());
+
+                gradientPicker.setInterfaceState(gradientName, color1, color2, colorIntensity, param1, param2);
+        }
 }

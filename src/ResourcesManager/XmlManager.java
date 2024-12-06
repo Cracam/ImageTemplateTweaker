@@ -61,6 +61,47 @@ public  class XmlManager {
                         return null;
                 }
     }
+    
+    
+    /**
+     * Creates the DesignParam element with multiple child elements, each with its own set of attributes.
+     *
+     * @param name     The name of the DesignParam element.
+     * @param layerName The value of the layerName attribute.
+     * @return the DesignParam element
+     */
+    public Element createDesignParamElement(String name, String attributeName ,String attributeValue) {
+        try {
+            // Create a DocumentBuilderFactory
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            // Create a DocumentBuilder
+            DocumentBuilder builder;
+            builder = factory.newDocumentBuilder();
+
+            // Create a new Document
+            Document doc = builder.newDocument();
+
+            // Create the DesignParam element
+            Element designParamElement = doc.createElement(name);
+            designParamElement.setAttribute(attributeName, attributeValue);
+
+            // Create and append each child element
+            for (ChildElement childElement : childs) {
+                Element element = doc.createElement(childElement.getName());
+                for (Map.Entry<String, String> entry : childElement.getAttributes().entrySet()) {
+                    element.setAttribute(entry.getKey(), entry.getValue());
+                }
+                designParamElement.appendChild(element);
+            }
+
+            childs.clear();
+            return designParamElement;
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(XmlManager.class.getName()).log(Level.SEVERE, null, ex);
+            childs.clear();
+            return null;
+        }
+    }
         
 
     public  void addChild(String name, Map<String, String> attributes){

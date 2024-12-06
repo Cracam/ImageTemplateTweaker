@@ -28,8 +28,6 @@ import javafx.scene.control.TitledPane;
  */
 public class LayerCustomImage extends Layer {
 
-        private String imagename;
-
         @FXML
         private PreviewImageBox Preview;
         @FXML
@@ -37,14 +35,8 @@ public class LayerCustomImage extends Layer {
         @FXML
         private TitledPane CustomImageTiledPane;
 
-        
-        
-        
-        
-        
-        
-        public LayerCustomImage(String layerName, String tabName,ResourcesManager modelResources, ResourcesManager designResources) {
-                super(layerName, tabName,modelResources, designResources);
+        public LayerCustomImage(String layerName, String tabName, ResourcesManager modelResources, ResourcesManager designResources) {
+                super(layerName, tabName, modelResources, designResources);
         }
 
         @Override
@@ -67,13 +59,13 @@ public class LayerCustomImage extends Layer {
                         // Add a listener to the changed property
                         LoaderInterface.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                                 if (newValue) {
-                                    //    System.out.println("trigered");
+                                        //    System.out.println("trigered");
                                         LoaderInterface.setChanged(false);
                                         this.computeAllImageGet();
                                         this.setChanged(true);
-                                        for(ImageBuilder imgBuilder  : this.getLinkedImagesBuilders()){
+                                        for (ImageBuilder imgBuilder : this.getLinkedImagesBuilders()) {
                                                 imgBuilder.refresh();
-                                        };              
+                                        };
                                         this.setChanged(false);
                                 }
                         });
@@ -83,19 +75,17 @@ public class LayerCustomImage extends Layer {
                 }
         }
 
-        
-        
-        
-        
-        
-        
-        
-        
         @Override
-        Node saveLayerData() {
+        Node saveLayerDesignData() {
+                String imageName = "Image_" + layerName + ".png";
+
                 XmlManager xmlManager = new XmlManager();
-                xmlManager.addChild("Image", Map.of("image_name", this.imagename));
-                return xmlManager.createDesignParamElement("DesignParam");
+                xmlManager.addChild("Image", Map.of("image_name", imageName));
+
+                //save the image into the Design zip
+                this.getDesignResources().setBufferedImage(layerName, imageName, LoaderInterface.getImage_out());
+
+                return xmlManager.createDesignParamElement("DesignParam", "LayerName", layerName);
         }
 
         /**
@@ -112,11 +102,17 @@ public class LayerCustomImage extends Layer {
                 this.refreshPreview(this.Preview);
         }
 
+        /**
+         * The work of our method does not change if the DPI change
+         */
         @Override
         public void DPIChanged() {
         }
 
-     
-        
+        @Override
+        void loadLayerdesignData(Element dataOfTheLayer) {
+                String imageName = dataOfTheLayer.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
+                LoaderInterface.loadImage(this.getDesignResources().get(imageName));
+        }
 
 }

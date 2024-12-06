@@ -21,28 +21,25 @@ public class LayerFixedImage extends Layer {
 
         private String imageName;
 
-        public LayerFixedImage(String layerName,String tabName, ResourcesManager modelResources, ResourcesManager designResources) {
+        public LayerFixedImage(String layerName, String tabName, ResourcesManager modelResources, ResourcesManager designResources) {
                 super(layerName, tabName, modelResources, designResources);
                 this.setHaveTiltlePane(false);
         }
 
-        
-        
-        
         @Override
         BufferedImage generateImageget(String key) {
                 try {
                         File imageFile = this.modelResources.get(this.imageName);
-                        
-                        if(imageFile==null){
-                                throw new ResourcesFileErrorException("This file dont exist : "+this.imageName);
+
+                        if (imageFile == null) {
+                                throw new ResourcesFileErrorException("This file dont exist : " + this.imageName);
                         }
                         return ResizeImage(ImageIO.read(imageFile), this.imageGetPixelSizeX(key), this.imageGetPixelSizeY(key));
                 } catch (IOException | ResourcesFileErrorException ex) {
                         Logger.getLogger(LayerFixedImage.class.getName()).log(Level.SEVERE, null, ex);
                         return null;
                 }
-           
+
         }
 
         /**
@@ -59,10 +56,9 @@ public class LayerFixedImage extends Layer {
          * @return
          */
         @Override
-        Node saveLayerData() {
+        Node saveLayerDesignData() {
                 XmlManager xmlManager = new XmlManager();
-
-                return xmlManager.createDesignParamElement("DesignParam");
+                return xmlManager.createDesignParamElement("DesignParam", "LayerName", layerName);
         }
 
         /**
@@ -74,7 +70,7 @@ public class LayerFixedImage extends Layer {
         @Override
         void readNode(Element paramNode, ImageBuilder imageBuilder) {
                 this.imageName = paramNode.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
-                  this.computeAllImageGet();
+                this.computeAllImageGet();
         }
 
         @Override
@@ -85,6 +81,13 @@ public class LayerFixedImage extends Layer {
         public void DPIChanged() {
         }
 
-        
+        /**
+         * Nothing to load : do nothing
+         *
+         * @param dataOfTheLayer
+         */
+        @Override
+        void loadLayerdesignData(Element dataOfTheLayer) {
+        }
 
 }

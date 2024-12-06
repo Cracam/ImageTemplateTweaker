@@ -8,12 +8,14 @@ package ResourcesManager;
  *
  * @author LECOURT Camille
  */
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import javax.imageio.ImageIO;
 
 public class ResourcesManager {
     private final Map<String, File> fileMap;
@@ -85,6 +87,17 @@ public class ResourcesManager {
         fileMap.put(key, file);
     }
 
+    public void setBufferedImage(String key,String imageName, BufferedImage image){
+        // Create a File object
+        File outputFile = new File(imageName+".png");
+
+        // Write the BufferedImage to the file
+        try {
+            ImageIO.write(image, "png", outputFile);
+            System.out.println("Image successfully written to file.");
+        } catch (IOException e) {
+        }
+    }
 
 }
 
