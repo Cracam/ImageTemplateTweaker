@@ -4,6 +4,7 @@ import imageBuilder.ImageBuilder;
 import Exceptions.ResourcesFileErrorException;
 import Layers.Layer;
 import ResourcesManager.ResourcesManager;
+import interfaces.Interface;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -47,8 +48,8 @@ public class DesignBuilder extends Application {
 
          
          private final  ArrayList<ImageBuilder> imageBuilders = new ArrayList<>();
-                  private final  ArrayList<TabOfTiltedPane> tabs = new ArrayList<>();
-
+         private final  ArrayList<TabOfTiltedPane> tabs = new ArrayList<>();
+         private final ArrayList<Interface> Interfaces=new ArrayList<>();
                   
     
         
@@ -263,5 +264,11 @@ public class DesignBuilder extends Application {
                 }
         }
         
+        
+        
+        
+        public Interface getInterface(String type,String name){
+                
+        }
         
 }

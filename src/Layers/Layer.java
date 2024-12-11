@@ -36,32 +36,26 @@ import previewimagebox.PreviewImageBox;
 public abstract class Layer extends TitledPane {
 
         // Variable of Interface management in the app 
-        protected final String layerName;
-        private static HashMap<String, Layer> createdLayers = new HashMap<>();  //HashMap of all the created Layer (the key will be the name of the DesignBuider class +"_"+ name of the layer
-
-        private List<ImageBuilder> linkedImagesBuilders = new ArrayList<>();
+        String layerName;
+         ImageBuilder linkedImagesBuilder;
 
         final ResourcesManager modelResources;  // model conrrespont to the sceletton of the images we return
         final ResourcesManager designResources; // design correspontd to how the user create something from the model
         
         private final String tabName;
-        // hashmap containing all the images of used by the layer. 
-        // I use Hashmap in order ot habe allow multiple image in/out for having one interface that have multiple in and out 
-        // List of the image (all this image have the 
-        private final HashMap<String, BufferedImage> image_out = new HashMap<>(); // compilation of image in and the layer below
-        private final HashMap<String, BufferedImage> image_in = new HashMap<>(); // compliation of all the lay below
-        private final HashMap<String, BufferedImage> image_get = new HashMap<>(); //the image that will containn the processing data 
+        
+         BufferedImage image_out; // compilation of image in and the layer below
+         BufferedImage image_in; // compliation of all the lay below
+         BufferedImage image_get; //the image that will containn the processing data 
 
         //Get Image parameter (real positions and size in milimeter
-        private final HashMap<String, QuadrupletFloat> posSize = new HashMap<>();
+          QuadrupletFloat posSize;
 
-        //The Image size and parameter in pixel (adaptable to the image definition)
-        private final HashMap<String, QuadrupletInt> pixelPosSize = new HashMap<>();
-
+        //Te Image size and parameter in pixel (adaptable to the image definition)
+          QuadrupletInt pixelPosSize;
         
         public static final Map<String, Class<? extends Layer>> layersTypesMap = Map.of("Fixed_Image", LayerFixedImage.class, "Custom_Image", LayerCustomImage.class,"Custom_Color", LayerCustomColor.class);
 
-        private boolean haveTiltlePane= true;
         
         // this variable will be use by the Image builder to detect a change and recompute the image accordingly.
         private boolean changed=false;
@@ -74,13 +68,12 @@ public abstract class Layer extends TitledPane {
          * @param modelResources
          * @param designResources
          */
-        public Layer(String layerName, String tabName, ResourcesManager modelResources, ResourcesManager designResources) {
+        public Layer(String layerName, String tabName, ResourcesManager modelResource) {
                 this.layerName = layerName;
                 this.tabName=tabName;
                 this.setText(layerName);
                 this.modelResources = modelResources;
                 this.designResources = designResources;
-                Layer.createdLayers.put(this.layerName,this);
                 initialiseInterface();
         }
 
@@ -204,18 +197,7 @@ public abstract class Layer extends TitledPane {
          */
         abstract BufferedImage generateImageget(String key);
 
-        /**
-         * Tiis method will resize the image get to what we nedd
-         */
-        static BufferedImage ResizeImage(BufferedImage imageToBeResized, int size_x, int size_y) {
-                // Resize image_get to size_x and size_y
-                BufferedImage resizedImageGet = new BufferedImage(size_x, size_y, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2d = resizedImageGet.createGraphics();
-                g2d.drawImage(imageToBeResized, 0, 0, size_x, size_y, null);
-                g2d.dispose();
-                return resizedImageGet;
-        }
-
+        
         /**
          * Compute the image out using Image_in and image_get
          * @param name
