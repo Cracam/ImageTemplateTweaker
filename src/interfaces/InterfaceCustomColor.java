@@ -45,8 +45,8 @@ public class InterfaceCustomColor extends Interface {
         
         
         
-        public InterfaceCustomColor(String interfaceName, String tabName, ResourcesManager designResources) {
-                super(interfaceName, tabName, designResources);
+        public InterfaceCustomColor(String interfaceName, ResourcesManager designResources) {
+                super(interfaceName, designResources);
         }
 
         @Override

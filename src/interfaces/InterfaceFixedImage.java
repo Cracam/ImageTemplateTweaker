@@ -21,8 +21,8 @@ import org.w3c.dom.Node;
  */
 public class InterfaceFixedImage extends Interface{
 
-        public InterfaceFixedImage(String interfaceName, String tabName, ResourcesManager designResources) {
-                super(interfaceName, tabName, designResources);
+        public InterfaceFixedImage(String interfaceName,  ResourcesManager designResources) {
+                super(interfaceName, designResources);
         }
 
         @Override

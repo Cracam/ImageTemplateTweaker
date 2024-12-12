@@ -35,8 +35,8 @@ public class InterfaceCustomImage extends Interface {
         @FXML
         private TitledPane CustomImageTiledPane;
 
-        public InterfaceCustomImage(String interfaceName, String tabName, ResourcesManager designResources) {
-                super(interfaceName, tabName, designResources);
+        public InterfaceCustomImage(String interfaceName, ResourcesManager designResources) {
+                super(interfaceName, designResources);
         }
         
         

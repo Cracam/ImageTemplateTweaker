@@ -2,8 +2,8 @@
 
 package interfaces;
 
+import Exceptions.ThisInterfaceDoesNotExistException;
 import Layers.Layer;
-import Layers.LayerCustomColor;
 import ResourcesManager.ResourcesManager;
 import imageBuilder.ImageBuilder;
 import java.awt.Graphics2D;
@@ -27,19 +27,22 @@ import org.w3c.dom.Node;
 public abstract class Interface {
         
         String interfaceName;
-        String tabName;
          ResourcesManager designResources;
          // this variable will be use by the Image builder to detect a change and recompute the image accordingly.
         
            ArrayList<ImageBuilder>  linkedImagesBuilders=new ArrayList<>();
            ArrayList<Layer> linkedLayers=new ArrayList<>();
          
-        public static final Map<String, Class<? extends Interface>> layersTypesMap = Map.of("Fixed_Image", InterfaceFixedImage.class, "Custom_Image",  InterfaceCustomImage.class,"Custom_Color", InterfaceCustomColor.class);
+        //Contain all the key to the identify an interface
+        public static final Map<String, Class<? extends Interface>> interfacesTypesMap = Map.of(
+                "Fixed_Image", InterfaceFixedImage.class, 
+                "Custom_Image",  InterfaceCustomImage.class,
+                "Custom_Color", InterfaceCustomColor.class
+        );
 
         
-        Interface(String interfaceName,String tabName, ResourcesManager designResources){
+        Interface(String interfaceName, ResourcesManager designResources){
                 this.interfaceName=interfaceName;
-                this.tabName=tabName;
                 this.designResources=designResources;
                 this.initialiseInterface();
         }
@@ -75,26 +78,7 @@ public abstract class Interface {
         
         
         
-/**
- * This method create an interface with the key (name of the node in the XML)
- * @param key
-         * @param name
-         * @param tabName
-         * @param designResources
- * @return 
- */        
-        public static Interface createInterface(String key,String name, String tabName, ResourcesManager designResources)  {
 
-                try {
-                        Class<? extends Interface> subclass = layersTypesMap.get(key);
-                        Constructor<? extends Interface> constructor = subclass.getConstructor(String.class, String.class, ResourcesManager.class);
-                        return constructor.newInstance(name, tabName,  designResources);
-                        
-                } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                        Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-                        return null;
-                }
-        }
         
         
         
@@ -137,4 +121,37 @@ public abstract class Interface {
                 }
         }
         
+        
+        
+        
+        
+        
+        
+        /**
+         * This code generate an interface using a String kay as an identifier
+         * @param interfaceType
+         * @param interfaceName
+         * @param designResources
+         * @return
+         * @throws ThisInterfaceDoesNotExistException 
+         */
+        public static Interface createOrReturnInterface(String interfaceType, String interfaceName, ResourcesManager designResources) throws ThisInterfaceDoesNotExistException {
+
+                if (!interfacesTypesMap.containsKey(interfaceType)) {
+                        throw new ThisInterfaceDoesNotExistException("This interface type does not exist : " + interfaceType);
+                }
+                try {
+
+                        Class<? extends Interface> subclass = interfacesTypesMap.get(interfaceType);
+                        Constructor<? extends Interface> constructor = subclass.getConstructor(String.class, ResourcesManager.class);
+
+                        return constructor.newInstance(interfaceName, designResources);
+
+                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+                        Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                return null;
+        }
+
 }

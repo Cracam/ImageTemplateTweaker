@@ -59,13 +59,12 @@ public abstract class Layer extends TitledPane {
          * the basic contructor
          *
          * @param layerName
-         * @param tabName
          * @param modelResources
          * @param layerInterface
          * @param linkedImageBuilder
          * @param posSize
          */
-        public Layer(String layerName, String tabName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
+        public Layer(String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
                 this.layerName = layerName;
                 this.setText(layerName);
                 this.modelResources = modelResources;
@@ -191,16 +190,16 @@ public abstract class Layer extends TitledPane {
          *
          * @param imageBuilder
          * @param layerNode
-         * @param templateResources
-         * @param designResources
+         * @param modelResources
          * @return
          * @throws Exceptions.ThisLayerDoesNotExistException
          */
-        public static Layer loadLayer(ImageBuilder imageBuilder, Node layerNode, ResourcesManager templateResources, ResourcesManager designResources) throws ThisLayerDoesNotExistException {
+        public static Layer loadLayer(ImageBuilder imageBuilder, Node layerNode, ResourcesManager modelResources) throws ThisLayerDoesNotExistException {
                 try {
                         if (layerNode.getNodeType() != Node.ELEMENT_NODE) {
                                 throw new TheXmlElementIsNotANodeException(layerNode.getNodeType()+  "   IN Layer (1) "+layerNode.getNodeName());
                         }
+                        
                         Element element = (Element) layerNode;
                         String key = element.getNodeName();
 
@@ -211,7 +210,7 @@ public abstract class Layer extends TitledPane {
                         Layer layerToReturn;
 
                         String name = element.getAttribute("name");
-                         String tabname = element.getAttribute("tab_name");
+                        String tabname = element.getAttribute("tab_name");
                         
                         
                                 if (Layer.createdLayers.containsKey(name) ) System.out.println("memem ELT ");
@@ -224,7 +223,7 @@ public abstract class Layer extends TitledPane {
                                 Class<? extends Layer> subclass = layersTypesMap.get(key);
                                 Constructor<? extends Layer> constructor = subclass.getConstructor(String.class,String.class, ResourcesManager.class, ResourcesManager.class);
 
-                                layerToReturn = constructor.newInstance(name, tabname,templateResources, designResources);
+                                layerToReturn = constructor.newInstance(name, tabname,modelResources, designResources);
 
                                
 
@@ -260,6 +259,48 @@ public abstract class Layer extends TitledPane {
                         return null;
                 }
         }
+        
+        
+                
+        /**
+         * This code will load the layer using a Strin identifier to get the type of the Layer
+         * @param layerType
+         * @param layerName
+         * @param modelResources
+         * @param layerInterface
+         * @param linkedImageBuilder
+         * @param posSize
+         * @return
+         * @throws ThisLayerDoesNotExistException 
+         */
+          public static Layer createOrReturnLayer(String layerType, String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) throws ThisLayerDoesNotExistException {
+
+                if (!layersTypesMap.containsKey(layerType)) {
+                        throw new ThisLayerDoesNotExistException("This interface type does not exist : " + layerType);
+                }
+                try {
+
+                        Class<? extends Layer> subclass = layersTypesMap.get(layerType);
+                        Constructor<? extends Layer> constructor = subclass.getConstructor(String.class, ResourcesManager.class,  Interface.class , ImageBuilder.class , QuadrupletFloat.class );
+
+                        return constructor.newInstance(layerName, modelResources,layerInterface,linkedImageBuilder,posSize );
+
+                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+                        Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                return null;
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
         /**
          * This method will read and load the parameter from the XML File that
@@ -282,8 +323,8 @@ public abstract class Layer extends TitledPane {
         WritableImage fxImage =SwingFXUtils.toFXImage(bufferedImage, null);
       ImageView imageView =new ImageView(fxImage);
         imageView.setPreserveRatio(true);
-        imageView.setFitHeight(1000);
-         imageView.setFitWidth(1000);
+       // imageView.setFitHeight(1000);
+         //imageView.setFitWidth(1000);
         return imageView;
     }
 
