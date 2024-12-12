@@ -2,17 +2,19 @@
 
 package interfaces;
 
+import Layers.Layer;
 import Layers.LayerCustomColor;
-import Layers.LayerCustomImage;
-import Layers.LayerFixedImage;
 import ResourcesManager.ResourcesManager;
+import imageBuilder.ImageBuilder;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -27,8 +29,12 @@ public abstract class Interface {
         String interfaceName;
         String tabName;
          ResourcesManager designResources;
+         // this variable will be use by the Image builder to detect a change and recompute the image accordingly.
+        
+           ArrayList<ImageBuilder>  linkedImagesBuilders=new ArrayList<>();
+           ArrayList<Layer> linkedLayers=new ArrayList<>();
          
-        public static final Map<String, Class<? extends Interface>> layersTypesMap = Map.of("Fixed_Image", LayerFixedImage.class, "Custom_Image", LayerCustomImage.class,"Custom_Color", LayerCustomColor.class);
+        public static final Map<String, Class<? extends Interface>> layersTypesMap = Map.of("Fixed_Image", InterfaceFixedImage.class, "Custom_Image",  InterfaceCustomImage.class,"Custom_Color", InterfaceCustomColor.class);
 
         
         Interface(String interfaceName,String tabName, ResourcesManager designResources){
@@ -55,8 +61,9 @@ public abstract class Interface {
         
         /**
          * This will load the data from the XML file
+         * @param dataOfTheLayer
          */
-        public abstract void loadInterfaceData();
+        public abstract void loadInterfaceData(Element dataOfTheLayer);
 
         
         
@@ -109,5 +116,25 @@ public abstract class Interface {
                 return resizedImageGet;
         }
 
+ 
+
+        
+        /**
+         * this method refresh all the layer that are kinked to the interface.
+         */
+        void refreshLayers() {
+                for (int i = 0; i < linkedLayers.size(); i++) {
+                        linkedLayers.get(i).refreshImageGet();
+                }
+        }
+        
+          /**
+         * this method refresh all the layer that are kinked to the interface.
+         */
+        void refreshImageBuilders() {
+                for (int i = 0; i < linkedImagesBuilders.size(); i++) {
+                        linkedImagesBuilders.get(i).refresh();
+                }
+        }
         
 }

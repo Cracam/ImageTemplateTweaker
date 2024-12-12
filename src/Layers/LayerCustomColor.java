@@ -162,24 +162,7 @@ public class LayerCustomColor extends Layer {
                 return "LayerCustomColor{" + "imageName=" + imageName + '}';
         }
 
-        public static String colorToHex(Color color) {
-                String hex = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
-                return hex;
-        }
-
-        public static Color hexToColor(String hex) {
-                // Remove the '#' character if present
-                if (hex.startsWith("#")) {
-                        hex = hex.substring(1);
-                }
-
-                // Parse the hex string
-                int r = Integer.parseInt(hex.substring(0, 2));
-                int g = Integer.parseInt(hex.substring(2, 4));
-                int b = Integer.parseInt(hex.substring(4, 6));
-
-                return new Color(r, g, b);
-        }
+   
 
         @Override
         void loadLayerdesignData(Element dataOfTheLayer) {

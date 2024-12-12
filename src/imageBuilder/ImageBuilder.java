@@ -69,7 +69,7 @@ public class ImageBuilder {
          * @return
          */
         public float get_pixel_mm_Factor() {
-                return this.designBuilder.get_pixel_mm_Factor();
+                return this.designBuilder.getPixelMmFactor();
         }
 
         
@@ -217,5 +217,7 @@ public class ImageBuilder {
         }
         
         
-        
+        public float getPixelMmFactor(){
+                return this.designBuilder.getPixelMmFactor();
+        }
 }

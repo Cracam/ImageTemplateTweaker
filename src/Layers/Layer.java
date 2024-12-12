@@ -6,18 +6,15 @@ package Layers;
 
 import imageBuilder.ImageBuilder;
 import Exceptions.TheXmlElementIsNotANodeException;
-import Exceptions.ThisImageBuilderNotExistInThisLayer;
 import Exceptions.ThisLayerDoesNotExistException;
 import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.ResourcesManager;
+import interfaces.Interface;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +24,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import previewimagebox.PreviewImageBox;
 
 /**
  *
@@ -36,14 +32,12 @@ import previewimagebox.PreviewImageBox;
 public abstract class Layer extends TitledPane {
 
         // Variable of Interface management in the app 
-        String layerName;
-         ImageBuilder linkedImagesBuilder;
+         final String layerName;
+         final ImageBuilder linkedImagesBuilder;
+         final Interface linkedInterface;
 
         final ResourcesManager modelResources;  // model conrrespont to the sceletton of the images we return
-        final ResourcesManager designResources; // design correspontd to how the user create something from the model
-        
-        private final String tabName;
-        
+                
          BufferedImage image_out; // compilation of image in and the layer below
          BufferedImage image_in; // compliation of all the lay below
          BufferedImage image_get; //the image that will containn the processing data 
@@ -60,142 +54,86 @@ public abstract class Layer extends TitledPane {
         // this variable will be use by the Image builder to detect a change and recompute the image accordingly.
         private boolean changed=false;
         
+        
         /**
          * the basic contructor
          *
          * @param layerName
          * @param tabName
          * @param modelResources
-         * @param designResources
+         * @param layerInterface
+         * @param linkedImageBuilder
+         * @param posSize
          */
-        public Layer(String layerName, String tabName, ResourcesManager modelResource) {
+        public Layer(String layerName, String tabName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
                 this.layerName = layerName;
-                this.tabName=tabName;
                 this.setText(layerName);
                 this.modelResources = modelResources;
-                this.designResources = designResources;
-                initialiseInterface();
+                this.linkedInterface=layerInterface;
+                this.linkedImagesBuilder=linkedImageBuilder;
+                this.posSize=posSize;
+                
         }
-
+        
+        
         /**
-         * This function initialise an element in each HashMap for the future
-         * image buider return
-         *
-         * @param anotherIamgeBuilder
+         * This code refresh the size of the 3 image used for this abstract
+         * class
          */
-        private void linkToAnotherImageBuilder(ImageBuilder anotherImageBuilder, float pos_x, float pos_y, float size_x, float size_y) {
-                this.linkedImagesBuilders.add(anotherImageBuilder);
-                String name = anotherImageBuilder.getName();
-
-                posSize.put(name, new QuadrupletFloat(pos_x, pos_y, size_x, size_y));
-                pixelPosSize.put(name, new QuadrupletInt(0,0,0,0));
-                reComputePixelSizeAndPos(anotherImageBuilder.get_pixel_mm_Factor());
-
-                int pixelSize_x = pixelPosSize.get(name).getSize_x();
-                int pixelSize_y = pixelPosSize.get(name).getSize_y();
-               
-                System.out.println("Pos Image builder : "+anotherImageBuilder.getX_p_size()+"   "+anotherImageBuilder.getY_p_size());
-                this.image_get.put(name, new BufferedImage(pixelSize_x, pixelSize_y, BufferedImage.TYPE_INT_ARGB));
-                this.image_in.put(name, new BufferedImage(anotherImageBuilder.getX_p_size(), anotherImageBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB));
-                this.image_out.put(name, new BufferedImage(anotherImageBuilder.getX_p_size(), anotherImageBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB));
-
+        public void refreshDPI() {
+                pixelPosSize.computePixelPosSize(posSize, linkedImagesBuilder.getPixelMmFactor());
+                //   System.out.println("Pos Image builder : "+anotherImageBuilder.getX_p_size()+"   "+anotherImageBuilder.getY_p_size());
+                this.image_get = new BufferedImage(pixelPosSize.getSize_x(), pixelPosSize.getSize_y(), BufferedImage.TYPE_INT_ARGB);
+                this.image_in = new BufferedImage(linkedImagesBuilder.getX_p_size(), linkedImagesBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB);
+                this.image_out = new BufferedImage(linkedImagesBuilder.getX_p_size(), linkedImagesBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB);
         }
+
+ 
 
         /**
          * Get the output of the Layer
          *
-         * @param name
          * @return
          */
-        public BufferedImage getImage_out(String name) {
-                try {
-                        if (!this.image_out.containsKey(name)) {
-                                throw new ThisImageBuilderNotExistInThisLayer("the key is not valid - It may  an error in image buider ");
-                        }
-                        return this.image_out.get(name);
-
-                } catch (ThisImageBuilderNotExistInThisLayer ex) {
-                        Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
-                        return null;
-                }
+        public BufferedImage getImage_out() {
+           return this.image_out;
         }
+        
+        
 
         /**
          * Set the imput of the layer
          *
-         * @param name
          * @param image_in
          */
-        public void setImage_in(String name, BufferedImage image_in) {
-                try {
-                        if (!this.image_in.containsKey(name)) {
-                                throw new ThisImageBuilderNotExistInThisLayer("the key is not valid - It may  an error in image buider ");
-
-                        }
-                        this.image_in.put(name, image_in);
-                } catch (ThisImageBuilderNotExistInThisLayer ex) {
-                        Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        public void setImage_in(BufferedImage image_in) {
+                           this.image_in=image_in;
         }
 
-        /**
-         * This method is use to recalculate the position and the size of
-         * image_get It's used for ajusting the quality
-         *
-         * @param pixelPerMilimeterFactor
-         */
-        public void reComputePixelSizeAndPos(float pixelPerMilimeterFactor) {
-                this.pixelPosSize.forEach((key, value) -> {
-                        System.out.println("clef :  "+key);
-                        pixelPosSize.get(key).computePixelPosSize(posSize.get(key), pixelPerMilimeterFactor);
-                });
+        
 
-                computeAllImageGet();// for automaticaly 
-        }
 
-        // ----------------------------
-        // End of public methods
-        // the image computation methods
-        private void computeImageGet(String name) {
-                try {
-                        if (!this.image_get.containsKey(name)) {
-                                throw new ThisImageBuilderNotExistInThisLayer("the key is not valid - It may  an error in image buider ");
-                        }
-
-                        this.image_get.put(name, generateImageget(name));
-
-                } catch (ThisImageBuilderNotExistInThisLayer ex) {
-                        Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
-                }
-        }
-
-        /**
-         * this compute all the image get
-         */
-         void computeAllImageGet() {
-                this.image_get.forEach((key, value) -> {
-                        computeImageGet(key);
-                });
-        }
          
-         
-       void refreshPreview(PreviewImageBox box){
+         //je doit changer les prewie avant
+       void refreshPreview(){
                box.clearAllImagesViews();
                 this.image_out.forEach((key, value) -> {
                         box.addImageView(createImageView(image_out.get(key)));
                 });
         }
 
+       
         /**
-         * this programm will retunr the image get (ready to be resized to be
-         * paste on the image_in to get image_out) depending o fthe layer type
+         * this programm will retunr the image get
+         * 
+         * depending o fthe layer type
          * it can be : - an image loaded by user - a locked image(get in the
          * resources of the model) - a gradient generated form user's color
          * choice - a gradient generated from user's shape choice - .....
          *
          * @return
          */
-        abstract BufferedImage generateImageget(String key);
+        abstract BufferedImage generateImageget();
 
         
         /**
@@ -203,64 +141,43 @@ public abstract class Layer extends TitledPane {
          * @param name
          */
         public void computeImage_Out(String name) {
-                try {
-                        if (!this.image_get.containsKey(name) | !this.image_in.containsKey(name) | !this.image_out.containsKey(name)) {
-                                throw new ThisImageBuilderNotExistInThisLayer("the key is not valid - It may  an error in image buider ");
-                        }
+           
 
                         // Create a new BufferedImage for the output
-                        BufferedImage outputImage = new BufferedImage(image_in.get(name).getWidth(), image_in.get(name).getHeight(), BufferedImage.TYPE_INT_ARGB);
+                        BufferedImage outputImage = new BufferedImage(image_in.getWidth(), image_in.getHeight(), BufferedImage.TYPE_INT_ARGB);
                         Graphics2D outputG2d = outputImage.createGraphics();
 
                         // Draw image_out onto the output image
-                        outputG2d.drawImage(image_in.get(name), 0, 0, null);
+                        outputG2d.drawImage(image_in, 0, 0, null);
 
                         // Draw the resized image_get onto the output image at the specified position
-                        outputG2d.drawImage(image_get.get(name),this.pixelPosSize.get(name).getPos_x(), this.pixelPosSize.get(name).getPos_y(), this.pixelPosSize.get(name).getSize_x(), this.pixelPosSize.get(name).getSize_y(), null);
+                        outputG2d.drawImage(image_get,this.pixelPosSize.getPos_x(), this.pixelPosSize.getPos_y(), this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y(), null);
 
                         // Dispose of the Graphics2D object
                         outputG2d.dispose();
 
                         // Update image_out with the new image
-                        this.image_out.put(name, outputImage);
+                        this.image_out = outputImage;
                          this.refreshPreview();
-                                 
-                } catch (ThisImageBuilderNotExistInThisLayer ex) {
-                        Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
-                }
+
         }
 
         
         
-       public abstract void refreshPreview();
         
        // end image computation
         //-----------------------------------------------------------------------------------------------------------
         // Interface management
         
-        /**
-         * this methods initialise the interface off the layer.
-         */
-        abstract void initialiseInterface();
+
 
         // END interface mangement
 //---------------------------------------------------------------------------------------------
         // Resources Management
-        
-        /**
-         * This function will return every parameter of the layer in the form of
-         * a node (in order to save it)
-         *It also save the image that have been imported on the design
-         * @return
-         */
-        abstract Node saveLayerDesignData();
+
 
         
-        /**
-         * This method will be used to load all the data from a saving Design XML file
-         * @param dataOfTheLayer 
-         */
-        abstract void loadLayerdesignData(Element dataOfTheLayer);
+
  
         
 
@@ -378,52 +295,21 @@ public abstract class Layer extends TitledPane {
                 this.changed = changed;
         }
 
-        public boolean isHaveTiltlePane() {
-                return haveTiltlePane;
-        }
 
-        public void setHaveTiltlePane(boolean haveTiltlePane) {
-                this.haveTiltlePane = haveTiltlePane;
-        }
-
-        public List<ImageBuilder> getLinkedImagesBuilders() {
-                return linkedImagesBuilders;
-        }
-
-        public String getTabName() {
-                return tabName;
-        }
+   
 
         @Override
         public String toString() {
-                return "Layer{" + "layerName=" + layerName + ", tabName=" + tabName + ", image_out=" + image_out + ", image_in=" + image_in + ", image_get=" + image_get + ", posSize=" + posSize + ", pixelPosSize=" + pixelPosSize + '}';
+                return "Layer{" + "layerName=" + layerName + ", image_out=" + image_out + ", image_in=" + image_in + ", image_get=" + image_get + ", posSize=" + posSize + ", pixelPosSize=" + pixelPosSize + '}';
         }
     
     
 
 
-        public HashMap<String, BufferedImage> getImage_get() {
+        public BufferedImage getImage_get() {
                 return image_get;
         }
         
-        
-    
-        public abstract void DPIChanged();
-    
-       public QuadrupletInt getPixelPosSize(String name){
-               return pixelPosSize.get(name);
-       }
-       
-       
-       public int imageGetPixelSizeX(String key){
-               return this.pixelPosSize.get(key).getSize_x();
-       }
-        public int imageGetPixelSizeY(String key){
-               return this.pixelPosSize.get(key).getSize_y();
-       }
-        
-        ResourcesManager getDesignResources(){
-                return this.designResources;
-        }
+
        
 }

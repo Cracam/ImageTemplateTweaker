@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -31,7 +32,7 @@ public class InterfaceFixedImage extends Interface{
         }
 
         @Override
-        public void loadInterfaceData() {
+        public void loadInterfaceData(Element dataOfTheLayer) {
                 //Do nothing because ther is no data in the interface to save
         }
 
