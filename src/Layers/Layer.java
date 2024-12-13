@@ -113,13 +113,15 @@ public abstract class Layer extends TitledPane {
 
 
          
-         //je doit changer les prewie avant
-       void refreshPreview(){
-               box.clearAllImagesViews();
-                this.image_out.forEach((key, value) -> {
-                        box.addImageView(createImageView(image_out.get(key)));
-                });
-        }
+       /**
+        * Change the preview (it will just enter the preview Image box object)
+        */
+       abstract void refreshPreview();
+          
+       
+       void refreshPreview(previewimagebox.PreviewImageBox box){
+               box.setImageView(this.layerName,createImageView(image_out));
+       }
 
        
         /**
