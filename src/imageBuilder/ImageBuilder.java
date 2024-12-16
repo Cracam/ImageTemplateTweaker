@@ -210,10 +210,10 @@ public class ImageBuilder {
                                         float size_y = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_y").getNodeValue());
                                         
                                         QuadrupletFloat posSize=new QuadrupletFloat(pos_x,pos_y,size_x,size_y);
-    
+                                        // System.out.println(key+ nameElement+ this.designBuilder.getModelResources()+ linkedInterface);
                                         Layer layerCreated =  Layer.createLayer(key, nameElement, this.designBuilder.getModelResources(), linkedInterface, this, posSize);
                                         
-                                        
+                                        System.out.println(layerCreated);
                                         //This code verify if the <Param> element is really an element
                                      Element retElement = (Element) element.getElementsByTagName("Param").item(0);
                                      if (retElement.getNodeType() != Node.ELEMENT_NODE) {

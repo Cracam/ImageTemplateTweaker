@@ -186,6 +186,7 @@ public abstract class Layer extends TitledPane {
                 if (!layersTypesMap.containsKey(layerType)) {
                         throw new ThisLayerDoesNotExistException("This interface type does not exist : " + layerType);
                 }
+                
                 try {
 
                         Class<? extends Layer> subclass = layersTypesMap.get(layerType);
