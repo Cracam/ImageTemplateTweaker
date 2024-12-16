@@ -18,12 +18,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.TitledPane;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import staticFunctions.StaticImageEditing;
 
 /**
  *
@@ -71,7 +69,7 @@ public abstract class Layer extends TitledPane {
                 this.linkedInterface=layerInterface;
                 this.linkedImagesBuilder=linkedImageBuilder;
                 this.posSize=posSize;
-                
+                refreshDPI();
         }
         
         
@@ -85,8 +83,14 @@ public abstract class Layer extends TitledPane {
                 this.image_get = new BufferedImage(pixelPosSize.getSize_x(), pixelPosSize.getSize_y(), BufferedImage.TYPE_INT_ARGB);
                 this.image_in = new BufferedImage(linkedImagesBuilder.getX_p_size(), linkedImagesBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB);
                 this.image_out = new BufferedImage(linkedImagesBuilder.getX_p_size(), linkedImagesBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB);
+                DPIChanged();
         }
-
+        
+        /**
+         * run the code specific to the layer in case of DPI change.
+         * just the data stored to create the image get : not the image get size itself
+         */
+        abstract void DPIChanged();
  
 
         /**
@@ -116,25 +120,24 @@ public abstract class Layer extends TitledPane {
        /**
         * Change the preview (it will just enter the preview Image box object)
         */
-       abstract void refreshPreview();
+       public abstract void refreshPreview();
           
        
        void refreshPreview(previewimagebox.PreviewImageBox box){
-               box.setImageView(this.layerName,createImageView(image_out));
+               box.setImageView(this.layerName,StaticImageEditing.createImageView(image_out));
        }
 
        
         /**
-         * this programm will retunr the image get
+         * this programm will refresh the image get
          * 
          * depending o fthe layer type
          * it can be : - an image loaded by user - a locked image(get in the
          * resources of the model) - a gradient generated form user's color
          * choice - a gradient generated from user's shape choice - .....
          *
-         * @return
          */
-        abstract BufferedImage generateImageget();
+        public abstract void refreshImageGet();
 
         
         /**
@@ -164,104 +167,7 @@ public abstract class Layer extends TitledPane {
         }
 
         
-        
-        
-       // end image computation
-        //-----------------------------------------------------------------------------------------------------------
-        // Interface management
-        
-
-
-        // END interface mangement
-//---------------------------------------------------------------------------------------------
-        // Resources Management
-
-
-        
-
- 
-        
-
-        
-        
-        
-        /**
-         * This method create a Layer of the good type it use a static Map of
-         * layer class linked to a string (the string that the user will define
-         * in the XML file model)
-         *
-         * @param imageBuilder
-         * @param layerNode
-         * @param modelResources
-         * @return
-         * @throws Exceptions.ThisLayerDoesNotExistException
-         */
-        public static Layer loadLayer(ImageBuilder imageBuilder, Node layerNode, ResourcesManager modelResources) throws ThisLayerDoesNotExistException {
-                try {
-                        if (layerNode.getNodeType() != Node.ELEMENT_NODE) {
-                                throw new TheXmlElementIsNotANodeException(layerNode.getNodeType()+  "   IN Layer (1) "+layerNode.getNodeName());
-                        }
-                        
-                        Element element = (Element) layerNode;
-                        String key = element.getNodeName();
-
-                        if (!Layer.layersTypesMap.containsKey(key)) {
-                                throw new ThisLayerDoesNotExistException(layerNode.getNodeName());
-                        }
-
-                        Layer layerToReturn;
-
-                        String name = element.getAttribute("name");
-                        String tabname = element.getAttribute("tab_name");
-                        
-                        
-                                if (Layer.createdLayers.containsKey(name) ) System.out.println("memem ELT ");
-                        
-                       if (Layer.createdLayers.containsKey(name) && (layersTypesMap.get(key)==Layer.createdLayers.get(name).getClass()) && tabname.equals(Layer.createdLayers.get(name).getTabName())) { // in this case we will just give back the layer (we will make a test to ensure that the layers are from the smae type)
-                                layerToReturn = Layer.createdLayers.get(name);
-
-                        } else { // in this case we will create the good layer
-
-                                Class<? extends Layer> subclass = layersTypesMap.get(key);
-                                Constructor<? extends Layer> constructor = subclass.getConstructor(String.class,String.class, ResourcesManager.class, ResourcesManager.class);
-
-                                layerToReturn = constructor.newInstance(name, tabname,modelResources, designResources);
-
-                               
-
-                                if (tabname == null | "".equals(tabname)) {
-                                        imageBuilder.assignLayerToTab(layerToReturn, "Non attribués");
-                                } else {
-                                        imageBuilder.assignLayerToTab(layerToReturn, tabname);
-                                }
-
-                        }
-                        
-                        float pos_x = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_x").getNodeValue());
-                        float pos_y = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_y").getNodeValue());
-                        float size_x = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_x").getNodeValue());
-                        float size_y = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_y").getNodeValue());
-                        //System.out.println(pos_x+" "+pos_y+" "+size_x+" "+size_y);
-
-                        layerToReturn.linkToAnotherImageBuilder(imageBuilder,pos_x, pos_y, size_x, size_y); //this line it to inform the Layer of if master
-                        
-                    
-                       
-                        //This code verify if the <Param> element is really an element
-                        Element retElement=(Element) element.getElementsByTagName("Param").item(0);
-                         if (retElement.getNodeType() != Node.ELEMENT_NODE) {
-                                throw new TheXmlElementIsNotANodeException("IN Layer(2) "+layerNode.getNodeName());
-                        }
-                        layerToReturn.readNode(retElement,imageBuilder); //read the specific parameter
-
-                        return layerToReturn;
-
-                } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException  | TheXmlElementIsNotANodeException ex) {
-                        Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
-                        return null;
-                }
-        }
-        
+       
         
                 
         /**
@@ -275,7 +181,7 @@ public abstract class Layer extends TitledPane {
          * @return
          * @throws ThisLayerDoesNotExistException 
          */
-          public static Layer createOrReturnLayer(String layerType, String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) throws ThisLayerDoesNotExistException {
+          public static Layer createLayer(String layerType, String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) throws ThisLayerDoesNotExistException {
 
                 if (!layersTypesMap.containsKey(layerType)) {
                         throw new ThisLayerDoesNotExistException("This interface type does not exist : " + layerType);
@@ -289,9 +195,8 @@ public abstract class Layer extends TitledPane {
 
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
                         Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                        return null;
                 }
-
-                return null;
         }
         
         
@@ -308,27 +213,14 @@ public abstract class Layer extends TitledPane {
          * This method will read and load the parameter from the XML File that
          * are specific to the layer
          *
-         * @param layerNode
+         * @param paramNode
          */
-        abstract void readNode(Element paramNode, ImageBuilder imageBuilder);
+        public abstract void readNode(Element paramNode);
 
         //implement save return (for design)
         
         
-        /**
-     * Creates an ImageView from a BufferedImage.
-     *
-     * @param bufferedImage the BufferedImage to convert
-     * @return the ImageView containing the converted Image
-     */
-    public static ImageView createImageView(BufferedImage bufferedImage) {
-        WritableImage fxImage =SwingFXUtils.toFXImage(bufferedImage, null);
-      ImageView imageView =new ImageView(fxImage);
-        imageView.setPreserveRatio(true);
-       // imageView.setFitHeight(1000);
-         //imageView.setFitWidth(1000);
-        return imageView;
-    }
+
 
         public boolean isChanged() {
                 return changed;

@@ -1,10 +1,13 @@
 package imageBuilder;
 
 import Exceptions.TheXmlElementIsNotANodeException;
+import Exceptions.ThisInterfaceDoesNotExistException;
 import Exceptions.ThisLayerDoesNotExistException;
 import Layers.Layer;
+import Layers.SubClasses.QuadrupletFloat;
 
 import designBuilder.DesignBuilder;
+import interfaces.Interface;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -14,6 +17,8 @@ import java.util.logging.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import previewimagebox.PreviewImageBox;
+import staticFunctions.StaticImageEditing;
 
 
 /**
@@ -124,7 +129,7 @@ public class ImageBuilder {
                                 changedPrecedently = true;
                                 if (i != 0) {
                                         layers.get(i).computeImage_Out(this.name);
-                                        imgBegining = layers.get(i-1).getImage_out(this.name);
+                                        imgBegining = layers.get(i-1).getImage_out();
                                 }else{
                                      imgBegining   = createBufferedImage(this.x_p_size, this.y_p_size);
                                 }
@@ -135,11 +140,11 @@ public class ImageBuilder {
                 
                 if(!changedPrecedently) return;
                 
-                        layers.get(indexBegining).setImage_in(this.name, imgBegining);
+                        layers.get(indexBegining).setImage_in(imgBegining);
                         layers.get(indexBegining).computeImage_Out(this.name);
 
                         for (int j = indexBegining + 1; j < layers.size(); j++) {
-                                layers.get(j).setImage_in(this.name, layers.get(j - 1).getImage_out(this.name));
+                                layers.get(j).setImage_in(layers.get(j - 1).getImage_out());
                                 layers.get(j).computeImage_Out(this.name);
                         }
                         
@@ -153,11 +158,11 @@ public class ImageBuilder {
          */
         public void refreshAll() {
                 BufferedImage imgBegining = createBufferedImage(this.x_p_size, this.y_p_size);
-                layers.get(0).setImage_in(this.name, imgBegining);
+                layers.get(0).setImage_in(imgBegining);
                 layers.get(0).computeImage_Out(this.name);
 
                 for (int j = 1; j < layers.size(); j++) {
-                        layers.get(j).setImage_in(this.name, layers.get(j - 1).getImage_out(this.name));
+                        layers.get(j).setImage_in(layers.get(j - 1).getImage_out());
                         layers.get(j).computeImage_Out(this.name);
                         layers.get(j).refreshPreview();
                 }
@@ -174,11 +179,61 @@ public class ImageBuilder {
 
                 for (int i = 0; i < nodeLayerList.getLength(); i++) {
                         if (nodeLayerList.item(i).getNodeType() == Node.ELEMENT_NODE) { //To avoid text node and comment node
-                                try{
-                                Layer layerTocreate = Layer.loadLayer(this, nodeLayerList.item(i), this.designBuilder.getTemplateResources(), this.designBuilder.getDesignResources());
-                                        layers.add(layerTocreate);
-                                }catch(ThisLayerDoesNotExistException e){
+                             try{   
+                                        Element element = (Element) nodeLayerList.item(i);
+                                        String key = element.getNodeName(); // key for defining the layer and the Interface
+                                        String nameElement = element.getAttribute("name");
+                                        
+                                        // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
+                                        // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
+                                        //Create an interface or return it
+                                        // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
+                                        // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
+                                        Interface linkedInterface= this.designBuilder.getInterface(key,nameElement);
+                                        if( linkedInterface==null){
+                                                 linkedInterface=Interface.createInterface(key, nameElement,  this.designBuilder.getDesignResources());
+                                                 this.designBuilder.addInterface(linkedInterface);
+                                                 String tabname = element.getAttribute("tab_name");
+                                                 this.designBuilder.assignInterfaceToTab(tabname,linkedInterface);
+                                        }
+                              
+                                                                             
+                                     
+                                        // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
+                                        // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
+                                        // Create a layer
+                                        // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
+                                        // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
+                                        float pos_x = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_x").getNodeValue());
+                                        float pos_y = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_y").getNodeValue());
+                                        float size_x = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_x").getNodeValue());
+                                        float size_y = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_y").getNodeValue());
+                                        
+                                        QuadrupletFloat posSize=new QuadrupletFloat(pos_x,pos_y,size_x,size_y);
+    
+                                        Layer layerCreated =  Layer.createLayer(key, nameElement, this.designBuilder.getModelResources(), linkedInterface, this, posSize);
+                                        
+                                        
+                                        //This code verify if the <Param> element is really an element
+                                     Element retElement = (Element) element.getElementsByTagName("Param").item(0);
+                                     if (retElement.getNodeType() != Node.ELEMENT_NODE) {
+                                             throw new TheXmlElementIsNotANodeException("IN Layer(2) " + nameElement);
+                                     }
+                                     layerCreated.readNode(retElement); //read the specific parameter
+                                     
+                                     // add the layer to the layers list
+                                      this.layers.add(layerCreated);
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                
+                                }catch(ThisLayerDoesNotExistException | ThisInterfaceDoesNotExistException e){
                                         System.out.println(e+" was detected ignoting it");
+                                } catch (TheXmlElementIsNotANodeException ex) {
+                                        Logger.getLogger(ImageBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                         }
                 }
@@ -189,9 +244,7 @@ public class ImageBuilder {
                 return this.name;
         }
 
-        public void assignLayerToTab(Layer layer, String tabName) {
-                if(layer.isHaveTiltlePane()) this.designBuilder.assignLayerToTab(layer,tabName);
-        }
+
         
         
 
@@ -213,11 +266,20 @@ public class ImageBuilder {
          * @return 
          */
         public BufferedImage getImageOut(){
-                return layers.get(layers.size()-1).getImage_out(this.name);
+                return layers.get(layers.size()-1).getImage_out();
         }
         
         
         public float getPixelMmFactor(){
                 return this.designBuilder.getPixelMmFactor();
         }
+        
+        
+        public void refreshPreview(PreviewImageBox preview){
+                preview.setImageView(this.name,StaticImageEditing.createImageView(this.getImageOut()));
+        }
+        
+        
+      
+
 }

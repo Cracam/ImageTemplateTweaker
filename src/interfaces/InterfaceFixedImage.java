@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import staticFunctions.StaticImageEditing;
 
 /**
  * This class have  the only function of generating the image out from a file
@@ -51,7 +52,7 @@ public class InterfaceFixedImage extends Interface{
          */
         public BufferedImage getImageOut(int x,int y,File imageFile){
                 try {
-                        return ResizeImage(ImageIO.read(imageFile), x,y);
+                        return StaticImageEditing.ResizeImage(ImageIO.read(imageFile), x,y);
                 } catch (IOException ex) {
                         Logger.getLogger(InterfaceFixedImage.class.getName()).log(Level.SEVERE, null, ex);
                         return null;

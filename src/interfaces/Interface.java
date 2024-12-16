@@ -6,14 +6,13 @@ import Exceptions.ThisInterfaceDoesNotExistException;
 import Layers.Layer;
 import ResourcesManager.ResourcesManager;
 import imageBuilder.ImageBuilder;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.TitledPane;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -24,7 +23,7 @@ import org.w3c.dom.Node;
  * 
  * @author Camille LECOURT
  */
-public abstract class Interface {
+public abstract class Interface extends TitledPane{
         
         String interfaceName;
          ResourcesManager designResources;
@@ -88,18 +87,7 @@ public abstract class Interface {
         
         
         
-        /**
-         * Tiis method will resize the image get to what we nedd
-         */
-        static BufferedImage ResizeImage(BufferedImage imageToBeResized, int size_x, int size_y) {
-                // Resize image_get to size_x and size_y
-                BufferedImage resizedImageGet = new BufferedImage(size_x, size_y, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2d = resizedImageGet.createGraphics();
-                g2d.drawImage(imageToBeResized, 0, 0, size_x, size_y, null);
-                g2d.dispose();
-                return resizedImageGet;
-        }
-
+      
  
 
         
@@ -109,6 +97,7 @@ public abstract class Interface {
         void refreshLayers() {
                 for (int i = 0; i < linkedLayers.size(); i++) {
                         linkedLayers.get(i).refreshImageGet();
+                        linkedLayers.get(i).refreshPreview();
                 }
         }
         
@@ -135,7 +124,7 @@ public abstract class Interface {
          * @return
          * @throws ThisInterfaceDoesNotExistException 
          */
-        public static Interface createOrReturnInterface(String interfaceType, String interfaceName, ResourcesManager designResources) throws ThisInterfaceDoesNotExistException {
+        public static Interface createInterface(String interfaceType, String interfaceName, ResourcesManager designResources) throws ThisInterfaceDoesNotExistException {
 
                 if (!interfacesTypesMap.containsKey(interfaceType)) {
                         throw new ThisInterfaceDoesNotExistException("This interface type does not exist : " + interfaceType);
@@ -154,4 +143,10 @@ public abstract class Interface {
                 return null;
         }
 
+        public String getInterfaceName() {
+                return interfaceName;
+        }
+
+        
+        
 }

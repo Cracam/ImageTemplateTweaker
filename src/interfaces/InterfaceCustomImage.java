@@ -20,6 +20,7 @@ import javafx.scene.control.TitledPane;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
+import staticFunctions.StaticImageEditing;
 
 /**
  *This class is a interface of a custom img Image loaded by the user
@@ -105,7 +106,7 @@ public class InterfaceCustomImage extends Interface {
          * @return 
          */
         public BufferedImage getImageOut(int x, int y){
-                    return ResizeImage(LoaderInterface.getImage_out(), x,y);
+                    return StaticImageEditing.ResizeImage(LoaderInterface.getImage_out(), x,y);
         }
         
         

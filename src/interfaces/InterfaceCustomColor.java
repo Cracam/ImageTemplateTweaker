@@ -22,14 +22,13 @@ import javafx.scene.control.TitledPane;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
+import staticFunctions.StaticImageEditing;
 
 /**
  *
  * @author Camille LECOURT
  */
 public class InterfaceCustomColor extends Interface {
-
-        private String imageName;
 
         @FXML
         private PreviewImageBox Preview;
@@ -40,10 +39,7 @@ public class InterfaceCustomColor extends Interface {
         @FXML
         private TitledPane CustomImageTiledPane;
 
-        private int[][] opacityMap;
-        private BufferedImage image_getRaw;
-        
-        
+
         
         public InterfaceCustomColor(String interfaceName, ResourcesManager designResources) {
                 super(interfaceName, designResources);
@@ -85,7 +81,7 @@ public class InterfaceCustomColor extends Interface {
         @Override
         public Node saveInterfaceData() {
                   XmlManager xmlManager = new XmlManager();
-                xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", colorToHex(gradientPicker.getColor1()), "Color_2", colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
+                xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()), "Color_2", StaticImageEditing.colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
                 return xmlManager.createDesignParamElement("DesignParam", "interfaceName", interfaceName);
         }
 
@@ -95,8 +91,8 @@ public class InterfaceCustomColor extends Interface {
         public void loadInterfaceData(Element dataOfTheLayer) {
                String gradientName = dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Gradient_Name").getNodeValue();
 
-                Color color1 = hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_1").getNodeValue());
-                Color color2 = hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_2").getNodeValue());
+                Color color1 = StaticImageEditing.hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_1").getNodeValue());
+                Color color2 = StaticImageEditing.hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_2").getNodeValue());
 
                 double colorIntensity = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("ColorIntensity").getNodeValue());
                 double param1 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_1").getNodeValue());
@@ -112,33 +108,5 @@ public class InterfaceCustomColor extends Interface {
                 return this.gradientPicker.getImageOut(opacityMap);
         }
         
-        
-        
-        
-        
-        
-        
-        //////////////////////////////////////////////:
-        // Intermediate functions :
-        
-        public static Color hexToColor(String hex) {
-                // Remove the '#' character if present
-                if (hex.startsWith("#")) {
-                        hex = hex.substring(1);
-                }
 
-                // Parse the hex string
-                int r = Integer.parseInt(hex.substring(0, 2));
-                int g = Integer.parseInt(hex.substring(2, 4));
-                int b = Integer.parseInt(hex.substring(4, 6));
-
-                return new Color(r, g, b);
-        }
-        
-          public static String colorToHex(Color color) {
-                String hex = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
-                return hex;
-        }
-        
-        
 }

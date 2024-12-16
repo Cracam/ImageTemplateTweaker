@@ -4,23 +4,17 @@
  */
 package Layers;
 
-import Exeptions.ResourcesFileErrorException;
+import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
-import ResourcesManager.XmlManager;
 import imageBuilder.ImageBuilder;
 import imageloaderinterface.ImageLoaderInterface;
+import interfaces.Interface;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
 import javafx.scene.control.TitledPane;
+import staticFunctions.StaticImageEditing;
 
 /**
  *
@@ -35,66 +29,21 @@ public class LayerCustomImage extends Layer {
         @FXML
         private TitledPane CustomImageTiledPane;
 
-        public LayerCustomImage(String layerName, String tabName, ResourcesManager modelResources, ResourcesManager designResources) {
-                super(layerName, tabName, modelResources, designResources);
+        public LayerCustomImage(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
+                super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
         }
 
+        
         @Override
-        BufferedImage generateImageget(String key) {
-                return ResizeImage(LoaderInterface.getImage_out(), this.imageGetPixelSizeX(key), this.imageGetPixelSizeY(key));
+        public void refreshImageGet() {
+                this.image_get= StaticImageEditing.ResizeImage(LoaderInterface.getImage_out(), this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y());
         }
 
-        @Override
-        void initialiseInterface() {
-                try {
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/LayerCustomImage.fxml"));
-                        if (fxmlLoader == null) {
-                                throw new ResourcesFileErrorException();
-                        }
-                        fxmlLoader.setRoot(this);
-                        fxmlLoader.setController(this);
+      
 
-                        fxmlLoader.load();
-
-                        // Add a listener to the changed property
-                        LoaderInterface.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                                if (newValue) {
-                                        //    System.out.println("trigered");
-                                        LoaderInterface.setChanged(false);
-                                        this.computeAllImageGet();
-                                        this.setChanged(true);
-                                        for (ImageBuilder imgBuilder : this.getLinkedImagesBuilders()) {
-                                                imgBuilder.refresh();
-                                        };
-                                        this.setChanged(false);
-                                }
-                        });
-
-                } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
-                        Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
-                }
-        }
 
         @Override
-        Node saveLayerDesignData() {
-                String imageName = "Image_" + layerName + ".png";
-
-                XmlManager xmlManager = new XmlManager();
-                xmlManager.addChild("Image", Map.of("image_name", imageName));
-
-                //save the image into the Design zip
-                this.getDesignResources().setBufferedImage(layerName, imageName, LoaderInterface.getImage_out());
-
-                return xmlManager.createDesignParamElement("DesignParam", "LayerName", layerName);
-        }
-
-        /**
-         * We dont need any information
-         *
-         * @param paramNode
-         */
-        @Override
-        void readNode(Element paramNode, ImageBuilder imageBuilder) {
+        public void readNode(Element paramNode) {
         }
 
         @Override
@@ -109,10 +58,8 @@ public class LayerCustomImage extends Layer {
         public void DPIChanged() {
         }
 
-        @Override
-        void loadLayerdesignData(Element dataOfTheLayer) {
-                String imageName = dataOfTheLayer.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
-                LoaderInterface.loadImage(this.getDesignResources().get(imageName));
-        }
+      
+
+        
 
 }
