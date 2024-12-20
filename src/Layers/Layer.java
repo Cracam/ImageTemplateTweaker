@@ -5,7 +5,6 @@
 package Layers;
 
 import imageBuilder.ImageBuilder;
-import Exceptions.TheXmlElementIsNotANodeException;
 import Exceptions.ThisLayerDoesNotExistException;
 import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
@@ -20,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.TitledPane;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import staticFunctions.StaticImageEditing;
 
 /**
@@ -69,6 +67,7 @@ public abstract class Layer extends TitledPane {
                 this.linkedInterface=layerInterface;
                 this.linkedImagesBuilder=linkedImageBuilder;
                 this.posSize=posSize;
+                this.pixelPosSize=new QuadrupletInt(0, 0, 0, 0);
                 refreshDPI();
         }
         
@@ -120,12 +119,12 @@ public abstract class Layer extends TitledPane {
        /**
         * Change the preview (it will just enter the preview Image box object)
         */
-       public abstract void refreshPreview();
+        public void refreshPreview() {
+                this.linkedInterface.refreshPreview(this.linkedImagesBuilder.getName(),StaticImageEditing.createImageView(this.image_out));
+                //   System.out.println(toString());
+        }
           
        
-       void refreshPreview(previewimagebox.PreviewImageBox box){
-               box.setImageView(this.layerName,StaticImageEditing.createImageView(image_out));
-       }
 
        
         /**
@@ -191,11 +190,13 @@ public abstract class Layer extends TitledPane {
 
                         Class<? extends Layer> subclass = layersTypesMap.get(layerType);
                         Constructor<? extends Layer> constructor = subclass.getConstructor(String.class, ResourcesManager.class,  Interface.class , ImageBuilder.class , QuadrupletFloat.class );
-
+                        
                         return constructor.newInstance(layerName, modelResources,layerInterface,linkedImageBuilder,posSize );
 
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
                         Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                            ex.printStackTrace(); // Print the stack trace
+
                         return null;
                 }
         }

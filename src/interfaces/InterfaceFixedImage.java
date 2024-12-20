@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.image.ImageView;
 import javax.imageio.ImageIO;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -22,9 +23,14 @@ import staticFunctions.StaticImageEditing;
  */
 public class InterfaceFixedImage extends Interface{
 
-        public InterfaceFixedImage(String interfaceName,  ResourcesManager designResources) {
+        
+        
+        
+        public InterfaceFixedImage(String interfaceName, ResourcesManager designResources) {
                 super(interfaceName, designResources);
+                this.haveGraphicInterface = false;
         }
+        
 
         @Override
         public Node saveInterfaceData() {
@@ -57,6 +63,12 @@ public class InterfaceFixedImage extends Interface{
                         Logger.getLogger(InterfaceFixedImage.class.getName()).log(Level.SEVERE, null, ex);
                         return null;
                 }
+        }
+        
+        
+        
+         @Override
+        public void refreshPreview(String imageBuilderName, ImageView previewImage){
         }
         
 }

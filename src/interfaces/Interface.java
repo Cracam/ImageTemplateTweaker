@@ -13,8 +13,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.ImageView;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import previewimagebox.PreviewImageBox;
 
 /**
  *All those subclasses are made to edit an image with entry from it's interface and layer 
@@ -38,6 +40,8 @@ public abstract class Interface extends TitledPane{
                 "Custom_Image",  InterfaceCustomImage.class,
                 "Custom_Color", InterfaceCustomColor.class
         );
+        
+        boolean haveGraphicInterface=true ;
 
         
         Interface(String interfaceName, ResourcesManager designResources){
@@ -75,20 +79,24 @@ public abstract class Interface extends TitledPane{
                 this.designResources = designResources;
         }
         
+        /**
+         * Refresh the Preview using the image builder name as a identifier
+         * @param imageBuilderName 
+         * @param previewImage 
+         */
+        public abstract void refreshPreview(String imageBuilderName, ImageView previewImage);
+        
+       /**
+        * Intermediate for the preview refresh
+        * @param imageBuilderName
+        * @param previewImage
+        * @param previewImageBox 
+        */
+        static void refreshPreviewIntermediate(String imageBuilderName, ImageView previewImage, PreviewImageBox previewImageBox){
+                previewImageBox.setImageView(imageBuilderName, previewImage);
+        }
         
         
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-      
- 
 
         
         /**
@@ -98,6 +106,7 @@ public abstract class Interface extends TitledPane{
                 for (int i = 0; i < linkedLayers.size(); i++) {
                         linkedLayers.get(i).refreshImageGet();
                         linkedLayers.get(i).refreshPreview();
+                        linkedLayers.get(i).setChanged(true);
                 }
         }
         
@@ -147,6 +156,23 @@ public abstract class Interface extends TitledPane{
                 return interfaceName;
         }
 
+        public void linkNewLayer(Layer layer){
+                this.linkedLayers.add(layer);
+        }
+        
+        public void linkNewImageBuilder(ImageBuilder imageBuilder) {
+                // Check if the imageBuilder already exists in the linkedImagesBuilders list
+                if (!this.linkedImagesBuilders.contains(imageBuilder)) {
+                        // If it does not exist, add it to the list
+                        this.linkedImagesBuilders.add(imageBuilder);
+                }
+        }
+
+        public boolean isHaveGraphicInterface() {
+                return haveGraphicInterface;
+        }
+
+        
         
         
 }

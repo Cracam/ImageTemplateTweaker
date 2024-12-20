@@ -115,6 +115,10 @@ public class DesignBuilder extends Application {
                                  System.out.println(this.toString());
                          }
                          
+                         for(int i=0 ;  i<imageBuilders.size();i++){
+                                 this.imageBuilders.get(i).refreshAll();
+                         }
+                         
                  } catch (ParserConfigurationException | SAXException | IOException ex) {
                          Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                  }

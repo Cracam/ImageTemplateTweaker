@@ -146,8 +146,9 @@ public class ImageBuilder {
                         for (int j = indexBegining + 1; j < layers.size(); j++) {
                                 layers.get(j).setImage_in(layers.get(j - 1).getImage_out());
                                 layers.get(j).computeImage_Out(this.name);
+                                 layers.get(j).refreshPreview();
                         }
-                        
+                        System.out.println("REFRESH");
                          this.designBuilder.refreshPreview();//refresh the main preview
         }
 
@@ -159,10 +160,13 @@ public class ImageBuilder {
         public void refreshAll() {
                 BufferedImage imgBegining = createBufferedImage(this.x_p_size, this.y_p_size);
                 layers.get(0).setImage_in(imgBegining);
+                layers.get(0).refreshImageGet();
                 layers.get(0).computeImage_Out(this.name);
+                layers.get(0).refreshPreview();
 
                 for (int j = 1; j < layers.size(); j++) {
                         layers.get(j).setImage_in(layers.get(j - 1).getImage_out());
+                        layers.get(j).refreshImageGet();
                         layers.get(j).computeImage_Out(this.name);
                         layers.get(j).refreshPreview();
                 }
@@ -179,26 +183,29 @@ public class ImageBuilder {
 
                 for (int i = 0; i < nodeLayerList.getLength(); i++) {
                         if (nodeLayerList.item(i).getNodeType() == Node.ELEMENT_NODE) { //To avoid text node and comment node
-                             try{   
+                                try {
                                         Element element = (Element) nodeLayerList.item(i);
                                         String key = element.getNodeName(); // key for defining the layer and the Interface
                                         String nameElement = element.getAttribute("name");
-                                        
+
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
                                         //Create an interface or return it
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
-                                        Interface linkedInterface= this.designBuilder.getInterface(key,nameElement);
-                                        if( linkedInterface==null){
-                                                 linkedInterface=Interface.createInterface(key, nameElement,  this.designBuilder.getDesignResources());
-                                                 this.designBuilder.addInterface(linkedInterface);
-                                                 String tabname = element.getAttribute("tab_name");
-                                                 this.designBuilder.assignInterfaceToTab(tabname,linkedInterface);
+                                        Interface linkedInterface = this.designBuilder.getInterface(key, nameElement);
+                                        if (linkedInterface == null) {
+                                                linkedInterface = Interface.createInterface(key, nameElement, this.designBuilder.getDesignResources());
+                                                this.designBuilder.addInterface(linkedInterface);
+                                                if(linkedInterface.isHaveGraphicInterface()){
+                                                        String tabname = element.getAttribute("tab_name");
+                                                        if (tabname == null) {
+                                                                tabname = "Defaut";
+                                                        }
+                                                        this.designBuilder.assignInterfaceToTab(tabname, linkedInterface);
+                                                }
                                         }
-                              
-                                                                             
-                                     
+
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
                                         // Create a layer
@@ -208,28 +215,28 @@ public class ImageBuilder {
                                         float pos_y = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_y").getNodeValue());
                                         float size_x = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_x").getNodeValue());
                                         float size_y = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_y").getNodeValue());
-                                        
-                                        QuadrupletFloat posSize=new QuadrupletFloat(pos_x,pos_y,size_x,size_y);
+
+                                        QuadrupletFloat posSize = new QuadrupletFloat(pos_x, pos_y, size_x, size_y);
                                         // System.out.println(key+ nameElement+ this.designBuilder.getModelResources()+ linkedInterface);
-                                        Layer layerCreated =  Layer.createLayer(key, nameElement, this.designBuilder.getModelResources(), linkedInterface, this, posSize);
+                                        Layer layerCreated = Layer.createLayer(key, nameElement, this.designBuilder.getModelResources(), linkedInterface, this, posSize);
+
+                                        if (!(layerCreated == null)) {
+                                                System.out.println(layerCreated);
+                                                //This code verify if the <Param> element is really an element
+                                                Element retElement = (Element) element.getElementsByTagName("Param").item(0);
+                                                if (retElement.getNodeType() != Node.ELEMENT_NODE) {
+                                                        throw new TheXmlElementIsNotANodeException("IN Layer(2) " + nameElement);
+                                                }
+                                                layerCreated.readNode(retElement); //read the specific parameter
+
+                                                // add the layer to the layers list
+                                                this.layers.add(layerCreated);
+                                                
+                                                linkedInterface.linkNewLayer(layerCreated); //link the layer tothe interface
+                                                linkedInterface.linkNewImageBuilder(this);
+                                        }
                                         
-                                        System.out.println(layerCreated);
-                                        //This code verify if the <Param> element is really an element
-                                     Element retElement = (Element) element.getElementsByTagName("Param").item(0);
-                                     if (retElement.getNodeType() != Node.ELEMENT_NODE) {
-                                             throw new TheXmlElementIsNotANodeException("IN Layer(2) " + nameElement);
-                                     }
-                                     layerCreated.readNode(retElement); //read the specific parameter
-                                     
-                                     // add the layer to the layers list
-                                      this.layers.add(layerCreated);
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        
-                                
+
                                 }catch(ThisLayerDoesNotExistException | ThisInterfaceDoesNotExistException e){
                                         System.out.println(e+" was detected ignoting it");
                                 } catch (TheXmlElementIsNotANodeException ex) {

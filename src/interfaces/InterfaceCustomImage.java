@@ -8,6 +8,7 @@ import Exeptions.ResourcesFileErrorException;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
 import imageloaderinterface.ImageLoaderInterface;
+import static interfaces.Interface.refreshPreviewIntermediate;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map;
@@ -17,6 +18,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.ImageView;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
@@ -59,7 +61,7 @@ public class InterfaceCustomImage extends Interface {
                                 if (newValue) {
                                         //    System.out.println("trigered");
                                         LoaderInterface.setChanged(false);
-                                     
+                                      System.out.println("(2) CHANGGE DEECTED");
                                         this.refreshLayers();
                                         this.refreshImageBuilders();
                                 }
@@ -109,5 +111,10 @@ public class InterfaceCustomImage extends Interface {
                     return StaticImageEditing.ResizeImage(LoaderInterface.getImage_out(), x,y);
         }
         
+        
+         @Override
+        public void refreshPreview(String imageBuilderName, ImageView previewImage){
+              refreshPreviewIntermediate(imageBuilderName,previewImage,Preview);
+        }
         
 }

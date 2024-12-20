@@ -19,6 +19,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.ImageView;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
@@ -66,6 +67,7 @@ public class InterfaceCustomColor extends Interface {
                                         
                                         this.refreshLayers();
                                         this.refreshImageBuilders();
+                                        System.out.println("(1) CHANGGE DEECTED " + linkedImagesBuilders.size());
                                 }
                         });
 
@@ -107,6 +109,13 @@ public class InterfaceCustomColor extends Interface {
         public BufferedImage getImageOut(int x,int y, int[][] opacityMap){
                 return this.gradientPicker.getImageOut(opacityMap);
         }
+        
+        @Override
+        public void refreshPreview(String imageBuilderName, ImageView previewImage){
+              refreshPreviewIntermediate(imageBuilderName,previewImage,Preview);
+        }
+        
+
         
 
 }

@@ -4,21 +4,18 @@
  */
 package Layers;
 
-import GradientCreatorInterface.GradientCreatorInterface;
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
 import imageBuilder.ImageBuilder;
 import interfaces.Interface;
+import interfaces.InterfaceCustomColor;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.fxml.FXML;
-import javafx.scene.control.TitledPane;
 import javax.imageio.ImageIO;
 import org.w3c.dom.Element;
-import previewimagebox.PreviewImageBox;
 import staticFunctions.StaticImageEditing;
 
 /**
@@ -28,15 +25,6 @@ import staticFunctions.StaticImageEditing;
 public  class LayerCustomColor extends Layer {
 
         private String imageName;
-
-        @FXML
-        private PreviewImageBox Preview;
-
-        @FXML
-        private GradientCreatorInterface gradientPicker;
-
-        @FXML
-        private TitledPane CustomImageTiledPane;
 
         private int[][]opacityMap;
         private BufferedImage image_getRaw;
@@ -50,15 +38,11 @@ public  class LayerCustomColor extends Layer {
  
         @Override
         public void refreshImageGet(){
-                this.image_get=this.gradientPicker.getImageOut(opacityMap);
-        }
-
-        @Override
-        public void refreshPreview() {
-                this.refreshPreview(this.Preview);
-                //   System.out.println(toString());
+                this.image_get=((InterfaceCustomColor) (this.linkedInterface)).getImageOut(0,0,opacityMap);
         }
         
+
+      
         
         
         @Override
