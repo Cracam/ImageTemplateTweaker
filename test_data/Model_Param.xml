@@ -75,7 +75,12 @@
 				</Custom_Image>
 
 
-
+<Custom_Text name="Texte Principal" tab_name="Recto" >
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Param>
+					</Param>
+				</Custom_Text>
 
 			<Custom_Color name="Arrière Plan Bords" tab_name="Commun">
 					<pos pos_x="0" pos_y="0"/>

@@ -44,7 +44,7 @@ public abstract class Layer extends TitledPane {
         //Te Image size and parameter in pixel (adaptable to the image definition)
           QuadrupletInt pixelPosSize;
         
-        public static final Map<String, Class<? extends Layer>> layersTypesMap = Map.of("Fixed_Image", LayerFixedImage.class, "Custom_Image", LayerCustomImage.class,"Custom_Color", LayerCustomColor.class);
+        public static final Map<String, Class<? extends Layer>> layersTypesMap = Map.of("Fixed_Image", LayerFixedImage.class, "Custom_Image", LayerCustomImage.class,"Custom_Color", LayerCustomColor.class, "Custom_Text",LayerCustomText.class);
 
         
         // this variable will be use by the Image builder to detect a change and recompute the image accordingly.

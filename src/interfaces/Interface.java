@@ -38,7 +38,8 @@ public abstract class Interface extends TitledPane{
         public static final Map<String, Class<? extends Interface>> interfacesTypesMap = Map.of(
                 "Fixed_Image", InterfaceFixedImage.class, 
                 "Custom_Image",  InterfaceCustomImage.class,
-                "Custom_Color", InterfaceCustomColor.class
+                "Custom_Color", InterfaceCustomColor.class,
+                "Custom_Text",InterfaceCustomText.class
         );
         
         boolean haveGraphicInterface=true ;
