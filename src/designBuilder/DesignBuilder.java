@@ -4,10 +4,16 @@ import imageBuilder.ImageBuilder;
 import Exceptions.ResourcesFileErrorException;
 import Layers.Layer;
 import ResourcesManager.ResourcesManager;
+import interfaces.Interface;
+import static interfaces.Interface.interfacesTypesMap;
+import interfaces.InterfaceCustomColor;
+import interfaces.InterfaceCustomImage;
+import interfaces.InterfaceFixedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -47,8 +53,8 @@ public class DesignBuilder extends Application {
 
          
          private final  ArrayList<ImageBuilder> imageBuilders = new ArrayList<>();
-                  private final  ArrayList<TabOfTiltedPane> tabs = new ArrayList<>();
-
+         private final  ArrayList<TabOfTiltedPane> tabs = new ArrayList<>();
+         private final ArrayList<Interface> interfaces=new ArrayList<>();
                   
     
         
@@ -109,6 +115,10 @@ public class DesignBuilder extends Application {
                                  System.out.println(this.toString());
                          }
                          
+                         for(int i=0 ;  i<imageBuilders.size();i++){
+                                 this.imageBuilders.get(i).refreshAll();
+                         }
+                         
                  } catch (ParserConfigurationException | SAXException | IOException ex) {
                          Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                  }
@@ -156,13 +166,6 @@ public class DesignBuilder extends Application {
                 return "DesignBuilder{" + "id=" + id + ", modelResources=" + modelResources + ", designResources=" + designResources + ", name=" + name + ", description=" + description + ", defaultDesignName=" + defaultDesignName + ", imageBuilders=" + imageBuilders + ", tabs=" + tabs + ", DPI=" + DPI + ", tabPane=" + tabPane + ", preview=" + preview + '}';
         }
          
-         
-         
-         
-         
-         
-
-   
 
 
         public int getId() {
@@ -209,21 +212,21 @@ public class DesignBuilder extends Application {
         /**
          * This function assign a layer to a tab (in main interface)
          * It can create one if the tab does not exist yet
-         * @param layer
+         * @param inter
          * @param tabName
          */
-        public void assignLayerToTab(Layer layer, String tabName) {
+        public void assignInterfaceToTab(String tabName, Interface inter) {
                 for (TabOfTiltedPane tab : tabs) {
 
                         if (tab.getText().equals(tabName)) {
-                                tab.addNodeToVBox(layer);
+                                tab.addNodeToVBox(inter);
                                 return;
                         }
                 }
                 //if the tab does not exist yet we create one and add the layer in it
                 TabOfTiltedPane tab = new TabOfTiltedPane(tabName);
                 tabPane.getTabs().add(tab);
-                tab.addNodeToVBox(layer);
+                tab.addNodeToVBox(inter);
                 tabs.add(tab);
 
         }
@@ -233,15 +236,15 @@ public class DesignBuilder extends Application {
 
 
 
-        public float get_pixel_mm_Factor() {
-                return (float) (this.DPI / 24.5);
+        public float getPixelMmFactor() {
+                return (float) (this.DPI / 25.4);
         }
 
-        public ResourcesManager getTemplateResources() {
+        public ResourcesManager getModelResources() {
                 return modelResources;
         }
 
-        private void setTemplateResources(ResourcesManager templateResources) {
+        private void setModelResources(ResourcesManager templateResources) {
                 this.modelResources = templateResources;
         }
 
@@ -259,9 +262,49 @@ public class DesignBuilder extends Application {
         public void refreshPreview(){
                 this.preview.clearAllImagesViews();
                 for(ImageBuilder imageBuilder : imageBuilders){
-                        this.preview.addImageView(Layer.createImageView(imageBuilder.getImageOut()));
+                       imageBuilder.refreshPreview(this.preview);
                 }
         }
         
+        
+                /**
+         * Add an interface in the arrayList of the Desing builder
+         *
+         * @param interf
+         */
+        public void addInterface(Interface interf) {
+                interfaces.add(interf);
+        }
+
+        /**
+         * return an interface identifie by is type and it's name
+         *
+         * @param type
+         * @param name
+         * @return
+         */
+        public Interface getInterface(String type, String name) {
+                // Check if the type exists in the map
+                if (interfacesTypesMap.containsKey(type)) {
+                        // Get the class of the interface
+                        Class<? extends Interface> interfaceClass = interfacesTypesMap.get(type);
+
+                        // Iterate through the list of interfaces
+                        for (Interface interf : interfaces) {
+                                // Check if the interface is of the correct type
+                                if (interfaceClass.isInstance(interf)) {
+                                        // Get the name of the interface
+                                        String interfaceName = interf.getInterfaceName();
+
+                                        // Compare the name with the provided name
+                                        if (interfaceName.equals(name)) {
+                                                return interf;
+                                        }
+                                }
+                        }
+                }
+                // Return null if the interface does not exist
+                return null;
+        }
         
 }

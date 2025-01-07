@@ -14,7 +14,7 @@
 
 		<Output name="Recto" size_x="88" size_y="58" ><!-- Verso de la carte (côte nom prenom) -->
 
-			<Custom_Color name="Fond" tab_name="Commun">
+			<Custom_Color name="Fond Recto"  tab_name="Commun">
 					<pos pos_x="6.72" pos_y="0"/>
 					<size size_x="74.55" size_y="58"/>
 					<Param>
@@ -33,7 +33,7 @@
 
 
 <!-- Cadre pour mettre le nom prenom-->
-<Fixed_Image name="Zone Texte">
+<Fixed_Image name="Zone Texte" >
 					<pos pos_x="10" pos_y="20" />
 					<size size_x="30" size_y="10" />
 					<Param>
@@ -75,7 +75,12 @@
 				</Custom_Image>
 
 
-
+<Custom_Text name="Texte Principal" tab_name="Recto" >
+					<pos pos_x="44" pos_y="5"/>
+					<size size_x="88" size_y="58"/>
+					<Param>
+					</Param>
+				</Custom_Text>
 
 			<Custom_Color name="Arrière Plan Bords" tab_name="Commun">
 					<pos pos_x="0" pos_y="0"/>
