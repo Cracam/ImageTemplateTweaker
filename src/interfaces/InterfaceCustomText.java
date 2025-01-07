@@ -44,11 +44,27 @@ public class InterfaceCustomText extends Interface {
 
        private int[][] opacityMap=new int[1][1];
        private boolean textChanged=true;
+       
+       //The five different boolean to mdify the text bahavior
+       private boolean canChangeText;
+       private  boolean canChangeTextSize;
+       private boolean canChangeTextHeight;
+        private boolean canChangeFont;
+       private boolean canChangeColor;
+       
+       
 
         public InterfaceCustomText(String interfaceName, ResourcesManager designResources) {
+                canChangeText = true;
+                canChangeTextSize = false;
+                canChangeTextHeight = true;
+                canChangeFont = false;
+                canChangeColor = true;
                 super(interfaceName, designResources);
         }
+
         
+      
         
         
         @Override
@@ -62,17 +78,18 @@ public class InterfaceCustomText extends Interface {
                         fxmlLoader.setController(this);
 
                         fxmlLoader.load();
-
-                        // Add a listener to the changed property
-                        gradientPicker.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                                if (newValue) {
-                                        //    System.out.println("trigered");
-                                        gradientPicker.setChanged(false);
-                                      System.out.println("(1) CHANGGE DEECTED");
-                                        this.refreshLayers();
-                                        this.refreshImageBuilders();
-                                }
-                        });
+                        
+                                // Add a listener to the changed property
+                                gradientPicker.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                                        if (newValue) {
+                                                //    System.out.println("trigered");
+                                                gradientPicker.setChanged(false);
+                                              System.out.println("(1) CHANGGE DEECTED");
+                                                this.refreshLayers();
+                                                this.refreshImageBuilders();
+                                        }
+                                });
+                        
                         
                         // Add a listener to the changed property
                         TextGenerator.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -87,27 +104,49 @@ public class InterfaceCustomText extends Interface {
                         });
                         
                         
+               
+             
+                         
+                        
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
 
-        
-        
-        
+        /**
+         * refresh the visibility of the different interface
+         */
+        public void refreshInterfaceVisibility(){
+                         //Check the visibility of the color interface 
+                         gradientPicker.setVisible(canChangeColor);
+                        
+                         if(!this.canChangeText){
+                                 TextGenerator.desactivateTextField();
+                         }
+                        
+                         if(!canChangeTextSize){
+                                 TextGenerator.desactivateTextSizeSlideBar();
+                         }
+                        
+                         if(!canChangeFont){
+                                 TextGenerator.desactivateFontCharger();
+                         }
+                         
+                         if(!canChangeTextHeight){
+                                 TextGenerator.desactivateTextHeighSlideBar();
+                         }
+        }
+
         
         
         @Override
         public Node saveInterfaceData() {
-                String imageName = "Image_" + interfaceName + ".png";
-
                 XmlManager xmlManager = new XmlManager();
-                xmlManager.addChild("Image", Map.of("image_name", imageName));
-
-                //save the image into the Design zip
-          //      this.designResources.setBufferedImage(interfaceName, imageName, LoaderInterface.getImage_out());
 
                 
+                xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()), "Color_2", StaticImageEditing.colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
+                xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()), "Color_2", StaticImageEditing.colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
+
          
                 return xmlManager.createDesignParamElement("DesignParam", "LayerName", interfaceName);
         }
@@ -139,7 +178,6 @@ public class InterfaceCustomText extends Interface {
         }
         
         
-        
         /**
          * Return the out of this interface with the good size
          * @param pixelMmFactor
@@ -148,7 +186,7 @@ public class InterfaceCustomText extends Interface {
         public BufferedImage getImageOut(float pixelMmFactor){
                         if (textChanged){
                              //   refreshBlendTable();
-                                 BufferedImage resizedImageGetRaw = this.TextGenerator.getImageOut(pixelMmFactor);
+                                 BufferedImage resizedImageGetRaw = this.TextGenerator.getImageOut( (pixelMmFactor)); //72/25.4 convert milimeter into pt 
                                  this.opacityMap =StaticImageEditing.transformToOpacityArray(resizedImageGetRaw);
                                  textChanged=false;
                         }
@@ -167,5 +205,53 @@ public class InterfaceCustomText extends Interface {
         public void refreshPreview(String imageBuilderName, ImageView previewImage){
               refreshPreviewIntermediate(imageBuilderName,previewImage,Preview);
         }
+
+        public boolean isCanChangeText() {
+                return canChangeText;
+        }
+
+        public void setCanChangeText(boolean canChangeText) {
+                this.canChangeText = canChangeText;
+        }
+
+        public boolean isCanChangeColor() {
+                return canChangeColor;
+        }
+
+        public void setCanChangeColor(boolean canChangeColor) {
+                this.canChangeColor = canChangeColor;
+        }
+
+        public boolean isCanChangeTextSize() {
+                return canChangeTextSize;
+        }
+
+        public void setCanChangeTextSize(boolean canChangeTextSize) {
+                this.canChangeTextSize = canChangeTextSize;
+        }
+
+        public boolean isCanChangeTextHeight() {
+                return canChangeTextHeight;
+        }
+
+        public void setCanChangeTextHeight(boolean canChangeTextHeight) {
+                this.canChangeTextHeight = canChangeTextHeight;
+        }
+
+        public boolean isCanChangeFont() {
+                return canChangeFont;
+        }
+
+        public void setCanChangeFont(boolean canChangeFont) {
+                this.canChangeFont = canChangeFont;
+        }
+
+        public TextInImageGenerator getTextGenerator() {
+                return TextGenerator;
+        }
+        
+        
+        
+        
         
 }

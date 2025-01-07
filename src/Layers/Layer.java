@@ -155,6 +155,9 @@ public abstract class Layer extends TitledPane {
 
                         // Draw the resized image_get onto the output image at the specified position
                         outputG2d.drawImage(image_get,this.pixelPosSize.getPos_x(), this.pixelPosSize.getPos_y(), this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y(), null);
+                        
+                        //use this if not resize 
+                        //outputG2d.drawImage(image_get,this.pixelPosSize.getPos_x(), this.pixelPosSize.getPos_y(),  null);
 
                         // Dispose of the Graphics2D object
                         outputG2d.dispose();

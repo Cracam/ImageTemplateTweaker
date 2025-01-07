@@ -237,7 +237,7 @@ public class DesignBuilder extends Application {
 
 
         public float getPixelMmFactor() {
-                return (float) (this.DPI / 24.5);
+                return (float) (this.DPI / 25.4);
         }
 
         public ResourcesManager getModelResources() {

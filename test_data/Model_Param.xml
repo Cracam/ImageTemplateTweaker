@@ -76,7 +76,7 @@
 
 
 <Custom_Text name="Texte Principal" tab_name="Recto" >
-					<pos pos_x="0" pos_y="0"/>
+					<pos pos_x="44" pos_y="5"/>
 					<size size_x="88" size_y="58"/>
 					<Param>
 					</Param>
