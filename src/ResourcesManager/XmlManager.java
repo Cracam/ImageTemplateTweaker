@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Represents a child element with its attributes.
@@ -135,5 +136,36 @@ public  class XmlManager {
     }
     
     
-    
+        /**
+         * Helper function to safely retrieve and parse a float attribute from
+         * an element.
+         *
+         * @param element The element from which to retrieve the attribute.
+         * @param attributeName The name of the attribute to retrieve.
+         * @param ret
+         * @return The parsed float value of the attribute, or null if the
+         * attribute is not found.
+         */
+       static  public Float getFloatAttribute(Element element, String attributeName, float ret) {
+                if (element == null) {
+                        System.err.println("Element is null.");
+                        return ret;
+                }
+
+                Node attributeNode = element.getAttributes().getNamedItem(attributeName);
+                if (attributeNode != null) {
+                        try {
+                                return Float.parseFloat(attributeNode.getNodeValue());
+                        } catch (NumberFormatException e) {
+                                System.err.println("Invalid value for attribute " + attributeName + ": " + attributeNode.getNodeValue());
+                                return ret;
+                        }
+                } else {
+                        System.err.println("Attribute " + attributeName + " is missing.");
+                        return ret;
+                }
+        }
+
+
+
 }

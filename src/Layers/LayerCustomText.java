@@ -6,12 +6,14 @@ package Layers;
 
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
+import ResourcesManager.XmlManager;
 import imageBuilder.ImageBuilder;
 import interfaces.Interface;
 import interfaces.InterfaceCustomText;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  *
@@ -20,22 +22,26 @@ import org.w3c.dom.Element;
 public class LayerCustomText extends Layer {
 
         private String imageName;
-
+        private float textHeightFactor=(float) 1.0; //in mm
+        private float textSizeMin=(float) 5.0; //in mm
+        private float textSizeMax =(float) 25.0;//in mm
 
         public LayerCustomText(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
                 super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
-                
         }
+        
 
         @Override
         public void refreshImageGet() {
-                this.image_get = ((InterfaceCustomText) (this.linkedInterface)).getImageOut( this.linkedImagesBuilder.getPixelMmFactor());
+                this.image_get = ((InterfaceCustomText) (this.linkedInterface)).getImageOut( this.linkedImagesBuilder.getPixelMmFactor(),textSizeMin,textSizeMax);
         }
+        
 
         @Override
         void DPIChanged() {
                 //noting to do the text compare the PixelMilimeter factor automaticaly
         }
+        
 
         /**
          * to modify of problem
@@ -44,8 +50,11 @@ public class LayerCustomText extends Layer {
          */
         @Override
         public void readNode(Element paramNode) {
-                // nothing to load if custon (everything will be changed iun the layer) -- This program wil be modified for other text generator
-                
+              Element element=  (Element) paramNode.getElementsByTagName("Text").item(0);
+
+                this.textHeightFactor=XmlManager.getFloatAttribute(element,"TextHeightFactor",this.textHeightFactor);
+                this.textSizeMin=XmlManager.getFloatAttribute(element,"TextSizeMin",this.textSizeMin);
+                this.textSizeMax=XmlManager.getFloatAttribute(element,"TextSizeMax",this.textSizeMax);
         }
 
         @Override
@@ -55,7 +64,7 @@ public class LayerCustomText extends Layer {
         
         
         
-                /**
+         /**
          * Compute the image out using Image_in and image_get
          * (this overrride is for use cenring position)
          * @param name
@@ -69,13 +78,13 @@ public class LayerCustomText extends Layer {
 
                         // Draw image_out onto the output image
                         outputG2d.drawImage(image_in, 0, 0, null);
-
                      
                         //use this if not resize 
                         
                         int y=this.pixelPosSize.getPos_y();
                         y=y - image_get.getHeight()/2;
-                        y=y+(int ) (((InterfaceCustomText) this.linkedInterface).getTextGenerator().getTextHeigthValue()*this.linkedImagesBuilder.get_pixel_mm_Factor());
+                        // on the line below we use minus to change the interface slidebar direction
+                        y=y-(int ) (((InterfaceCustomText) this.linkedInterface).getTextGenerator().getTextHeigthValue()*this.textHeightFactor*this.linkedImagesBuilder.get_pixel_mm_Factor());
                         
                         outputG2d.drawImage(image_get,this.pixelPosSize.getPos_x()-image_get.getWidth()/2, y,  null);
 
@@ -85,7 +94,5 @@ public class LayerCustomText extends Layer {
                         // Update image_out with the new image
                         this.image_out = outputImage;
                          this.refreshPreview();
-
         }
-
 }

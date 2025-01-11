@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -41,6 +42,9 @@ public class InterfaceCustomText extends Interface {
 
         @FXML
         private GradientCreatorInterface gradientPicker;
+        
+        @FXML 
+        private TitledPane CustomImageTiledPane;
 
        private int[][] opacityMap=new int[1][1];
        private boolean textChanged=true;
@@ -79,12 +83,13 @@ public class InterfaceCustomText extends Interface {
 
                         fxmlLoader.load();
                         
+                        this.CustomImageTiledPane.setText(interfaceName);
                                 // Add a listener to the changed property
                                 gradientPicker.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                                         if (newValue) {
                                                 //    System.out.println("trigered");
                                                 gradientPicker.setChanged(false);
-                                              System.out.println("(1) CHANGGE DEECTED");
+                                       //       System.out.println("(1) CHANGGE DEECTED");
                                                 this.refreshLayers();
                                                 this.refreshImageBuilders();
                                         }
@@ -97,7 +102,7 @@ public class InterfaceCustomText extends Interface {
                                         //    System.out.println("trigered");
                                         this.textChanged();
                                         TextGenerator.setChanged(false);
-                                      System.out.println("(2) CHANGGE DEECTED");
+                                      //System.out.println("(2) CHANGGE DEECTED");
                                         this.refreshLayers();
                                         this.refreshImageBuilders();
                                 }
@@ -142,15 +147,17 @@ public class InterfaceCustomText extends Interface {
         @Override
         public Node saveInterfaceData() {
                 XmlManager xmlManager = new XmlManager();
-
                 
                 xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()), "Color_2", StaticImageEditing.colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
                 xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()), "Color_2", StaticImageEditing.colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
 
-         
                 return xmlManager.createDesignParamElement("DesignParam", "LayerName", interfaceName);
         }
 
+        
+        
+        
+        
         
         
         @Override
@@ -168,7 +175,7 @@ public class InterfaceCustomText extends Interface {
                 
                 //String textBuilderName = dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text_Name").getNodeValue();
                 String fontName = dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Font_name").getNodeValue();
-                this.TextGenerator.setFont(this.designResources.get(fontName));
+                this.TextGenerator.loadNewFont(this.designResources.get(fontName));
                 
                 String text = dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text").getNodeValue();
                 double textSize = Double.parseDouble(dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text_Size").getNodeValue());
@@ -181,12 +188,14 @@ public class InterfaceCustomText extends Interface {
         /**
          * Return the out of this interface with the good size
          * @param pixelMmFactor
+         * @param textSizeMin
+         * @param textSizeMax
          * @return 
          */
-        public BufferedImage getImageOut(float pixelMmFactor){
+        public BufferedImage getImageOut(float pixelMmFactor, float textSizeMin, float textSizeMax){
                         if (textChanged){
                              //   refreshBlendTable();
-                                 BufferedImage resizedImageGetRaw = this.TextGenerator.getImageOut( (pixelMmFactor)); //72/25.4 convert milimeter into pt 
+                                 BufferedImage resizedImageGetRaw = this.TextGenerator.getImageOut( pixelMmFactor,textSizeMin,textSizeMax); //72/25.4 convert milimeter into pt 
                                  this.opacityMap =StaticImageEditing.transformToOpacityArray(resizedImageGetRaw);
                                  textChanged=false;
                         }

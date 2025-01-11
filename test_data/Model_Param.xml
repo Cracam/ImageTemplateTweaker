@@ -75,10 +75,11 @@
 				</Custom_Image>
 
 
-<Custom_Text name="Texte Principal" tab_name="Recto" >
+				<Custom_Text name="Texte Principal" tab_name="Recto" >
 					<pos pos_x="44" pos_y="5"/>
 					<size size_x="88" size_y="58"/>
 					<Param>
+						<Text TextHeightFactor="2.0" TextSizeMin="2.0" TextSizeMax="10.0"/>
 					</Param>
 				</Custom_Text>
 

@@ -7,7 +7,7 @@
 <?import previewimagebox.PreviewImageBox?>
 <?import textinimagegenerator.TextInImageGenerator?>
 
-<fx:root animated="false" minHeight="-Infinity" minWidth="-Infinity" text="untitled" type="TitledPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="CustomImageTiledPane" animated="false" minHeight="-Infinity" minWidth="-Infinity" text="untitled" type="TitledPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <HBox>
          <children>
