@@ -83,6 +83,16 @@
 					</Param>
 				</Custom_Text>
 
+
+
+				<Fixed_Text_Custom_Color_Custom_Style name="Texte Fixe" tab_name="Recto" >
+					<pos pos_x="44" pos_y="20"/>
+					<size size_x="88" size_y="58"/>
+					<Param>
+						<Text Text="Ceci est Un test" TextHeightFactor="2.0" TextSizeMin="5.0" TextSizeMax="15.0"/>
+					</Param>
+				</Fixed_Text_Custom_Color_Custom_Style>
+
 			<Custom_Color name="Arrière Plan Bords" tab_name="Commun">
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>

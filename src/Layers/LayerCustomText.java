@@ -20,11 +20,12 @@ import org.w3c.dom.Node;
  * @author Camille LECOURT
  */
 public class LayerCustomText extends Layer {
+        boolean textChanged=true; //use only the the sub classe
 
         private String imageName;
-        private float textHeightFactor=(float) 1.0; //in mm
-        private float textSizeMin=(float) 5.0; //in mm
-        private float textSizeMax =(float) 25.0;//in mm
+        float textHeightFactor=(float) 1.0; //in mm
+        float textSizeMin=(float) 5.0; //in mm
+        float textSizeMax =(float) 25.0;//in mm
 
         public LayerCustomText(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
                 super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
@@ -44,8 +45,7 @@ public class LayerCustomText extends Layer {
         
 
         /**
-         * to modify of problem
-         *
+         * 
          * @param paramNode
          */
         @Override
@@ -94,5 +94,9 @@ public class LayerCustomText extends Layer {
                         // Update image_out with the new image
                         this.image_out = outputImage;
                          this.refreshPreview();
+        }
+        
+               public void setTextChanged(boolean textChanged) {
+                this.textChanged = textChanged;
         }
 }

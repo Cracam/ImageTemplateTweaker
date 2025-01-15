@@ -56,6 +56,7 @@ public class InterfaceCustomImage extends Interface {
 
                         fxmlLoader.load();
                         this.CustomImageTiledPane.setText(interfaceName);
+                        this.Preview.toggleFixedSize();
                         
                         // Add a listener to the changed property
                         LoaderInterface.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -87,7 +88,7 @@ public class InterfaceCustomImage extends Interface {
                 xmlManager.addChild("Image", Map.of("image_name", imageName));
 
                 //save the image into the Design zip
-                this.designResources.setBufferedImage(interfaceName, imageName, LoaderInterface.getImage_out());
+                this.designResources.setBufferedImage(imageName, LoaderInterface.getImage_out());
 
                 return xmlManager.createDesignParamElement("DesignParam", "LayerName", interfaceName);
         }

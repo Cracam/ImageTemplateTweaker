@@ -6,12 +6,14 @@ package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
 import GradientCreatorInterface.GradientCreatorInterface;
+import Layers.LayerCustomText;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
 import imageloaderinterface.ImageLoaderInterface;
 import static interfaces.Interface.refreshPreviewIntermediate;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
@@ -47,22 +49,22 @@ public class InterfaceCustomText extends Interface {
         private TitledPane CustomImageTiledPane;
 
        private int[][] opacityMap=new int[1][1];
-       private boolean textChanged=true;
+        boolean textChanged=true;
        
        //The five different boolean to mdify the text bahavior
-       private boolean canChangeText;
-       private  boolean canChangeTextSize;
-       private boolean canChangeTextHeight;
-        private boolean canChangeFont;
-       private boolean canChangeColor;
+        boolean canChangeText;
+         boolean canChangeTextSize;
+        boolean canChangeTextHeight;
+         boolean canChangeFont;
+        boolean canChangeColor;
        
        
 
         public InterfaceCustomText(String interfaceName, ResourcesManager designResources) {
                 canChangeText = true;
-                canChangeTextSize = false;
+                canChangeTextSize = true;
                 canChangeTextHeight = true;
-                canChangeFont = false;
+                canChangeFont = true;
                 canChangeColor = true;
                 super(interfaceName, designResources);
         }
@@ -82,6 +84,8 @@ public class InterfaceCustomText extends Interface {
                         fxmlLoader.setController(this);
 
                         fxmlLoader.load();
+                        
+                        this.Preview.toggleFixedSize();
                         
                         this.CustomImageTiledPane.setText(interfaceName);
                                 // Add a listener to the changed property
@@ -105,14 +109,17 @@ public class InterfaceCustomText extends Interface {
                                       //System.out.println("(2) CHANGGE DEECTED");
                                         this.refreshLayers();
                                         this.refreshImageBuilders();
+
+                                        for (int i = 0; i < linkedLayers.size(); i++) {
+                                           ((LayerCustomText) ( linkedLayers.get(i))).setTextChanged(true);
+
+                                        }
+        
+        
                                 }
                         });
-                        
-                        
-               
-             
-                         
-                        
+                              checkInterfaceHidding();
+
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -121,10 +128,13 @@ public class InterfaceCustomText extends Interface {
         /**
          * refresh the visibility of the different interface
          */
-        public void refreshInterfaceVisibility(){
+        public void checkInterfaceHidding(){
                          //Check the visibility of the color interface 
-                         gradientPicker.setVisible(canChangeColor);
-                        
+                         if(!this.canChangeColor){
+                                gradientPicker.setVisible(false);
+                                gradientPicker.setManaged(false);
+                         }
+                                
                          if(!this.canChangeText){
                                  TextGenerator.desactivateTextField();
                          }
@@ -149,7 +159,9 @@ public class InterfaceCustomText extends Interface {
                 XmlManager xmlManager = new XmlManager();
                 
                 xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()), "Color_2", StaticImageEditing.colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
-                xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()), "Color_2", StaticImageEditing.colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
+                
+                File fontToSave=TextGenerator.getFontFile();
+                xmlManager.addChild("TextBuilder", Map.of("Font_name", fontToSave.getName(), "Text",TextGenerator.getTextValue(),"Text_Size",String.valueOf(TextGenerator.getTextSizeValue()),"Text_Height",String.valueOf(TextGenerator.getTextHeigthValue()) ));
 
                 return xmlManager.createDesignParamElement("DesignParam", "LayerName", interfaceName);
         }
@@ -257,6 +269,18 @@ public class InterfaceCustomText extends Interface {
 
         public TextInImageGenerator getTextGenerator() {
                 return TextGenerator;
+        }
+
+        public PreviewImageBox getPreview() {
+                return Preview;
+        }
+
+        public GradientCreatorInterface getGradientPicker() {
+                return gradientPicker;
+        }
+
+        public TitledPane getCustomImageTiledPane() {
+                return CustomImageTiledPane;
         }
         
         

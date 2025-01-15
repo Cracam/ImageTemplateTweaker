@@ -87,16 +87,20 @@ public class ResourcesManager {
         fileMap.put(key, file);
     }
 
-    public void setBufferedImage(String key,String imageName, BufferedImage image){
+    public void setBufferedImage(String imageName, BufferedImage image){
         // Create a File object
-        File outputFile = new File(imageName+".png");
+        File outputFile = new File(imageName);
 
         // Write the BufferedImage to the file
         try {
             ImageIO.write(image, "png", outputFile);
             System.out.println("Image successfully written to file.");
+              fileMap.put(imageName,outputFile);
+            
         } catch (IOException e) {
         }
+        
+        
     }
 
 }
