@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Layers;
 
 import Layers.SubClasses.QuadrupletFloat;
@@ -9,11 +5,8 @@ import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
 import imageBuilder.ImageBuilder;
 import interfaces.Interface;
-import interfaces.InterfaceCustomText;
 import interfaces.InterfaceFixedTextCustomStyleCustomColor;
-import java.awt.image.BufferedImage;
 import org.w3c.dom.Element;
-import staticFunctions.StaticImageEditing;
 
 /**
  *
@@ -44,14 +37,10 @@ public class LayerFixedTextCustomStyleCustomColor extends LayerCustomText {
                 if (textChanged) {
                         this.opacityMap = ((InterfaceFixedTextCustomStyleCustomColor) (this.linkedInterface)).refreshOpacityMap(text, this.linkedImagesBuilder.get_pixel_mm_Factor(), textSizeMin, textSizeMax);
                         textChanged = false;
-                        System.out.println("################################"+text);
                 }
                 this.image_get = ((InterfaceFixedTextCustomStyleCustomColor) (this.linkedInterface)).getImageOut(opacityMap);
         }
 
-        
-        
- 
         
           /**
          * 

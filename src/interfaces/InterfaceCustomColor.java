@@ -69,7 +69,7 @@ public class InterfaceCustomColor extends Interface {
                                         
                                         this.refreshLayers();
                                         this.refreshImageBuilders();
-                                        System.out.println("(1) CHANGGE DEECTED " + linkedImagesBuilders.size());
+                                 //       System.out.println("(1) CHANGGE DEECTED " + linkedImagesBuilders.size());
                                 }
                         });
 

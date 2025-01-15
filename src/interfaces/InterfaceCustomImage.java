@@ -63,7 +63,7 @@ public class InterfaceCustomImage extends Interface {
                                 if (newValue) {
                                         //    System.out.println("trigered");
                                         LoaderInterface.setChanged(false);
-                                      System.out.println("(2) CHANGGE DEECTED");
+                                  //    System.out.println("(2) CHANGGE DEECTED");
                                         this.refreshLayers();
                                         this.refreshImageBuilders();
                                 }

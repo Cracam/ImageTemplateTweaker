@@ -3,17 +3,14 @@ package Layers;
 import Exceptions.ResourcesFileErrorException;
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
-import ResourcesManager.XmlManager;
 import imageBuilder.ImageBuilder;
 import interfaces.Interface;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import staticFunctions.StaticImageEditing;
 
 /**

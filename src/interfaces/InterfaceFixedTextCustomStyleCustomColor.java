@@ -27,7 +27,7 @@ public class InterfaceFixedTextCustomStyleCustomColor extends InterfaceCustomTex
                 canChangeTextHeight = true;
                 canChangeFont = true;
                 canChangeColor = true;
-                 checkInterfaceHidding();
+                checkInterfaceHidding();
         }
 
         @Override
@@ -59,10 +59,6 @@ public class InterfaceFixedTextCustomStyleCustomColor extends InterfaceCustomTex
                 return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
 
         }
-        
-        
-        
-        
 
         @Override
         public void loadInterfaceData(Element dataOfTheLayer) {
@@ -81,34 +77,30 @@ public class InterfaceFixedTextCustomStyleCustomColor extends InterfaceCustomTex
                 String fontName = dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Font_name").getNodeValue();
                 this.getTextGenerator().loadNewFont(this.designResources.get(fontName));
 
-          //      String text = dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text").getNodeValue();
+                //      String text = dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text").getNodeValue();
                 double textSize = Double.parseDouble(dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text_Size").getNodeValue());
                 double textheight = Double.parseDouble(dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text_Height").getNodeValue());
 
                 this.getTextGenerator().loadValues("", textSize, textheight);
         }
-       
-        
-        
 
-        public BufferedImage getImageOut(int[][] opacityMap){
-                    return this.getGradientPicker().getImageOut(opacityMap);
+        public BufferedImage getImageOut(int[][] opacityMap) {
+                return this.getGradientPicker().getImageOut(opacityMap);
         }
-        
-        
+
         /**
-         * This code return a 
+         * This code return a
+         *
          * @param text
          * @param pixelMmFactor
          * @param textSizeMin
          * @param textSizeMax
-         * @return 
+         * @return
          */
-        public int[][] refreshOpacityMap(String text,float pixelMmFactor, float textSizeMin, float textSizeMax){
-                    BufferedImage resizedImageGetRaw = this.getTextGenerator().getImageOut( pixelMmFactor,textSizeMin,textSizeMax); //72/25.4 convert milimeter into pt 
-                    return StaticImageEditing.transformToOpacityArray(resizedImageGetRaw);
+        public int[][] refreshOpacityMap(String text, float pixelMmFactor, float textSizeMin, float textSizeMax) {
+
+                BufferedImage resizedImageGetRaw = this.getTextGenerator().getImageOut(text, pixelMmFactor, textSizeMin, textSizeMax);
+                return StaticImageEditing.transformToOpacityArray(resizedImageGetRaw);
         }
         
-        
-
 }

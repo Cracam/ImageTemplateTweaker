@@ -13,7 +13,6 @@ import interfaces.InterfaceCustomText;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  *
