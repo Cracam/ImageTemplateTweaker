@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import previewimagebox.PreviewImageBox?>
+
+<fx:root fx:id="CustomImageTiledPane" type="TitledPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <HBox>
+         <children>
+            <Slider fx:id="slider_Y" orientation="VERTICAL">
+               <padding>
+                  <Insets bottom="12.0" top="12.0" />
+               </padding>
+            </Slider>
+            <VBox>
+               <children>
+                  <Slider fx:id="slider_X">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </Slider>
+                  <ImageView fx:id="PreviewBox" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </VBox>
+            <PreviewImageBox fx:id="Preview" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </HBox.margin></PreviewImageBox>
+         </children>
+      </HBox>
+   </content>
+</fx:root>

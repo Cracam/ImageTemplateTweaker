@@ -61,12 +61,14 @@ public class InterfaceCustomText extends Interface {
        
 
         public InterfaceCustomText(String interfaceName, ResourcesManager designResources) {
+                
+                super(interfaceName, designResources);
                 canChangeText = true;
                 canChangeTextSize = true;
                 canChangeTextHeight = true;
                 canChangeFont = true;
                 canChangeColor = true;
-                super(interfaceName, designResources);
+                 checkInterfaceHidding();
         }
 
         
@@ -118,7 +120,6 @@ public class InterfaceCustomText extends Interface {
         
                                 }
                         });
-                              checkInterfaceHidding();
 
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
