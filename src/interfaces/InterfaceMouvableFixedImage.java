@@ -16,6 +16,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import javax.imageio.ImageIO;
 import org.w3c.dom.Element;
@@ -42,13 +43,13 @@ public class InterfaceMouvableFixedImage extends Interface{
         @FXML
         private PreviewImageBox Preview;
         
-        
+        @FXML
+        private TitledPane CustomImageTiledPane;
         
         
         
         public InterfaceMouvableFixedImage(String interfaceName, ResourcesManager designResources) {
                 super(interfaceName, designResources);
-                this.haveGraphicInterface = false;
         }
         
 
@@ -66,7 +67,7 @@ public class InterfaceMouvableFixedImage extends Interface{
         @Override
         protected void initialiseInterface() {
                try {
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/LayerFixedMovableImage.fxml"));
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InterfaceFixedMovableImage.fxml"));
                         if (fxmlLoader == null) {
                                 throw new ResourcesFileErrorException();
                         }
@@ -75,18 +76,22 @@ public class InterfaceMouvableFixedImage extends Interface{
 
                         fxmlLoader.load();
                         this.Preview.toggleFixedSize();
-                        
+                        this.CustomImageTiledPane.setText(interfaceName);
                         
                    
-                        slider_X.setMin(0.001);
+                        slider_X.setMin(-0.999);
                         slider_X.setMax(0.999);
                         slider_X.setValue(0.5);
                         slider_X.setBlockIncrement(0.001);
                         
-                        slider_Y.setMin(0.001);
+                        slider_Y.setMin(-0.999);
                         slider_Y.setMax(0.999);
                         slider_Y.setValue(0.5);
                         slider_Y.setBlockIncrement(0.001);
+                        
+                        
+                
+                        
                         
                         
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
@@ -115,6 +120,12 @@ public class InterfaceMouvableFixedImage extends Interface{
         
          @Override
         public void refreshPreview(String imageBuilderName, ImageView previewImage){
+        }
+        
+        @FXML
+        private void refreshImagesBuilders(){
+                  this.refreshLayers();
+                   this.refreshImageBuilders();
         }
         
 }

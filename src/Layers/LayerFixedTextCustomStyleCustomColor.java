@@ -1,6 +1,7 @@
 package Layers;
 
 import Layers.SubClasses.QuadrupletFloat;
+import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
 import imageBuilder.ImageBuilder;
@@ -15,34 +16,25 @@ import org.w3c.dom.Element;
 public class LayerFixedTextCustomStyleCustomColor extends LayerCustomText {
         private int[][] opacityMap;
         private String text;
+       
         
         public LayerFixedTextCustomStyleCustomColor(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
                 super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
-                
-                
         }
 
-        public void setOpacityMap(int[][] opacityMap) {
-                this.opacityMap = opacityMap;
-        }
 
-        public int[][] getOpacityMap() {
-                return opacityMap;
-        }
         
 
                         
         @Override
         public void refreshImageGet() {
-                if (textChanged) {
-                        this.opacityMap = ((InterfaceFixedTextCustomStyleCustomColor) (this.linkedInterface)).refreshOpacityMap(text, this.linkedImagesBuilder.get_pixel_mm_Factor(), textSizeMin, textSizeMax);
-                        textChanged = false;
-                }
-                this.image_get = ((InterfaceFixedTextCustomStyleCustomColor) (this.linkedInterface)).getImageOut(opacityMap);
+               
+                
+                
         }
-
         
-          /**
+    
+   /**
          * 
          * @param paramNode
          */
@@ -54,7 +46,7 @@ public class LayerFixedTextCustomStyleCustomColor extends LayerCustomText {
                 this.textSizeMin=XmlManager.getFloatAttribute(element,"TextSizeMin",this.textSizeMin);
                 this.textSizeMax=XmlManager.getFloatAttribute(element,"TextSizeMax",this.textSizeMax);
                  this.text=XmlManager.getStringAttribute(element,"Text",this.text);
-        }
+        }         
 
         
 }

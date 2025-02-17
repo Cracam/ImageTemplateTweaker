@@ -40,7 +40,8 @@ public abstract class Interface extends TitledPane{
                 "Custom_Image",  InterfaceCustomImage.class,
                 "Custom_Color", InterfaceCustomColor.class,
                 "Custom_Text",InterfaceCustomText.class,
-                "Fixed_Text_Custom_Color_Custom_Style", InterfaceFixedTextCustomStyleCustomColor.class
+                "Fixed_Text_Custom_Color_Custom_Style", InterfaceFixedTextCustomStyleCustomColor.class,
+                "Mouvable_Fixed_Image", InterfaceMouvableFixedImage.class
         );
         
         boolean haveGraphicInterface=true ;

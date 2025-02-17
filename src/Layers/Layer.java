@@ -10,6 +10,7 @@ import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.ResourcesManager;
 import interfaces.Interface;
+import interfaces.InterfaceMouvableFixedImage;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
@@ -49,7 +50,8 @@ public abstract class Layer extends TitledPane {
                 "Custom_Image", LayerCustomImage.class,
                 "Custom_Color", LayerCustomColor.class, 
                 "Custom_Text",LayerCustomText.class,
-                "Fixed_Text_Custom_Color_Custom_Style", LayerFixedTextCustomStyleCustomColor.class
+                "Fixed_Text_Custom_Color_Custom_Style", LayerFixedTextCustomStyleCustomColor.class,
+                "Mouvable_Fixed_Image", LayerMovableFixedImage.class
         );
 
         
