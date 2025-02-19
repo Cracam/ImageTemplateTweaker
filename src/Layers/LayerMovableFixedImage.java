@@ -6,6 +6,9 @@ import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
 import imageBuilder.ImageBuilder;
 import interfaces.Interface;
+import interfaces.InterfaceCustomText;
+import interfaces.InterfaceMouvableFixedImage;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -25,28 +28,38 @@ public class LayerMovableFixedImage extends Layer {
         private float X_MinOffset=(float) -1.0;
         private float Y_MaxOffset=(float) 1.0;
         private float Y_MinOffset=(float) -1.0;
+        private File imageGetRaw=null;
+        
+        private float posRefX;
+        private float posRefY;
         
         public LayerMovableFixedImage(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
                 super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
+                this.posRefX=posSize.getPos_x();//save the original postion
+                this.posRefY=posSize.getPos_x();//save the original postion
+                
         }
 
      
 
         @Override
         public void refreshImageGet() {
+                    refreshOffset(((InterfaceMouvableFixedImage) (this.linkedInterface)).getSliderXValue(),((InterfaceMouvableFixedImage) (this.linkedInterface)).getSliderYValue());
+               
                 try {
-                        File imageFile = this.modelResources.get(this.imageName);
+                        if (imageGetRaw == null) {
+                                imageGetRaw = this.modelResources.get(this.imageName);
 
-                        if (imageFile == null) {
-                                throw new ResourcesFileErrorException("This file dont exist : " + this.imageName);
+                                if (imageGetRaw == null) {
+                                        throw new ResourcesFileErrorException("This file dont exist : " + this.imageName);
+                                }
+
                         }
-                         this.image_get= StaticImageEditing.ResizeImage(ImageIO.read(imageFile), this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y());
+                        this.image_get = StaticImageEditing.ResizeImage(ImageIO.read(imageGetRaw), this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y());
+
                 } catch (IOException | ResourcesFileErrorException ex) {
                         Logger.getLogger(LayerMovableFixedImage.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                refreshOffset(this.linkedInterface);
-
 
         }
 
@@ -72,16 +85,14 @@ public class LayerMovableFixedImage extends Layer {
                           offsetY=-this.Y_MinOffset*rawOffestY;
                 }
                 
-                posSize=new QuadrupletFloat(posSize.getPos_x()+offsetX, posSize.getPos_y()+offsetY, posSize.getSize_x(), posSize.getSize_y());
-                this.refreshDPI();
+                posSize=new QuadrupletFloat(posRefX+offsetX,posRefY+offsetY, posSize.getSize_x(), posSize.getSize_y());
+             pixelPosSize.computePixelPosSize(posSize, linkedImagesBuilder.getPixelMmFactor());
         }
         
 
    
 
-        @Override
-        public void refreshPreview() {
-        }
+  
 
         @Override
         public void DPIChanged() {
@@ -100,5 +111,7 @@ public class LayerMovableFixedImage extends Layer {
               this.Y_MaxOffset=XmlManager.getFloatAttribute(element,"Y_MaxOffset", this.Y_MaxOffset);
               this.Y_MinOffset=XmlManager.getFloatAttribute(element,"Y_MinOffset", this.Y_MinOffset);
         }
+        
+     
      
 }

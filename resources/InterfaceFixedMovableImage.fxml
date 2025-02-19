@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import previewimagebox.PreviewImageBox?>
@@ -11,19 +12,19 @@
    <content>
       <HBox>
          <children>
-            <Slider fx:id="slider_Y" onKeyPressed="#refreshImagesBuilders" orientation="VERTICAL">
+            <Slider fx:id="slider_Y" onKeyPressed="#refreshImagesBuilders" onMouseDragged="#refreshImagesBuilders" orientation="VERTICAL">
                <padding>
                   <Insets bottom="12.0" top="12.0" />
                </padding>
             </Slider>
             <VBox>
                <children>
-                  <Slider fx:id="slider_X" onKeyPressed="#refreshImagesBuilders">
+                  <Slider fx:id="slider_X" onKeyPressed="#refreshImagesBuilders" onMouseDragged="#refreshImagesBuilders">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </Slider>
-                  <PreviewImageBox fx:id="PreviewBox" />
+                  <ImageView fx:id="PreviewBox" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" />
                </children>
                <HBox.margin>
                   <Insets left="10.0" />

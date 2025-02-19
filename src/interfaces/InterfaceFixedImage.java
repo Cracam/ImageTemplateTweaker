@@ -49,21 +49,7 @@ public class InterfaceFixedImage extends Interface{
         }
         
         
-        /**
-         * Return the image resized
-         * @param x
-         * @param y
-         * @param imageFile
-         * @return 
-         */
-        public BufferedImage getImageOut(int x,int y,File imageFile){
-                try {
-                        return StaticImageEditing.ResizeImage(ImageIO.read(imageFile), x,y);
-                } catch (IOException ex) {
-                        Logger.getLogger(InterfaceFixedImage.class.getName()).log(Level.SEVERE, null, ex);
-                        return null;
-                }
-        }
+   
         
         
         

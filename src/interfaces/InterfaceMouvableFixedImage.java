@@ -6,19 +6,24 @@ package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
 import ResourcesManager.ResourcesManager;
+import ResourcesManager.XmlChild;
+import ResourcesManager.XmlManager;
 import imageloaderinterface.ImageLoaderInterface;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javax.imageio.ImageIO;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
@@ -32,7 +37,7 @@ import staticFunctions.StaticImageEditing;
 public class InterfaceMouvableFixedImage extends Interface{
 
         @FXML
-        private PreviewImageBox PreviewBox;
+        private ImageView PreviewBox;
         
         @FXML
         private Slider slider_X;
@@ -55,14 +60,26 @@ public class InterfaceMouvableFixedImage extends Interface{
 
         @Override
         public Node saveInterfaceData() {
-               //Do nothing because ther is no data in the interface to load
-               return null;
+              XmlManager xmlManager = new XmlManager();
+
+                XmlChild XmlGradient = new XmlChild("OffSet");
+                XmlGradient.addAttribute("X_Offset", String.valueOf(slider_X.getValue()));
+                XmlGradient.addAttribute("Y_Offset", String.valueOf(slider_Y.getValue()));
+                
+                return xmlManager.createDesignParamElement("DesignParam", "LayerName", interfaceName);
         }
+        
+        
+        
 
         @Override
         public void loadInterfaceData(Element dataOfTheLayer) {
-                //Do nothing because ther is no data in the interface to save
+                slider_X.setValue( Double.parseDouble(dataOfTheLayer.getElementsByTagName("OffSet").item(0).getAttributes().getNamedItem("X_Offset").getNodeValue()));
+                slider_Y.setValue( Double.parseDouble(dataOfTheLayer.getElementsByTagName("OffSet").item(0).getAttributes().getNamedItem("Y_Offset").getNodeValue()));
         }
+        
+        
+        
 
         @Override
         protected void initialiseInterface() {
@@ -81,15 +98,15 @@ public class InterfaceMouvableFixedImage extends Interface{
                    
                         slider_X.setMin(-0.999);
                         slider_X.setMax(0.999);
-                        slider_X.setValue(0.5);
+                        slider_X.setValue(0.0);
                         slider_X.setBlockIncrement(0.001);
                         
                         slider_Y.setMin(-0.999);
                         slider_Y.setMax(0.999);
-                        slider_Y.setValue(0.5);
+                        slider_Y.setValue(0.0);
                         slider_Y.setBlockIncrement(0.001);
                         
-                        
+                        PreviewBox.setImage(generateIndicator((float) this.slider_X.getValue(),  (float)  this.slider_Y.getValue()));
                 
                         
                         
@@ -100,32 +117,75 @@ public class InterfaceMouvableFixedImage extends Interface{
         }
         
         
-        /**
-         * Return the image resized
-         * @param x
-         * @param y
-         * @param imageFile
-         * @return 
-         */
-        public BufferedImage getImageOut(int x,int y,File imageFile){
-                try {
-                        return StaticImageEditing.ResizeImage(ImageIO.read(imageFile), x,y);
-                } catch (IOException ex) {
-                        Logger.getLogger(InterfaceMouvableFixedImage.class.getName()).log(Level.SEVERE, null, ex);
-                        return null;
-                }
-        }
-        
+    
         
         
          @Override
         public void refreshPreview(String imageBuilderName, ImageView previewImage){
+                 refreshPreviewIntermediate(imageBuilderName,previewImage,Preview);
         }
+        
         
         @FXML
         private void refreshImagesBuilders(){
                   this.refreshLayers();
                    this.refreshImageBuilders();
+                
+                   PreviewBox.setImage(generateIndicator((float) this.getSliderXValue(),  (float) this.getSliderYValue()));
         }
+        
+        /**
+         * return the vallue of the slider X
+         * @return 
+         */
+        public float getSliderXValue(){
+                return (float) this.slider_X.getValue();
+        }
+        
+        /**
+         * return the value of the slider y
+         * @return 
+         */
+        public float getSliderYValue(){
+                return (float) -this.slider_Y.getValue();
+        }
+        
+        
+        
+        
+        
+     public static Image generateIndicator(float X, float Y) {
+        // Taille du carré
+        double squareSize = 200;
+
+        // Création du carré
+        Rectangle square = new Rectangle(squareSize, squareSize);
+        square.setFill(Color.LIGHTGRAY);
+        square.setStroke(Color.BLACK);
+
+        // Mappage des coordonnées de [-1, 1] à [0, squareSize]
+        double mappedX = mapRange(X, -1.15, 1.15, 0, squareSize);
+        double mappedY = mapRange(Y, -1.15, 1.15, 0, squareSize);
+
+        // Création du cercle
+        Circle circle = new Circle(10, Color.RED);
+        circle.setCenterX(mappedX);
+        circle.setCenterY(mappedY);
+
+        // Création du Pane et ajout des formes
+        Pane pane = new Pane();
+        pane.getChildren().addAll(square, circle);
+
+        // Capture d'écran du Pane
+        SnapshotParameters params = new SnapshotParameters();
+        WritableImage image = pane.snapshot(params, null);
+
+        return image;
+    }
+
+    // Fonction pour mapper une valeur d'un intervalle à un autre
+    private static double mapRange(double value, double fromLow, double fromHigh, double toLow, double toHigh) {
+        return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
+    }
         
 }
