@@ -10,6 +10,7 @@ import ResourcesManager.XmlManager;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import staticFunctions.StaticImageEditing;
@@ -31,8 +32,8 @@ public class InterfaceFixedTextCustomStyleCustomColor extends InterfaceCustomTex
         }
 
         @Override
-        public Node saveInterfaceData() {
-                XmlManager xmlManager = new XmlManager();
+        public Node saveInterfaceData(Document doc) {
+                XmlManager xmlManager = new XmlManager(doc);
 
                 XmlChild XmlGradient = new XmlChild("Gradient");
                 XmlGradient.addAttribute("Gradient_Name", this.getGradientPicker().getSelectedGradientName());
@@ -103,4 +104,6 @@ public class InterfaceFixedTextCustomStyleCustomColor extends InterfaceCustomTex
                 return StaticImageEditing.transformToOpacityArray(resizedImageGetRaw);
         }
         
+        
+       
 }

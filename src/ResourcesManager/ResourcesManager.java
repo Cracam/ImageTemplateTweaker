@@ -26,6 +26,7 @@ public class ResourcesManager {
         this.fileMap = new HashMap<>();
         loadZipFile();
     }
+    
 
     private void loadZipFile() {
         try (FileInputStream fis = new FileInputStream(zipFilePath);

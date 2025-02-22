@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.image.ImageView;
 import javax.imageio.ImageIO;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import staticFunctions.StaticImageEditing;
@@ -33,7 +34,7 @@ public class InterfaceFixedImage extends Interface{
         
 
         @Override
-        public Node saveInterfaceData() {
+        public Node saveInterfaceData(Document doc) {
                //Do nothing because ther is no data in the interface to load
                return null;
         }

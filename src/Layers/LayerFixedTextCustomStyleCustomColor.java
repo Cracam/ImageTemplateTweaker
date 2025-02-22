@@ -1,7 +1,6 @@
 package Layers;
 
 import Layers.SubClasses.QuadrupletFloat;
-import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
 import imageBuilder.ImageBuilder;
@@ -23,16 +22,6 @@ public class LayerFixedTextCustomStyleCustomColor extends LayerCustomText {
         }
 
 
-        
-
-                        
-        @Override
-        public void refreshImageGet() {
-               
-                
-                
-        }
-        
     
    /**
          * 
@@ -46,6 +35,7 @@ public class LayerFixedTextCustomStyleCustomColor extends LayerCustomText {
                 this.textSizeMin=XmlManager.getFloatAttribute(element,"TextSizeMin",this.textSizeMin);
                 this.textSizeMax=XmlManager.getFloatAttribute(element,"TextSizeMax",this.textSizeMax);
                  this.text=XmlManager.getStringAttribute(element,"Text",this.text);
+                 ((InterfaceFixedTextCustomStyleCustomColor) (this.linkedInterface)).getTextGenerator().setText(this.text);
         }         
 
         

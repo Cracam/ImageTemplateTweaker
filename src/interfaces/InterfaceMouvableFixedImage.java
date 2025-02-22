@@ -24,6 +24,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
@@ -59,8 +60,8 @@ public class InterfaceMouvableFixedImage extends Interface{
         
 
         @Override
-        public Node saveInterfaceData() {
-              XmlManager xmlManager = new XmlManager();
+        public Node saveInterfaceData(Document doc) {
+              XmlManager xmlManager = new XmlManager(doc);
 
                 XmlChild XmlGradient = new XmlChild("OffSet");
                 XmlGradient.addAttribute("X_Offset", String.valueOf(slider_X.getValue()));

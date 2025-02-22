@@ -2,18 +2,13 @@ package designBuilder;
 
 import imageBuilder.ImageBuilder;
 import Exceptions.ResourcesFileErrorException;
-import Layers.Layer;
 import ResourcesManager.ResourcesManager;
 import interfaces.Interface;
 import static interfaces.Interface.interfacesTypesMap;
-import interfaces.InterfaceCustomColor;
-import interfaces.InterfaceCustomImage;
-import interfaces.InterfaceFixedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -22,10 +17,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,17 +47,17 @@ public class DesignBuilder extends Application {
                  private ResourcesManager  designResources;
                  
          //Information on the model
-         private String name; // the model Name
+         private String modelName; // the model Name
+         private String designName;
          private String description; // The description of themodel
          private String defaultDesignName; // the default design name (inside the zip of the model) it's the file we will copy if the user use a model a reference for it's new Design.
-         
+         private String author;
 
          
          private final  ArrayList<ImageBuilder> imageBuilders = new ArrayList<>();
          private final  ArrayList<TabOfTiltedPane> tabs = new ArrayList<>();
          private final ArrayList<Interface> interfaces=new ArrayList<>();
                   
-    
         
          private Scene scene;
          
@@ -97,7 +98,7 @@ public class DesignBuilder extends Application {
                          // Get the root element
                          Element rootElement = document.getDocumentElement();
                          
-                         this.name = rootElement.getAttribute("name");
+                         this.modelName = rootElement.getAttribute("name");
                          
                          Element informationsNode = (Element) rootElement.getElementsByTagName("Informations").item(0);
                          this.description = informationsNode.getElementsByTagName("DefaultDesign").item(0).getAttributes().getNamedItem("name").getNodeValue();
@@ -115,9 +116,7 @@ public class DesignBuilder extends Application {
                                  System.out.println(this.toString());
                          }
                          
-                         for(int i=0 ;  i<imageBuilders.size();i++){
-                                 this.imageBuilders.get(i).refreshAll();
-                         }
+                        refreshEverything();
                          
                  } catch (ParserConfigurationException | SAXException | IOException ex) {
                          Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
@@ -125,6 +124,88 @@ public class DesignBuilder extends Application {
         }
 
          
+        private void refreshEverything(){
+                 for(int i=0 ;  i<imageBuilders.size();i++){
+                                 this.imageBuilders.get(i).refreshAll();
+                         }
+        }
+        
+        /**
+         * This program will be used to create a new model it will set a resource Manager element, (it will not save the design until the first save)
+         * 
+         * It will pen an xml file in order to
+         * @param filepath 
+         */
+        private void loadNewDesign(String filepath) {
+                 try {
+                         this.designResources = new ResourcesManager(filepath);
+                         //gérer xml opening
+                         // Create a DocumentBuilderFactory
+                         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                         // Create a DocumentBuilder
+                         DocumentBuilder builder = factory.newDocumentBuilder();
+                         // Parse the XML file and return a DOM Document object
+                         Document document = builder.parse(this.modelResources.get("Design_Param.xml"));
+                         // Get the root element
+                         Element rootElement = document.getDocumentElement();
+                         
+                      
+                        // if(!rootElement.getAttribute("modelName")==this.modelName ){
+                                 
+                         
+                                 
+                            this.designName = rootElement.getAttribute("Design_name");
+                            this.author= rootElement.getAttribute("Author_name");
+                            
+                     
+                         // Get all "Output" nodes
+                         NodeList InterfacesNodes = rootElement.getElementsByTagName("Interfaces");
+                         
+                         Interface tempInterface;
+                         // Print the names of all "Output" nodes
+                         for (int i = 0; i < InterfacesNodes.getLength(); i++) {//we begin by one to avoid the description node
+                                 Node interfaceNode = InterfacesNodes.item(i);
+                                 
+                                 System.out.println("InterfacesNodes: " + interfaceNode.getNodeName());
+                                 tempInterface=findInterfaceByName(interfaceNode.getNodeName());
+                                 if(tempInterface!=null){
+                                         tempInterface.loadInterfaceData((Element) interfaceNode);
+                                 }
+                         }
+                          
+                       refreshEverything();
+                         
+                 } catch (ParserConfigurationException | SAXException | IOException ex) {
+                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+        }
+        
+        
+    /**
+     * This method shearch in the intefaces array to know if this interfac exist
+     * @param targetName
+     * @return 
+     */    
+    private Interface findInterfaceByName( String targetName) {
+        if (targetName == null) {
+            return null;
+        }
+
+        for (Interface myInterface : this.interfaces) {
+            if (targetName.equals(myInterface.getInterfaceName())) {
+                return myInterface;
+            }
+        }
+
+        return null; // Retourne null si aucune interface correspondante n'est trouvée
+    }        
+        
+        
+        
+        
+        
+        
+        
          
          @Override
          public void start(Stage primarystage) throws Exception {
@@ -150,6 +231,9 @@ public class DesignBuilder extends Application {
                            scene = new Scene(root);
                            primarystage.setScene(scene);
                            primarystage.show();
+                           
+                            modelResources=new ResourcesManager("C:\\BACKUP\\ENSE3\\Foyer\\Programme_Java\\Batcher_Foyer\\test_data\\modelTest.zip");
+                            designResources=new ResourcesManager("C:\\BACKUP\\ENSE3\\Foyer\\Programme_Java\\Batcher_Foyer\\test_data\\designTest.zip");
 
                          //refresh all the images
                          for (ImageBuilder imageBuilder : imageBuilders) {
@@ -161,9 +245,73 @@ public class DesignBuilder extends Application {
                   }
          }
 
+         
+         @FXML
+         private void saveDesign(){
+                 FileChooser fileChooser = new FileChooser();
+                  fileChooser.setTitle("Choisissez votre image");
+                  fileChooser.getExtensionFilters().addAll(
+                            new FileChooser.ExtensionFilter("XML Files", "*.xml"));
+                 File selectedFile =  fileChooser.showSaveDialog(null);
+                  if (selectedFile != null) {
+                         saveDesign(selectedFile.getAbsolutePath());
+                  }
+                  
+                 System.out.println("saveDesignsaveDesign");
+         }      
+                 
+             /**
+     * This method saves the current design to an XML file.
+     * @param filepath
+     */
+    private void saveDesign(String filepath) {
+        try {
+            // Create a DocumentBuilderFactory
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            // Create a DocumentBuilder
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            // Create a new DOM Document
+            Document document = builder.newDocument();
+
+            // Create the root element
+            Element rootElement = document.createElement("Design");
+            document.appendChild(rootElement);
+
+            // Set attributes for the root element
+            rootElement.setAttribute("Design_name", this.designName);
+            rootElement.setAttribute("Author_name", this.author);
+
+            // Save interfaces
+            Element interfacesElement = document.createElement("Interfaces");
+            rootElement.appendChild(interfacesElement);
+
+            for (Interface myInterface : this.interfaces) {
+                Node interfaceElement = myInterface.saveInterfaceData(document);
+                interfacesElement.appendChild(interfaceElement);
+            }
+
+            // Write the content into XML file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(new File(filepath));
+            transformer.transform(source, result);
+
+        } catch (ParserConfigurationException | TransformerException e) {
+            e.printStackTrace();
+        }
+    }
+         
+         
+         
+         
+         
+         
+         
+         
         @Override
         public String toString() {
-                return "DesignBuilder{" + "id=" + id + ", modelResources=" + modelResources + ", designResources=" + designResources + ", name=" + name + ", description=" + description + ", defaultDesignName=" + defaultDesignName + ", imageBuilders=" + imageBuilders + ", tabs=" + tabs + ", DPI=" + DPI + ", tabPane=" + tabPane + ", preview=" + preview + '}';
+                return "DesignBuilder{" + "id=" + id + ", modelResources=" + modelResources + ", designResources=" + designResources + ", name=" + modelName + ", description=" + description + ", defaultDesignName=" + defaultDesignName + ", imageBuilders=" + imageBuilders + ", tabs=" + tabs + ", DPI=" + DPI + ", tabPane=" + tabPane + ", preview=" + preview + '}';
         }
          
 

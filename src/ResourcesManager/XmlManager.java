@@ -5,13 +5,7 @@
 package ResourcesManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -22,8 +16,10 @@ import org.w3c.dom.Node;
 public class XmlManager {
 
         private ArrayList<XmlChild> childs = new ArrayList<>();
-
-        public XmlManager() {
+        private Document doc;
+        
+        public XmlManager(Document doc) {
+                this.doc=doc;
         }
 
         /**
@@ -36,15 +32,7 @@ public class XmlManager {
          * @return the DesignParam element
          */
         public Element createDesignParamElement(String name, String attributeName, String attributeValue) {
-                try {
-                        // Create a DocumentBuilderFactory
-                        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                        // Create a DocumentBuilder
-                        DocumentBuilder builder;
-                        builder = factory.newDocumentBuilder();
-
-                        // Create a new Document
-                        Document doc = builder.newDocument();
+                       
 
                         // Create the DesignParam element
                         Element designParamElement = doc.createElement(name);
@@ -61,11 +49,7 @@ public class XmlManager {
 
                         childs.clear();
                         return designParamElement;
-                } catch (ParserConfigurationException ex) {
-                        Logger.getLogger(XmlManager.class.getName()).log(Level.SEVERE, null, ex);
-                        childs.clear();
-                        return null;
-                }
+  
         }
 
         public void addChild(String name, Map<String, String> attributes) {

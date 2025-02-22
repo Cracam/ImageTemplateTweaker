@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
@@ -64,9 +65,10 @@ public abstract class Interface extends TitledPane{
         
         /**
          * This function will return a node that will allow to save the data of the interface
+         * @param doc
          * @return 
          */
-        public abstract Node saveInterfaceData();
+        public abstract Node saveInterfaceData(Document doc);
         
         /**
          * This will load the data from the XML file

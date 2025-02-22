@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
@@ -81,10 +82,10 @@ public class InterfaceCustomImage extends Interface {
         
         
         @Override
-        public Node saveInterfaceData() {
+        public Node saveInterfaceData(Document doc) {
                 String imageName = "Image_" + interfaceName + ".png";
 
-                XmlManager xmlManager = new XmlManager();
+                XmlManager xmlManager = new XmlManager(doc);
                 xmlManager.addChild("Image", Map.of("image_name", imageName));
 
                 //save the image into the Design zip

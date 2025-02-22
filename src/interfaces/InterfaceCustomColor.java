@@ -20,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
@@ -83,8 +84,8 @@ public class InterfaceCustomColor extends Interface {
         
         
         @Override
-        public Node saveInterfaceData() {
-                  XmlManager xmlManager = new XmlManager();
+        public Node saveInterfaceData(Document doc) {
+                  XmlManager xmlManager = new XmlManager(doc);
                 xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()), "Color_2", StaticImageEditing.colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
                 return xmlManager.createDesignParamElement("DesignParam", "interfaceName", interfaceName);
         }
