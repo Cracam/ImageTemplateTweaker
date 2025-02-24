@@ -4,18 +4,11 @@
  */
 package interfaces;
 
-import ResourcesManager.ResourcesManager;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import designBuilder.DesignBuilder;
 import javafx.scene.image.ImageView;
-import javax.imageio.ImageIO;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import staticFunctions.StaticImageEditing;
 
 /**
  * This class have  the only function of generating the image out from a file
@@ -27,8 +20,8 @@ public class InterfaceFixedImage extends Interface{
         
         
         
-        public InterfaceFixedImage(String interfaceName, ResourcesManager designResources) {
-                super(interfaceName, designResources);
+        public InterfaceFixedImage(String interfaceName, DesignBuilder designBuilder) {
+                super(interfaceName, designBuilder);
                 this.haveGraphicInterface = false;
         }
         

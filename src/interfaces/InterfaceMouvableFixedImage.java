@@ -5,9 +5,9 @@
 package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
-import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
+import designBuilder.DesignBuilder;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -28,7 +28,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
-import staticFunctions.StaticImageEditing;
 
 /**
  * This class have  the only function of generating the image out from a file
@@ -54,8 +53,8 @@ public class InterfaceMouvableFixedImage extends Interface{
         
         
         
-        public InterfaceMouvableFixedImage(String interfaceName, ResourcesManager designResources) {
-                super(interfaceName, designResources);
+        public InterfaceMouvableFixedImage(String interfaceName, DesignBuilder designBuilder) {
+                super(interfaceName, designBuilder);
         }
         
 
@@ -63,11 +62,12 @@ public class InterfaceMouvableFixedImage extends Interface{
         public Node saveInterfaceData(Document doc) {
               XmlManager xmlManager = new XmlManager(doc);
 
-                XmlChild XmlGradient = new XmlChild("OffSet");
-                XmlGradient.addAttribute("X_Offset", String.valueOf(slider_X.getValue()));
-                XmlGradient.addAttribute("Y_Offset", String.valueOf(slider_Y.getValue()));
-                
-                return xmlManager.createDesignParamElement("DesignParam", "LayerName", interfaceName);
+                XmlChild Xmloffset = new XmlChild("OffSet");
+                Xmloffset.addAttribute("X_Offset", String.valueOf(slider_X.getValue()));
+                Xmloffset.addAttribute("Y_Offset", String.valueOf(slider_Y.getValue()));
+                xmlManager.addChild(Xmloffset);
+                 
+                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
         }
         
         
@@ -77,6 +77,8 @@ public class InterfaceMouvableFixedImage extends Interface{
         public void loadInterfaceData(Element dataOfTheLayer) {
                 slider_X.setValue( Double.parseDouble(dataOfTheLayer.getElementsByTagName("OffSet").item(0).getAttributes().getNamedItem("X_Offset").getNodeValue()));
                 slider_Y.setValue( Double.parseDouble(dataOfTheLayer.getElementsByTagName("OffSet").item(0).getAttributes().getNamedItem("Y_Offset").getNodeValue()));
+                refreshImagesBuilders();
+                
         }
         
         

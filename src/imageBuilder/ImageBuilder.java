@@ -195,7 +195,7 @@ public class ImageBuilder {
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
                                         Interface linkedInterface = this.designBuilder.getInterface(key, nameElement);
                                         if (linkedInterface == null) {
-                                                linkedInterface = Interface.createInterface(key, nameElement, this.designBuilder.getDesignResources());
+                                                linkedInterface = Interface.createInterface(key, nameElement, this.designBuilder);
                                                 this.designBuilder.addInterface(linkedInterface);
                                                 if(linkedInterface.isHaveGraphicInterface()){
                                                         String tabname = element.getAttribute("tab_name");

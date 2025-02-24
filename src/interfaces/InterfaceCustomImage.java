@@ -5,8 +5,8 @@
 package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
-import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
+import designBuilder.DesignBuilder;
 import imageloaderinterface.ImageLoaderInterface;
 import static interfaces.Interface.refreshPreviewIntermediate;
 import java.awt.image.BufferedImage;
@@ -39,8 +39,8 @@ public class InterfaceCustomImage extends Interface {
         @FXML
         private TitledPane CustomImageTiledPane;
 
-        public InterfaceCustomImage(String interfaceName, ResourcesManager designResources) {
-                super(interfaceName, designResources);
+        public InterfaceCustomImage(String interfaceName, DesignBuilder designBuilder) {
+                super(interfaceName, designBuilder);
         }
         
         
@@ -86,12 +86,17 @@ public class InterfaceCustomImage extends Interface {
                 String imageName = "Image_" + interfaceName + ".png";
 
                 XmlManager xmlManager = new XmlManager(doc);
-                xmlManager.addChild("Image", Map.of("image_name", imageName));
+                if(null == LoaderInterface.getImage_out()){
+                         xmlManager.addChild("Image", Map.of());
+                }else{
+                        xmlManager.addChild("Image", Map.of("image_name", imageName));
 
-                //save the image into the Design zip
-                this.designResources.setBufferedImage(imageName, LoaderInterface.getImage_out());
+                        //save the image into the Design zip
+                        this.designBuilder.getDesignResources().setBufferedImage(imageName, LoaderInterface.getImage_out());
+                }
+                
 
-                return xmlManager.createDesignParamElement("DesignParam", "LayerName", interfaceName);
+                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
         }
 
         
@@ -99,7 +104,7 @@ public class InterfaceCustomImage extends Interface {
         @Override
         public void loadInterfaceData(Element dataOfTheLayer ) {
                 String imageName = dataOfTheLayer.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
-                LoaderInterface.loadImage(this.designResources.get(imageName));
+                LoaderInterface.loadImage(this.designBuilder.getDesignResources().get(imageName));
         }
         
         

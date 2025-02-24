@@ -5,7 +5,9 @@ import Exceptions.ResourcesFileErrorException;
 import ResourcesManager.ResourcesManager;
 import interfaces.Interface;
 import static interfaces.Interface.interfacesTypesMap;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -130,6 +133,30 @@ public class DesignBuilder extends Application {
                          }
         }
         
+        
+        
+        @FXML
+    private void loadDesign() throws IOException, TransformerException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir un modèle de carte à charger");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("ZIP Files", "*.zip"));
+
+        // Utilisez showOpenDialog pour charger un fichier existant
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            // Affichez le chemin du fichier sélectionné
+            String filePath = selectedFile.getAbsolutePath();
+            System.out.println("Chemin du fichier ZIP sélectionné : " + filePath);
+            loadNewDesign(filePath);
+
+            // Vous pouvez également passer ce chemin à une autre méthode si nécessaire
+            // processZipFile(filePath);
+        }
+
+        System.out.println("loadDesign");
+    }
+         
         /**
          * This program will be used to create a new model it will set a resource Manager element, (it will not save the design until the first save)
          * 
@@ -145,7 +172,7 @@ public class DesignBuilder extends Application {
                          // Create a DocumentBuilder
                          DocumentBuilder builder = factory.newDocumentBuilder();
                          // Parse the XML file and return a DOM Document object
-                         Document document = builder.parse(this.modelResources.get("Design_Param.xml"));
+                         Document document = builder.parse(this.designResources.get("DesignData.xml"));
                          // Get the root element
                          Element rootElement = document.getDocumentElement();
                          
@@ -159,17 +186,22 @@ public class DesignBuilder extends Application {
                             
                      
                          // Get all "Output" nodes
-                         NodeList InterfacesNodes = rootElement.getElementsByTagName("Interfaces");
+                         NodeList allInterfaces = rootElement.getElementsByTagName("Interfaces");
                          
+                        NodeList InterfacesNodes = allInterfaces.item(0).getChildNodes();
+                       //  System.out.println("#####"+InterfacesNodes.getLength());
                          Interface tempInterface;
                          // Print the names of all "Output" nodes
                          for (int i = 0; i < InterfacesNodes.getLength(); i++) {//we begin by one to avoid the description node
                                  Node interfaceNode = InterfacesNodes.item(i);
+                                 Element interfaceElt=(Element) interfaceNode;
                                  
-                                 System.out.println("InterfacesNodes: " + interfaceNode.getNodeName());
-                                 tempInterface=findInterfaceByName(interfaceNode.getNodeName());
+                                 tempInterface=findInterfaceByName(interfaceElt.getAttribute("InterfaceName"));
+                                 System.out.println("####"+i+" "+interfaceElt.getAttribute("InterfaceName"));
                                  if(tempInterface!=null){
-                                         tempInterface.loadInterfaceData((Element) interfaceNode);
+                                         tempInterface.loadInterfaceData( interfaceElt);
+                                         System.out.println("InterfacesNodes: " + interfaceElt.getAttribute("InterfaceName"));
+
                                  }
                          }
                           
@@ -232,8 +264,7 @@ public class DesignBuilder extends Application {
                            primarystage.setScene(scene);
                            primarystage.show();
                            
-                            modelResources=new ResourcesManager("C:\\BACKUP\\ENSE3\\Foyer\\Programme_Java\\Batcher_Foyer\\test_data\\modelTest.zip");
-                            designResources=new ResourcesManager("C:\\BACKUP\\ENSE3\\Foyer\\Programme_Java\\Batcher_Foyer\\test_data\\designTest.zip");
+                            designResources=new ResourcesManager();
 
                          //refresh all the images
                          for (ImageBuilder imageBuilder : imageBuilders) {
@@ -247,11 +278,11 @@ public class DesignBuilder extends Application {
 
          
          @FXML
-         private void saveDesign(){
+         private void saveDesign() throws IOException, TransformerException{
                  FileChooser fileChooser = new FileChooser();
-                  fileChooser.setTitle("Choisissez votre image");
+                  fileChooser.setTitle("Choisisser où sauvgader le modèle de carte");
                   fileChooser.getExtensionFilters().addAll(
-                            new FileChooser.ExtensionFilter("XML Files", "*.xml"));
+                            new FileChooser.ExtensionFilter("ZIP Files", "*.zip"));
                  File selectedFile =  fileChooser.showSaveDialog(null);
                   if (selectedFile != null) {
                          saveDesign(selectedFile.getAbsolutePath());
@@ -264,19 +295,22 @@ public class DesignBuilder extends Application {
      * This method saves the current design to an XML file.
      * @param filepath
      */
-    private void saveDesign(String filepath) {
+    private void saveDesign(String filepath) throws IOException, TransformerConfigurationException, TransformerException {
         try {
+                
+              this.designResources.createNewZip(filepath);
+                
+               // Créez un ByteArrayOutputStream pour capturer le contenu XML
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        StreamResult result = new StreamResult(outputStream);
+              
             // Create a DocumentBuilderFactory
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            // Create a DocumentBuilder
             DocumentBuilder builder = factory.newDocumentBuilder();
-            // Create a new DOM Document
             Document document = builder.newDocument();
-
             // Create the root element
             Element rootElement = document.createElement("Design");
             document.appendChild(rootElement);
-
             // Set attributes for the root element
             rootElement.setAttribute("Design_name", this.designName);
             rootElement.setAttribute("Author_name", this.author);
@@ -287,17 +321,34 @@ public class DesignBuilder extends Application {
 
             for (Interface myInterface : this.interfaces) {
                 Node interfaceElement = myInterface.saveInterfaceData(document);
-                interfacesElement.appendChild(interfaceElement);
+                if(interfaceElement != null) interfacesElement.appendChild(interfaceElement);
             }
 
             // Write the content into XML file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(document);
-            StreamResult result = new StreamResult(new File(filepath));
             transformer.transform(source, result);
+            
+             // Convertissez le contenu du ByteArrayOutputStream en un tableau de bytes
+        byte[] xmlBytes = outputStream.toByteArray();
 
-        } catch (ParserConfigurationException | TransformerException e) {
+        // Créez un objet File en mémoire avec le contenu XML
+        File xmlFile = new File("DesignData.xml");
+        // Vous pouvez également utiliser un nom de fichier temporaire si vous ne voulez pas spécifier un nom
+        // File xmlFile = File.createTempFile("DesignData", ".xml");
+
+        // Écrivez les bytes dans le fichier (en mémoire)
+       
+       java.io.FileOutputStream fos = new java.io.FileOutputStream(xmlFile);
+            fos.write(xmlBytes);
+      
+        
+        
+            this.designResources.set("DesignData.xml",xmlFile);
+            this.designResources.save();
+
+        } catch (ParserConfigurationException | FileNotFoundException e) {
             e.printStackTrace();
         }
     }

@@ -4,9 +4,9 @@
  */
 package interfaces;
 
-import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
+import designBuilder.DesignBuilder;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -21,8 +21,8 @@ import staticFunctions.StaticImageEditing;
  */
 public class InterfaceFixedTextCustomStyleCustomColor extends InterfaceCustomText {
 
-        public InterfaceFixedTextCustomStyleCustomColor(String interfaceName, ResourcesManager designResources) {
-                super(interfaceName, designResources);
+        public InterfaceFixedTextCustomStyleCustomColor(String interfaceName, DesignBuilder designBuilder) {
+                super(interfaceName, designBuilder);
                 canChangeText = false;
                 canChangeTextSize = true;
                 canChangeTextHeight = true;
@@ -43,16 +43,17 @@ public class InterfaceFixedTextCustomStyleCustomColor extends InterfaceCustomTex
                 XmlGradient.addAttribute("Param_1", String.valueOf(this.getGradientPicker().getParam1()));
                 XmlGradient.addAttribute("Param_2", String.valueOf(this.getGradientPicker().getParam2()));
 
-                File fontToSave = this.getTextGenerator().getFontFile();
-
-                String fontName = fontToSave.getName();
-                this.designResources.set(fontName, fontToSave);
-
                 XmlChild XmlTextBuilder = new XmlChild("TextBuilder");
-                XmlTextBuilder.addAttribute("Font_name", fontName);
                 //XmlTextBuilder.addAttribute("Text", this.getTextGenerator().getTextValue());
                 XmlTextBuilder.addAttribute("Text_Size", String.valueOf(this.getTextGenerator().getTextSizeValue()));
                 XmlTextBuilder.addAttribute("Text_Height", String.valueOf(this.getTextGenerator().getTextHeigthValue()));
+
+                File fontToSave = this.getTextGenerator().getFontFile();
+                if (fontToSave != null) {
+                        String fontName = fontToSave.getName();
+                        this.designBuilder.getDesignResources().set(fontName, fontToSave);
+                        XmlTextBuilder.addAttribute("Font_name", fontName);
+                }
 
                 xmlManager.addChild(XmlGradient);
                 xmlManager.addChild(XmlTextBuilder);
@@ -74,9 +75,11 @@ public class InterfaceFixedTextCustomStyleCustomColor extends InterfaceCustomTex
                 double param2 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_2").getNodeValue());
                 this.getGradientPicker().setInterfaceState(gradientName, color1, color2, colorIntensity, param1, param2);
 
-                //String textBuilderName = dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text_Name").getNodeValue();
-                String fontName = dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Font_name").getNodeValue();
-                this.getTextGenerator().loadNewFont(this.designResources.get(fontName));
+                Node fontNameNode =  dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Font_name");
+                if (fontNameNode != null) {
+                        String fontName = fontNameNode.getNodeValue();
+                        this.getTextGenerator().loadNewFont(this.designBuilder.getDesignResources().get(fontName));
+                }
 
                 //      String text = dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text").getNodeValue();
                 double textSize = Double.parseDouble(dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text_Size").getNodeValue());
@@ -103,7 +106,5 @@ public class InterfaceFixedTextCustomStyleCustomColor extends InterfaceCustomTex
                 BufferedImage resizedImageGetRaw = this.getTextGenerator().getImageOut(text, pixelMmFactor, textSizeMin, textSizeMax);
                 return StaticImageEditing.transformToOpacityArray(resizedImageGetRaw);
         }
-        
-        
-       
+
 }

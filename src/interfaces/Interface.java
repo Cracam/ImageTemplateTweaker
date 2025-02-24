@@ -5,6 +5,7 @@ package interfaces;
 import Exceptions.ThisInterfaceDoesNotExistException;
 import Layers.Layer;
 import ResourcesManager.ResourcesManager;
+import designBuilder.DesignBuilder;
 import imageBuilder.ImageBuilder;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +30,7 @@ import previewimagebox.PreviewImageBox;
 public abstract class Interface extends TitledPane{
         
         String interfaceName;
-         ResourcesManager designResources;
+         DesignBuilder designBuilder;
          // this variable will be use by the Image builder to detect a change and recompute the image accordingly.
         
            ArrayList<ImageBuilder>  linkedImagesBuilders=new ArrayList<>();
@@ -48,9 +49,9 @@ public abstract class Interface extends TitledPane{
         boolean haveGraphicInterface=true ;
 
         
-        Interface(String interfaceName, ResourcesManager designResources){
+        Interface(String interfaceName, DesignBuilder designBuilder){
                 this.interfaceName=interfaceName;
-                this.designResources=designResources;
+                this.designBuilder=designBuilder;
                 this.initialiseInterface();
         }
         
@@ -80,9 +81,7 @@ public abstract class Interface extends TitledPane{
         
         
         
-        public void setDesignResources(ResourcesManager designResources) {
-                this.designResources = designResources;
-        }
+      
         
         /**
          * Refresh the Preview using the image builder name as a identifier
@@ -134,11 +133,11 @@ public abstract class Interface extends TitledPane{
          * This code generate an interface using a String kay as an identifier
          * @param interfaceType
          * @param interfaceName
-         * @param designResources
+         * @param designBuilder
          * @return
          * @throws ThisInterfaceDoesNotExistException 
          */
-        public static Interface createInterface(String interfaceType, String interfaceName, ResourcesManager designResources) throws ThisInterfaceDoesNotExistException {
+        public static Interface createInterface(String interfaceType, String interfaceName, DesignBuilder designBuilder) throws ThisInterfaceDoesNotExistException {
 
                 if (!interfacesTypesMap.containsKey(interfaceType)) {
                         throw new ThisInterfaceDoesNotExistException("This interface type does not exist : " + interfaceType);
@@ -146,9 +145,9 @@ public abstract class Interface extends TitledPane{
                 try {
 
                         Class<? extends Interface> subclass = interfacesTypesMap.get(interfaceType);
-                        Constructor<? extends Interface> constructor = subclass.getConstructor(String.class, ResourcesManager.class);
+                        Constructor<? extends Interface> constructor = subclass.getConstructor(String.class, DesignBuilder.class);
 
-                        return constructor.newInstance(interfaceName, designResources);
+                        return constructor.newInstance(interfaceName, designBuilder);
 
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
                         Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);

@@ -6,8 +6,8 @@ package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
 import GradientCreatorInterface.GradientCreatorInterface;
-import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
+import designBuilder.DesignBuilder;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -43,8 +43,8 @@ public class InterfaceCustomColor extends Interface {
 
 
         
-        public InterfaceCustomColor(String interfaceName, ResourcesManager designResources) {
-                super(interfaceName, designResources);
+        public InterfaceCustomColor(String interfaceName, DesignBuilder designBuilder) {
+                super(interfaceName, designBuilder);
         }
 
         @Override
@@ -87,7 +87,7 @@ public class InterfaceCustomColor extends Interface {
         public Node saveInterfaceData(Document doc) {
                   XmlManager xmlManager = new XmlManager(doc);
                 xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()), "Color_2", StaticImageEditing.colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
-                return xmlManager.createDesignParamElement("DesignParam", "interfaceName", interfaceName);
+                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
         }
 
         
@@ -102,7 +102,8 @@ public class InterfaceCustomColor extends Interface {
                 double colorIntensity = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("ColorIntensity").getNodeValue());
                 double param1 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_1").getNodeValue());
                 double param2 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_2").getNodeValue());
-
+                
+                System.out.println(" gradient  "+gradientName+"  "+ color1+"  "+ color2+"  "+colorIntensity+"  "+ param1+"  "+ param2);
                 gradientPicker.setInterfaceState(gradientName, color1, color2, colorIntensity, param1, param2);
         }
         
