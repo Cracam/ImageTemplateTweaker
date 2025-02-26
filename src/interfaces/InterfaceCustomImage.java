@@ -57,7 +57,6 @@ public class InterfaceCustomImage extends Interface {
 
                         fxmlLoader.load();
                         this.CustomImageTiledPane.setText(interfaceName);
-                        this.Preview.toggleFixedSize();
                         
                         // Add a listener to the changed property
                         LoaderInterface.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {

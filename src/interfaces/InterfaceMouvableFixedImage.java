@@ -95,7 +95,6 @@ public class InterfaceMouvableFixedImage extends Interface{
                         fxmlLoader.setController(this);
 
                         fxmlLoader.load();
-                        this.Preview.toggleFixedSize();
                         this.CustomImageTiledPane.setText(interfaceName);
                         
                    

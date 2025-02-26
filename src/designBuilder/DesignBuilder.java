@@ -7,7 +7,6 @@ import interfaces.Interface;
 import static interfaces.Interface.interfacesTypesMap;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -19,6 +18,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.xml.parsers.DocumentBuilder;
@@ -55,6 +55,7 @@ public class DesignBuilder extends Application {
          private String description; // The description of themodel
          private String defaultDesignName; // the default design name (inside the zip of the model) it's the file we will copy if the user use a model a reference for it's new Design.
          private String author;
+         private String designPath=null; // the path of the desing currently opened ==null if nothing save yet (use to save function)
 
          
          private final  ArrayList<ImageBuilder> imageBuilders = new ArrayList<>();
@@ -65,6 +66,8 @@ public class DesignBuilder extends Application {
          private Scene scene;
          
          private int DPI=150;
+         
+
 
          
          @FXML
@@ -119,6 +122,7 @@ public class DesignBuilder extends Application {
                                  System.out.println(this.toString());
                          }
                          
+                        designPath=null; //reset the design path to null to force a new document
                         refreshEverything();
                          
                  } catch (ParserConfigurationException | SAXException | IOException ex) {
@@ -266,10 +270,12 @@ public class DesignBuilder extends Application {
                            
                             designResources=new ResourcesManager();
 
-                         //refresh all the images
-                         for (ImageBuilder imageBuilder : imageBuilders) {
-                                         imageBuilder.refreshAll();
-                         }
+                            
+
+                                                    
+                        refreshEverything();
+                         
+
 
                   } catch (ResourcesFileErrorException e) {
 
@@ -277,25 +283,46 @@ public class DesignBuilder extends Application {
          }
 
          
+//         
          @FXML
-         private void saveDesign() throws IOException, TransformerException{
+         private void saveDesing(){
+                 if(this.designPath!=null){
+                         saveDesign(this.designPath);
+                 }else{
+                         saveAsDesign();
+                 }
+         }
+         
+         
+         
+         /**
+          * This function is call for a save as 
+          * it :
+          *     -open a filepath selectin
+          *     - launch the save in the selected path
+          * @throws IOException
+          * @throws TransformerException 
+          */
+         @FXML
+         private void saveAsDesign() {
                  FileChooser fileChooser = new FileChooser();
                   fileChooser.setTitle("Choisisser où sauvgader le modèle de carte");
                   fileChooser.getExtensionFilters().addAll(
                             new FileChooser.ExtensionFilter("ZIP Files", "*.zip"));
                  File selectedFile =  fileChooser.showSaveDialog(null);
                   if (selectedFile != null) {
-                         saveDesign(selectedFile.getAbsolutePath());
+                          this.designPath=selectedFile.getAbsolutePath();
+                         saveDesign(  this.designPath);
+                         System.out.println("----- The Design is saved");
                   }
                   
-                 System.out.println("saveDesignsaveDesign");
          }      
                  
              /**
      * This method saves the current design to an XML file.
      * @param filepath
      */
-    private void saveDesign(String filepath) throws IOException, TransformerConfigurationException, TransformerException {
+    private void saveDesign(String filepath)  {
         try {
                 
               this.designResources.createNewZip(filepath);
@@ -348,9 +375,11 @@ public class DesignBuilder extends Application {
             this.designResources.set("DesignData.xml",xmlFile);
             this.designResources.save();
 
-        } catch (ParserConfigurationException | FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        }       catch (TransformerConfigurationException ex) {
+                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                 } catch (TransformerException | IOException | ParserConfigurationException ex) {
+                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                 }
     }
          
          
@@ -505,6 +534,14 @@ public class DesignBuilder extends Application {
                 // Return null if the interface does not exist
                 return null;
         }
+        
+        
+        
+        
+        
+        
+        
+    
         
 }
 

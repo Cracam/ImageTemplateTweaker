@@ -9,11 +9,11 @@
 
 <fx:root fx:id="CustomImageTiledPane" animated="false" minHeight="-Infinity" minWidth="-Infinity" text="untitled" type="TitledPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <content>
-      <HBox>
+      <HBox maxHeight="245.0" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <TextInImageGenerator fx:id="TextGenerator" HBox.hgrow="NEVER" />
+            <TextInImageGenerator fx:id="TextGenerator" />
             <GradientCreatorInterface fx:id="gradientPicker" />
-            <PreviewImageBox fx:id="Preview" HBox.hgrow="NEVER">
+            <PreviewImageBox fx:id="Preview">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>

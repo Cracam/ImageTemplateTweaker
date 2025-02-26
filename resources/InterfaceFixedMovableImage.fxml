@@ -10,7 +10,7 @@
 
 <fx:root fx:id="CustomImageTiledPane" type="TitledPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <content>
-      <HBox>
+      <HBox maxHeight="183.0">
          <children>
             <Slider fx:id="slider_Y" onKeyPressed="#refreshImagesBuilders" onMouseDragged="#refreshImagesBuilders" orientation="VERTICAL">
                <padding>

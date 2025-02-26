@@ -83,7 +83,6 @@ public class InterfaceCustomText extends Interface {
 
                         fxmlLoader.load();
 
-                        this.Preview.toggleFixedSize();
 
                         this.CustomImageTiledPane.setText(interfaceName);
                         // Add a listener to the changed property

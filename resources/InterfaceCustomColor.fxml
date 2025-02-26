@@ -8,9 +8,12 @@
 
 <fx:root fx:id="CustomImageTiledPane" type="TitledPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <content>
-      <HBox>
+      <HBox maxHeight="245.0">
          <children>
-            <GradientCreatorInterface fx:id="gradientPicker" />
+            <GradientCreatorInterface fx:id="gradientPicker">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin></GradientCreatorInterface>
             <PreviewImageBox fx:id="Preview" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets left="5.0" right="5.0" />

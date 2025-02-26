@@ -60,7 +60,6 @@ public class InterfaceCustomColor extends Interface {
                         fxmlLoader.load();
 
                     //    System.out.println("gradientPicker initialized: " + (gradientPicker != null) + " value : " + gradientPicker.isChanged());
-                        this.Preview.toggleFixedSize();
                         this.CustomImageTiledPane.setText(interfaceName);
                         // Add a listener to the changed property
                         gradientPicker.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {

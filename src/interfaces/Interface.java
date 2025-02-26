@@ -35,6 +35,8 @@ public abstract class Interface extends TitledPane{
         
            ArrayList<ImageBuilder>  linkedImagesBuilders=new ArrayList<>();
            ArrayList<Layer> linkedLayers=new ArrayList<>();
+           
+           
          
         //Contain all the key to the identify an interface
         public static final Map<String, Class<? extends Interface>> interfacesTypesMap = Map.of(
