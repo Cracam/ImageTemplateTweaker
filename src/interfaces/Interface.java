@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import org.w3c.dom.Document;
@@ -36,7 +38,10 @@ public abstract class Interface extends TitledPane{
            ArrayList<ImageBuilder>  linkedImagesBuilders=new ArrayList<>();
            ArrayList<Layer> linkedLayers=new ArrayList<>();
            
-           
+         private  Interface upperInterface=null;
+         private PreviewImageBox PreviewGen; //for colecting all the preview from the Fxml files
+         
+
          
         //Contain all the key to the identify an interface
         public static final Map<String, Class<? extends Interface>> interfacesTypesMap = Map.of(
@@ -45,7 +50,8 @@ public abstract class Interface extends TitledPane{
                 "Custom_Color", InterfaceCustomColor.class,
                 "Custom_Text",InterfaceCustomText.class,
                 "Fixed_Text_Custom_Color_Custom_Style", InterfaceFixedTextCustomStyleCustomColor.class,
-                "Mouvable_Fixed_Image", InterfaceMouvableFixedImage.class
+                "Mouvable_Fixed_Image", InterfaceMouvableFixedImage.class,
+                "Custom_Shape_Custom_Color" ,InterfaceCustomShapeCustomColor.class
         );
         
         boolean haveGraphicInterface=true ;
@@ -56,6 +62,25 @@ public abstract class Interface extends TitledPane{
                 this.designBuilder=designBuilder;
                 this.initialiseInterface();
         }
+        
+        /**
+         * use t linkt the changes of the sub interface to the main one
+         * @param upperInterface
+         */
+         public void setUpperInterface(Interface upperInterface){
+                 this.upperInterface=upperInterface;
+         }
+         
+         /**
+          * Resfresh the upper interface
+          * NEED to BE after this one (use insite Interface in refresh layers
+          */
+           public void refreshUppeInterface(){
+                 if(this.upperInterface!=null){
+                          this.upperInterface.refreshLayers();
+                          this.upperInterface.refreshImageBuilders();
+                 }
+         }
         
         
         
@@ -80,7 +105,9 @@ public abstract class Interface extends TitledPane{
         public abstract void loadInterfaceData(Element dataOfTheLayer);
 
         
-        
+        public void setPreview(PreviewImageBox PreviewGen){
+                this.PreviewGen=PreviewGen;
+        }
         
         
       
@@ -90,18 +117,16 @@ public abstract class Interface extends TitledPane{
          * @param imageBuilderName 
          * @param previewImage 
          */
-        public abstract void refreshPreview(String imageBuilderName, ImageView previewImage);
-        
-       /**
-        * Intermediate for the preview refresh
-        * @param imageBuilderName
-        * @param previewImage
-        * @param previewImageBox 
-        */
-        static void refreshPreviewIntermediate(String imageBuilderName, ImageView previewImage, PreviewImageBox previewImageBox){
-                previewImageBox.setImageView(imageBuilderName, previewImage);
+        public void refreshPreview(String imageBuilderName, ImageView previewImage){
+                 PreviewGen.setImageView(imageBuilderName, previewImage);
         }
         
+        
+        
+      
+        
+        
+     
         
 
         
@@ -109,11 +134,14 @@ public abstract class Interface extends TitledPane{
          * this method refresh all the layer that are kinked to the interface.
          */
         void refreshLayers() {
+               
+                
                 for (int i = 0; i < linkedLayers.size(); i++) {
                         linkedLayers.get(i).refreshImageGet();
                         linkedLayers.get(i).refreshPreview();
                         linkedLayers.get(i).setChanged(true);
                 }
+                 refreshUppeInterface();
         }
         
           /**
@@ -179,6 +207,10 @@ public abstract class Interface extends TitledPane{
         }
 
         
-        
+        public void desactivatePreview(){
+                 PreviewGen.setDisable(true);
+                PreviewGen.setVisible(false);
+                PreviewGen.setManaged(false);
+        }
         
 }

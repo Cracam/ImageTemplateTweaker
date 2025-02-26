@@ -20,7 +20,6 @@ import org.w3c.dom.NodeList;
 import previewimagebox.PreviewImageBox;
 import staticFunctions.StaticImageEditing;
 
-
 /**
  * The role of this class is to build a image by piling it's differents layer
  * This calls is also in charge of initialising every layer from every types
@@ -42,6 +41,7 @@ public class ImageBuilder {
 
         private Node loaderNode;
 
+
         /**
          * This constructor use
          *
@@ -54,20 +54,21 @@ public class ImageBuilder {
                 try {
                         Element element = (Element) loaderNode;
                         if (loaderNode.getNodeType() != Node.ELEMENT_NODE) {
-                                throw new TheXmlElementIsNotANodeException("IN ImageBuilder"+loaderNode.getNodeName());
+                                throw new TheXmlElementIsNotANodeException("IN ImageBuilder" + loaderNode.getNodeName());
                         }
                         this.name = this.designBuilder.getId() + "_" + element.getAttribute("name");
                         this.x_size = Float.parseFloat(element.getAttribute("size_x"));
                         this.y_size = Float.parseFloat(element.getAttribute("size_y"));
 
-                }catch (TheXmlElementIsNotANodeException ex) {
+                } catch (TheXmlElementIsNotANodeException ex) {
                         Logger.getLogger(ImageBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 this.computeXY_p_size();
                 this.createLayers();
         }
 
-        
+      
+
         /**
          * This function retunr the pixel milimeter fator from the batcher
          *
@@ -77,7 +78,6 @@ public class ImageBuilder {
                 return this.designBuilder.getPixelMmFactor();
         }
 
-        
         /**
          * this function is use to compute the size of the image in pixel
          */
@@ -87,7 +87,6 @@ public class ImageBuilder {
                 this.y_p_size = (int) (this.y_size * factor);
         }
 
-        
         /**
          * Creates a BufferedImage with the specified dimensions.
          *
@@ -113,7 +112,6 @@ public class ImageBuilder {
                 return image;
         }
 
-        
         /**
          * This code is used to refresh the final image in the case of a
          * modification of one layer. (we dont compute the images_out of the
@@ -122,37 +120,38 @@ public class ImageBuilder {
          */
         public void refresh() {
                 boolean changedPrecedently = false;
-                BufferedImage imgBegining=null ;
+                BufferedImage imgBegining = null;
                 int indexBegining = 0;
                 for (int i = 0; i < layers.size(); i++) {
                         if (layers.get(i).isChanged()) {
                                 changedPrecedently = true;
                                 if (i != 0) {
                                         layers.get(i).computeImage_Out(this.name);
-                                        imgBegining = layers.get(i-1).getImage_out();
-                                }else{
-                                     imgBegining   = createBufferedImage(this.x_p_size, this.y_p_size);
+                                        imgBegining = layers.get(i - 1).getImage_out();
+                                } else {
+                                        imgBegining = createBufferedImage(this.x_p_size, this.y_p_size);
                                 }
                                 indexBegining = i;
                                 break;
                         }
                 }
-                
-                if(!changedPrecedently) return;
-                
-                        layers.get(indexBegining).setImage_in(imgBegining);
-                        layers.get(indexBegining).computeImage_Out(this.name);
 
-                        for (int j = indexBegining + 1; j < layers.size(); j++) {
-                                layers.get(j).setImage_in(layers.get(j - 1).getImage_out());
-                                layers.get(j).computeImage_Out(this.name);
-                                 layers.get(j).refreshPreview();
-                        }
-                        System.out.println("REFRESH");
-                         this.designBuilder.refreshPreview();//refresh the main preview
+                if (!changedPrecedently) {
+                        return;
+                }
+
+                layers.get(indexBegining).setImage_in(imgBegining);
+                layers.get(indexBegining).computeImage_Out(this.name);
+
+                for (int j = indexBegining + 1; j < layers.size(); j++) {
+                        layers.get(j).setImage_in(layers.get(j - 1).getImage_out());
+                        layers.get(j).computeImage_Out(this.name);
+                        layers.get(j).refreshPreview();
+                }
+       //         System.out.println("REFRESH");
+                this.designBuilder.refreshPreview();//refresh the main preview
         }
 
-        
         /**
          * This code refresh All the Image (including all the previews of the
          * differrents layers)
@@ -172,11 +171,10 @@ public class ImageBuilder {
                 }
                 this.designBuilder.refreshPreview();
         }
-        
-        
+
         /**
-         * This function will create the layer using it's parameter XML
-         *  it will mainly use the Layer class multi buider for it's work
+         * This function will create the layer using it's parameter XML it will
+         * mainly use the Layer class multi buider for it's work
          */
         private void createLayers() {
                 NodeList nodeLayerList = this.loaderNode.getChildNodes();
@@ -197,7 +195,7 @@ public class ImageBuilder {
                                         if (linkedInterface == null) {
                                                 linkedInterface = Interface.createInterface(key, nameElement, this.designBuilder);
                                                 this.designBuilder.addInterface(linkedInterface);
-                                                if(linkedInterface.isHaveGraphicInterface()){
+                                                if (linkedInterface.isHaveGraphicInterface()) {
                                                         String tabname = element.getAttribute("tab_name");
                                                         if (tabname == null) {
                                                                 tabname = "Defaut";
@@ -231,33 +229,27 @@ public class ImageBuilder {
 
                                                 // add the layer to the layers list
                                                 this.layers.add(layerCreated);
-                                                
+
                                                 linkedInterface.linkNewLayer(layerCreated); //link the layer tothe interface
                                                 linkedInterface.linkNewImageBuilder(this);
                                         }
-                                        
 
-                                }catch(ThisLayerDoesNotExistException | ThisInterfaceDoesNotExistException e){
-                                        System.out.println(e+" was detected ignoting it");
+                                } catch (ThisLayerDoesNotExistException | ThisInterfaceDoesNotExistException e) {
+                                        System.out.println(e + " was detected ignoting it");
                                 } catch (TheXmlElementIsNotANodeException ex) {
                                         Logger.getLogger(ImageBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                         }
                 }
         }
-        
-        
+
         public String getName() {
                 return this.name;
         }
 
-
-        
-        
-
         @Override
         public String toString() {
-                return "ImageBuilder{" + "name=" + name  + ", x_size=" + x_size + ", y_size=" + y_size + ", x_p_size=" + x_p_size + ", y_p_size=" + y_p_size + ", layers=" + layers  + '}';
+                return "ImageBuilder{" + "name=" + name + ", x_size=" + x_size + ", y_size=" + y_size + ", x_p_size=" + x_p_size + ", y_p_size=" + y_p_size + ", layers=" + layers + '}';
         }
 
         public int getX_p_size() {
@@ -267,26 +259,26 @@ public class ImageBuilder {
         public int getY_p_size() {
                 return y_p_size;
         }
-        
+
         /**
          * This method retunr the last image out
-         * @return 
+         *
+         * @return
          */
-        public BufferedImage getImageOut(){
-                return layers.get(layers.size()-1).getImage_out();
+        public BufferedImage getImageOut() {
+                return layers.get(layers.size() - 1).getImage_out();
         }
-        
-        
-        public float getPixelMmFactor(){
+
+        public float getPixelMmFactor() {
                 return this.designBuilder.getPixelMmFactor();
         }
-        
-        
-        public void refreshPreview(PreviewImageBox preview){
-                preview.setImageView(this.name,StaticImageEditing.createImageView(this.getImageOut()));
+
+        public void refreshPreview(PreviewImageBox preview) {
+                preview.setImageView(this.name, StaticImageEditing.createImageView(this.getImageOut()));
         }
-        
-        
-      
+
+        public DesignBuilder getDesignBuilder() {
+                return designBuilder;
+        }
 
 }

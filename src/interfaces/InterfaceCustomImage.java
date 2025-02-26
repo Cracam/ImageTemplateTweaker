@@ -5,20 +5,18 @@
 package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
+import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
 import designBuilder.DesignBuilder;
 import imageloaderinterface.ImageLoaderInterface;
-import static interfaces.Interface.refreshPreviewIntermediate;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TitledPane;
-import javafx.scene.image.ImageView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -69,7 +67,7 @@ public class InterfaceCustomImage extends Interface {
                                 }
                         });
                         
-                        
+                        setPreview(Preview);
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -85,15 +83,17 @@ public class InterfaceCustomImage extends Interface {
                 String imageName = "Image_" + interfaceName + ".png";
 
                 XmlManager xmlManager = new XmlManager(doc);
-                if(null == LoaderInterface.getImage_out()){
-                         xmlManager.addChild("Image", Map.of());
-                }else{
-                        xmlManager.addChild("Image", Map.of("image_name", imageName));
+
+                XmlChild XmlTextBuilder = new XmlChild("Image");
+
+                if (LoaderInterface.getImage_out() != null) {
+                        XmlTextBuilder.addAttribute("image_name", imageName);
 
                         //save the image into the Design zip
                         this.designBuilder.getDesignResources().setBufferedImage(imageName, LoaderInterface.getImage_out());
                 }
-                
+
+                xmlManager.addChild(XmlTextBuilder);
 
                 return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
         }
@@ -118,10 +118,6 @@ public class InterfaceCustomImage extends Interface {
                     return StaticImageEditing.ResizeImage(LoaderInterface.getImage_out(), x,y);
         }
         
-        
-         @Override
-        public void refreshPreview(String imageBuilderName, ImageView previewImage){
-              refreshPreviewIntermediate(imageBuilderName,previewImage,Preview);
-        }
+
         
 }

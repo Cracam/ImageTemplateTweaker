@@ -1,25 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import imageloaderinterface.ImageLoaderInterface?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.RangeSlider?>
 <?import previewimagebox.PreviewImageBox?>
 
 <fx:root fx:id="CustomImageTiledPane" type="TitledPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <content>
-      <HBox>
+      <VBox>
          <children>
-            <ImageLoaderInterface fx:id="LoaderInterface">
+            <HBox>
                <children>
-                  <RangeSlider />
-               </children></ImageLoaderInterface>
-            <PreviewImageBox fx:id="Preview" HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets left="5.0" right="5.0" />
-               </HBox.margin></PreviewImageBox>
+                  <VBox>
+                     <children>
+                        <Label text="Tailles des images" />
+                        <RangeSlider fx:id="DS_imageSize">
+                           <VBox.margin>
+                              <Insets left="5.0" top="5.0" />
+                           </VBox.margin>
+                        </RangeSlider>
+                        <Separator prefWidth="200.0">
+                           <VBox.margin>
+                              <Insets bottom="7.0" top="7.0" />
+                           </VBox.margin>
+                        </Separator>
+                        <Label text="Tailles des intervalles">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Label>
+                        <RangeSlider fx:id="DS_intervalSize">
+                           <VBox.margin>
+                              <Insets left="5.0" top="5.0" />
+                           </VBox.margin>
+                        </RangeSlider>
+                     </children>
+                  </VBox>
+                  <PreviewImageBox fx:id="Preview" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin>
+                  </PreviewImageBox>
+               </children>
+            </HBox>
+            <HBox fx:id="HboxInterface">
+               <VBox.margin>
+                  <Insets left="30.0" top="15.0" />
+               </VBox.margin>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
    </content>
 </fx:root>

@@ -86,12 +86,19 @@
 
 <Mouvable_Fixed_Image name="mouvable image" tab_name="Recto" >
 					<pos pos_x="22" pos_y="20"/>
-					<size size_x="44" size_y="23"/>
+					<size size_x="12" size_y="23"/>
 					<Param>
 						<Image image_name="testmovableimage.png"/>
 						<OffSet X_MaxOffset="1.0"  X_MinOffset="-1.0"  Y_MaxOffset="1.0"  Y_MinOffset="-1.0"/>
     				</Param>
 				</Mouvable_Fixed_Image>
+
+<Custom_Shape_Custom_Color  name="Img TKT" tab_name="Recto" >
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Param>
+					</Param>
+				</Custom_Shape_Custom_Color>
 
 
 

@@ -110,7 +110,7 @@ public class InterfaceMouvableFixedImage extends Interface{
                         
                         PreviewBox.setImage(generateIndicator((float) this.slider_X.getValue(),  (float)  this.slider_Y.getValue()));
                 
-                        
+                        setPreview(Preview);
                         
                         
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
@@ -122,10 +122,7 @@ public class InterfaceMouvableFixedImage extends Interface{
     
         
         
-         @Override
-        public void refreshPreview(String imageBuilderName, ImageView previewImage){
-                 refreshPreviewIntermediate(imageBuilderName,previewImage,Preview);
-        }
+         
         
         
         @FXML

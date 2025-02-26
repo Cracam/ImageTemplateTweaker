@@ -10,7 +10,6 @@ import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.ResourcesManager;
 import interfaces.Interface;
-import interfaces.InterfaceMouvableFixedImage;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
@@ -45,20 +44,23 @@ public abstract class Layer extends TitledPane {
         //Te Image size and parameter in pixel (adaptable to the image definition)
           QuadrupletInt pixelPosSize;
         
+          private boolean inert=false; //if true this layer 
+          
         public static final Map<String, Class<? extends Layer>> layersTypesMap = Map.of(
                 "Fixed_Image", LayerFixedImage.class, 
                 "Custom_Image", LayerCustomImage.class,
                 "Custom_Color", LayerCustomColor.class, 
                 "Custom_Text",LayerCustomText.class,
                 "Fixed_Text_Custom_Color_Custom_Style", LayerFixedTextCustomStyleCustomColor.class,
-                "Mouvable_Fixed_Image", LayerMovableFixedImage.class
+                "Mouvable_Fixed_Image", LayerMovableFixedImage.class,
+                  "Custom_Shape_Custom_Color" ,LayerCustomShapeCustomColor.class
         );
 
         
         // this variable will be use by the Image builder to detect a change and recompute the image accordingly.
         private boolean changed=false;
         
-        
+      
         /**
          * the basic contructor
          *
@@ -89,7 +91,7 @@ public abstract class Layer extends TitledPane {
                 //   System.out.println("Pos Image builder : "+anotherImageBuilder.getX_p_size()+"   "+anotherImageBuilder.getY_p_size());
                 this.image_get = new BufferedImage(pixelPosSize.getSize_x(), pixelPosSize.getSize_y(), BufferedImage.TYPE_INT_ARGB);
                 this.image_in = new BufferedImage(linkedImagesBuilder.getX_p_size(), linkedImagesBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB);
-                this.image_out = new BufferedImage(linkedImagesBuilder.getX_p_size(), linkedImagesBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB);
+                if(!this.inert)  this.image_out = new BufferedImage(linkedImagesBuilder.getX_p_size(), linkedImagesBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB);
                 DPIChanged();
         }
         
@@ -109,7 +111,9 @@ public abstract class Layer extends TitledPane {
            return this.image_out;
         }
         
-        
+        public void setInert(boolean inert){
+                this.inert=inert;
+        }
 
         /**
          * Set the imput of the layer
@@ -128,7 +132,7 @@ public abstract class Layer extends TitledPane {
         * Change the preview (it will just enter the preview Image box object)
         */
         public void refreshPreview() {
-                this.linkedInterface.refreshPreview(this.linkedImagesBuilder.getName(),StaticImageEditing.createImageView(this.image_out));
+               if(!this.inert)   this.linkedInterface.refreshPreview(this.linkedImagesBuilder.getName(),StaticImageEditing.createImageView(this.image_out));
                 //   System.out.println(toString());
         }
           
@@ -214,7 +218,26 @@ public abstract class Layer extends TitledPane {
         
         
         
-        
+          /**
+         * This code will load the layer using a String identifier to get the type of the Layer
+         * 
+         * This layer will be inert and will not internene into the imagebuiders (we we just use it for it's image get)
+         * 
+         * @param layerType
+         * @param layerName
+         * @param modelResources
+         * @param layerInterface
+         * @param linkedImageBuilder
+         * @param posSize
+         * @return
+         * @throws ThisLayerDoesNotExistException 
+         */
+          public static Layer createInertLayer(String layerType, String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) throws ThisLayerDoesNotExistException {
+                 Layer layer =Layer.createLayer( layerType,  layerName,   modelResources,  layerInterface,  linkedImageBuilder,  posSize);
+                 layer.setInert(true);
+                 return layer;
+          }
+
         
         
         
