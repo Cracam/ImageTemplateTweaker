@@ -5,21 +5,25 @@
 package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
-import Layers.Layer;
 import designBuilder.DesignBuilder;
+import imageBuilder.SubImageBuilder;
 import imageloaderinterface.ImageLoaderInterface;
+import interfaces.Interface;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.event.EventType;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.HBox;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import org.controlsfx.control.RangeSlider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
+import static staticFunctions.StaticImageEditing.convertToFXImage;
 
 /**
  *
@@ -41,9 +45,12 @@ public class InterfaceRandomImageDispersion extends Interface{
         private RangeSlider DS_intervalSize;
         
         @FXML
-        private HBox HboxInterface;
+        private VBox vboxInterface;
         
-        private Layer linkedLayer;
+        @FXML
+        private ImageView prev;
+        
+        private SubImageBuilder lowerImageBuilder;
         
         public InterfaceRandomImageDispersion(String interfaceName, DesignBuilder designBuilder) {
                 super(interfaceName, designBuilder);
@@ -52,7 +59,7 @@ public class InterfaceRandomImageDispersion extends Interface{
         @Override
         protected void initialiseInterface() {
                 try {
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InterfaceCustomShapeCustomColor.fxml"));
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InterfaceRandomImagedispersion.fxml"));
                         if (fxmlLoader == null) {
                                 throw new ResourcesFileErrorException();
                         }
@@ -62,19 +69,70 @@ public class InterfaceRandomImageDispersion extends Interface{
                         fxmlLoader.load();
 
                         
+                        
+                        
+                        
                         setPreview(Preview);
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
-        
-        public void linkLayer(Layer linkedLayer){
-               this.linkedLayer= linkedLayer;
+
+        public void setLowerImageBuilder(SubImageBuilder lowerImageBuilder) {
+                
+                this.lowerImageBuilder = lowerImageBuilder;
+                
+               //intall trigger
+                   lowerImageBuilder.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                                if (newValue) {
+                                        //    System.out.println("trigered");
+                                        lowerImageBuilder.setChanged(false);
+                                        //       System.out.println("(1) CHANGGE DEECTED");
+                                        refreshSubInterface();
+                                        this.refreshLayers();
+                                        this.refreshImageBuilders();
+                                }
+                        });
+                //    lowerImageBuilder.setChanged(true);
+                lowerImageBuilder.refreshAll();
+                refreshSubInterface();
+               
+
+                ArrayList<Interface> interfaces = lowerImageBuilder.getInterfaces();
+
+                for (Interface iface : interfaces) {
+                       
+                        // Ajouter le nœud à la VBox
+                        vboxInterface.getChildren().add(iface);
+                }
+
         }
+                   
+        
+
+      
+        
+        
+        
         
         public void linkInterface(Interface inter){
-                HboxInterface.getChildren().add(inter);
+                vboxInterface.getChildren().add(inter);
+                inter.refreshLayers();
+                inter.refreshImageBuilders();
         }
+        
+        @FXML
+        public void uptadeInterface(){
+                   this.refreshLayers();
+                   this.refreshImageBuilders();               
+        }
+        
+        public void refreshSubInterface(){
+                 this.prev.setImage( convertToFXImage(this.lowerImageBuilder.getImageOut()));
+                  prev.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-style: solid;");
+                 //System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+        }
+                
 
         @Override
         public Node saveInterfaceData(Document doc) {

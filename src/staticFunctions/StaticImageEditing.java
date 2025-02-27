@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 
@@ -18,7 +19,13 @@ import javafx.scene.image.WritableImage;
  */
 public class StaticImageEditing {
        
-        
+        public static Image convertToFXImage(BufferedImage bufferedImage) {
+        if (bufferedImage == null) {
+            throw new IllegalArgumentException("BufferedImage cannot be null");
+        }
+        WritableImage writableImage = new WritableImage(bufferedImage.getWidth(), bufferedImage.getHeight());
+        return SwingFXUtils.toFXImage(bufferedImage, writableImage);
+    }
         
         
                 /**
@@ -36,7 +43,30 @@ public class StaticImageEditing {
         return imageView;
     }
         
-        
+           /**
+         * Creates a BufferedImage with the specified dimensions.
+         *
+         * @param x the width of the image
+         * @param y the height of the image
+         * @return the created BufferedImage
+         */
+        public static BufferedImage createBufferedImage(int x, int y) {
+                // Create a BufferedImage with the specified dimensions
+                BufferedImage image = new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB);
+
+                // Get the Graphics2D object to draw on the image
+                Graphics2D g2d = image.createGraphics();
+
+                // Set the background color to black with 0 opacity
+                Color transparentBlack = new Color(0, 0, 0, 0);
+                g2d.setColor(transparentBlack);
+                g2d.fillRect(0, 0, x, y);
+
+                // Dispose of the Graphics2D object to free resources
+                g2d.dispose();
+
+                return image;
+        }
         
         
         

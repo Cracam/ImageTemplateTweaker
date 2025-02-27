@@ -51,7 +51,8 @@ public abstract class Interface extends TitledPane{
                 "Custom_Text",InterfaceCustomText.class,
                 "Fixed_Text_Custom_Color_Custom_Style", InterfaceFixedTextCustomStyleCustomColor.class,
                 "Mouvable_Fixed_Image", InterfaceMouvableFixedImage.class,
-                "Custom_Shape_Custom_Color" ,InterfaceCustomShapeCustomColor.class
+                "Custom_Shape_Custom_Color" ,InterfaceCustomShapeCustomColor.class,
+                "Random_Image_Dispersion",InterfaceRandomImageDispersion.class
         );
         
         boolean haveGraphicInterface=true ;
@@ -75,7 +76,7 @@ public abstract class Interface extends TitledPane{
           * Resfresh the upper interface
           * NEED to BE after this one (use insite Interface in refresh layers
           */
-           public void refreshUppeInterface(){
+           public void refreshUpperInterface(){
                  if(this.upperInterface!=null){
                           this.upperInterface.refreshLayers();
                           this.upperInterface.refreshImageBuilders();
@@ -141,7 +142,7 @@ public abstract class Interface extends TitledPane{
                         linkedLayers.get(i).refreshPreview();
                         linkedLayers.get(i).setChanged(true);
                 }
-                 refreshUppeInterface();
+                 refreshUpperInterface();
         }
         
           /**

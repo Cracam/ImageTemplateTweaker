@@ -8,17 +8,18 @@ import Layers.SubClasses.QuadrupletFloat;
 
 import designBuilder.DesignBuilder;
 import interfaces.Interface;
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import previewimagebox.PreviewImageBox;
 import staticFunctions.StaticImageEditing;
+import static staticFunctions.StaticImageEditing.createBufferedImage;
 
 /**
  * The role of this class is to build a image by piling it's differents layer
@@ -28,20 +29,19 @@ import staticFunctions.StaticImageEditing;
  */
 public class ImageBuilder {
 
-        private String name; // name the the Image Builder :  "Index of the windows" + "Name given in the model.XML file"
-        private final DesignBuilder designBuilder;
+         String name; // name the the Image Builder :  "Index of the windows" + "Name given in the model.XML file"
+         final DesignBuilder designBuilder;
 
-        private float x_size;
-        private float y_size;
+         float x_size;
+         float y_size;
 
-        private int x_p_size;
-        private int y_p_size;
+         int x_p_size;
+         int y_p_size;
 
         ArrayList<Layer> layers = new ArrayList<>();
 
-        private Node loaderNode;
-
-
+         Node loaderNode;
+     
         /**
          * This constructor use
          *
@@ -66,7 +66,30 @@ public class ImageBuilder {
                 this.computeXY_p_size();
                 this.createLayers();
         }
+        
+        
+         /**
+         * This constructor use
+         *
+         * @param batcher for reference and subInterface display
+         * @param loaderNode
+         * @param size_x
+         * @param size_y
+         */
+        public ImageBuilder(DesignBuilder batcher, Node loaderNode, float size_x, float size_y ) {
+                
+                this.designBuilder = batcher;
+                this.loaderNode = loaderNode;
+             
+                      //  this.name = this.designBuilder.getId() + "_" + "INTER";
+                        this.x_size =size_x;
+                        this.y_size = size_y;
+              
+                this.computeXY_p_size();
+        }
+        
 
+        
       
 
         /**
@@ -87,30 +110,7 @@ public class ImageBuilder {
                 this.y_p_size = (int) (this.y_size * factor);
         }
 
-        /**
-         * Creates a BufferedImage with the specified dimensions.
-         *
-         * @param x the width of the image
-         * @param y the height of the image
-         * @return the created BufferedImage
-         */
-        public static BufferedImage createBufferedImage(int x, int y) {
-                // Create a BufferedImage with the specified dimensions
-                BufferedImage image = new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB);
 
-                // Get the Graphics2D object to draw on the image
-                Graphics2D g2d = image.createGraphics();
-
-                // Set the background color to black with 0 opacity
-                Color transparentBlack = new Color(0, 0, 0, 0);
-                g2d.setColor(transparentBlack);
-                g2d.fillRect(0, 0, x, y);
-
-                // Dispose of the Graphics2D object to free resources
-                g2d.dispose();
-
-                return image;
-        }
 
         /**
          * This code is used to refresh the final image in the case of a
@@ -118,7 +118,7 @@ public class ImageBuilder {
          * layer if there is no modification before. -- upgrade ? : considering
          * only the zone modified by the changed layer
          */
-        public void refresh() {
+        public void DRYrefresh() {
                 boolean changedPrecedently = false;
                 BufferedImage imgBegining = null;
                 int indexBegining = 0;
@@ -156,7 +156,7 @@ public class ImageBuilder {
          * This code refresh All the Image (including all the previews of the
          * differrents layers)
          */
-        public void refreshAll() {
+        public void DRYrefreshAll() {
                 BufferedImage imgBegining = createBufferedImage(this.x_p_size, this.y_p_size);
                 layers.get(0).setImage_in(imgBegining);
                 layers.get(0).refreshImageGet();
@@ -172,11 +172,20 @@ public class ImageBuilder {
                 this.designBuilder.refreshPreview();
         }
 
+        
+         public void refresh() {
+                 DRYrefresh();
+         }
+        
+           public void refreshAll() {
+                    DRYrefreshAll();
+         }
+        
         /**
          * This function will create the layer using it's parameter XML it will
          * mainly use the Layer class multi buider for it's work
          */
-        private void createLayers() {
+          void createLayers() {
                 NodeList nodeLayerList = this.loaderNode.getChildNodes();
 
                 for (int i = 0; i < nodeLayerList.getLength(); i++) {
@@ -242,6 +251,8 @@ public class ImageBuilder {
                         }
                 }
         }
+        
+      
 
         public String getName() {
                 return this.name;
@@ -280,5 +291,7 @@ public class ImageBuilder {
         public DesignBuilder getDesignBuilder() {
                 return designBuilder;
         }
+        
+
 
 }
