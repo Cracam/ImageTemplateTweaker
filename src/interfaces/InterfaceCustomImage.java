@@ -102,8 +102,13 @@ public class InterfaceCustomImage extends Interface {
         
         @Override
         public void loadInterfaceData(Element dataOfTheLayer ) {
-                String imageName = dataOfTheLayer.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
-                LoaderInterface.loadImage(this.designBuilder.getDesignResources().get(imageName));
+                Element nodeimageName = (Element) dataOfTheLayer.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name");
+                      if(nodeimageName!=null){
+                             
+                              LoaderInterface.loadImage(this.designBuilder.getDesignResources().get(nodeimageName.getNodeValue()));
+
+                      }
+
         }
         
         

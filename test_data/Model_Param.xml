@@ -126,17 +126,17 @@
 									</Param>
 							</Custom_Color>
 
-							<Custom_Color name="grine V2" tab_name="Recto">
-									<pos pos_x="1" pos_y="1"/>
-									<size size_x="3" size_y="3" />
-									<Param>
-										<Image image_name="graine.png"/>
-									</Param>
-							</Custom_Color>
+							<Mouvable_Fixed_Image name="mouvable image" tab_name="Recto" >
+					<pos pos_x="22" pos_y="20"/>
+					<size size_x="12" size_y="23"/>
+					<Param>
+						<Image image_name="testmovableimage.png"/>
+						<OffSet X_MaxOffset="1.0"  X_MinOffset="-1.0"  Y_MaxOffset="1.0"  Y_MinOffset="-1.0"/>
+    				</Param>
+				</Mouvable_Fixed_Image>
 						</Interface>
 					</Param>
 				</Random_Image_Dispersion>
-
 
 
 

@@ -132,9 +132,17 @@ setPreview(Preview);
 
                 System.out.println(" gradient  " + gradientName + "  " + color1 + "  " + color2 + "  " + colorIntensity + "  " + param1 + "  " + param2);
                 gradientPicker.setInterfaceState(gradientName, color1, color2, colorIntensity, param1, param2);
+                
+                
+                
+                 Element nodeimageName = (Element) dataOfTheLayer.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name");
+                      if(nodeimageName!=null){
+                             
+                              LoaderInterface.loadImage(this.designBuilder.getDesignResources().get(nodeimageName.getNodeValue()));
 
-                String imageName = dataOfTheLayer.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
-                LoaderInterface.loadImage(this.designBuilder.getDesignResources().get(imageName));
+                      }
+                      
+             
         }
         
         

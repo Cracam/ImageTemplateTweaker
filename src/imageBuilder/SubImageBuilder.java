@@ -96,12 +96,15 @@ private final float qualityFactor;
                                         Interface linkedInterface = this.designBuilder.getInterface(key, nameElement);
                                         if (linkedInterface == null) { // if the interface 
                                                 linkedInterface = Interface.createInterface(key, nameElement, this.designBuilder);
+                                                 this.designBuilder.addInterface(linkedInterface);
                                         }
                                         
                                         if (linkedInterface.isHaveGraphicInterface()) {
                                                         linkedInterface.desactivatePreview();
                                                         interfaces.add(linkedInterface);
                                        }
+                                  
+
                                         
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
@@ -156,7 +159,6 @@ private final float qualityFactor;
         public ArrayList<Interface> getInterfaces() {
                 return interfaces;
         }
-
 
         
 
