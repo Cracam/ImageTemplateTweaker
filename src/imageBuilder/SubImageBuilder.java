@@ -30,7 +30,7 @@ public class SubImageBuilder extends ImageBuilder{
       //  ArrayList<Layer> layers = new ArrayList<>();
             ArrayList<Interface> interfaces = new ArrayList<>();
 
-
+private final float qualityFactor;
         
  private final BooleanProperty changed = new SimpleBooleanProperty(false);
 
@@ -45,10 +45,12 @@ public class SubImageBuilder extends ImageBuilder{
          * @param size_x
          * @param size_y
          * @param upperLayer
+         * @param qualityFactor
          */
-        public SubImageBuilder(DesignBuilder batcher, Node loaderNode, float size_x, float size_y,Layer upperLayer ) {
+        public SubImageBuilder(DesignBuilder batcher, Node loaderNode, float size_x, float size_y,Layer upperLayer,float qualityFactor ) {
                 
-               super(batcher, loaderNode, size_x, size_y);
+               super(batcher, loaderNode, size_x*qualityFactor, size_y*qualityFactor);
+               this.qualityFactor=qualityFactor;
                 this.createLayers();
         }
         
@@ -106,10 +108,10 @@ public class SubImageBuilder extends ImageBuilder{
                                         // Create a layer
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
-                                        float pos_x = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_x").getNodeValue());
-                                        float pos_y = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_y").getNodeValue());
-                                        float size_x = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_x").getNodeValue());
-                                        float size_y = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_y").getNodeValue());
+                                        float pos_x = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_x").getNodeValue())*qualityFactor;
+                                        float pos_y = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_y").getNodeValue())*qualityFactor;
+                                        float size_x = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_x").getNodeValue())*qualityFactor;
+                                        float size_y = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_y").getNodeValue())*qualityFactor;
 
                                         QuadrupletFloat posSize = new QuadrupletFloat(pos_x, pos_y, size_x, size_y);
                                         // System.out.println(key+ nameElement+ this.designBuilder.getModelResources()+ linkedInterface);

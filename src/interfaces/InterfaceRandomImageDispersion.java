@@ -5,53 +5,60 @@
 package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
+import ResourcesManager.XmlChild;
+import ResourcesManager.XmlManager;
 import designBuilder.DesignBuilder;
 import imageBuilder.SubImageBuilder;
 import imageloaderinterface.ImageLoaderInterface;
 import interfaces.Interface;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.transform.Rotate;
+import javax.imageio.ImageIO;
 import org.controlsfx.control.RangeSlider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
+import staticFunctions.ObjectDispersion;
 import static staticFunctions.StaticImageEditing.convertToFXImage;
 
 /**
  *
  * @author Camille LECOURT
  */
-public class InterfaceRandomImageDispersion extends Interface{
+public class InterfaceRandomImageDispersion extends Interface {
 
-           @FXML
+        @FXML
         private PreviewImageBox Preview;
 
-           
-           
-        
-         @FXML
+        @FXML
         private RangeSlider DS_imageSize;
-        
-          
+
         @FXML
         private RangeSlider DS_intervalSize;
-        
+
         @FXML
         private VBox vboxInterface;
-        
+
         @FXML
         private ImageView prev;
-        
+
         private SubImageBuilder lowerImageBuilder;
-        
+
         public InterfaceRandomImageDispersion(String interfaceName, DesignBuilder designBuilder) {
                 super(interfaceName, designBuilder);
         }
@@ -68,10 +75,16 @@ public class InterfaceRandomImageDispersion extends Interface{
 
                         fxmlLoader.load();
 
-                        
-                        
-                        
-                        
+                        DS_intervalSize.setMin(0);
+                        DS_intervalSize.setMax(1);
+                        DS_intervalSize.setLowValue(0.25);
+                        DS_intervalSize.setHighValue(0.75);
+
+                        DS_imageSize.setMin(0);
+                        DS_imageSize.setMax(1);
+                        DS_imageSize.setLowValue(0.25);
+                        DS_imageSize.setHighValue(0.75);
+
                         setPreview(Preview);
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
@@ -79,69 +92,99 @@ public class InterfaceRandomImageDispersion extends Interface{
         }
 
         public void setLowerImageBuilder(SubImageBuilder lowerImageBuilder) {
-                
+
                 this.lowerImageBuilder = lowerImageBuilder;
-                
-               //intall trigger
-                   lowerImageBuilder.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                                if (newValue) {
-                                        //    System.out.println("trigered");
-                                        lowerImageBuilder.setChanged(false);
-                                        //       System.out.println("(1) CHANGGE DEECTED");
-                                        refreshSubInterface();
-                                        this.refreshLayers();
-                                        this.refreshImageBuilders();
-                                }
-                        });
+
+                //intall trigger
+                lowerImageBuilder.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                        if (newValue) {
+                                //    System.out.println("trigered");
+                                lowerImageBuilder.setChanged(false);
+                                //       System.out.println("(1) CHANGGE DEECTED");
+                                refreshSubInterface();
+                                this.refreshLayers();
+                                this.refreshImageBuilders();
+                        }
+                });
                 //    lowerImageBuilder.setChanged(true);
                 lowerImageBuilder.refreshAll();
                 refreshSubInterface();
-               
 
                 ArrayList<Interface> interfaces = lowerImageBuilder.getInterfaces();
-
                 for (Interface iface : interfaces) {
-                       
-                        // Ajouter le nœud à la VBox
                         vboxInterface.getChildren().add(iface);
                 }
 
         }
-                   
-        
 
-      
-        
-        
-        
-        
-        public void linkInterface(Interface inter){
+        public void linkInterface(Interface inter) {
                 vboxInterface.getChildren().add(inter);
                 inter.refreshLayers();
                 inter.refreshImageBuilders();
         }
-        
+
         @FXML
-        public void uptadeInterface(){
-                   this.refreshLayers();
-                   this.refreshImageBuilders();               
-        }
-        
-        public void refreshSubInterface(){
-                 this.prev.setImage( convertToFXImage(this.lowerImageBuilder.getImageOut()));
-                  prev.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-style: solid;");
-                 //System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-        }
+        public void uptadeInterface() {
+             //   System.out.println(DS_intervalSize.getLowValue());
                 
+                
+                
+                
+         
+                
+                
+                
+                this.refreshLayers();
+                this.refreshImageBuilders();
+
+        }
+
+        public void refreshSubInterface() {
+                this.prev.setImage(convertToFXImage(this.lowerImageBuilder.getImageOut()));
+                prev.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-style: solid;");
+                //System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+        }
 
         @Override
         public Node saveInterfaceData(Document doc) {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+              XmlManager xmlManager = new XmlManager(doc);
+
+                XmlChild Xmlinterval = new XmlChild("Interval");
+                Xmlinterval.addAttribute("Min_Interval", String.valueOf(DS_intervalSize.getLowValue()));
+                Xmlinterval.addAttribute("Max_Interval", String.valueOf(DS_intervalSize.getHighValue()));
+                xmlManager.addChild(Xmlinterval);
+                
+                XmlChild XmlSize = new XmlChild("Size");
+                XmlSize.addAttribute("Min_Size", String.valueOf(DS_imageSize.getLowValue()));
+                XmlSize.addAttribute("Max_Size", String.valueOf(DS_imageSize.getHighValue()));
+                xmlManager.addChild(XmlSize);
+                 
+                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
         }
 
         @Override
         public void loadInterfaceData(Element dataOfTheLayer) {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//                 slider_X.setValue( Double.parseDouble(dataOfTheLayer.getElementsByTagName("OffSet").item(0).getAttributes().getNamedItem("X_Offset").getNodeValue()));
+//                slider_Y.setValue( Double.parseDouble(dataOfTheLayer.getElementsByTagName("OffSet").item(0).getAttributes().getNamedItem("Y_Offset").getNodeValue()));
+//                refreshImagesBuilders();
+                
         }
         
+        
+        public float getLowIntervalSize(){
+                return (float) this.DS_intervalSize.getLowValue();
+        }
+        
+        public float getHighIntervalSize(){
+                return (float) this.DS_intervalSize.getHighValue();
+        }
+        
+        public float getLowImageSize(){
+                return (float) this.DS_imageSize.getLowValue();
+        }
+        
+        public float getHighImageSize(){
+                return (float) this.DS_imageSize.getHighValue();
+        }
+
 }

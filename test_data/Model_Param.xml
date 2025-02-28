@@ -116,7 +116,7 @@
 					<size size_x="88" size_y="58"/>
 					<Param>
 						<Size maxXSize="5" minXSize="1" maxYSize="5" minYSize="1"/>
-						<Interval maxXInterval="7" minXInterval="5" maxYInterval="7" minYInterval="5"/>
+						<Interval maxInterval="7" minInterval="3"/>
 						<Interface>
 							<Custom_Color name="graine" tab_name="Recto">
 									<pos pos_x="0" pos_y="0"/>
