@@ -37,8 +37,6 @@ public class InterfaceCustomShapeCustomColor extends Interface {
         @FXML
         private GradientCreatorInterface gradientPicker;
 
-        @FXML
-        private TitledPane CustomImageTiledPane;
 
         @FXML
         private ImageLoaderInterface LoaderInterface;
@@ -62,7 +60,6 @@ public class InterfaceCustomShapeCustomColor extends Interface {
                         fxmlLoader.load();
 
                         //    System.out.println("gradientPicker initialized: " + (gradientPicker != null) + " value : " + gradientPicker.isChanged());
-                        this.CustomImageTiledPane.setText(interfaceName);
                         // Add a listener to the changed property
                         gradientPicker.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                                 if (newValue) {

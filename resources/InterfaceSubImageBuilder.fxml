@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.VBox?>
+<?import previewimagebox.PreviewImageBox?>
+
+<fx:root fx:id="CustomImageTiledPane" type="TitledPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <VBox>
+         <children>
+            <PreviewImageBox fx:id="Preview" maxHeight="150.0" />
+            <VBox fx:id="vboxInterface">
+               <VBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </VBox.margin>
+            </VBox>
+         </children>
+      </VBox>
+   </content>
+</fx:root>

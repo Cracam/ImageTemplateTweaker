@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import imageloaderinterface.ImageLoaderInterface?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import previewimagebox.PreviewImageBox?>
+
+<fx:root fx:id="CustomImageTiledPane" type="TitledPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <HBox>
+         <children>
+            <VBox>
+               <children>
+                  <ImageLoaderInterface />
+                  <VBox fx:id="vboxInterface">
+                     <VBox.margin>
+                        <Insets left="30.0" top="15.0" />
+                     </VBox.margin>
+                  </VBox>
+               </children>
+            </VBox>
+            <PreviewImageBox fx:id="Preview" />
+         </children>
+      </HBox>
+   </content>
+</fx:root>

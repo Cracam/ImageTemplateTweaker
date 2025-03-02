@@ -10,7 +10,7 @@
    <content>
       <HBox maxHeight="245.0">
          <children>
-            <GradientCreatorInterface fx:id="gradientPicker">
+            <GradientCreatorInterface fx:id="gradientPicker" maxHeight="226.0">
                <HBox.margin>
                   <Insets />
                </HBox.margin></GradientCreatorInterface>
@@ -21,4 +21,7 @@
          </children>
       </HBox>
    </content>
+   <padding>
+      <Insets top="5.0" />
+   </padding>
 </fx:root>

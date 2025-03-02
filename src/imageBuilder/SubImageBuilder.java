@@ -5,10 +5,10 @@ import Exceptions.ThisInterfaceDoesNotExistException;
 import Exceptions.ThisLayerDoesNotExistException;
 import Layers.Layer;
 import Layers.SubClasses.QuadrupletFloat;
+import ResourcesManager.XmlManager;
 
 import designBuilder.DesignBuilder;
 import interfaces.Interface;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
@@ -24,17 +24,15 @@ import org.w3c.dom.NodeList;
  * @author LECOURT Camille
  */
 public class SubImageBuilder extends ImageBuilder{
-
-    
-
+private SubImageBuilderInterface subInterface;
+     
       //  ArrayList<Layer> layers = new ArrayList<>();
-            ArrayList<Interface> interfaces = new ArrayList<>();
+    //        ArrayList<Interface> interfaces = new ArrayList<>();
 
 private final float qualityFactor;
         
  private final BooleanProperty changed = new SimpleBooleanProperty(false);
 
-   
 
         
           /**
@@ -51,7 +49,10 @@ private final float qualityFactor;
                 
                super(batcher, loaderNode, size_x*qualityFactor, size_y*qualityFactor);
                this.qualityFactor=qualityFactor;
+                  this.name = ((Element) loaderNode).getAttribute("name");
+               subInterface=new SubImageBuilderInterface(name);
                 this.createLayers();
+                
         }
         
         
@@ -97,11 +98,13 @@ private final float qualityFactor;
                                         if (linkedInterface == null) { // if the interface 
                                                 linkedInterface = Interface.createInterface(key, nameElement, this.designBuilder);
                                                  this.designBuilder.addInterface(linkedInterface);
+                                                    linkedInterface.desactivatePreview();
                                         }
                                         
                                         if (linkedInterface.isHaveGraphicInterface()) {
-                                                        linkedInterface.desactivatePreview();
-                                                        interfaces.add(linkedInterface);
+                                                     
+                                                   //     interfaces.add(linkedInterface);
+                                                       subInterface.linkInterface(linkedInterface);
                                        }
                                   
 
@@ -156,10 +159,13 @@ private final float qualityFactor;
                         this.changed.set(value);
         }
 
-        public ArrayList<Interface> getInterfaces() {
-                return interfaces;
-        }
+//        public ArrayList<Interface> getInterfaces() {
+//                return interfaces;
+//        }
 
-        
+             public SubImageBuilderInterface getSubInterface(){
+                     return this.subInterface;
+             }
+     
 
 }

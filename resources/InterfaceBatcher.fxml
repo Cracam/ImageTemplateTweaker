@@ -33,17 +33,19 @@
 -->
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import previewimagebox.PreviewImageBox?>
-
 
 <BorderPane prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <top>
@@ -82,7 +84,7 @@
     </MenuBar>
    </top>
    <center>
-      <SplitPane dividerPositions="0.6614420062695925" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <SplitPane fx:id="core" dividerPositions="0.6614420062695925" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
@@ -106,6 +108,15 @@
       </SplitPane>
    </center>
    <bottom>
-      <AnchorPane prefHeight="30.0" prefWidth="640.0" BorderPane.alignment="CENTER" />
+      <AnchorPane prefHeight="30.0" prefWidth="640.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_LEFT" disable="true" visible="false" AnchorPane.leftAnchor="0.0">
+               <children>
+                  <Label text="Changer l'échelle de l'interface : " />
+                  <Slider fx:id="sliderScale" blockIncrement="0.1" max="3.0" min="0.25" />
+                  <Button mnemonicParsing="false" onAction="#updateScale" text="Valider" />
+               </children>
+            </HBox>
+         </children></AnchorPane>
    </bottom>
 </BorderPane>

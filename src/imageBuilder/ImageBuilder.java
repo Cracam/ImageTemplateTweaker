@@ -210,9 +210,11 @@ public class ImageBuilder {
                                                                 tabname = "Defaut";
                                                         }
                                                         this.designBuilder.assignInterfaceToTab(tabname, linkedInterface);
+                                                     
                                                 }
                                         }
-
+                                          linkedInterface.activatePreview();
+                                          
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
                                         // Create a layer

@@ -99,25 +99,24 @@ public class InterfaceRandomImageDispersion extends Interface {
                 //    lowerImageBuilder.setChanged(true);
                 lowerImageBuilder.refreshAll();
                 refreshSubInterface();
-
-                ArrayList<Interface> interfaces = lowerImageBuilder.getInterfaces();
-                for (Interface iface : interfaces) {
-                        vboxInterface.getChildren().add(iface);
-                }
+               vboxInterface.getChildren().add( this.lowerImageBuilder.getSubInterface());
+//                ArrayList<Interface> interfaces = lowerImageBuilder.getInterfaces();
+//                for (Interface iface : interfaces) {
+//                        vboxInterface.getChildren().add(iface);
+//                }
 
         }
 
-        public void linkInterface(Interface inter) {
-                vboxInterface.getChildren().add(inter);
-                inter.refreshLayers();
-                inter.refreshImageBuilders();
-        }
+//        public void linkInterface(Interface inter) {
+//                vboxInterface.getChildren().add(inter);
+//                inter.refreshLayers();
+//                inter.refreshImageBuilders();
+//        }
 
         @FXML
         public void uptadeInterface() {
                 this.refreshLayers();
                 this.refreshImageBuilders();
-
         }
 
         public void refreshSubInterface() {

@@ -47,9 +47,7 @@ public class InterfaceMouvableFixedImage extends Interface{
         
         @FXML
         private PreviewImageBox Preview;
-        
-        @FXML
-        private TitledPane CustomImageTiledPane;
+
         
         
         
@@ -95,7 +93,6 @@ public class InterfaceMouvableFixedImage extends Interface{
                         fxmlLoader.setController(this);
 
                         fxmlLoader.load();
-                        this.CustomImageTiledPane.setText(interfaceName);
                         
                    
                         slider_X.setMin(-0.999);

@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import org.w3c.dom.Document;
@@ -62,6 +63,7 @@ public abstract class Interface extends TitledPane{
                 this.interfaceName=interfaceName;
                 this.designBuilder=designBuilder;
                 this.initialiseInterface();
+                this.setText(interfaceName);
         }
         
         /**
@@ -134,7 +136,7 @@ public abstract class Interface extends TitledPane{
         /**
          * this method refresh all the layer that are kinked to the interface.
          */
-        void refreshLayers() {
+     public   void refreshLayers() {
                
                 
                 for (int i = 0; i < linkedLayers.size(); i++) {
@@ -148,7 +150,7 @@ public abstract class Interface extends TitledPane{
           /**
          * this method refresh all the layer that are kinked to the interface.
          */
-        void refreshImageBuilders() {
+       public void refreshImageBuilders() {
                 for (int i = 0; i < linkedImagesBuilders.size(); i++) {
                         linkedImagesBuilders.get(i).refresh();
                 }
@@ -209,9 +211,20 @@ public abstract class Interface extends TitledPane{
 
         
         public void desactivatePreview(){
+                if(haveGraphicInterface){
                  PreviewGen.setDisable(true);
                 PreviewGen.setVisible(false);
-                PreviewGen.setManaged(false);
+                PreviewGen.setManaged(false);}
         }
         
+          public void activatePreview(){
+                  if(haveGraphicInterface){
+                 PreviewGen.setDisable(false);
+                PreviewGen.setVisible(true);
+                PreviewGen.setManaged(true);}
+        }
+ 
+          public ObservableList<javafx.scene.Node> getChildrens(){
+                  return this.getChildren();
+          }
 }

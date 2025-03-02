@@ -26,7 +26,7 @@ import staticFunctions.StaticImageEditing;
  *
  * @author LECOURT Camille
  */
-public abstract class Layer extends TitledPane {
+public abstract class Layer {
 
         // Variable of Interface management in the app 
          final String layerName;
@@ -73,7 +73,6 @@ public abstract class Layer extends TitledPane {
          */
         public Layer(String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
                 this.layerName = layerName;
-                this.setText(layerName);
                 this.modelResources = modelResources;
                 this.linkedInterface=layerInterface;
                 this.linkedImagesBuilder=linkedImageBuilder;

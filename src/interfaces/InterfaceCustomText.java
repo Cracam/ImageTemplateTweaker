@@ -44,8 +44,6 @@ public class InterfaceCustomText extends Interface {
         @FXML
         private GradientCreatorInterface gradientPicker;
 
-        @FXML
-        private TitledPane CustomImageTiledPane;
 
         private int[][] opacityMap = new int[1][1];
         boolean textChanged = true;
@@ -81,7 +79,6 @@ public class InterfaceCustomText extends Interface {
                         fxmlLoader.load();
 
 
-                        this.CustomImageTiledPane.setText(interfaceName);
                         // Add a listener to the changed property
                         gradientPicker.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                                 if (newValue) {
@@ -282,8 +279,6 @@ setPreview(Preview);
                 return gradientPicker;
         }
 
-        public TitledPane getCustomImageTiledPane() {
-                return CustomImageTiledPane;
-        }
+
 
 }

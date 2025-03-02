@@ -117,7 +117,7 @@
 					<Param>
 						<Size maxXSize="5" minXSize="1" maxYSize="5" minYSize="1"/>
 						<Interval maxInterval="7" minInterval="3"/>
-						<Interface>
+						<Interface name="SubBuildee">
 							<Custom_Color name="graine" tab_name="Recto">
 									<pos pos_x="0" pos_y="0"/>
 									<size size_x="5" size_y="5" />
@@ -127,8 +127,8 @@
 							</Custom_Color>
 
 							<Mouvable_Fixed_Image name="mouvable image" tab_name="Recto" >
-					<pos pos_x="22" pos_y="20"/>
-					<size size_x="12" size_y="23"/>
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="1" size_y="2"/>
 					<Param>
 						<Image image_name="testmovableimage.png"/>
 						<OffSet X_MaxOffset="1.0"  X_MinOffset="-1.0"  Y_MaxOffset="1.0"  Y_MinOffset="-1.0"/>

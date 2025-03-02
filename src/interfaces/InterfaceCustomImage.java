@@ -34,8 +34,7 @@ public class InterfaceCustomImage extends Interface {
         private PreviewImageBox Preview;
         @FXML
         private ImageLoaderInterface LoaderInterface;
-        @FXML
-        private TitledPane CustomImageTiledPane;
+
 
         public InterfaceCustomImage(String interfaceName, DesignBuilder designBuilder) {
                 super(interfaceName, designBuilder);
@@ -54,7 +53,6 @@ public class InterfaceCustomImage extends Interface {
                         fxmlLoader.setController(this);
 
                         fxmlLoader.load();
-                        this.CustomImageTiledPane.setText(interfaceName);
                         
                         // Add a listener to the changed property
                         LoaderInterface.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
