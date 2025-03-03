@@ -272,6 +272,40 @@
 					</Param>
 				</img_custom_shape>
 
+
+
+					<Random_Image_Allocation name="randompos" tab_name="Verso" >
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Param>
+						<SubImagesData>
+							<SubImageData size_x="14.5" size_y="14.5" pos_x="10.2" pos_y="6.45"/>
+							<SubImageData size_x="14.5" size_y="14.5" pos_x="10.2" pos_y="20.2"/>
+							<SubImageData size_x="14.5" size_y="14.5" pos_x="10.2" pos_y="33.45"/>
+						</SubImagedata>
+
+						<Interface name="SubBuildee">
+							<Custom_Color name="graine" tab_name="Recto">
+									<pos pos_x="0" pos_y="0"/>
+									<size size_x="5" size_y="5" />
+									<Param>
+										<Image image_name="graine.png"/>
+									</Param>
+							</Custom_Color>
+
+							<Mouvable_Fixed_Image name="mouvable image" tab_name="Recto" >
+								<pos pos_x="0" pos_y="0"/>
+								<size size_x="1" size_y="2"/>
+								<Param>
+									<Image image_name="testmovableimage.png"/>
+									<OffSet X_MaxOffset="1.0"  X_MinOffset="-1.0"  Y_MaxOffset="1.0"  Y_MinOffset="-1.0"/>
+			    				</Param>
+							</Mouvable_Fixed_Image>
+							
+						</Interface>
+					</Param>
+				</Random_Image_Allocation>
+
 		</Output>
 
 
