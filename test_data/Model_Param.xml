@@ -274,7 +274,7 @@
 
 
 
-					<Random_Image_Allocation name="randompos" tab_name="Verso" >
+					<Random_Image_Allocations name="randompos" tab_name="Verso" >
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>
 					<Param>
@@ -282,7 +282,7 @@
 							<SubImageData size_x="14.5" size_y="14.5" pos_x="10.2" pos_y="6.45"/>
 							<SubImageData size_x="14.5" size_y="14.5" pos_x="10.2" pos_y="20.2"/>
 							<SubImageData size_x="14.5" size_y="14.5" pos_x="10.2" pos_y="33.45"/>
-						</SubImagedata>
+						</SubImagesData>
 
 						<Interface name="SubBuildee">
 							<Custom_Color name="graine" tab_name="Recto">
@@ -304,7 +304,7 @@
 							
 						</Interface>
 					</Param>
-				</Random_Image_Allocation>
+				</Random_Image_Allocations>
 
 		</Output>
 

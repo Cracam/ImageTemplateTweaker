@@ -11,7 +11,10 @@ import ResourcesManager.XmlManager;
 import imageBuilder.ImageBuilder;
 import imageBuilder.SubImageBuilder;
 import interfaces.Interface;
+import interfaces.InterfaceRandomImageAllocations;
+import interfaces.SubInterfaceRandomImageAllocation;
 import java.util.ArrayList;
+import javafx.fxml.FXML;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -24,10 +27,16 @@ public class LayerRandomImageAllocation extends Layer {
         private ArrayList<QuadrupletFloat> positions;
         private ArrayList<QuadrupletInt> pixelPositions;
         private ArrayList<SubImageBuilder> subImageBuilders;
-        
+
         private SubImageBuilder imagesAssembler;
         private Element interfaceLoaderElement;
+        
+          private ArrayList<SubImageBuilder> lowerImageBuilders;
+        private ArrayList<SubInterfaceRandomImageAllocation> lowerInterfaces;
 
+          private float maxXSize = 0;
+          private      float maxYSize = 0;
+                
         public LayerRandomImageAllocation(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
                 super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
         }
@@ -42,7 +51,7 @@ public class LayerRandomImageAllocation extends Layer {
 
         @Override
         public void readNode(Element paramNode) {
-                
+
                 //Loading each positions
                 //    Element element = (Element) 
                 Element element = (Element) paramNode.getElementsByTagName("SubImagesData").item(0);
@@ -50,9 +59,8 @@ public class LayerRandomImageAllocation extends Layer {
                 float pos_x, pos_y, size_x, size_y;
                 Element subElement;
 
-                              float maxXSize=0;
-                  float maxYSize=0;
-                          
+              
+
                 for (int i = 0; i < subElements.getLength(); i++) {
                         subElement = (Element) subElements.item(i);
                         pos_x = XmlManager.getFloatAttribute(subElement, "pos_x", 0);
@@ -62,19 +70,32 @@ public class LayerRandomImageAllocation extends Layer {
                         positions.add(new QuadrupletFloat(pos_x, pos_y, size_x, size_y));
                         pixelPositions.add(new QuadrupletInt(0, 0, 0, 0));
                         pixelPositions.get(i).computePixelPosSize(positions.get(i), linkedImagesBuilder.getPixelMmFactor());
-                        
-                        if(maxXSize<size_x) maxXSize=size_x;
-                        if(maxYSize<size_y) maxYSize=size_y;
+
+                        if (maxXSize < size_x) {
+                                maxXSize = size_x;
+                        }
+                        if (maxYSize < size_y) {
+                                maxYSize = size_y;
+                        }
                 }
-                  interfaceLoaderElement = (Element) paramNode.getElementsByTagName("interfaceLoaderElement").item(0);
-    
-                  subImageBuilders.add(new SubImageBuilder(this.linkedImagesBuilder.getDesignBuilder(), interfaceLoaderElement, maxXSize, maxYSize, this, 2));
-                  
+                interfaceLoaderElement = (Element) paramNode.getElementsByTagName("Interface").item(0);
+
+                subImageBuilders.add(new SubImageBuilder(this.linkedImagesBuilder.getDesignBuilder(), interfaceLoaderElement, maxXSize, maxYSize, this));
         }
 
+        
+          
+        public SubInterfaceRandomImageAllocation createNewImgBuilder() {
+                lowerImageBuilders.add(new SubImageBuilder(this.linkedImagesBuilder.getDesignBuilder(), interfaceLoaderElement,  maxXSize, maxYSize, this));
+             
+                SubInterfaceRandomImageAllocation subInter=new SubInterfaceRandomImageAllocation("Item de"+ this.layerName+" : " + lowerInterfaces.size(), (InterfaceRandomImageAllocations) this.getLinkedInterface(),lowerImageBuilders.get(lowerImageBuilders.size()-1));
+                lowerInterfaces.add(subInter);
+
+                return subInter;
+        }
+        
         @Override
         public void refreshImageGet() {
-
 
         }
 }

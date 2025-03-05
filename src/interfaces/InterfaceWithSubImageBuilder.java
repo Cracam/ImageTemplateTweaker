@@ -5,7 +5,7 @@
 package interfaces;
 
 import designBuilder.DesignBuilder;
-import imageBuilder.SubImageBuilderWithInterface;
+import imageBuilder.SubImageBuilder;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -17,7 +17,7 @@ import static staticFunctions.StaticImageEditing.convertToFXImage;
  */
 public abstract class InterfaceWithSubImageBuilder extends Interface {
 
-         SubImageBuilderWithInterface lowerImageBuilder;
+         SubImageBuilder lowerImageBuilder;
  private  ImageView prev;
   private  VBox vboxInterface;
   
@@ -33,7 +33,7 @@ public abstract class InterfaceWithSubImageBuilder extends Interface {
                 this.prev=prev;
         }
         
-        public void setLowerImageBuilder(SubImageBuilderWithInterface lowerImageBuilder) {
+        public void setLowerImageBuilder(SubImageBuilder lowerImageBuilder) {
 
                 this.lowerImageBuilder = lowerImageBuilder;
 

@@ -2,10 +2,9 @@ package imageBuilder;
 
 import Exceptions.TheXmlElementIsNotANodeException;
 import Exceptions.ThisInterfaceDoesNotExistException;
-import Exceptions.ThisLayerDoesNotExistException;
+import Exceptions.XMLExeptions.GetAttributeValueException;
 import Layers.Layer;
 import Layers.SubClasses.QuadrupletFloat;
-import ResourcesManager.XmlManager;
 
 import designBuilder.DesignBuilder;
 import interfaces.Interface;
@@ -13,9 +12,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.image.ImageView;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import static staticFunctions.StaticImageEditing.convertToFXImage;
 
 /**
  * The role of this class is to build a image by piling it's differents layer
@@ -29,10 +30,10 @@ private SubImageBuilderInterface subInterface;
       //  ArrayList<Layer> layers = new ArrayList<>();
     //        ArrayList<Interface> interfaces = new ArrayList<>();
 
-private final float qualityFactor;
+private final float QUALITY_FACTOR=2;
         
  private final BooleanProperty changed = new SimpleBooleanProperty(false);
-
+private ImageView preview;
 
         
           /**
@@ -43,16 +44,17 @@ private final float qualityFactor;
          * @param size_x
          * @param size_y
          * @param upperLayer
-         * @param qualityFactor
          */
-        public SubImageBuilder(DesignBuilder batcher, Node loaderNode, float size_x, float size_y,Layer upperLayer,float qualityFactor ) {
+        public SubImageBuilder(DesignBuilder batcher, Node loaderNode, float size_x, float size_y,Layer upperLayer ) {
                 
-               super(batcher, loaderNode, size_x*qualityFactor, size_y*qualityFactor);
-               this.qualityFactor=qualityFactor;
+               super(batcher, loaderNode, size_x*2, size_y*2);
                   this.name = ((Element) loaderNode).getAttribute("name");
                subInterface=new SubImageBuilderInterface(name);
                 this.createLayers();
                 
+                preview= new ImageView();
+                preview.setFitHeight(150);
+                 preview.setFitWidth(150);
         }
         
         
@@ -64,12 +66,14 @@ private final float qualityFactor;
         public void refresh() {
                 DRYrefresh();
                 setChanged(true);
+                preview.setImage(convertToFXImage(this.getImageOut()));
         }
            
         @Override
         public void refreshAll() {
                 DRYrefreshAll();
                 setChanged(true);
+                 preview.setImage(convertToFXImage(this.getImageOut()));
         }
 
         
@@ -114,10 +118,10 @@ private final float qualityFactor;
                                         // Create a layer
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
                                         // ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------  ----------
-                                        float pos_x = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_x").getNodeValue())*qualityFactor;
-                                        float pos_y = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_y").getNodeValue())*qualityFactor;
-                                        float size_x = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_x").getNodeValue())*qualityFactor;
-                                        float size_y = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_y").getNodeValue())*qualityFactor;
+                                        float pos_x = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_x").getNodeValue())*QUALITY_FACTOR;
+                                        float pos_y = Float.parseFloat(element.getElementsByTagName("pos").item(0).getAttributes().getNamedItem("pos_y").getNodeValue())*QUALITY_FACTOR;
+                                        float size_x = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_x").getNodeValue())*QUALITY_FACTOR;
+                                        float size_y = Float.parseFloat(element.getElementsByTagName("size").item(0).getAttributes().getNamedItem("size_y").getNodeValue())*QUALITY_FACTOR;
 
                                         QuadrupletFloat posSize = new QuadrupletFloat(pos_x, pos_y, size_x, size_y);
                                         // System.out.println(key+ nameElement+ this.designBuilder.getModelResources()+ linkedInterface);
@@ -139,7 +143,7 @@ private final float qualityFactor;
                                                 linkedInterface.linkNewImageBuilder(this);
                                         }
 
-                                } catch (ThisLayerDoesNotExistException | ThisInterfaceDoesNotExistException e) {
+                                } catch (GetAttributeValueException | ThisInterfaceDoesNotExistException e) {
                                         System.out.println(e + " was detected ignoting it");
                                 } catch (TheXmlElementIsNotANodeException ex) {
                                         Logger.getLogger(SubImageBuilder.class.getName()).log(Level.SEVERE, null, ex);
@@ -167,5 +171,8 @@ private final float qualityFactor;
                      return this.subInterface;
              }
      
+             public ImageView getPreview(){
+                     return preview;
+             }
 
 }

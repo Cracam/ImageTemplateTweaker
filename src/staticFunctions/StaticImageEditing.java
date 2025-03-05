@@ -148,4 +148,26 @@ public class StaticImageEditing {
                 String hex = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
                 return hex;
         }
+          
+               
+        public static BufferedImage overlayImages(BufferedImage img1, BufferedImage img2) {
+        // Crée une nouvelle image avec les dimensions de la plus grande des deux images
+        int width = Math.max(img1.getWidth(), img2.getWidth());
+        int height = Math.max(img1.getHeight(), img2.getHeight());
+        BufferedImage combined = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        // Obtient le contexte graphique de la nouvelle image
+        Graphics2D g = combined.createGraphics();
+
+        // Dessine la première image sur la nouvelle image
+        g.drawImage(img1, 0, 0, null);
+
+        // Dessine la deuxième image par-dessus la première image
+        g.drawImage(img2, 0, 0, null);
+
+        // Libère les ressources graphiques
+        g.dispose();
+
+        return combined;
+    }
 }

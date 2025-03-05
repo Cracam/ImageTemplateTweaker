@@ -2,7 +2,7 @@ package imageBuilder;
 
 import Exceptions.TheXmlElementIsNotANodeException;
 import Exceptions.ThisInterfaceDoesNotExistException;
-import Exceptions.ThisLayerDoesNotExistException;
+import Exceptions.XMLExeptions.GetAttributeValueException;
 import Layers.Layer;
 import Layers.SubClasses.QuadrupletFloat;
 
@@ -245,7 +245,7 @@ public class ImageBuilder {
                                                 linkedInterface.linkNewImageBuilder(this);
                                         }
 
-                                } catch (ThisLayerDoesNotExistException | ThisInterfaceDoesNotExistException e) {
+                                } catch (GetAttributeValueException | ThisInterfaceDoesNotExistException e) {
                                         System.out.println(e + " was detected ignoting it");
                                 } catch (TheXmlElementIsNotANodeException ex) {
                                         Logger.getLogger(ImageBuilder.class.getName()).log(Level.SEVERE, null, ex);

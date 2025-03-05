@@ -5,11 +5,12 @@
 package Layers;
 
 import imageBuilder.ImageBuilder;
-import Exceptions.ThisLayerDoesNotExistException;
+import Exceptions.XMLExeptions.GetAttributeValueException;
 import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.ResourcesManager;
 import interfaces.Interface;
+import interfaces.InterfaceRandomImageAllocations;
 import interfaces.InterfaceRandomImageDispersion;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -54,7 +55,8 @@ public abstract class Layer {
                 "Fixed_Text_Custom_Color_Custom_Style", LayerFixedTextCustomStyleCustomColor.class,
                 "Mouvable_Fixed_Image", LayerMovableFixedImage.class,
                   "Custom_Shape_Custom_Color" ,LayerCustomShapeCustomColor.class,
-                   "Random_Image_Dispersion",LayerRandomImageDispersion.class
+                   "Random_Image_Dispersion",LayerRandomImageDispersion.class,
+                    "Random_Image_Allocations",LayerRandomImageAllocation.class
         );
 
         
@@ -196,12 +198,12 @@ public abstract class Layer {
          * @param linkedImageBuilder
          * @param posSize
          * @return
-         * @throws ThisLayerDoesNotExistException 
+         * @throws GetAttributeValueException 
          */
-          public static Layer createLayer(String layerType, String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) throws ThisLayerDoesNotExistException {
+          public static Layer createLayer(String layerType, String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) throws GetAttributeValueException {
 
                 if (!layersTypesMap.containsKey(layerType)) {
-                        throw new ThisLayerDoesNotExistException("This interface type does not exist : " + layerType);
+                        throw new GetAttributeValueException("This interface type does not exist : " + layerType);
                 }
                 
                 try {

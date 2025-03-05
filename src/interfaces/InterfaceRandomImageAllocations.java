@@ -5,12 +5,11 @@
 package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
-import ResourcesManager.XmlChild;
-import ResourcesManager.XmlManager;
+import Layers.LayerRandomImageAllocation;
 import designBuilder.DesignBuilder;
-import imageBuilder.SubImageBuilderWithInterface;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
@@ -25,26 +24,22 @@ import previewimagebox.PreviewImageBox;
  *
  * @author Camille LECOURT
  */
-public class InterfaceRandomImageAllocations extends InterfaceWithSubImageBuilder {
+public class InterfaceRandomImageAllocations extends Interface {
 
         @FXML
         private PreviewImageBox Preview;
 
-
-
         @FXML
         private VBox vboxInterface;
 
-        
         @FXML
         private ImageLoaderInterface loader;
-        
 
-        private SubImageBuilderWithInterface lowerImageBuilder;
+        private ArrayList<SubInterfaceRandomImageAllocation> lowerInterfaces;
 
         public InterfaceRandomImageAllocations(String interfaceName, DesignBuilder designBuilder) {
                 super(interfaceName, designBuilder);
-                 link( null, vboxInterface);
+                //  link( null, vboxInterface);
         }
 
         @Override
@@ -59,15 +54,11 @@ public class InterfaceRandomImageAllocations extends InterfaceWithSubImageBuilde
 
                         fxmlLoader.load();
 
-              
                         setPreview(Preview);
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
-
-    
-
 
         @FXML
         public void uptadeInterface() {
@@ -75,7 +66,11 @@ public class InterfaceRandomImageAllocations extends InterfaceWithSubImageBuilde
                 this.refreshImageBuilders();
         }
 
-
+        @FXML
+        public void createNewImgBuilder() {
+                   SubInterfaceRandomImageAllocation subInter= ((LayerRandomImageAllocation)  this.linkedLayers.get(0)).createNewImgBuilder();
+                lowerInterfaces.add(subInter);
+        }
 
         @Override
         public Node saveInterfaceData(Document doc) {
@@ -92,8 +87,7 @@ public class InterfaceRandomImageAllocations extends InterfaceWithSubImageBuilde
 //                xmlManager.addChild(XmlSize);
 
 //                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
-
-return null;
+                return null;
         }
 
         @Override

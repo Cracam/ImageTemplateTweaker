@@ -63,7 +63,7 @@ public class LayerRandomImageDispersion extends Layer {
 
                 element = (Element) paramNode.getElementsByTagName("Interface").item(0);
 
-                imageBuilder = new SubImageBuilder(this.linkedImagesBuilder.getDesignBuilder(), element, maxXSize, maxYSize, this, 2);
+                imageBuilder = new SubImageBuilder(this.linkedImagesBuilder.getDesignBuilder(), element, maxXSize, maxYSize, this);
 
                 ((InterfaceRandomImageDispersion) (this.linkedInterface)).setLowerImageBuilder(imageBuilder);
 

@@ -8,12 +8,14 @@ package Exceptions;
  *
  * @author LECOURT Camille
  */
-public class ThisLayerDoesNotExistException extends Exception{
-          public ThisLayerDoesNotExistException() {
+public class DesingNodeLowerNodeIsAnormalyVoidException extends Exception {
+        public DesingNodeLowerNodeIsAnormalyVoidException() {
         super();
     }
 
-    public ThisLayerDoesNotExistException(String string) {
+    public DesingNodeLowerNodeIsAnormalyVoidException(String string) {
         super(string);
     }
+
+    
 }

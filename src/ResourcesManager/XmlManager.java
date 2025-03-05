@@ -4,6 +4,7 @@
  */
 package ResourcesManager;
 
+import Exceptions.XMLExeptions.GetAttributeValueException;
 import java.util.ArrayList;
 import java.util.Map;
 import org.w3c.dom.Document;
@@ -17,9 +18,9 @@ public class XmlManager {
 
         private ArrayList<XmlChild> childs = new ArrayList<>();
         private Document doc;
-        
+
         public XmlManager(Document doc) {
-                this.doc=doc;
+                this.doc = doc;
         }
 
         /**
@@ -32,24 +33,23 @@ public class XmlManager {
          * @return the DesignParam element
          */
         public Element createDesignParamElement(String name, String attributeName, String attributeValue) {
-                       
 
-                        // Create the DesignParam element
-                        Element designParamElement = doc.createElement(name);
-                        designParamElement.setAttribute(attributeName, attributeValue);
+                // Create the DesignParam element
+                Element designParamElement = doc.createElement(name);
+                designParamElement.setAttribute(attributeName, attributeValue);
 
-                        // Create and append each child element
-                        for (XmlChild childElement : childs) {
-                                Element element = doc.createElement(childElement.getName());
-                                for (Map.Entry<String, String> entry : childElement.getAttributes().entrySet()) {
-                                        element.setAttribute(entry.getKey(), entry.getValue());
-                                }
-                                designParamElement.appendChild(element);
+                // Create and append each child element
+                for (XmlChild childElement : childs) {
+                        Element element = doc.createElement(childElement.getName());
+                        for (Map.Entry<String, String> entry : childElement.getAttributes().entrySet()) {
+                                element.setAttribute(entry.getKey(), entry.getValue());
                         }
+                        designParamElement.appendChild(element);
+                }
 
-                        childs.clear();
-                        return designParamElement;
-  
+                childs.clear();
+                return designParamElement;
+
         }
 
         public void addChild(String name, Map<String, String> attributes) {
@@ -69,24 +69,13 @@ public class XmlManager {
          * @param ret
          * @return The parsed float value of the attribute, or null if the
          * attribute is not found.
+         * @throws Exceptions.XMLExeptions.GetAttributeValueException
          */
-        static public Float getFloatAttribute(Element element, String attributeName, float ret) {
-                if (element == null) {
-                        System.err.println("Element is null.");
-                        return ret;
-                }
-
-                Node attributeNode = element.getAttributes().getNamedItem(attributeName);
-                if (attributeNode != null) {
-                        try {
-                                return Float.parseFloat(attributeNode.getNodeValue());
-                        } catch (NumberFormatException e) {
-                                System.err.println("Invalid value for attribute " + attributeName + ": " + attributeNode.getNodeValue());
-                                return ret;
-                        }
-                } else {
-                        System.err.println("Attribute " + attributeName + " is missing.");
-                        return ret;
+        static public Float getFloatAttribute(Element element, String attributeName, float ret) throws   GetAttributeValueException {
+                try {
+                        return Float.valueOf(getAttributeValue(element, attributeName));
+                } catch (NumberFormatException e) {
+                        throw new GetAttributeValueException("Invalid value for attribute " + attributeName + ": " + getAttributeValue(element, attributeName));
                 }
         }
 
@@ -100,25 +89,30 @@ public class XmlManager {
          * or is invalid.
          * @return The value of the attribute as a string, or the default value
          * if the attribute is not found or is invalid.
+         * @throws Exceptions.XMLExeptions.GetAttributeValueException
          */
-        public static String getStringAttribute(Element element, String attributeName, String ret) {
+        public static String getStringAttribute(Element element, String attributeName, String ret) throws  GetAttributeValueException  {
+               
+                        String attributeValue = getAttributeValue(element, attributeName);
+                        if (attributeValue != null && !attributeValue.isEmpty()) {
+                                return attributeValue;
+                        } else {
+                                    throw new GetAttributeValueException("Invalid value for attribute " + attributeName + ": " + getAttributeValue(element, attributeName));
+                        }
+        }
+        
+        
+
+        private static String getAttributeValue(Element element, String attributeName) throws GetAttributeValueException {
                 if (element == null) {
-                        System.err.println("Element is null.");
-                        return ret;
+                        throw new GetAttributeValueException("Element that qhould be linked to " + attributeName + " is null.");
                 }
 
                 Node attributeNode = element.getAttributes().getNamedItem(attributeName);
                 if (attributeNode != null) {
-                        String attributeValue = attributeNode.getNodeValue();
-                        if (attributeValue != null && !attributeValue.isEmpty()) {
-                                return attributeValue;
-                        } else {
-                                System.err.println("Invalid value for attribute " + attributeName + ": " + attributeValue);
-                                return ret;
-                        }
+                        return attributeNode.getNodeValue();
                 } else {
-                        System.err.println("Attribute " + attributeName + " is missing.");
-                        return ret;
+                        throw new GetAttributeValueException("Attribute " + attributeName + " is missing.");
                 }
         }
 
