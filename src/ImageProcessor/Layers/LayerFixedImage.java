@@ -1,6 +1,8 @@
-package Layers;
+package ImageProcessor.Layers;
 
 import Exceptions.ResourcesFileErrorException;
+import ImageProcessor.Layer;
+import Layers.Layer_old;
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
 import imageBuilder.ImageBuilder;

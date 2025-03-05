@@ -22,6 +22,7 @@ public abstract class ImageTransformer extends DesignNode{
                 super( upperDE,  elt);
         }
 
+        @Override
          void generateFromElement(Element elt) throws GetAttributeValueException  {
                  this.name =getStringAttribute(elt,"name","ERROR");
                  DRYgenerateFromElement(elt);
@@ -32,11 +33,10 @@ public abstract class ImageTransformer extends DesignNode{
         @Override
         public void DRYUpdate() {
                 ImageTransformer lowerDE =(ImageTransformer) this.getLowerDE(ImageTransformer.class);
-                 if(lowerDE!=null)    this.image_in=  lowerDE.getImageOut();
-                DRY_DRYUpdate();
+                 if(lowerDE!=null)  DRY_DRYUpdate( lowerDE.getImageOut()); 
         }
         
-        public abstract void DRY_DRYUpdate();
+        public abstract void DRY_DRYUpdate(BufferedImage img_in);
         
         
 }

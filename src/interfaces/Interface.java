@@ -3,7 +3,7 @@
 package interfaces;
 
 import Exceptions.ThisInterfaceDoesNotExistException;
-import Layers.Layer;
+import Layers.Layer_old;
 import ResourcesManager.ResourcesManager;
 import designBuilder.DesignBuilder;
 import imageBuilder.ImageBuilder;
@@ -37,7 +37,7 @@ public abstract class Interface extends TitledPane{
          // this variable will be use by the Image builder to detect a change and recompute the image accordingly.
         
            ArrayList<ImageBuilder>  linkedImagesBuilders=new ArrayList<>();
-           ArrayList<Layer> linkedLayers=new ArrayList<>();
+           ArrayList<Layer_old> linkedLayers=new ArrayList<>();
            
          private  Interface upperInterface=null;
          private PreviewImageBox PreviewGen; //for colecting all the preview from the Fxml files
@@ -194,7 +194,7 @@ public abstract class Interface extends TitledPane{
                 return interfaceName;
         }
 
-        public void linkNewLayer(Layer layer){
+        public void linkNewLayer(Layer_old layer){
                 this.linkedLayers.add(layer);
         }
         

@@ -3,7 +3,7 @@ package imageBuilder;
 import Exceptions.TheXmlElementIsNotANodeException;
 import Exceptions.ThisInterfaceDoesNotExistException;
 import Exceptions.XMLExeptions.GetAttributeValueException;
-import Layers.Layer;
+import Layers.Layer_old;
 import Layers.SubClasses.QuadrupletFloat;
 
 import designBuilder.DesignBuilder;
@@ -38,7 +38,7 @@ public class ImageBuilder {
          int x_p_size;
          int y_p_size;
 
-        ArrayList<Layer> layers = new ArrayList<>();
+        ArrayList<Layer_old> layers = new ArrayList<>();
 
          Node loaderNode;
      
@@ -227,7 +227,7 @@ public class ImageBuilder {
 
                                         QuadrupletFloat posSize = new QuadrupletFloat(pos_x, pos_y, size_x, size_y);
                                         // System.out.println(key+ nameElement+ this.designBuilder.getModelResources()+ linkedInterface);
-                                        Layer layerCreated = Layer.createLayer(key, nameElement, this.designBuilder.getModelResources(), linkedInterface, this, posSize);
+                                        Layer_old layerCreated = Layer_old.createLayer(key, nameElement, this.designBuilder.getModelResources(), linkedInterface, this, posSize);
 
                                         if (!(layerCreated == null)) {
                                                 System.out.println(layerCreated);

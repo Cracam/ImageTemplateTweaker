@@ -1,4 +1,4 @@
-package Layers;
+package ImageProcessor.Layers;
 
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
