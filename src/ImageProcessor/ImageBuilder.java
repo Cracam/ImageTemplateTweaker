@@ -1,15 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package ImageProcessor;
 
 import Exceptions.XMLExeptions.GetAttributeValueException;
-import Layers.SubClasses.QuadrupletFloat;
+import static ImageProcessor.ImageTransformer.createTransformer;
 import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.getStringAttribute;
 import designBuilder.DesignBuilder;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -43,6 +41,25 @@ public class ImageBuilder extends ImageDimentioner {
                 y_size= XmlManager.getFloatAttribute(subElt, "size_y", 0);
 
                 
+                
+                
+                
+                 currentUpperDN=this;
+                subElt = (Element) elt.getElementsByTagName("Layers").item(0);
+                NodeList nodeTransformersList = subElt.getChildNodes();
+
+                //running in the inverse 
+                for (int i = nodeTransformersList.getLength()-1; i >=0; i--) {
+                        if (nodeTransformersList.item(i).getNodeType() == Node.ELEMENT_NODE) { //To avoid text node and comment node
+
+                                subSubElt = (Element) nodeTransformersList.item(i);
+                                key = subSubElt.getNodeName(); // key for defining the layer and the Interface
+
+                                currentUpperDN = createTransformer(key, currentUpperDN, subSubElt);
+                        }
+                }
+                
+                
         }
         
         
@@ -50,6 +67,8 @@ public class ImageBuilder extends ImageDimentioner {
         public DesignBuilder getDesignBuilder(){
                 return this.designBuilder;
         }
+
+     
         
         
 }

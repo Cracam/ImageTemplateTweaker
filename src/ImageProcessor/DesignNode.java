@@ -1,5 +1,6 @@
 package ImageProcessor;
 
+import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
 import Exceptions.XMLExeptions.GetAttributeValueException;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -53,12 +54,33 @@ public abstract class DesignNode {
                         upper.update();
                 }
         }
+        
+        
+        /**
+         * Thes update program consserning the element
+         */
+        public abstract void DRYRefreshDPI();
+
+        /**
+         * This update the size of all the element and after refresh everything
+         */
+        public void RefreshDPI() {
+                DRYRefreshDPI();
+                for (DesignNode lower : lowersDN) {
+                        lower.RefreshDPI();
+                }
+                update();
+        }
+        
 
         public void updateLower() {
-                for (DesignNode designNode : lowersDN) {
-                        designNode.updateLower();
+                for (DesignNode lower : lowersDN) {
+                        lower.updateLower();
                 }
-        }
+        } 
+        
+        
+        
 
         public void addLowerDN(DesignNode lowerDN) {
                 if (this.lowersDN == null) {

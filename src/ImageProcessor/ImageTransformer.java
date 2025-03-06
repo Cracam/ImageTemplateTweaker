@@ -4,12 +4,14 @@
  */
 package ImageProcessor;
 
+import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
 import Exceptions.XMLExeptions.GetAttributeValueException;
 import static ImageProcessor.ImageGenerator.generatorTypesMap;
 import ImageProcessor.ImagesTransformers.TransformerCustomColor;
 import ImageProcessor.ImagesTransformers.TransformerMovableFixedImage;
 import ImageProcessor.ImagesTransformers.TransformerRandomImageAllocation;
 import ImageProcessor.ImagesTransformers.TransformerRandomImageDispersion;
+import designBuilder.DesignBuilder;
 import interfaces.Interface;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
@@ -26,7 +28,6 @@ import org.w3c.dom.Element;
  */
 public abstract class ImageTransformer extends DesignNode{
 
-        private BufferedImage image_in;
         
         
         public ImageTransformer( DesignNode upperDE,  Element elt,String name) throws GetAttributeValueException {
@@ -43,12 +44,32 @@ public abstract class ImageTransformer extends DesignNode{
         abstract void DRYgenerateFromElement(Element elt) throws GetAttributeValueException;
 
         @Override
-        public void DRYUpdate() {
-                ImageTransformer lowerDE =(ImageTransformer) this.getLowerDN(ImageTransformer.class);
-                 if(lowerDE!=null)  DRY_DRYUpdate( lowerDE.getImageOut()); 
+        public void DRYUpdate() {              
+                try {
+                 DesignNode lowerDN = this.getLowerDN(ImageTransformer.class);
+                        if (lowerDN == null) {
+                                lowerDN = this.getLowerDN(ImageGenerator.class);
+                        }
+                        if (lowerDN == null) {
+                                 throw new DesingNodeLowerNodeIsAnormalyVoidException("The Layer" + this.name + " does not have the ImageGenerator");
+                        }
+                        DRY_DRYUpdate( lowerDN.getImageOut()); 
+                        
+                } catch (DesingNodeLowerNodeIsAnormalyVoidException ex) {
+                                 Logger.getLogger(ImageTransformer.class.getName()).log(Level.SEVERE, null, ex);
+                         }
         }
         
         public abstract void DRY_DRYUpdate(BufferedImage img_in);
+        
+        
+        
+         @Override
+        public void DRYRefreshDPI() {
+             //no update to any sort of size in Imaes transformers
+        }
+        
+        
         
         
         

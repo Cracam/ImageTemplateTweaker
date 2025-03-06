@@ -13,7 +13,6 @@ import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.getStringAttribute;
 import designBuilder.DesignBuilder;
-import imageBuilder.ImageBuilder_old;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,7 +66,6 @@ public abstract class Layer extends DesignNode {
                 String key;
                 Element subElt,subSubElt;
                 DesignNode currentUpperDN;
-                DesignBuilder designBuilder =((ImageBuilder_old) this.getUpperDN(ImageBuilder)).getDesignBuilder();
                 
                 this.name = getStringAttribute(elt, "name", "ERROR");
                 
@@ -80,8 +78,7 @@ public abstract class Layer extends DesignNode {
                  float size_y = XmlManager.getFloatAttribute(subElt, "size_y", 0);
 
                  posSize = new QuadrupletFloat(pos_x, pos_y, size_x, size_y);
-                 pixelPosSize.computePixelPosSize(posSize,designBuilder.getPixelMmFactor());
-                
+                 DRYRefreshDPI();
                 
                 
                 
@@ -116,8 +113,12 @@ public abstract class Layer extends DesignNode {
                 }
         }
         
-        
-        
+
+        @Override
+        public void DRYRefreshDPI() {
+                DesignBuilder designBuilder = ((ImageBuilder) this.getUpperDN(ImageBuilder.class)).getDesignBuilder();
+                pixelPosSize.computePixelPosSize(posSize, designBuilder.getPixelMmFactor());
+        }
 
  
         

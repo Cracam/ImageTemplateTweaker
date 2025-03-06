@@ -4,11 +4,8 @@
  */
 package ImageProcessor.ImagesTransformers;
 
+import Exceptions.XMLExeptions.GetAttributeValueException;
 import ImageProcessor.ImageTransformer;
-import Layers.SubClasses.QuadrupletFloat;
-import ResourcesManager.ResourcesManager;
-import imageBuilder.ImageBuilder_old;
-import interfaces.Interface;
 import interfaces.InterfaceCustomColor;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -25,19 +22,14 @@ import staticFunctions.StaticImageEditing;
  */
 public  class TransformerCustomColor extends ImageTransformer {
 
-        private String imageName;
 
         private int[][]opacityMap;
         private BufferedImage image_getRaw;
 
-        public TransformerCustomColor(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder_old linkedImageBuilder, QuadrupletFloat posSize) {
-                super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
-        }
-
+      
        
 
  
-        @Override
         public void refreshImageGet(){
                 this.image_get=((InterfaceCustomColor) (this.linkedInterface)).getImageOut(0,0,opacityMap);
         }
@@ -46,7 +38,6 @@ public  class TransformerCustomColor extends ImageTransformer {
       
         
         
-        @Override
         void DPIChanged() {
                 BufferedImage resizedImageGetRaw = StaticImageEditing.ResizeImage(this.image_getRaw, this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y());
                 this.opacityMap =StaticImageEditing.transformToOpacityArray(resizedImageGetRaw);
@@ -55,7 +46,7 @@ public  class TransformerCustomColor extends ImageTransformer {
 
         
 
-        @Override
+        
         public void readNode(Element paramNode) {
                 this.imageName = paramNode.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
                 try {
@@ -74,9 +65,16 @@ public  class TransformerCustomColor extends ImageTransformer {
     
        
 
-        @Override
         public String toString() {
                 return "LayerCustomColor{" + "imageName=" + imageName + '}';
+        }
+
+        void DRYgenerateFromElement(Element elt) throws GetAttributeValueException {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        public void DRY_DRYUpdate(BufferedImage img_in) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
  

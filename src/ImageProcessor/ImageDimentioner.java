@@ -3,18 +3,6 @@ package ImageProcessor;
 
 import Exceptions.XMLExeptions.GetAttributeValueException;
 
-import ImageProcessor.ImageGenerators.GeneratorCustomImage;
-import ImageProcessor.ImageGenerators.GeneratorCustomText;
-import ImageProcessor.ImageGenerators.GeneratorFixedImage;
-import ImageProcessor.ImageGenerators.GeneratorFixedTextCustomStyle;
-
-import interfaces.Interface;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.w3c.dom.Element;
 
 /**
@@ -57,6 +45,9 @@ public abstract class ImageDimentioner extends DesignNode {
                 this.y_p_size = (int) (this.y_size * factor);
         }
          
-         
+            @Override
+        public void DRYRefreshDPI() {
+              computeXY_p_size();
+        }
         
 }
