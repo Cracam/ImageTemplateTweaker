@@ -2,10 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ImageProcessor.Layers;
+package ImageProcessor.ImagesTransformers;
 
-import ImageProcessor.Layer;
-import Layers.Layer_old;
+import ImageProcessor.ImageTransformer;
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
 import imageBuilder.ImageBuilder;
@@ -24,14 +23,14 @@ import staticFunctions.StaticImageEditing;
  *
  * @author Camille LECOURT
  */
-public  class LayerCustomColor extends Layer {
+public  class TransformerCustomColor extends ImageTransformer {
 
         private String imageName;
 
         private int[][]opacityMap;
         private BufferedImage image_getRaw;
 
-        public LayerCustomColor(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
+        public TransformerCustomColor(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
                 super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
         }
 
@@ -68,7 +67,7 @@ public  class LayerCustomColor extends Layer {
                         this.opacityMap=StaticImageEditing.transformToOpacityArray(resizedImageGetRaw);
 
                 } catch (IOException ex) {
-                        Logger.getLogger(LayerCustomColor.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(TransformerCustomColor.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
 

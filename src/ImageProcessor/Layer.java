@@ -7,7 +7,11 @@ package ImageProcessor;
 import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
 import Exceptions.XMLExeptions.GetAttributeValueException;
 import static ImageProcessor.ImageGenerator.createGenerator;
+import Layers.SubClasses.QuadrupletFloat;
+import Layers.SubClasses.QuadrupletInt;
+import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.getStringAttribute;
+import designBuilder.DesignBuilder;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,8 +24,10 @@ import static staticFunctions.StaticImageEditing.overlayImages;
  *
  * @author Camille LECOURT
  */
-public class Layer extends DesignNode {
-
+public abstract class Layer extends DesignNode {
+ protected QuadrupletFloat posSize;
+        protected QuadrupletInt pixelPosSize;
+        
         public Layer(DesignNode upperDE, Element elt) throws GetAttributeValueException {
                 super(upperDE, elt);
         }
@@ -32,48 +38,85 @@ public class Layer extends DesignNode {
                         BufferedImage image_get;
 
                         // Getting the right imageGet
-                        DesignNode lowerDN = this.getLowerDE(ImageTransformer.class);
+                        DesignNode lowerDN = this.getLowerDN(ImageTransformer.class);
                         if (lowerDN == null) {
-                                lowerDN = this.getLowerDE(ImageGenerator.class);
+                                lowerDN = this.getLowerDN(ImageGenerator.class);
                         }
                         if (lowerDN == null) {
                                 throw new DesingNodeLowerNodeIsAnormalyVoidException("The Layer" + this.name + " does not have the ImageGenerator");
                         }
                         image_get = lowerDN.getImageOut();
 
-                        DesignNode lowerLayer = this.getLowerDE(Layer.class);
+                        DesignNode lowerLayer = this.getLowerDN(Layer.class);
                         if (lowerLayer == null) {
                                 this.imageOut = image_get;
                         } else {
                                 this.imageOut = overlayImages(lowerLayer.getImageOut(), image_get);
                         }
 
-                } catch (DesingNodeLowerNodeIsAnormalyVoidException ex) {
+                }catch (DesingNodeLowerNodeIsAnormalyVoidException ex) {
                         Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
 
+        
         @Override
         void generateFromElement(Element elt) throws GetAttributeValueException {
+                String key;
+                Element subElt,subSubElt;
+                DesignNode currentUpperDN;
+                DesignBuilder designBuilder =((ImageBuilder) this.getUpperDN(ImageBuilder)).getDesignBuilder();
+                
                 this.name = getStringAttribute(elt, "name", "ERROR");
-                Element subElt = (Element) elt.getElementsByTagName("Generator").item(0);
-                String key = subElt.getNodeName();
+                
+                 subElt = (Element) elt.getElementsByTagName("pos").item(0);
+                 float pos_x = XmlManager.getFloatAttribute(subElt, "pos_x", 0);
+                 float pos_y = XmlManager.getFloatAttribute(subElt, "pos_y", 0);
 
-                DesignNode currentUpperDN = createGenerator(key, this, subElt);
+                 subElt = (Element) elt.getElementsByTagName("size").item(0);
+                 float size_x = XmlManager.getFloatAttribute(subElt, "size_x", 0);
+                 float size_y = XmlManager.getFloatAttribute(subElt, "size_y", 0);
 
+                 posSize = new QuadrupletFloat(pos_x, pos_y, size_x, size_y);
+                 pixelPosSize.computePixelPosSize(posSize,designBuilder.getPixelMmFactor());
+                
+                
+                
+                
+               
+
+                currentUpperDN=this;
                 subElt = (Element) elt.getElementsByTagName("Transformers").item(0);
                 NodeList nodeTransformersList = subElt.getChildNodes();
 
-                for (int i = 0; i < nodeTransformersList.getLength(); i++) {
+                //running in the inverse 
+                for (int i = nodeTransformersList.getLength()-1; i >=0; i--) {
                         if (nodeTransformersList.item(i).getNodeType() == Node.ELEMENT_NODE) { //To avoid text node and comment node
 
-                                Element subSubElt = (Element) nodeTransformersList.item(i);
+                                subSubElt = (Element) nodeTransformersList.item(i);
                                 key = subSubElt.getNodeName(); // key for defining the layer and the Interface
 
                                 currentUpperDN = createTransformator(key, currentUpperDN, subSubElt);
                         }
                 }
+                
+                
+                
+                ////////
+                //creating the last element of the chain if there is generator.
+                //if not it will be linked to another layer.
+                 subElt = (Element) elt.getElementsByTagName("Generator").item(0);
+                 if(subElt!=null){
+                        key = subElt.getNodeName();
 
+                        currentUpperDN = createGenerator(key, this, subElt);
+                       ((ImageGenerator)currentUpperDN).setDim(pixelPosSize.getSize_x(),pixelPosSize.getSize_y());
+                }
         }
+        
+        
+        
 
+ 
+        
 }

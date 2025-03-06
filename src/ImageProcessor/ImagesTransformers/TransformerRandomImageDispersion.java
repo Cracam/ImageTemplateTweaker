@@ -2,10 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ImageProcessor.Layers;
+package ImageProcessor.ImagesTransformers;
 
-import ImageProcessor.Layer;
-import Layers.Layer_old;
+import ImageProcessor.ImageTransformer;
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
@@ -25,7 +24,7 @@ import staticFunctions.ObjectDispersion;
  *
  * @author Camille LECOURT
  */
-public class LayerRandomImageDispersion extends Layer {
+public class TransformerRandomImageDispersion extends ImageTransformer {
 
         private float maxXSize;
         private float minXSize;
@@ -37,7 +36,7 @@ public class LayerRandomImageDispersion extends Layer {
 
         private SubImageBuilder imageBuilder;
 
-        public LayerRandomImageDispersion(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
+        public TransformerRandomImageDispersion(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
                 super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
         }
 

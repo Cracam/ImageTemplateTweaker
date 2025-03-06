@@ -5,7 +5,7 @@
 package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
-import ImageProcessor.Layers.LayerRandomImageAllocation;
+import ImageProcessor.ImagesTransformers.TransformerRandomImageAllocation;
 import designBuilder.DesignBuilder;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class InterfaceRandomImageAllocations extends Interface {
 
         @FXML
         public void createNewImgBuilder() {
-                   SubInterfaceRandomImageAllocation subInter= ((LayerRandomImageAllocation)  this.linkedLayers.get(0)).createNewImgBuilder();
+                   SubInterfaceRandomImageAllocation subInter= ((TransformerRandomImageAllocation)  this.linkedLayers.get(0)).createNewImgBuilder();
                 lowerInterfaces.add(subInter);
         }
 

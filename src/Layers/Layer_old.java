@@ -5,14 +5,14 @@
 package Layers;
 
 import ImageProcessor.ImageGenerator.LayerFixedTextCustomStyleCustomColor;
-import ImageProcessor.Layers.LayerMovableFixedImage;
-import ImageProcessor.Layers.LayerRandomImageDispersion;
+import ImageProcessor.ImagesTransformers.TransformerMovableFixedImage;
+import ImageProcessor.ImagesTransformers.TransformerRandomImageDispersion;
 import ImageProcessor.ImageGenerator.LayerCustomImage;
 import ImageProcessor.ImageGenerator.LayerFixedImage;
 import ImageProcessor.ImageGenerator.LayerCustomShapeCustomColor;
 import ImageProcessor.ImageGenerator.LayerCustomText;
-import ImageProcessor.Layers.LayerCustomColor;
-import ImageProcessor.Layers.LayerRandomImageAllocation;
+import ImageProcessor.ImagesTransformers.TransformerCustomColor;
+import ImageProcessor.ImagesTransformers.TransformerRandomImageAllocation;
 import imageBuilder.ImageBuilder;
 import Exceptions.XMLExeptions.GetAttributeValueException;
 import Layers.SubClasses.QuadrupletFloat;
@@ -56,16 +56,15 @@ public abstract class Layer_old {
           QuadrupletInt pixelPosSize;
         
        
-        public static final Map<String, Class<? extends Layer_old>> layersTypesMap = Map.of(
-                "Fixed_Image", LayerFixedImage.class, 
+        public static final Map<String, Class<? extends Layer_old>> layersTypesMap = Map.of("Fixed_Image", LayerFixedImage.class, 
                 "Custom_Image", LayerCustomImage.class,
-                "Custom_Color", LayerCustomColor.class, 
+                "Custom_Color", TransformerCustomColor.class, 
                 "Custom_Text",LayerCustomText.class,
                 "Fixed_Text_Custom_Color_Custom_Style", LayerFixedTextCustomStyleCustomColor.class,
-                "Mouvable_Fixed_Image", LayerMovableFixedImage.class,
+                "Mouvable_Fixed_Image", TransformerMovableFixedImage.class,
                   "Custom_Shape_Custom_Color" ,LayerCustomShapeCustomColor.class,
-                   "Random_Image_Dispersion",LayerRandomImageDispersion.class,
-                    "Random_Image_Allocations",LayerRandomImageAllocation.class
+                   "Random_Image_Dispersion",TransformerRandomImageDispersion.class,
+                    "Random_Image_Allocations",TransformerRandomImageAllocation.class
         );
 
         

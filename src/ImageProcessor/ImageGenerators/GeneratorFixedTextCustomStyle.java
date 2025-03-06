@@ -10,7 +10,7 @@ import org.w3c.dom.Element;
  *
  * @author Camille LECOURT
  */
-public class GeneratorFixedTextCustomStyleCustomColor extends ImageGenerator {
+public class GeneratorFixedTextCustomStyle extends ImageGenerator {
         private int[][] opacityMap;
         private String text;
        

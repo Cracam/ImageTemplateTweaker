@@ -1,16 +1,13 @@
-package ImageProcessor.Layers;
+package ImageProcessor.ImagesTransformers;
 
 import Exceptions.ResourcesFileErrorException;
-import ImageProcessor.Layer;
-import Layers.Layer_old;
+import ImageProcessor.ImageTransformer;
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
 import imageBuilder.ImageBuilder;
 import interfaces.Interface;
-import interfaces.InterfaceCustomText;
 import interfaces.InterfaceMouvableFixedImage;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -23,7 +20,7 @@ import staticFunctions.StaticImageEditing;
  *
  * @author camil
  */
-public class LayerMovableFixedImage extends Layer {
+public class TransformerMovableFixedImage extends ImageTransformer {
 
         private String imageName;
  private float X_MaxOffset=(float) 1.0;
@@ -35,7 +32,7 @@ public class LayerMovableFixedImage extends Layer {
         private float posRefX;
         private float posRefY;
         
-        public LayerMovableFixedImage(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
+        public TransformerMovableFixedImage(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
                 super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
                 this.posRefX=posSize.getPos_x();//save the original postion
                 this.posRefY=posSize.getPos_x();//save the original postion
@@ -60,7 +57,7 @@ public class LayerMovableFixedImage extends Layer {
                         this.image_get = StaticImageEditing.ResizeImage(ImageIO.read(imageGetRaw), this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y());
 
                 } catch (IOException | ResourcesFileErrorException ex) {
-                        Logger.getLogger(LayerMovableFixedImage.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(TransformerMovableFixedImage.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
         }

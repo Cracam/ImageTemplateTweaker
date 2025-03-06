@@ -2,10 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ImageProcessor.Layers;
+package ImageProcessor.ImagesTransformers;
 
-import ImageProcessor.Layer;
-import Layers.Layer_old;
+import ImageProcessor.ImageTransformer;
 import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.ResourcesManager;
@@ -16,7 +15,6 @@ import interfaces.Interface;
 import interfaces.InterfaceRandomImageAllocations;
 import interfaces.SubInterfaceRandomImageAllocation;
 import java.util.ArrayList;
-import javafx.fxml.FXML;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -24,7 +22,7 @@ import org.w3c.dom.NodeList;
  *
  * @author Camille LECOURT
  */
-public class LayerRandomImageAllocation extends Layer {
+public class TransformerRandomImageAllocation extends ImageTransformer {
 
         private ArrayList<QuadrupletFloat> positions;
         private ArrayList<QuadrupletInt> pixelPositions;
@@ -39,7 +37,7 @@ public class LayerRandomImageAllocation extends Layer {
           private float maxXSize = 0;
           private      float maxYSize = 0;
                 
-        public LayerRandomImageAllocation(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
+        public TransformerRandomImageAllocation(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
                 super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
         }
 
