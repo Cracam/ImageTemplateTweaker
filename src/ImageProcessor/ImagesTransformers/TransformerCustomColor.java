@@ -7,7 +7,7 @@ package ImageProcessor.ImagesTransformers;
 import ImageProcessor.ImageTransformer;
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
-import imageBuilder.ImageBuilder;
+import imageBuilder.ImageBuilder_old;
 import interfaces.Interface;
 import interfaces.InterfaceCustomColor;
 import java.awt.image.BufferedImage;
@@ -30,7 +30,7 @@ public  class TransformerCustomColor extends ImageTransformer {
         private int[][]opacityMap;
         private BufferedImage image_getRaw;
 
-        public TransformerCustomColor(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
+        public TransformerCustomColor(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder_old linkedImageBuilder, QuadrupletFloat posSize) {
                 super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
         }
 

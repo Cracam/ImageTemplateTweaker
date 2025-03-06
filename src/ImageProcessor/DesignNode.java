@@ -93,7 +93,7 @@ public abstract class DesignNode {
                 return null; // Retourne null si aucun élément correspondant n'est trouvé
         }
 
-        private DesignNode REC_getUpperDN(Class<?> nodeClass) {
+        public DesignNode getUpperDN(Class<?> nodeClass) {
                 if (upperDN == null) {
                         return null;
                 }
@@ -102,7 +102,7 @@ public abstract class DesignNode {
                         if (upper.getClass() == nodeClass) {
                                 return upper;
                         } else {
-                                DesignNode result = upper.REC_getUpperDN(nodeClass);
+                                DesignNode result = upper.getUpperDN(nodeClass);
                                 if (result != null) {
                                         return result;
                                 }
@@ -111,10 +111,8 @@ public abstract class DesignNode {
                 return null;
         }
 
-        public DesignNode getUpperDE(Class<?> nodeClass) {
-                if (upperDN == null) {
-                        return null;
-                }
-                return this.REC_getUpperDN(nodeClass);
+        public DesignNode getUpperOrHimselfDN(Class<?> nodeClass) {
+                if(this.getClass()==nodeClass) return this;
+                return this.getUpperDN(nodeClass);
         }
 }

@@ -7,11 +7,13 @@ package ImageProcessor;
 import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
 import Exceptions.XMLExeptions.GetAttributeValueException;
 import static ImageProcessor.ImageGenerator.createGenerator;
+import static ImageProcessor.ImageTransformer.createTransformer;
 import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.getStringAttribute;
 import designBuilder.DesignBuilder;
+import imageBuilder.ImageBuilder_old;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,7 +67,7 @@ public abstract class Layer extends DesignNode {
                 String key;
                 Element subElt,subSubElt;
                 DesignNode currentUpperDN;
-                DesignBuilder designBuilder =((ImageBuilder) this.getUpperDN(ImageBuilder)).getDesignBuilder();
+                DesignBuilder designBuilder =((ImageBuilder_old) this.getUpperDN(ImageBuilder)).getDesignBuilder();
                 
                 this.name = getStringAttribute(elt, "name", "ERROR");
                 
@@ -96,7 +98,7 @@ public abstract class Layer extends DesignNode {
                                 subSubElt = (Element) nodeTransformersList.item(i);
                                 key = subSubElt.getNodeName(); // key for defining the layer and the Interface
 
-                                currentUpperDN = createTransformator(key, currentUpperDN, subSubElt);
+                                currentUpperDN = createTransformer(key, currentUpperDN, subSubElt);
                         }
                 }
                 
@@ -109,7 +111,7 @@ public abstract class Layer extends DesignNode {
                  if(subElt!=null){
                         key = subElt.getNodeName();
 
-                        currentUpperDN = createGenerator(key, this, subElt);
+                        currentUpperDN = createGenerator(key, currentUpperDN, subElt);
                        ((ImageGenerator)currentUpperDN).setDim(pixelPosSize.getSize_x(),pixelPosSize.getSize_y());
                 }
         }

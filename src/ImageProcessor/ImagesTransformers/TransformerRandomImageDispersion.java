@@ -8,7 +8,7 @@ import ImageProcessor.ImageTransformer;
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
-import imageBuilder.ImageBuilder;
+import imageBuilder.ImageBuilder_old;
 import imageBuilder.SubImageBuilder;
 import interfaces.Interface;
 import interfaces.InterfaceRandomImageDispersion;
@@ -36,7 +36,7 @@ public class TransformerRandomImageDispersion extends ImageTransformer {
 
         private SubImageBuilder imageBuilder;
 
-        public TransformerRandomImageDispersion(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
+        public TransformerRandomImageDispersion(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder_old linkedImageBuilder, QuadrupletFloat posSize) {
                 super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
         }
 

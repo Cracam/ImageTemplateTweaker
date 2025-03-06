@@ -12,7 +12,7 @@ import Layers.Layer_old;
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
-import imageBuilder.ImageBuilder;
+import imageBuilder.ImageBuilder_old;
 import interfaces.Interface;
 import interfaces.InterfaceCustomText;
 import java.awt.Graphics2D;

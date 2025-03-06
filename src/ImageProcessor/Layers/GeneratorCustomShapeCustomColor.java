@@ -11,7 +11,7 @@ import ImageProcessor.Layer;
 import Layers.Layer_old;
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
-import imageBuilder.ImageBuilder;
+import imageBuilder.ImageBuilder_old;
 import interfaces.Interface;
 import interfaces.InterfaceCustomShapeCustomColor;
 import org.w3c.dom.Element;

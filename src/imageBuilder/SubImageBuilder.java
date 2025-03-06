@@ -24,7 +24,7 @@ import static staticFunctions.StaticImageEditing.convertToFXImage;
  *
  * @author LECOURT Camille
  */
-public class SubImageBuilder extends ImageBuilder{
+public class SubImageBuilder extends ImageBuilder_old{
 private SubImageBuilderInterface subInterface;
      
       //  ArrayList<Layer> layers = new ArrayList<>();

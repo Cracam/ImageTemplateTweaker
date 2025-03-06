@@ -9,7 +9,7 @@ import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
-import imageBuilder.ImageBuilder;
+import imageBuilder.ImageBuilder_old;
 import imageBuilder.SubImageBuilder;
 import interfaces.Interface;
 import interfaces.InterfaceRandomImageAllocations;
@@ -37,7 +37,7 @@ public class TransformerRandomImageAllocation extends ImageTransformer {
           private float maxXSize = 0;
           private      float maxYSize = 0;
                 
-        public TransformerRandomImageAllocation(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
+        public TransformerRandomImageAllocation(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder_old linkedImageBuilder, QuadrupletFloat posSize) {
                 super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
         }
 

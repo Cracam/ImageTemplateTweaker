@@ -8,7 +8,7 @@ import ImageProcessor.Layer;
 import Layers.Layer_old;
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
-import imageBuilder.ImageBuilder;
+import imageBuilder.ImageBuilder_old;
 import interfaces.Interface;
 import java.io.File;
 import java.io.IOException;

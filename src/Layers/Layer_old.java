@@ -13,7 +13,7 @@ import ImageProcessor.ImageGenerator.LayerCustomShapeCustomColor;
 import ImageProcessor.ImageGenerator.LayerCustomText;
 import ImageProcessor.ImagesTransformers.TransformerCustomColor;
 import ImageProcessor.ImagesTransformers.TransformerRandomImageAllocation;
-import imageBuilder.ImageBuilder;
+import imageBuilder.ImageBuilder_old;
 import Exceptions.XMLExeptions.GetAttributeValueException;
 import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
@@ -40,7 +40,7 @@ public abstract class Layer_old {
 
         // Variable of Interface management in the app 
          final String layerName;
-         final ImageBuilder linkedImagesBuilder;
+         final ImageBuilder_old linkedImagesBuilder;
          final Interface linkedInterface;
 
         final ResourcesManager modelResources;  // model conrrespont to the sceletton of the images we return
@@ -81,7 +81,7 @@ public abstract class Layer_old {
          * @param linkedImageBuilder
          * @param posSize
          */
-        public Layer_old(String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
+        public Layer_old(String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder_old linkedImageBuilder, QuadrupletFloat posSize) {
                 this.layerName = layerName;
                 this.modelResources = modelResources;
                 this.linkedInterface=layerInterface;
@@ -208,7 +208,7 @@ public abstract class Layer_old {
          * @return
          * @throws GetAttributeValueException 
          */
-          public static Layer_old createLayer(String layerType, String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) throws GetAttributeValueException {
+          public static Layer_old createLayer(String layerType, String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder_old linkedImageBuilder, QuadrupletFloat posSize) throws GetAttributeValueException {
 
                 if (!layersTypesMap.containsKey(layerType)) {
                         throw new GetAttributeValueException("This interface type does not exist : " + layerType);
@@ -217,7 +217,7 @@ public abstract class Layer_old {
                 try {
 
                         Class<? extends Layer_old> subclass = layersTypesMap.get(layerType);
-                        Constructor<? extends Layer_old> constructor = subclass.getConstructor(String.class, ResourcesManager.class,  Interface.class , ImageBuilder.class , QuadrupletFloat.class );
+                        Constructor<? extends Layer_old> constructor = subclass.getConstructor(String.class, ResourcesManager.class,  Interface.class , ImageBuilder_old.class , QuadrupletFloat.class );
                         
                         return constructor.newInstance(layerName, modelResources,layerInterface,linkedImageBuilder,posSize );
 

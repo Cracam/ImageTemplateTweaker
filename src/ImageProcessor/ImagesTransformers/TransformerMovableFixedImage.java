@@ -5,7 +5,7 @@ import ImageProcessor.ImageTransformer;
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
-import imageBuilder.ImageBuilder;
+import imageBuilder.ImageBuilder_old;
 import interfaces.Interface;
 import interfaces.InterfaceMouvableFixedImage;
 import java.io.File;
@@ -32,7 +32,7 @@ public class TransformerMovableFixedImage extends ImageTransformer {
         private float posRefX;
         private float posRefY;
         
-        public TransformerMovableFixedImage(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
+        public TransformerMovableFixedImage(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder_old linkedImageBuilder, QuadrupletFloat posSize) {
                 super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
                 this.posRefX=posSize.getPos_x();//save the original postion
                 this.posRefY=posSize.getPos_x();//save the original postion

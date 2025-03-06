@@ -1,6 +1,6 @@
 package designBuilder;
 
-import imageBuilder.ImageBuilder;
+import imageBuilder.ImageBuilder_old;
 import Exceptions.ResourcesFileErrorException;
 import ResourcesManager.ResourcesManager;
 import interfaces.Interface;
@@ -60,7 +60,7 @@ public class DesignBuilder extends Application {
         private String author;
         private String designPath = null; // the path of the desing currently opened ==null if nothing save yet (use to save function)
 
-        private final ArrayList<ImageBuilder> imageBuilders = new ArrayList<>();
+        private final ArrayList<ImageBuilder_old> imageBuilders = new ArrayList<>();
         private final ArrayList<TabOfTiltedPane> tabs = new ArrayList<>();
         private final ArrayList<Interface> interfaces = new ArrayList<>();
 
@@ -124,7 +124,7 @@ public class DesignBuilder extends Application {
                                 Node outputNode = outputNodes.item(i);
 
                                 System.out.println("Output Node: " + outputNode.getNodeName());
-                                imageBuilders.add(new ImageBuilder(this, outputNode));
+                                imageBuilders.add(new ImageBuilder_old(this, outputNode));
                                 System.out.println(this.toString());
                         }
 
@@ -464,7 +464,7 @@ public class DesignBuilder extends Application {
          */
         public void refreshPreview() {
                 this.preview.clearAllImagesViews();
-                for (ImageBuilder imageBuilder : imageBuilders) {
+                for (ImageBuilder_old imageBuilder : imageBuilders) {
                         imageBuilder.refreshPreview(this.preview);
                 }
         }

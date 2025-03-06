@@ -27,7 +27,7 @@ import static staticFunctions.StaticImageEditing.createBufferedImage;
  *
  * @author LECOURT Camille
  */
-public class ImageBuilder {
+public class ImageBuilder_old {
 
          String name; // name the the Image Builder :  "Index of the windows" + "Name given in the model.XML file"
          final DesignBuilder designBuilder;
@@ -48,7 +48,7 @@ public class ImageBuilder {
          * @param batcher for reference and subInterface display
          * @param loaderNode
          */
-        public ImageBuilder(DesignBuilder batcher, Node loaderNode) {
+        public ImageBuilder_old(DesignBuilder batcher, Node loaderNode) {
                 this.designBuilder = batcher;
                 this.loaderNode = loaderNode;
                 try {
@@ -61,7 +61,7 @@ public class ImageBuilder {
                         this.y_size = Float.parseFloat(element.getAttribute("size_y"));
 
                 } catch (TheXmlElementIsNotANodeException ex) {
-                        Logger.getLogger(ImageBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ImageBuilder_old.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 this.computeXY_p_size();
                 this.createLayers();
@@ -76,7 +76,7 @@ public class ImageBuilder {
          * @param size_x
          * @param size_y
          */
-        public ImageBuilder(DesignBuilder batcher, Node loaderNode, float size_x, float size_y ) {
+        public ImageBuilder_old(DesignBuilder batcher, Node loaderNode, float size_x, float size_y ) {
                 
                 this.designBuilder = batcher;
                 this.loaderNode = loaderNode;
@@ -248,7 +248,7 @@ public class ImageBuilder {
                                 } catch (GetAttributeValueException | ThisInterfaceDoesNotExistException e) {
                                         System.out.println(e + " was detected ignoting it");
                                 } catch (TheXmlElementIsNotANodeException ex) {
-                                        Logger.getLogger(ImageBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                                        Logger.getLogger(ImageBuilder_old.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                         }
                 }

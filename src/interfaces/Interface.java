@@ -6,7 +6,7 @@ import Exceptions.ThisInterfaceDoesNotExistException;
 import Layers.Layer_old;
 import ResourcesManager.ResourcesManager;
 import designBuilder.DesignBuilder;
-import imageBuilder.ImageBuilder;
+import imageBuilder.ImageBuilder_old;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public abstract class Interface extends TitledPane{
          DesignBuilder designBuilder;
          // this variable will be use by the Image builder to detect a change and recompute the image accordingly.
         
-           ArrayList<ImageBuilder>  linkedImagesBuilders=new ArrayList<>();
+           ArrayList<ImageBuilder_old>  linkedImagesBuilders=new ArrayList<>();
            ArrayList<Layer_old> linkedLayers=new ArrayList<>();
            
          private  Interface upperInterface=null;
@@ -198,7 +198,7 @@ public abstract class Interface extends TitledPane{
                 this.linkedLayers.add(layer);
         }
         
-        public void linkNewImageBuilder(ImageBuilder imageBuilder) {
+        public void linkNewImageBuilder(ImageBuilder_old imageBuilder) {
                 // Check if the imageBuilder already exists in the linkedImagesBuilders list
                 if (!this.linkedImagesBuilders.contains(imageBuilder)) {
                         // If it does not exist, add it to the list
