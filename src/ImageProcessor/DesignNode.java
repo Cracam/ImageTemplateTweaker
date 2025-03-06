@@ -15,9 +15,9 @@ import org.w3c.dom.Element;
  */
 public abstract class DesignNode {
         private final DesignNode upperDE;
-            String name;
-private ArrayList<DesignNode> lowersDN;
-BufferedImage imageOut;
+          protected  String name;
+        private ArrayList<DesignNode> lowersDN;
+        BufferedImage imageOut;
             
         public DesignNode(DesignNode upperDE, Element elt) throws GetAttributeValueException{
                 this.upperDE = upperDE;
@@ -25,7 +25,7 @@ BufferedImage imageOut;
                 generateFromElement(elt);
         }
 
-              abstract void generateFromElement(Element elt) throws GetAttributeValueException;
+               abstract void generateFromElement(Element elt) throws GetAttributeValueException;
         
          /**
          * Thes update program consserning the element

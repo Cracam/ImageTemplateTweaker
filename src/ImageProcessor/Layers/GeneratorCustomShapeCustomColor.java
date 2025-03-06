@@ -4,31 +4,32 @@
  */
 package ImageProcessor.Layers;
 
+import Exceptions.XMLExeptions.GetAttributeValueException;
+import ImageProcessor.DesignNode;
+import ImageProcessor.ImageGenerator;
 import ImageProcessor.Layer;
 import Layers.Layer_old;
 import Layers.SubClasses.QuadrupletFloat;
 import ResourcesManager.ResourcesManager;
 import imageBuilder.ImageBuilder;
 import interfaces.Interface;
-import interfaces.InterfaceCustomImage;
+import interfaces.InterfaceCustomShapeCustomColor;
 import org.w3c.dom.Element;
 
 /**
  *
  * @author Camille LECOURT
  */
-public class LayerCustomImage extends Layer {
-
-
-
-        public LayerCustomImage(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
-                super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
+public class GeneratorCustomShapeCustomColor extends ImageGenerator {
+        
+       public GeneratorCustomImage(DesignNode upperDE,Element elt,String name) throws GetAttributeValueException {
+                super(upperDE,elt,name);
         }
 
         
         @Override
         public void refreshImageGet() {
-               this.image_get= ((InterfaceCustomImage) (this.linkedInterface)).getImageOut( this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y());
+               this.image_get= ((InterfaceCustomShapeCustomColor) (this.linkedInterface)).getImageOut( this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y());
         }
 
       
@@ -46,9 +47,4 @@ public class LayerCustomImage extends Layer {
         @Override
         public void DPIChanged() {
         }
-
-      
-
-        
-
 }

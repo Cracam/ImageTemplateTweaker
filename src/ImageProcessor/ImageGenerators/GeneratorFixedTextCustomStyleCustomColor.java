@@ -1,10 +1,8 @@
-package ImageProcessor.Layers;
+package ImageProcessor.ImageGenerators;
 
-import Layers.SubClasses.QuadrupletFloat;
-import ResourcesManager.ResourcesManager;
+import ImageProcessor.ImageGenerator;
+import Exceptions.XMLExeptions.GetAttributeValueException;
 import ResourcesManager.XmlManager;
-import imageBuilder.ImageBuilder;
-import interfaces.Interface;
 import interfaces.InterfaceFixedTextCustomStyleCustomColor;
 import org.w3c.dom.Element;
 
@@ -12,13 +10,12 @@ import org.w3c.dom.Element;
  *
  * @author Camille LECOURT
  */
-public class LayerFixedTextCustomStyleCustomColor extends LayerCustomText {
+public class GeneratorFixedTextCustomStyleCustomColor extends ImageGenerator {
         private int[][] opacityMap;
         private String text;
        
-        
-        public LayerFixedTextCustomStyleCustomColor(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
-                super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
+          public GeneratorFixedTextCustomStyleCustomColorrDE,Element elt) throws GetAttributeValueException {
+                super(upperDE,elt);
         }
 
 

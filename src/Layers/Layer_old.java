@@ -4,13 +4,13 @@
  */
 package Layers;
 
-import ImageProcessor.Layers.LayerFixedTextCustomStyleCustomColor;
+import ImageProcessor.ImageGenerator.LayerFixedTextCustomStyleCustomColor;
 import ImageProcessor.Layers.LayerMovableFixedImage;
 import ImageProcessor.Layers.LayerRandomImageDispersion;
-import ImageProcessor.Layers.LayerCustomImage;
-import ImageProcessor.Layers.LayerFixedImage;
-import ImageProcessor.Layers.LayerCustomShapeCustomColor;
-import ImageProcessor.Layers.LayerCustomText;
+import ImageProcessor.ImageGenerator.LayerCustomImage;
+import ImageProcessor.ImageGenerator.LayerFixedImage;
+import ImageProcessor.ImageGenerator.LayerCustomShapeCustomColor;
+import ImageProcessor.ImageGenerator.LayerCustomText;
 import ImageProcessor.Layers.LayerCustomColor;
 import ImageProcessor.Layers.LayerRandomImageAllocation;
 import imageBuilder.ImageBuilder;

@@ -6,7 +6,7 @@ package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
 import GradientCreatorInterface.GradientCreatorInterface;
-import ImageProcessor.Layers.LayerCustomText;
+import ImageProcessor.ImageGenerator.LayerCustomText;
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
 import designBuilder.DesignBuilder;

@@ -1,6 +1,9 @@
-package ImageProcessor.Layers;
+package ImageProcessor.ImageGenerators;
 
+import ImageProcessor.ImageGenerator;
 import Exceptions.ResourcesFileErrorException;
+import Exceptions.XMLExeptions.GetAttributeValueException;
+import ImageProcessor.DesignNode;
 import ImageProcessor.Layer;
 import Layers.Layer_old;
 import Layers.SubClasses.QuadrupletFloat;
@@ -19,12 +22,12 @@ import staticFunctions.StaticImageEditing;
  *
  * @author camil
  */
-public class LayerFixedImage extends Layer {
+public class GeneratorFixedImage extends ImageGenerator {
 
         private String imageName;
 
-        public LayerFixedImage(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
-                super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
+       public GeneratorFixedImage(DesignNode upperDE,Element elt ) throws GetAttributeValueException {
+                super(upperDE,elt);
         }
 
      
@@ -39,7 +42,7 @@ public class LayerFixedImage extends Layer {
                         }
                          this.image_get= StaticImageEditing.ResizeImage(ImageIO.read(imageFile), this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y());
                 } catch (IOException | ResourcesFileErrorException ex) {
-                        Logger.getLogger(LayerFixedImage.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(GeneratorFixedImage.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
         }

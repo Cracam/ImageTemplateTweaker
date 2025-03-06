@@ -8,7 +8,7 @@ package InterfaceTest;
  *
  * @author LECOURT Camille
  */
-import ImageProcessor.Layers.LayerCustomImage;
+import ImageProcessor.ImageGenerator.LayerCustomImage;
 import ResourcesManager.ResourcesManager;
 import javafx.application.Application;
 import javafx.scene.Scene;

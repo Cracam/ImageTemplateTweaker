@@ -2,8 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ImageProcessor.Layers;
+package ImageProcessor.ImageGenerators;
 
+import ImageProcessor.ImageGenerator;
+import Exceptions.XMLExeptions.GetAttributeValueException;
+import ImageProcessor.DesignNode;
 import ImageProcessor.Layer;
 import Layers.Layer_old;
 import Layers.SubClasses.QuadrupletFloat;
@@ -20,7 +23,7 @@ import org.w3c.dom.Element;
  *
  * @author Camille LECOURT
  */
-public class LayerCustomText extends Layer {
+public class GeneratorCustomText extends ImageGenerator {
         boolean textChanged=true; //use only the the sub classe
 
         private String imageName;
@@ -28,8 +31,8 @@ public class LayerCustomText extends Layer {
         float textSizeMin=(float) 5.0; //in mm
         float textSizeMax =(float) 25.0;//in mm
 
-        public LayerCustomText(String layerName, ResourcesManager modelResources, Interface layerInterface, ImageBuilder linkedImageBuilder, QuadrupletFloat posSize) {
-                super(layerName, modelResources, layerInterface, linkedImageBuilder, posSize);
+         public GeneratorCustomText(DesignNode upperDE,Element elt ) throws GetAttributeValueException {
+                super(upperDE,elt);
         }
         
 

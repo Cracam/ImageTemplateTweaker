@@ -18,13 +18,14 @@ public abstract class ImageTransformer extends DesignNode{
         private BufferedImage image_in;
         
         
-        public ImageTransformer( DesignNode upperDE,  Element elt) throws GetAttributeValueException {
+        public ImageTransformer( DesignNode upperDE,  Element elt,String name) throws GetAttributeValueException {
                 super( upperDE,  elt);
+                this.name=name;
         }
 
         @Override
          void generateFromElement(Element elt) throws GetAttributeValueException  {
-                 this.name =getStringAttribute(elt,"name","ERROR");
+                
                  DRYgenerateFromElement(elt);
         }
          
