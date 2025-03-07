@@ -6,7 +6,7 @@ package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
 import ImageProcessor.ImagesTransformers.TransformerRandomImageAllocation;
-import designBuilder.DesignBuilder;
+import AppInterface.DesignBuilder;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
 import java.util.ArrayList;

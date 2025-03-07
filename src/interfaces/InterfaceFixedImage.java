@@ -4,7 +4,7 @@
  */
 package interfaces;
 
-import designBuilder.DesignBuilder;
+import AppInterface.DesignBuilder;
 import javafx.scene.image.ImageView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

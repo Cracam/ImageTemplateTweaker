@@ -12,7 +12,7 @@ import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.getStringAttribute;
-import designBuilder.DesignBuilder;
+import AppInterface.DesignBuilder;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;

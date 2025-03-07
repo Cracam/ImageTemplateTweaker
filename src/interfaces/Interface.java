@@ -5,7 +5,7 @@ package interfaces;
 import Exceptions.ThisInterfaceDoesNotExistException;
 import Layers.Layer_old;
 import ResourcesManager.ResourcesManager;
-import designBuilder.DesignBuilder;
+import AppInterface.DesignBuilder;
 import imageBuilder.ImageBuilder_old;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

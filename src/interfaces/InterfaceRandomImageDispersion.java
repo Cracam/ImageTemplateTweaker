@@ -7,7 +7,7 @@ package interfaces;
 import Exeptions.ResourcesFileErrorException;
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
-import designBuilder.DesignBuilder;
+import AppInterface.DesignBuilder;
 import imageBuilder.SubImageBuilder;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;

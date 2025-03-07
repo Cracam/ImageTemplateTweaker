@@ -11,7 +11,7 @@ import ImageProcessor.ImagesTransformers.TransformerCustomColor;
 import ImageProcessor.ImagesTransformers.TransformerMovableFixedImage;
 import ImageProcessor.ImagesTransformers.TransformerRandomImageAllocation;
 import ImageProcessor.ImagesTransformers.TransformerRandomImageDispersion;
-import designBuilder.DesignBuilder;
+import AppInterface.DesignBuilder;
 import interfaces.Interface;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;

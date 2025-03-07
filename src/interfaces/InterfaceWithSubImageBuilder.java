@@ -4,7 +4,7 @@
  */
 package interfaces;
 
-import designBuilder.DesignBuilder;
+import AppInterface.DesignBuilder;
 import imageBuilder.SubImageBuilder;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.image.ImageView;

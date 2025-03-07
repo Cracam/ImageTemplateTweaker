@@ -1,4 +1,4 @@
-package designBuilder;
+package AppInterface;
 
 import imageBuilder.ImageBuilder_old;
 import Exceptions.ResourcesFileErrorException;
@@ -61,9 +61,9 @@ public class DesignBuilder extends Application {
         private String designPath = null; // the path of the desing currently opened ==null if nothing save yet (use to save function)
 
         private final ArrayList<ImageBuilder_old> imageBuilders = new ArrayList<>();
-        private final ArrayList<TabOfTiltedPane> tabs = new ArrayList<>();
-        private final ArrayList<Interface> interfaces = new ArrayList<>();
 
+      private  InterfacesManager interfacesManager;
+        
         private Scene scene;
 
         private int DPI = 150;
@@ -84,6 +84,7 @@ public class DesignBuilder extends Application {
          * @param args the command line arguments
          */
         public static void main(String[] args) {
+                
                 launch(args);
         }
 
@@ -195,20 +196,10 @@ public class DesignBuilder extends Application {
 
                         NodeList InterfacesNodes = allInterfaces.item(0).getChildNodes();
                         //  System.out.println("#####"+InterfacesNodes.getLength());
-                        Interface tempInterface;
-                        // Print the names of all "Output" nodes
-                        for (int i = 0; i < InterfacesNodes.getLength(); i++) {//we begin by one to avoid the description node
-                                Node interfaceNode = InterfacesNodes.item(i);
-                                Element interfaceElt = (Element) interfaceNode;
-
-                                tempInterface = findInterfaceByName(interfaceElt.getAttribute("InterfaceName"));
-                                System.out.println("####" + i + " " + interfaceElt.getAttribute("InterfaceName"));
-                                if (tempInterface != null) {
-                                        tempInterface.loadInterfaceData(interfaceElt);
-                                        System.out.println("InterfacesNodes: " + interfaceElt.getAttribute("InterfaceName"));
-
-                                }
-                        }
+                     this.interfacesManager.loadInterfaces(InterfacesNodes);
+                        
+                        
+                        
 
                         refreshEverything();
 
@@ -217,25 +208,64 @@ public class DesignBuilder extends Application {
                 }
         }
 
-        /**
-         * This method shearch in the intefaces array to know if this interfac
-         * exist
+               /**
+         * This method saves the current design to an XML file.
          *
-         * @param targetName
-         * @return
+         * @param filepath
          */
-        private Interface findInterfaceByName(String targetName) {
-                if (targetName == null) {
-                        return null;
-                }
+        private void saveDesign(String filepath) {
+                try {
 
-                for (Interface myInterface : this.interfaces) {
-                        if (targetName.equals(myInterface.getInterfaceName())) {
-                                return myInterface;
-                        }
-                }
+                        this.designResources.createNewZip(filepath);
 
-                return null; // Retourne null si aucune interface correspondante n'est trouvée
+                        // Créez un ByteArrayOutputStream pour capturer le contenu XML
+                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                        StreamResult result = new StreamResult(outputStream);
+
+                        // Create a DocumentBuilderFactory
+                        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                        DocumentBuilder builder = factory.newDocumentBuilder();
+                        Document document = builder.newDocument();
+                        // Create the root element
+                        Element rootElement = document.createElement("Design");
+                        document.appendChild(rootElement);
+                        // Set attributes for the root element
+                        rootElement.setAttribute("Design_name", this.designName);
+                        rootElement.setAttribute("Author_name", this.author);
+
+                        // Save interfaces
+                        Element interfacesElement = document.createElement("Interfaces");
+                       
+
+                       interfacesManager.saveInterfaces(interfacesElement,document);
+                       
+                        rootElement.appendChild(interfacesElement);
+                        // Write the content into XML file
+                        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                        Transformer transformer = transformerFactory.newTransformer();
+                        DOMSource source = new DOMSource(document);
+                        transformer.transform(source, result);
+
+                        // Convertissez le contenu du ByteArrayOutputStream en un tableau de bytes
+                        byte[] xmlBytes = outputStream.toByteArray();
+
+                        // Créez un objet File en mémoire avec le contenu XML
+                        File xmlFile = new File("DesignData.xml");
+                        // Vous pouvez également utiliser un nom de fichier temporaire si vous ne voulez pas spécifier un nom
+                        // File xmlFile = File.createTempFile("DesignData", ".xml");
+
+                        // Écrivez les bytes dans le fichier (en mémoire)
+                        java.io.FileOutputStream fos = new java.io.FileOutputStream(xmlFile);
+                        fos.write(xmlBytes);
+
+                        this.designResources.set("DesignData.xml", xmlFile);
+                        this.designResources.save();
+
+                } catch (TransformerConfigurationException ex) {
+                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (TransformerException | IOException | ParserConfigurationException ex) {
+                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                }
         }
 
         @Override
@@ -256,6 +286,9 @@ public class DesignBuilder extends Application {
                         FXMLLoader loader = new FXMLLoader(inter_principalle);
                         loader.setController(this);
                         Parent root = loader.load();
+                        
+                       interfacesManager=new InterfacesManager(tabPane);
+                        
                         loadNewModel("C:\\BACKUP\\ENSE3\\Foyer\\Programme_Java\\Batcher_Foyer\\test_data\\modelTest.zip");
 
                         primarystage.setTitle("Batcher FOYER");
@@ -311,74 +344,9 @@ public class DesignBuilder extends Application {
 
         }
 
-        /**
-         * This method saves the current design to an XML file.
-         *
-         * @param filepath
-         */
-        private void saveDesign(String filepath) {
-                try {
+  
 
-                        this.designResources.createNewZip(filepath);
-
-                        // Créez un ByteArrayOutputStream pour capturer le contenu XML
-                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                        StreamResult result = new StreamResult(outputStream);
-
-                        // Create a DocumentBuilderFactory
-                        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                        DocumentBuilder builder = factory.newDocumentBuilder();
-                        Document document = builder.newDocument();
-                        // Create the root element
-                        Element rootElement = document.createElement("Design");
-                        document.appendChild(rootElement);
-                        // Set attributes for the root element
-                        rootElement.setAttribute("Design_name", this.designName);
-                        rootElement.setAttribute("Author_name", this.author);
-
-                        // Save interfaces
-                        Element interfacesElement = document.createElement("Interfaces");
-                        rootElement.appendChild(interfacesElement);
-
-                        for (Interface myInterface : this.interfaces) {
-                                Node interfaceElement = myInterface.saveInterfaceData(document);
-                                if (interfaceElement != null) {
-                                        interfacesElement.appendChild(interfaceElement);
-                                }
-                        }
-
-                        // Write the content into XML file
-                        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                        Transformer transformer = transformerFactory.newTransformer();
-                        DOMSource source = new DOMSource(document);
-                        transformer.transform(source, result);
-
-                        // Convertissez le contenu du ByteArrayOutputStream en un tableau de bytes
-                        byte[] xmlBytes = outputStream.toByteArray();
-
-                        // Créez un objet File en mémoire avec le contenu XML
-                        File xmlFile = new File("DesignData.xml");
-                        // Vous pouvez également utiliser un nom de fichier temporaire si vous ne voulez pas spécifier un nom
-                        // File xmlFile = File.createTempFile("DesignData", ".xml");
-
-                        // Écrivez les bytes dans le fichier (en mémoire)
-                        java.io.FileOutputStream fos = new java.io.FileOutputStream(xmlFile);
-                        fos.write(xmlBytes);
-
-                        this.designResources.set("DesignData.xml", xmlFile);
-                        this.designResources.save();
-
-                } catch (TransformerConfigurationException ex) {
-                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (TransformerException | IOException | ParserConfigurationException ex) {
-                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                }
-        }
-
-        @Override
-        public String toString() {
-                return "DesignBuilder{" + "id=" + id + ", modelResources=" + modelResources + ", designResources=" + designResources + ", name=" + modelName + ", description=" + description + ", defaultDesignName=" + defaultDesignName + ", imageBuilders=" + imageBuilders + ", tabs=" + tabs + ", DPI=" + DPI + ", tabPane=" + tabPane + ", preview=" + preview + '}';
-        }
+        
 
         public int getId() {
                 return id;
@@ -416,29 +384,7 @@ public class DesignBuilder extends Application {
                 return currentDir.getAbsolutePath() + "/resources/" + fileName;
         }
 
-        /**
-         * This function assign a layer to a tab (in main interface) It can
-         * create one if the tab does not exist yet
-         *
-         * @param inter
-         * @param tabName
-         */
-        public void assignInterfaceToTab(String tabName, Interface inter) {
-                for (TabOfTiltedPane tab : tabs) {
-
-                        if (tab.getText().equals(tabName)) {
-                                tab.addNodeToVBox(inter);
-                                return;
-                        }
-                }
-                //if the tab does not exist yet we create one and add the layer in it
-                TabOfTiltedPane tab = new TabOfTiltedPane(tabName);
-                tabPane.getTabs().add(tab);
-                tab.addNodeToVBox(inter);
-                tabs.add(tab);
-
-        }
-
+   
         public float getPixelMmFactor() {
                 return (float) (this.DPI / 25.4);
         }
@@ -469,45 +415,7 @@ public class DesignBuilder extends Application {
                 }
         }
 
-        /**
-         * Add an interface in the arrayList of the Desing builder
-         *
-         * @param interf
-         */
-        public void addInterface(Interface interf) {
-                interfaces.add(interf);
-        }
-
-        /**
-         * return an interface identifie by is type and it's name
-         *
-         * @param type
-         * @param name
-         * @return
-         */
-        public Interface getInterface(String type, String name) {
-                // Check if the type exists in the map
-                if (interfacesTypesMap.containsKey(type)) {
-                        // Get the class of the interface
-                        Class<? extends Interface> interfaceClass = interfacesTypesMap.get(type);
-
-                        // Iterate through the list of interfaces
-                        for (Interface interf : interfaces) {
-                                // Check if the interface is of the correct type
-                                if (interfaceClass.isInstance(interf)) {
-                                        // Get the name of the interface
-                                        String interfaceName = interf.getInterfaceName();
-
-                                        // Compare the name with the provided name
-                                        if (interfaceName.equals(name)) {
-                                                return interf;
-                                        }
-                                }
-                        }
-                }
-                // Return null if the interface does not exist
-                return null;
-        }
+     
 
         @FXML
         private void updateScale() {

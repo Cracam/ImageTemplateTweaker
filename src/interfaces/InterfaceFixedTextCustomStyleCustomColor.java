@@ -6,7 +6,7 @@ package interfaces;
 
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
-import designBuilder.DesignBuilder;
+import AppInterface.DesignBuilder;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;

@@ -4,7 +4,7 @@ import Exceptions.XMLExeptions.GetAttributeValueException;
 import static ImageProcessor.ImageTransformer.createTransformer;
 import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.getStringAttribute;
-import designBuilder.DesignBuilder;
+import AppInterface.DesignBuilder;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

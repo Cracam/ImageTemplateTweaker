@@ -8,7 +8,7 @@ import Exeptions.ResourcesFileErrorException;
 import GradientCreatorInterface.GradientCreatorInterface;
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
-import designBuilder.DesignBuilder;
+import AppInterface.DesignBuilder;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
