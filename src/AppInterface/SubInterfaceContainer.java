@@ -11,7 +11,7 @@ import org.w3c.dom.Node;
  */
 public  class SubInterfaceContainer {
 
-        private  ArrayList<SubInterfaceContainer> upperDN;
+        private  ArrayList<SubInterfaceContainer> upperIN;
         private String name;
         private String uniqueID;
 
