@@ -5,6 +5,8 @@ import static ImageProcessor.ImageTransformer.createTransformer;
 import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.getStringAttribute;
 import AppInterface.DesignBuilder;
+import AppInterface.DesignInterfaceLinker;
+import AppInterface.InterfaceNode;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -29,21 +31,12 @@ public class ImageBuilder extends ImageDimentioner {
         }
 
         @Override
-        public void generateFromElement(Element elt) throws GetAttributeValueException {
+        public void DRYgenerateFromElement(Element elt) throws GetAttributeValueException {
                  String key;
                 Element subElt,subSubElt;
                 DesignNode currentUpperDN;
                 
-                this.name = getStringAttribute(elt, "name", "ERROR");
-                
-                 subElt = (Element) elt.getElementsByTagName("size").item(0);
-                x_size = XmlManager.getFloatAttribute(subElt, "size_x", 0);
-                y_size= XmlManager.getFloatAttribute(subElt, "size_y", 0);
-
-                
-                
-                
-                
+         
                  currentUpperDN=this;
                 subElt = (Element) elt.getElementsByTagName("Layers").item(0);
                 NodeList nodeTransformersList = subElt.getChildNodes();
@@ -69,6 +62,14 @@ public class ImageBuilder extends ImageDimentioner {
         }
 
      
-        
+               @Override
+        public String DRYComputeUniqueID() {
+                return DesignInterfaceLinker.getIdentifier(this.getClass()) + name;
+        }
+
+        @Override
+        public InterfaceNode createLinkedInterface(InterfaceNode upperInter) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
         
 }

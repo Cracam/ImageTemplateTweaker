@@ -25,8 +25,7 @@ public abstract class ImageGenerator extends ImageDimentioner {
                 super(upperDE, elt);
         }
 
-        @Override
-        public abstract void generateFromElement(Element elt) throws GetAttributeValueException;
+       
 
         @Override
         public abstract void DRYUpdate();

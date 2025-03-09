@@ -7,7 +7,8 @@ package ImageProcessor.ImageGenerators;
 import ImageProcessor.ImageGenerator;
 import Exceptions.XMLExeptions.GetAttributeValueException;
 import ImageProcessor.DesignNode;
-import interfaces.InterfaceCustomImage;
+import AppInterface.Interfaces.InterfaceCustomImage;
+import ResourcesManager.XmlManager;
 import org.w3c.dom.Element;
 
 /**
@@ -16,46 +17,19 @@ import org.w3c.dom.Element;
  */
 public class GeneratorCustomImage extends ImageGenerator {
 
-
-
-        public GeneratorCustomImage(DesignNode upperDE,Element elt ) throws GetAttributeValueException {
-                super(upperDE,elt);
-        }
-
-        
-        @Override
-        public void refreshImageGet() {
-               this.image_get= ((InterfaceCustomImage) (this.linkedInterface)).getImageOut( this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y());
-        }
-
-      
-
-
-        @Override
-        public void readNode(Element paramNode) {
-        }
-
-       
-
-        /**
-         * The work of our method does not change if the DPI change
-         */
-        @Override
-        public void DPIChanged() {
+        public GeneratorCustomImage(DesignNode upperDE, Element elt) throws GetAttributeValueException {
+                super(upperDE, elt);
         }
 
         @Override
         public void DRYUpdate() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                this.imageOut = ((InterfaceCustomImage) (this.linkedinterface)).getImageOut(this.x_p_size, this.y_p_size);
         }
 
         @Override
-        void DRYgenerateFromElement(Element elt) throws GetAttributeValueException {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        public void DRYgenerateFromElement(Element elt) throws GetAttributeValueException {
         }
 
-      
-
-        
+       
 
 }

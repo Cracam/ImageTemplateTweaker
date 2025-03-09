@@ -2,6 +2,7 @@
 
 package interfaces;
 
+import AppInterface.Interfaces.InterfaceCustomImage;
 import Exceptions.ThisInterfaceDoesNotExistException;
 import Layers.Layer_old;
 import ResourcesManager.ResourcesManager;

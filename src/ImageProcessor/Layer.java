@@ -13,6 +13,8 @@ import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.getStringAttribute;
 import AppInterface.DesignBuilder;
+import AppInterface.DesignInterfaceLinker;
+import AppInterface.InterfaceNode;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -121,5 +123,14 @@ public abstract class Layer extends DesignNode {
         }
 
  
+               @Override
+        public String DRYComputeUniqueID() {
+                return DesignInterfaceLinker.getIdentifier(this.getClass()) + name;
+        }
         
+        
+        @Override
+        public InterfaceNode createLinkedInterface(InterfaceNode upperInter) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
 }

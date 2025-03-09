@@ -1,9 +1,16 @@
 package ImageProcessor;
 
-import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
+import AppInterface.DesignInterfaceLinker;
+import AppInterface.InterfaceNode;
+import Exceptions.InvalidLinkbetweenNode;
 import Exceptions.XMLExeptions.GetAttributeValueException;
+import interfaces.Interface;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.w3c.dom.Element;
 
 /**
@@ -15,7 +22,8 @@ public abstract class DesignNode {
         private final ArrayList<DesignNode> upperDN;
         protected String name;
         private ArrayList<DesignNode> lowersDN;
-        BufferedImage imageOut;
+       protected BufferedImage imageOut;
+       protected InterfaceNode linkedinterface;
 
         // Constructeur prenant un seul upperDN
         public DesignNode(DesignNode upperDE, Element elt) throws GetAttributeValueException {
@@ -137,4 +145,81 @@ public abstract class DesignNode {
                 if(this.getClass()==nodeClass) return this;
                 return this.getUpperDN(nodeClass);
         }
+        
+        
+        public  InterfaceNode createLinkedInterface(InterfaceNode upperInter){
+                  
+
+                try {
+
+                        Class<? extends InterfaceNode> subclass = DesignInterfaceLinker.getLinkedInterface(this.getClass());
+                        Constructor<? extends InterfaceNode> constructor = subclass.getConstructor(InterfaceNode.class);
+
+                        return constructor.newInstance(upperInter);
+
+                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+                        Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                        ex.printStackTrace(); // Print the stack trace
+
+                        return null;
+                }
+        }
+        
+        
+        
+        
+  
+        
+        
+        
+         public  InterfaceNode createInterfaceTreeFromNodeTree(InterfaceNode upperIN){
+                 InterfaceNode InterfaceRoot  = this.createLinkedInterface(upperIN);
+                 for (DesignNode lowerDN : lowersDN) {
+                        lowerDN.createInterfaceTreeFromNodeTree(InterfaceRoot);
+                 }
+                 return InterfaceRoot;
+        }
+          
+          /**
+           * This program take as root a desing node and create the corresponding InterfaceNode
+           * @param interNode
+           * @throws InvalidLinkbetweenNode 
+           */
+         public  void linkDesignNodeToInterfaceNodes(InterfaceNode interNode) throws InvalidLinkbetweenNode{
+                  if(DesignInterfaceLinker.getLinkedInterface(this.getClass())!=interNode.getClass()){
+                          throw new InvalidLinkbetweenNode("the DesignNode of class : "+this.getClass().getName()+" is not compatible with this InterfaceNOde : "+interNode.getClass().getName());
+                  }
+                interNode.addDesignNode(this);
+                
+                ArrayList<InterfaceNode> subInterfaceNodeList = interNode.getLowerInterfaces();
+                if(subInterfaceNodeList.size()!=lowersDN.size()){
+                        throw new InvalidLinkbetweenNode("The number of sub DesignNode ( "+lowersDN.size()+" ) and  InterfaceNode ( "+interNode.getLowerInterfaces().size()+" ) are not equal");
+                }
+                
+                for(int i=0 ; i<subInterfaceNodeList.size();i++){
+                        lowersDN.get(i).linkDesignNodeToInterfaceNodes(subInterfaceNodeList.get(i));
+                }
+                
+                
+          }
+          
+          
+          
+             public String ComputeUniqueID() {
+                String ret = "";
+                this.DRYComputeUniqueID();
+                for (DesignNode lInter : lowersDN) {
+                        ret = ret + lInter.ComputeUniqueID();
+                }
+                return ret;
+        }
+        
+        public  String DRYComputeUniqueID(){
+               return  DesignInterfaceLinker.getIdentifier(this.getClass());
+        }
+
+          
+          
+          
+          
 }

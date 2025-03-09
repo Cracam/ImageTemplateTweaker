@@ -2,12 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package interfaces;
+package AppInterface.Interfaces;
 
 import Exeptions.ResourcesFileErrorException;
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
 import AppInterface.DesignBuilder;
+import AppInterface.InterfaceNode;
+import Exceptions.XMLExeptions.GetAttributeValueException;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -16,7 +18,6 @@ import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TitledPane;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -27,7 +28,7 @@ import staticFunctions.StaticImageEditing;
  *This class is a interface of a custom img Image loaded by the user
  * @author Camille LECOURT
  */
-public class InterfaceCustomImage extends Interface {
+public class InterfaceCustomImage extends InterfaceNode {
 
         
           @FXML
@@ -119,6 +120,16 @@ public class InterfaceCustomImage extends Interface {
          */
         public BufferedImage getImageOut(int x, int y){
                     return StaticImageEditing.ResizeImage(LoaderInterface.getImage_out(), x,y);
+        }
+
+        @Override
+        protected Element DRYLoadDesign(Element element, int index) throws GetAttributeValueException {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
+        public Element DRYsaveDesign() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
         
 

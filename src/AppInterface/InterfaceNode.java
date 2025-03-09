@@ -1,0 +1,97 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package AppInterface;
+
+import Exceptions.XMLExeptions.GetAttributeValueException;
+import ImageProcessor.DesignNode;
+import java.util.ArrayList;
+import javafx.scene.layout.VBox;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+/**
+ *
+ * @author Camille LECOURT
+ */
+public abstract class InterfaceNode extends VBox {
+        
+        InterfaceNode upperInterface;
+        private ArrayList<InterfaceNode> lowerInterfaces;
+        private ArrayList<DesignNode> linkedDesignNodes;
+
+        // Constructeur prenant un seul upperDN
+        public InterfaceNode(InterfaceNode upperIN) {
+                
+                upperInterface = upperIN;
+                
+                upperInterface.addLowerIN(this);
+                upperInterface.placeInterface(this);
+        }
+        
+        public String ComputeUniqueID() {
+                String ret = "";
+                this.DRYComputeUniqueID();
+                for (InterfaceNode lInter : lowerInterfaces) {
+                        ret = ret + lInter.ComputeUniqueID();
+                }
+                return ret;
+        }
+        
+        public  String DRYComputeUniqueID(){
+               return  DesignInterfaceLinker.getIdentifier(this.getClass());
+        }
+
+        /**
+         * Schearch the next nearest interface container in the tree
+         *
+         * @param lowerInerface
+         */
+        public void placeInterface(InterfaceNode lowerInerface) {
+                if (upperInterface != null) {
+                        upperInterface.placeInterface(lowerInerface);
+                }
+        }
+        
+        public void addLowerIN(InterfaceNode lowerIN) {
+                lowerInterfaces.add(lowerIN);
+        }
+        
+        protected abstract Element DRYLoadDesign(Element element, int index) throws GetAttributeValueException;
+        
+        public void loadDesign(Element element, int index) throws GetAttributeValueException {
+                Element subelt = DRYLoadDesign(element, index);
+                index++;
+                if (subelt != element) {
+                        index = 0;
+                }
+                
+                for (InterfaceNode lInter : lowerInterfaces) {
+                        lInter.DRYLoadDesign(subelt, index);
+                }
+                
+        }
+        
+        public void updateLinkedDesignNodes() {
+                for (DesignNode DN : linkedDesignNodes) {
+                        DN.update();
+                }
+        }
+        
+        public void addDesignNode(DesignNode DN) {
+                linkedDesignNodes.add(DN);
+        }
+
+        public ArrayList<InterfaceNode> getLowerInterfaces() {
+                return lowerInterfaces;
+        }
+        
+        public  NodeList saveDesign(NodeList nodelist){
+                
+                              throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+        }
+      
+        public abstract Element DRYsaveDesign();
+}

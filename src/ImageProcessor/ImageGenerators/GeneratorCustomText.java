@@ -7,13 +7,7 @@ package ImageProcessor.ImageGenerators;
 import ImageProcessor.ImageGenerator;
 import Exceptions.XMLExeptions.GetAttributeValueException;
 import ImageProcessor.DesignNode;
-import ImageProcessor.Layer;
-import Layers.Layer_old;
-import Layers.SubClasses.QuadrupletFloat;
-import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlManager;
-import imageBuilder.ImageBuilder_old;
-import interfaces.Interface;
 import interfaces.InterfaceCustomText;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -75,7 +69,6 @@ public class GeneratorCustomText extends ImageGenerator {
          */
         @Override
         public void computeImage_Out(String name) {
-          
              // Create a new BufferedImage for the output
                         BufferedImage outputImage = new BufferedImage(image_in.getWidth(), image_in.getHeight(), BufferedImage.TYPE_INT_ARGB);
                         Graphics2D outputG2d = outputImage.createGraphics();
@@ -102,5 +95,15 @@ public class GeneratorCustomText extends ImageGenerator {
         
                public void setTextChanged(boolean textChanged) {
                 this.textChanged = textChanged;
+        }
+
+        @Override
+        public void generateFromElement(Element elt) throws GetAttributeValueException {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
+        public void DRYUpdate() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 }

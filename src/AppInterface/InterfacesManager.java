@@ -4,9 +4,13 @@
  */
 package AppInterface;
 
+import Exceptions.XMLExeptions.GetAttributeValueException;
+import ResourcesManager.XmlManager;
 import interfaces.Interface;
 import static interfaces.Interface.interfacesTypesMap;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.TabPane;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,32 +23,29 @@ import taboftiltedpane.TabOfTiltedPane;
  * @author Camille LECOURT
  */
 public class InterfacesManager {
-                private final ArrayList<SubInterfaceContainer> interfaces = new ArrayList<>();
-                 private final ArrayList<TabOfTiltedPane> tabs = new ArrayList<>();
-                 private TabPane tabPane;
+
+        private final ArrayList<InterfaceContainer> interfaces = new ArrayList<>();
+        private final ArrayList<TabOfTiltedPane> tabs = new ArrayList<>();
+        private TabPane tabPane;
 
         public InterfacesManager(TabPane tabPane) {
                 this.tabPane = tabPane;
         }
-                 
-                 
-                 
-                 
-                 
-                /**
+
+        /**
          * This method shearch in the intefaces array to know if this interfac
          * exist
          *
          * @param targetName
          * @return
          */
-        private SubInterfaceContainer findInterfaceByName(String targetName) {
+        private InterfaceContainer findInterfaceByUniqueID(String targetName) {
                 if (targetName == null) {
                         return null;
                 }
 
-                for (SubInterfaceContainer myInterface : this.interfaces) {
-                        if (targetName.equals(myInterface.getUniqueID())) {
+                for (InterfaceContainer myInterface : this.interfaces) {
+                        if (targetName.equals(myInterface.ComputeUniqueID())) {
                                 return myInterface;
                         }
                 }
@@ -52,27 +53,22 @@ public class InterfacesManager {
                 return null; // Retourne null si aucune interface correspondante n'est trouvée
         }
 
-        
-        
-        public void saveInterfaces(Element interfacesElement,   Document document) {
+//        public void saveInterfaces(Element interfacesElement, Document document) {
+//
+//                for (InterfaceContainer myInterface : this.interfaces) {
+//                        Node interfaceElement = myInterface.saveInterfaceData(document);
+//                        if (interfaceElement != null) {
+//                                interfacesElement.appendChild(interfaceElement);
+//                        }
+//                }
+//        }
 
-                for (SubInterfaceContainer myInterface : this.interfaces) {
-                        Node interfaceElement = myInterface.saveInterfaceData(document);
-                        if (interfaceElement != null) {
-                                interfacesElement.appendChild(interfaceElement);
-                        }
-                }
-        }
-        
-        
-        
-        
-           /**
+        /**
          * Add an interface in the arrayList of the Desing builder
          *
          * @param interf
          */
-        public void addInterface(SubInterfaceContainer interf) {
+        public void addInterface(InterfaceContainer interf) {
                 interfaces.add(interf);
         }
 
@@ -83,18 +79,18 @@ public class InterfacesManager {
          * @param name
          * @return
          */
-        public SubInterfaceContainer getInterface(String type, String name) {
+        public InterfaceContainer getInterface(String type, String name) {
                 // Check if the type exists in the map
                 if (interfacesTypesMap.containsKey(type)) {
                         // Get the class of the interface
                         Class<? extends Interface> interfaceClass = interfacesTypesMap.get(type);
 
                         // Iterate through the list of interfaces
-                        for (SubInterfaceContainer interf : interfaces) {
+                        for (InterfaceContainer interf : interfaces) {
                                 // Check if the interface is of the correct type
                                 if (interfaceClass.isInstance(interf)) {
                                         // Get the name of the interface
-                                        String interfaceName = interf.getUniqueID();
+                                        String interfaceName = interf.ComputeUniqueID();
 
                                         // Compare the name with the provided name
                                         if (interfaceName.equals(name)) {
@@ -106,9 +102,8 @@ public class InterfacesManager {
                 // Return null if the interface does not exist
                 return null;
         }
-        
-        
-             /**
+
+        /**
          * This function assign a layer to a tab (in main interface) It can
          * create one if the tab does not exist yet
          *
@@ -130,70 +125,33 @@ public class InterfacesManager {
                 tabs.add(tab);
 
         }
-        
-        
-               
-                  public void loadInterfaces(NodeList interfacesNodes){
-                        SubInterfaceContainer tempInterface;
-                        // Print the names of all "Output" nodes
-                        for (int i = 0; i < interfacesNodes.getLength(); i++) {//we begin by one to avoid the description node
-                                Node interfaceNode = interfacesNodes.item(i);
-                                Element interfaceElt = (Element) interfaceNode;
 
-                                tempInterface = findInterfaceByName(concatenateNames(interfaceElt));
-                                
-                                if (tempInterface != null) {
-                                        tempInterface.loadInterfaceData(interfaceElt);
-                                  //     System.out.println("InterfacesNodes: " + interfaceElt.getAttribute("InterfaceName"));
+        public void loadInterfaces(NodeList interfacesNodes) {
+                InterfaceContainer tempInterface;
+                // Print the names of all "Output" nodes
+                for (int i = 0; i < interfacesNodes.getLength(); i++) {//we begin by one to avoid the description node
+                        Node interfaceNode = interfacesNodes.item(i);
+                        Element interfaceElt = (Element) interfaceNode;
 
-                                }else{
-                                        System.out.println("Interface Loading failed " + interfaceElt.getAttribute("InterfaceName"));
+                        try {
+                                tempInterface = findInterfaceByUniqueID(XmlManager.getStringAttribute(interfaceElt, "name", ""));
+                        } catch (GetAttributeValueException ex) {
+                                Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                                tempInterface = null;
+                        }
+                        if (tempInterface != null) {
+                                try {
+                                        tempInterface.loadDesign(interfaceElt, 0);
+                                } catch (GetAttributeValueException ex) {
+                                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                                        tempInterface = null;
                                 }
-                        }
-                  }
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-        /**
-         * Concatenate the unique ID friom the XML model loader
-         * @param layerElement
-         * @return 
-         */
-        public static String concatenateNames(Element layerElement) {
-                String interfaceName = layerElement.getAttribute("name");
-                String tabName = layerElement.getAttribute("tab_name");
+                                //     System.out.println("InterfacesNodes: " + interfaceElt.getAttribute("InterfaceName"));
 
-                StringBuilder result = new StringBuilder(interfaceName + tabName);
-
-                NodeList generatorNodes = layerElement.getElementsByTagName("Generator").item(0).getChildNodes();
-                for (int i = 0; i < generatorNodes.getLength(); i++) {
-                        Node node = generatorNodes.item(i);
-                        if (node.getNodeType() == Node.ELEMENT_NODE) {
-                                result.append("_-_").append(node.getNodeName());
-                                break;
+                        } else {
+                                System.out.println("Interface Loading failed " + interfaceElt.getAttribute("InterfaceName"));
                         }
                 }
-
-                NodeList transformerNodes = layerElement.getElementsByTagName("Transformers").item(0).getChildNodes();
-                for (int i = 0; i < transformerNodes.getLength(); i++) {
-                        Node node = transformerNodes.item(i);
-                        if (node.getNodeType() == Node.ELEMENT_NODE) {
-                                result.append("_-_").append(node.getNodeName());
-                        }
-                }
-
-                return result.toString();
         }
-        
+
 }
