@@ -6,8 +6,11 @@ package AppInterface;
 
 import Exceptions.XMLExeptions.GetAttributeValueException;
 import ImageProcessor.DesignNode;
+import ImageProcessor.ImageBuilder;
+import ResourcesManager.ResourcesManager;
 import java.util.ArrayList;
 import javafx.scene.layout.VBox;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -25,9 +28,10 @@ public abstract class InterfaceNode extends VBox {
         public InterfaceNode(InterfaceNode upperIN) {
                 
                 upperInterface = upperIN;
-                
+                initialiseInterface();
                 upperInterface.addLowerIN(this);
                 upperInterface.placeInterface(this);
+                
         }
         
         public String ComputeUniqueID() {
@@ -93,5 +97,37 @@ public abstract class InterfaceNode extends VBox {
 
         }
       
-        public abstract Element DRYsaveDesign();
+        public abstract Element DRYsaveDesign(Document doc);
+        
+            protected abstract void initialiseInterface() ;
+            
+            
+             public InterfaceNode getUpperDN(Class<?> nodeClass) {
+                if (upperInterface == null) {
+                        return null;
+                }
+
+                        if (upperInterface.getClass() == nodeClass) {
+                                return upperInterface;
+                        } else {
+                                InterfaceNode result = upperInterface.getUpperDN(nodeClass);
+                                if (result != null) {
+                                        return result;
+                                }
+                        }
+                
+                return null;
+        }
+
+               public ResourcesManager getDesignRessources(){
+                       if(!linkedDesignNodes.isEmpty()){
+                                   return  ((ImageBuilder)linkedDesignNodes.get(0).getUpperDN(ImageBuilder.class)).getDesignBuilder().getDesignResources();
+                       }else{
+                               return null;
+                       }
+                              
+          }
 }
+            
+            
+

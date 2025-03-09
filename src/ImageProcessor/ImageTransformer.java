@@ -41,7 +41,7 @@ public abstract class ImageTransformer extends DesignNode{
                  DRYgenerateFromElement(elt);
         }
          
-        abstract void DRYgenerateFromElement(Element elt) throws GetAttributeValueException;
+        protected abstract void DRYgenerateFromElement(Element elt) throws GetAttributeValueException;
 
         @Override
         public void DRYUpdate() {              

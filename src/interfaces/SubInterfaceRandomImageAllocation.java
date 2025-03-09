@@ -5,7 +5,6 @@
 package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
-import imageBuilder.SubImageBuilder;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -23,13 +22,13 @@ import javafx.scene.layout.VBox;
  */
 public class SubInterfaceRandomImageAllocation extends HBox {
 
-        private final InterfaceRandomImageAllocations upperInterface;
-        private final String name;
+//        private final InterfaceRandomImageAllocations upperInterface;
+//        private final String name;
 
         @FXML
         private VBox vboxInterface;
 
-        private SubImageBuilder lowerImageBuilder;
+   //     private SubImageBuilder lowerImageBuilder;
 
         @FXML
         private Spinner numberSelector;
@@ -37,12 +36,12 @@ public class SubInterfaceRandomImageAllocation extends HBox {
         @FXML
         private ImageView prev;
 
-        public SubInterfaceRandomImageAllocation(String interfaceName, InterfaceRandomImageAllocations upperInterface, SubImageBuilder lowerImageBuilder) {
-                this.upperInterface = upperInterface;
-                this.name = interfaceName;
-                this.lowerImageBuilder = lowerImageBuilder;
-                initialiseInterface();
-        }
+//        public SubInterfaceRandomImageAllocation(String interfaceName, InterfaceRandomImageAllocations upperInterface, SubImageBuilder lowerImageBuilder) {
+//                this.upperInterface = upperInterface;
+//                this.name = interfaceName;
+//                this.lowerImageBuilder = lowerImageBuilder;
+//                initialiseInterface();
+//        }
 
         protected void initialiseInterface() {
                 try {
@@ -53,18 +52,18 @@ public class SubInterfaceRandomImageAllocation extends HBox {
                         fxmlLoader.setRoot(this);
                         fxmlLoader.setController(this);
 
-                        fxmlLoader.load();
-                        this.getChildren().add(lowerImageBuilder.getSubInterface());
-                        this.prev = lowerImageBuilder.getPreview();
+//                        fxmlLoader.load();
+//                        this.getChildren().add(lowerImageBuilder.getSubInterface());
+//                        this.prev = lowerImageBuilder.getPreview();
 
-                } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
+                } catch (ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
-
-        @FXML
-        private void update() {
-                this.upperInterface.uptadeInterface();
-        }
+//
+//        @FXML
+//        private void update() {
+//                this.upperInterface.uptadeInterface();
+//        }
 
 }

@@ -30,7 +30,7 @@ public class GeneratorFixedImage extends ImageGenerator {
         @Override
         public void DRYUpdate() {
                try {
-                        File imageFile = ((ImageBuilder) this.getUpperDN(ImageBuilder.class)).getDesignBuilder().getModelResources().get(this.imageName);
+                        File imageFile = getModelRessources().get(this.imageName);
 
                         if (imageFile == null) {
                                 throw new ResourcesFileErrorException("This file dont exist : " + this.imageName);

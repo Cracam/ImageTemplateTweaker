@@ -8,7 +8,6 @@ import Exeptions.ResourcesFileErrorException;
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
 import AppInterface.DesignBuilder;
-import imageBuilder.SubImageBuilder;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class InterfaceRandomImageDispersion extends Interface {
         @FXML
         private ImageView prev;
 
-        private SubImageBuilder lowerImageBuilder;
+    //    private SubImageBuilder lowerImageBuilder;
 
         public InterfaceRandomImageDispersion(String interfaceName, DesignBuilder designBuilder) {
                 super(interfaceName, designBuilder);
@@ -81,31 +80,31 @@ public class InterfaceRandomImageDispersion extends Interface {
                 }
         }
 
-        public void setLowerImageBuilder(SubImageBuilder lowerImageBuilder) {
-
-                this.lowerImageBuilder = lowerImageBuilder;
-
-                //intall trigger
-                lowerImageBuilder.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                        if (newValue) {
-                                //    System.out.println("trigered");
-                                lowerImageBuilder.setChanged(false);
-                                //       System.out.println("(1) CHANGGE DEECTED");
-                                refreshSubInterface();
-                                this.refreshLayers();
-                                this.refreshImageBuilders();
-                        }
-                });
-                //    lowerImageBuilder.setChanged(true);
-                lowerImageBuilder.refreshAll();
-                refreshSubInterface();
-               vboxInterface.getChildren().add( this.lowerImageBuilder.getSubInterface());
-//                ArrayList<Interface> interfaces = lowerImageBuilder.getInterfaces();
-//                for (Interface iface : interfaces) {
-//                        vboxInterface.getChildren().add(iface);
-//                }
-
-        }
+//        public void setLowerImageBuilder(SubImageBuilder lowerImageBuilder) {
+//
+//                this.lowerImageBuilder = lowerImageBuilder;
+//
+//                //intall trigger
+//                lowerImageBuilder.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//                        if (newValue) {
+//                                //    System.out.println("trigered");
+//                                lowerImageBuilder.setChanged(false);
+//                                //       System.out.println("(1) CHANGGE DEECTED");
+//                                refreshSubInterface();
+//                                this.refreshLayers();
+//                                this.refreshImageBuilders();
+//                        }
+//                });
+//                //    lowerImageBuilder.setChanged(true);
+//                lowerImageBuilder.refreshAll();
+//                refreshSubInterface();
+//               vboxInterface.getChildren().add( this.lowerImageBuilder.getSubInterface());
+////                ArrayList<Interface> interfaces = lowerImageBuilder.getInterfaces();
+////                for (Interface iface : interfaces) {
+////                        vboxInterface.getChildren().add(iface);
+////                }
+//
+//        }
 
 //        public void linkInterface(Interface inter) {
 //                vboxInterface.getChildren().add(inter);
@@ -119,11 +118,11 @@ public class InterfaceRandomImageDispersion extends Interface {
                 this.refreshImageBuilders();
         }
 
-        public void refreshSubInterface() {
-                this.prev.setImage(convertToFXImage(this.lowerImageBuilder.getImageOut()));
-                prev.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-style: solid;");
-                //System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-        }
+//        public void refreshSubInterface() {
+//                this.prev.setImage(convertToFXImage(this.lowerImageBuilder.getImageOut()));
+//                prev.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-style: solid;");
+//                //System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+//        }
 
         @Override
         public Node saveInterfaceData(Document doc) {

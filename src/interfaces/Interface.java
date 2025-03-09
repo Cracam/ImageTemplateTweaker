@@ -44,20 +44,20 @@ public abstract class Interface extends TitledPane{
          private PreviewImageBox PreviewGen; //for colecting all the preview from the Fxml files
          
 
-         
-        //Contain all the key to the identify an interface
-        public static final Map<String, Class<? extends Interface>> interfacesTypesMap = Map.of(
-                "Fixed_Image", InterfaceFixedImage.class, 
-                "Custom_Image",  InterfaceCustomImage.class,
-                "Custom_Color", InterfaceCustomColor.class,
-                "Custom_Text",InterfaceCustomText.class,
-                "Fixed_Text_Custom_Color_Custom_Style", InterfaceFixedTextCustomStyleCustomColor.class,
-                "Mouvable_Fixed_Image", InterfaceMouvableFixedImage.class,
-                "Custom_Shape_Custom_Color" ,InterfaceCustomShapeCustomColor.class,
-                "Random_Image_Dispersion",InterfaceRandomImageDispersion.class,
-                "Random_Image_Allocations",InterfaceRandomImageAllocations.class
-        );
-        
+//         
+//        //Contain all the key to the identify an interface
+//        public static final Map<String, Class<? extends Interface>> interfacesTypesMap = Map.of(
+//                "Fixed_Image", InterfaceFixedImage.class, 
+//                "Custom_Image",  InterfaceCustomImage.class,
+//                "Custom_Color", InterfaceCustomColor.class,
+//                "Custom_Text",InterfaceCustomText.class,
+//                "Fixed_Text_Custom_Color_Custom_Style", InterfaceFixedTextCustomStyleCustomColor.class,
+//                "Mouvable_Fixed_Image", InterfaceMouvableFixedImage.class,
+//                "Custom_Shape_Custom_Color" ,InterfaceCustomShapeCustomColor.class,
+//                "Random_Image_Dispersion",InterfaceRandomImageDispersion.class,
+//                "Random_Image_Allocations",InterfaceRandomImageAllocations.class
+//        );
+//        
         boolean haveGraphicInterface=true ;
 
         
@@ -173,20 +173,20 @@ public abstract class Interface extends TitledPane{
          * @throws ThisInterfaceDoesNotExistException 
          */
         public static Interface createInterface(String interfaceType, String interfaceName, DesignBuilder designBuilder) throws ThisInterfaceDoesNotExistException {
+//
+//                if (!interfacesTypesMap.containsKey(interfaceType)) {
+//                        throw new ThisInterfaceDoesNotExistException("This interface type does not exist : " + interfaceType);
+//                }
+//                try {
+//
+//                        Class<? extends Interface> subclass = interfacesTypesMap.get(interfaceType);
+//                        Constructor<? extends Interface> constructor = subclass.getConstructor(String.class, DesignBuilder.class);
+//
+//                        return constructor.newInstance(interfaceName, designBuilder);
 
-                if (!interfacesTypesMap.containsKey(interfaceType)) {
-                        throw new ThisInterfaceDoesNotExistException("This interface type does not exist : " + interfaceType);
-                }
-                try {
-
-                        Class<? extends Interface> subclass = interfacesTypesMap.get(interfaceType);
-                        Constructor<? extends Interface> constructor = subclass.getConstructor(String.class, DesignBuilder.class);
-
-                        return constructor.newInstance(interfaceName, designBuilder);
-
-                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-                        Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-                }
+//                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+//                        Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+//                }
 
                 return null;
         }

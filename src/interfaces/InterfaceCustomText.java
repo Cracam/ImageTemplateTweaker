@@ -6,7 +6,6 @@ package interfaces;
 
 import Exeptions.ResourcesFileErrorException;
 import GradientCreatorInterface.GradientCreatorInterface;
-import ImageProcessor.ImageGenerator.LayerCustomText;
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
 import AppInterface.DesignBuilder;
@@ -101,7 +100,7 @@ public class InterfaceCustomText extends Interface {
                                         this.refreshImageBuilders();
 
                                         for (int i = 0; i < linkedLayers.size(); i++) {
-                                                ((LayerCustomText) (linkedLayers.get(i))).setTextChanged(true);
+                              //                  ((LayerCustomText) (linkedLayers.get(i))).setTextChanged(true);
 
                                         }
 

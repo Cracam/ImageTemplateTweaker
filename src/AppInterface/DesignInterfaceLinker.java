@@ -4,7 +4,7 @@
  */
 package AppInterface;
 
-import AppInterface.Interfaces.FixedImageInterface;
+import AppInterface.Interfaces.VoidInterface;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerators.GeneratorCustomImage;
 import ImageProcessor.ImageGenerators.GeneratorCustomText;
@@ -23,10 +23,10 @@ public class DesignInterfaceLinker {
 
         static {
                 linkMap = new HashMap<>();
-                linkMap.put("G_Fixed_Image", new DesignInterfacePair(GeneratorFixedImage.class, FixedImageInterface.class));
-                linkMap.put("G_Custom_Image", new DesignInterfacePair(GeneratorCustomImage.class, FixedImageInterface.class));
-                linkMap.put("G_Custom_Text", new DesignInterfacePair(GeneratorCustomText.class, FixedImageInterface.class));
-                linkMap.put("G_Fixed_Text_Custom_Color_Custom_Style", new DesignInterfacePair(GeneratorFixedTextCustomStyle.class, FixedImageInterface.class));
+                linkMap.put("G_Fixed_Image", new DesignInterfacePair(GeneratorFixedImage.class, VoidInterface.class));
+                linkMap.put("G_Custom_Image", new DesignInterfacePair(GeneratorCustomImage.class, VoidInterface.class));
+                linkMap.put("G_Custom_Text", new DesignInterfacePair(GeneratorCustomText.class, VoidInterface.class));
+                linkMap.put("G_Fixed_Text_Custom_Color_Custom_Style", new DesignInterfacePair(GeneratorFixedTextCustomStyle.class, VoidInterface.class));
         }
 
         public static Class<? extends InterfaceNode> getLinkedInterface(Class<? extends DesignNode> designNodeClass) {

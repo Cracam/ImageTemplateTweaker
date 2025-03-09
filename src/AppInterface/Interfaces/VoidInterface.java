@@ -6,15 +6,16 @@ package AppInterface.Interfaces;
 
 import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.GetAttributeValueException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
  *
  * @author Camille LECOURT
  */
-public class FixedImageInterface extends InterfaceNode {
+public class VoidInterface extends InterfaceNode {
 
-        public FixedImageInterface(InterfaceNode upperIN) {
+        public VoidInterface(InterfaceNode upperIN) {
                 super(upperIN);
         }
 
@@ -26,8 +27,12 @@ public class FixedImageInterface extends InterfaceNode {
         }
 
         @Override
-        public Element DRYsaveDesign() {
+        public Element DRYsaveDesign(Document doc) {
                 return null;
+        }
+
+        @Override
+        protected void initialiseInterface() {//no interface
         }
         
 }

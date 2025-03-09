@@ -4,15 +4,7 @@
  */
 package Layers;
 
-import ImageProcessor.ImageGenerator.LayerFixedTextCustomStyleCustomColor;
-import ImageProcessor.ImagesTransformers.TransformerMovableFixedImage;
-import ImageProcessor.ImagesTransformers.TransformerRandomImageDispersion;
-import ImageProcessor.ImageGenerator.LayerCustomImage;
-import ImageProcessor.ImageGenerator.LayerFixedImage;
-import ImageProcessor.ImageGenerator.LayerCustomShapeCustomColor;
-import ImageProcessor.ImageGenerator.LayerCustomText;
-import ImageProcessor.ImagesTransformers.TransformerCustomColor;
-import ImageProcessor.ImagesTransformers.TransformerRandomImageAllocation;
+
 import imageBuilder.ImageBuilder_old;
 import Exceptions.XMLExeptions.GetAttributeValueException;
 import Layers.SubClasses.QuadrupletFloat;
@@ -55,17 +47,17 @@ public abstract class Layer_old {
         //Te Image size and parameter in pixel (adaptable to the image definition)
           QuadrupletInt pixelPosSize;
         
-       
-        public static final Map<String, Class<? extends Layer_old>> layersTypesMap = Map.of("Fixed_Image", LayerFixedImage.class, 
-                "Custom_Image", LayerCustomImage.class,
-                "Custom_Color", TransformerCustomColor.class, 
-                "Custom_Text",LayerCustomText.class,
-                "Fixed_Text_Custom_Color_Custom_Style", LayerFixedTextCustomStyleCustomColor.class,
-                "Mouvable_Fixed_Image", TransformerMovableFixedImage.class,
-                  "Custom_Shape_Custom_Color" ,LayerCustomShapeCustomColor.class,
-                   "Random_Image_Dispersion",TransformerRandomImageDispersion.class,
-                    "Random_Image_Allocations",TransformerRandomImageAllocation.class
-        );
+//       
+//        public static final Map<String, Class<? extends Layer_old>> layersTypesMap = Map.of("Fixed_Image", LayerFixedImage.class, 
+//                "Custom_Image", LayerCustomImage.class,
+//                "Custom_Color", TransformerCustomColor.class, 
+//                "Custom_Text",LayerCustomText.class,
+//                "Fixed_Text_Custom_Color_Custom_Style", LayerFixedTextCustomStyleCustomColor.class,
+//                "Mouvable_Fixed_Image", TransformerMovableFixedImage.class,
+//                  "Custom_Shape_Custom_Color" ,LayerCustomShapeCustomColor.class,
+//                   "Random_Image_Dispersion",TransformerRandomImageDispersion.class,
+//                    "Random_Image_Allocations",TransformerRandomImageAllocation.class
+//        );
 
         
         // this variable will be use by the Image builder to detect a change and recompute the image accordingly.
@@ -197,38 +189,38 @@ public abstract class Layer_old {
        
         
                 
-        /**
-         * This code will load the layer using a Strin identifier to get the type of the Layer
-         * @param layerType
-         * @param layerName
-         * @param modelResources
-         * @param layerInterface
-         * @param linkedImageBuilder
-         * @param posSize
-         * @return
-         * @throws GetAttributeValueException 
-         */
-          public static Layer_old createLayer(String layerType, String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder_old linkedImageBuilder, QuadrupletFloat posSize) throws GetAttributeValueException {
-
-                if (!layersTypesMap.containsKey(layerType)) {
-                        throw new GetAttributeValueException("This interface type does not exist : " + layerType);
-                }
-                
-                try {
-
-                        Class<? extends Layer_old> subclass = layersTypesMap.get(layerType);
-                        Constructor<? extends Layer_old> constructor = subclass.getConstructor(String.class, ResourcesManager.class,  Interface.class , ImageBuilder_old.class , QuadrupletFloat.class );
-                        
-                        return constructor.newInstance(layerName, modelResources,layerInterface,linkedImageBuilder,posSize );
-
-                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-                        Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
-                            ex.printStackTrace(); // Print the stack trace
-
-                        return null;
-                }
-        }
-        
+//        /**
+//         * This code will load the layer using a Strin identifier to get the type of the Layer
+//         * @param layerType
+//         * @param layerName
+//         * @param modelResources
+//         * @param layerInterface
+//         * @param linkedImageBuilder
+//         * @param posSize
+//         * @return
+//         * @throws GetAttributeValueException 
+//         */
+//          public static Layer_old createLayer(String layerType, String layerName,  ResourcesManager modelResources, Interface layerInterface, ImageBuilder_old linkedImageBuilder, QuadrupletFloat posSize) throws GetAttributeValueException {
+//
+//                if (!layersTypesMap.containsKey(layerType)) {
+//                        throw new GetAttributeValueException("This interface type does not exist : " + layerType);
+//                }
+//                
+//                try {
+//
+//                        Class<? extends Layer_old> subclass = layersTypesMap.get(layerType);
+//                        Constructor<? extends Layer_old> constructor = subclass.getConstructor(String.class, ResourcesManager.class,  Interface.class , ImageBuilder_old.class , QuadrupletFloat.class );
+//                        
+//                        return constructor.newInstance(layerName, modelResources,layerInterface,linkedImageBuilder,posSize );
+//
+//                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+//                        Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+//                            ex.printStackTrace(); // Print the stack trace
+//
+//                        return null;
+//                }
+//        }
+//        
         
         
 

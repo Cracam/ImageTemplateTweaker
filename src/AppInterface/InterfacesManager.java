@@ -7,7 +7,6 @@ package AppInterface;
 import Exceptions.XMLExeptions.GetAttributeValueException;
 import ResourcesManager.XmlManager;
 import interfaces.Interface;
-import static interfaces.Interface.interfacesTypesMap;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;

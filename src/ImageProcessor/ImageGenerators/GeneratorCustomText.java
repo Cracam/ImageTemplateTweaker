@@ -29,31 +29,28 @@ public class GeneratorCustomText extends ImageGenerator {
                 super(upperDE,elt);
         }
         
-
-        @Override
-        public void refreshImageGet() {
-                this.image_get = ((InterfaceCustomText) (this.linkedInterface)).getImageOut( this.linkedImagesBuilder.getPixelMmFactor(),textSizeMin,textSizeMax);
-        }
-        
-
-        @Override
-        void DPIChanged() {
-                //noting to do the text compare the PixelMilimeter factor automaticaly
-        }
-        
-
-        /**
-         * 
-         * @param paramNode
-         */
-        @Override
-        public void readNode(Element paramNode) {
-              Element element=  (Element) paramNode.getElementsByTagName("Text").item(0);
-
-                this.textHeightFactor=XmlManager.getFloatAttribute(element,"TextHeightFactor",this.textHeightFactor);
-                this.textSizeMin=XmlManager.getFloatAttribute(element,"TextSizeMin",this.textSizeMin);
-                this.textSizeMax=XmlManager.getFloatAttribute(element,"TextSizeMax",this.textSizeMax);
-        }
+//
+//        @Override
+//        public void refreshImageGet() {
+//                this.image_get = ((InterfaceCustomText) (this.linkedInterface)).getImageOut( this.linkedImagesBuilder.getPixelMmFactor(),textSizeMin,textSizeMax);
+//        }
+//        
+//
+//        
+//        
+//
+//        /**
+//         * 
+//         * @param paramNode
+//         */
+//        @Override
+//        public void readNode(Element paramNode) {
+//              Element element=  (Element) paramNode.getElementsByTagName("Text").item(0);
+//
+//                this.textHeightFactor=XmlManager.getFloatAttribute(element,"TextHeightFactor",this.textHeightFactor);
+//                this.textSizeMin=XmlManager.getFloatAttribute(element,"TextSizeMin",this.textSizeMin);
+//                this.textSizeMax=XmlManager.getFloatAttribute(element,"TextSizeMax",this.textSizeMax);
+//        }
 
         @Override
         public String toString() {
@@ -62,36 +59,36 @@ public class GeneratorCustomText extends ImageGenerator {
         
         
         
-         /**
-         * Compute the image out using Image_in and image_get
-         * (this overrride is for use cenring position)
-         * @param name
-         */
-        @Override
-        public void computeImage_Out(String name) {
-             // Create a new BufferedImage for the output
-                        BufferedImage outputImage = new BufferedImage(image_in.getWidth(), image_in.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                        Graphics2D outputG2d = outputImage.createGraphics();
-
-                        // Draw image_out onto the output image
-                        outputG2d.drawImage(image_in, 0, 0, null);
-                     
-                        //use this if not resize 
-                        
-                        int y=this.pixelPosSize.getPos_y();
-                        y=y - image_get.getHeight()/2;
-                        // on the line below we use minus to change the interface slidebar direction
-                        y=y-(int ) (((InterfaceCustomText) this.linkedInterface).getTextGenerator().getTextHeigthValue()*this.textHeightFactor*this.linkedImagesBuilder.get_pixel_mm_Factor());
-                        
-                        outputG2d.drawImage(image_get,this.pixelPosSize.getPos_x()-image_get.getWidth()/2, y,  null);
-
-                        // Dispose of the Graphics2D object
-                        outputG2d.dispose();
-
-                        // Update image_out with the new image
-                        this.image_out = outputImage;
-                         this.refreshPreview();
-        }
+//         /**
+//         * Compute the image out using Image_in and image_get
+//         * (this overrride is for use cenring position)
+//         * @param name
+//         */
+//        @Override
+//        public void computeImage_Out(String name) {
+//             // Create a new BufferedImage for the output
+//                        BufferedImage outputImage = new BufferedImage(image_in.getWidth(), image_in.getHeight(), BufferedImage.TYPE_INT_ARGB);
+//                        Graphics2D outputG2d = outputImage.createGraphics();
+//
+//                        // Draw image_out onto the output image
+//                        outputG2d.drawImage(image_in, 0, 0, null);
+//                     
+//                        //use this if not resize 
+//                        
+//                        int y=this.pixelPosSize.getPos_y();
+//                        y=y - image_get.getHeight()/2;
+//                        // on the line below we use minus to change the interface slidebar direction
+//                        y=y-(int ) (((InterfaceCustomText) this.linkedInterface).getTextGenerator().getTextHeigthValue()*this.textHeightFactor*this.linkedImagesBuilder.get_pixel_mm_Factor());
+//                        
+//                        outputG2d.drawImage(image_get,this.pixelPosSize.getPos_x()-image_get.getWidth()/2, y,  null);
+//
+//                        // Dispose of the Graphics2D object
+//                        outputG2d.dispose();
+//
+//                        // Update image_out with the new image
+//                        this.image_out = outputImage;
+//                         this.refreshPreview();
+//        }
         
                public void setTextChanged(boolean textChanged) {
                 this.textChanged = textChanged;
@@ -104,6 +101,11 @@ public class GeneratorCustomText extends ImageGenerator {
 
         @Override
         public void DRYUpdate() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
+        public void DRYgenerateFromElement(Element elt) throws GetAttributeValueException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 }

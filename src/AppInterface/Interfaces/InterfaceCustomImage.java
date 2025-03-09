@@ -5,9 +5,6 @@
 package AppInterface.Interfaces;
 
 import Exeptions.ResourcesFileErrorException;
-import ResourcesManager.XmlChild;
-import ResourcesManager.XmlManager;
-import AppInterface.DesignBuilder;
 import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.GetAttributeValueException;
 import imageloaderinterface.ImageLoaderInterface;
@@ -20,29 +17,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import previewimagebox.PreviewImageBox;
 import staticFunctions.StaticImageEditing;
 
 /**
- *This class is a interface of a custom img Image loaded by the user
+ * This class is a interface of a custom img Image loaded by the user
+ *
  * @author Camille LECOURT
  */
 public class InterfaceCustomImage extends InterfaceNode {
 
-        
-          @FXML
-        private PreviewImageBox Preview;
         @FXML
         private ImageLoaderInterface LoaderInterface;
 
-
-        public InterfaceCustomImage(String interfaceName, DesignBuilder designBuilder) {
-                super(interfaceName, designBuilder);
+        public InterfaceCustomImage(InterfaceNode upperIN) {
+                super(upperIN);
         }
-        
-        
-        
+
         @Override
         protected void initialiseInterface() {
                 try {
@@ -54,84 +44,62 @@ public class InterfaceCustomImage extends InterfaceNode {
                         fxmlLoader.setController(this);
 
                         fxmlLoader.load();
-                        
+
                         // Add a listener to the changed property
                         LoaderInterface.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                                 if (newValue) {
                                         //    System.out.println("trigered");
                                         LoaderInterface.setChanged(false);
-                                  //    System.out.println("(2) CHANGGE DEECTED");
-                                        this.refreshLayers();
-                                        this.refreshImageBuilders();
+                                        this.updateLinkedDesignNodes();
                                 }
                         });
-                        
-                        setPreview(Preview);
+
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
 
-        
-        
-        
-        
-        
         @Override
-        public Node saveInterfaceData(Document doc) {
-                String imageName = "Image_" + interfaceName + ".png";
-
-                XmlManager xmlManager = new XmlManager(doc);
-
-                XmlChild XmlTextBuilder = new XmlChild("Image");
-
-                if (LoaderInterface.getImage_out() != null) {
-                        XmlTextBuilder.addAttribute("image_name", imageName);
-
-                        //save the image into the Design zip
-                        this.designBuilder.getDesignResources().setBufferedImage(imageName, LoaderInterface.getImage_out());
-                }
-
-                xmlManager.addChild(XmlTextBuilder);
-
-                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
+        public Element DRYsaveDesign(Document doc) {
+//                String imageName = "Image_" + this.getUpperDN(InterfaceContainer.class).ComputeUniqueID() + ".png";
+//
+//                XmlManager xmlManager = new XmlManager(doc);
+//
+//                XmlChild XmlTextBuilder = new XmlChild("Image");
+//
+//                if (LoaderInterface.getImage_out() != null) {
+//                        XmlTextBuilder.addAttribute("image_name", imageName);
+//
+//                        //save the image into the Design zip
+//                     getDesignRessources().setBufferedImage(imageName, LoaderInterface.getImage_out());
+//                }
+//
+//                xmlManager.addChild(XmlTextBuilder);
+//
+//                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
-        
-        
-        @Override
-        public void loadInterfaceData(Element dataOfTheLayer ) {
-                Element nodeimageName = (Element) dataOfTheLayer.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name");
-                      if(nodeimageName!=null){
-                             
-                              LoaderInterface.loadImage(this.designBuilder.getDesignResources().get(nodeimageName.getNodeValue()));
-
-                      }
-
-        }
-        
-        
-        
         /**
          * Return the out of this interface with the good size
+         *
          * @param x
          * @param y
-         * @return 
+         * @return
          */
-        public BufferedImage getImageOut(int x, int y){
-                    return StaticImageEditing.ResizeImage(LoaderInterface.getImage_out(), x,y);
+        public BufferedImage getImageOut(int x, int y) {
+                return StaticImageEditing.ResizeImage(LoaderInterface.getImage_out(), x, y);
         }
 
         @Override
         protected Element DRYLoadDesign(Element element, int index) throws GetAttributeValueException {
+                //                Element nodeimageName = (Element) dataOfTheLayer.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name");
+//                      if(nodeimageName!=null){
+//                             
+//                              LoaderInterface.loadImage(this.designBuilder.getDesignResources().get(nodeimageName.getNodeValue()));
+//
+//                      }
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
-        @Override
-        public Element DRYsaveDesign() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-        
-
-        
 }

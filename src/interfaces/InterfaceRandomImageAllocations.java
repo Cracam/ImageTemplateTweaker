@@ -68,8 +68,8 @@ public class InterfaceRandomImageAllocations extends Interface {
 
         @FXML
         public void createNewImgBuilder() {
-                   SubInterfaceRandomImageAllocation subInter= ((TransformerRandomImageAllocation)  this.linkedLayers.get(0)).createNewImgBuilder();
-                lowerInterfaces.add(subInter);
+             //      SubInterfaceRandomImageAllocation subInter= ((TransformerRandomImageAllocation)  this.linkedLayers.get(0)).createNewImgBuilder();
+             //   lowerInterfaces.add(subInter);
         }
 
         @Override

@@ -4,6 +4,7 @@ import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceNode;
 import Exceptions.InvalidLinkbetweenNode;
 import Exceptions.XMLExeptions.GetAttributeValueException;
+import ResourcesManager.ResourcesManager;
 import interfaces.Interface;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
@@ -220,6 +221,10 @@ public abstract class DesignNode {
 
           
           
-          
-          
+          public ResourcesManager getModelRessources(){
+                 return  ((ImageBuilder)this.getUpperDN(ImageBuilder.class)).getDesignBuilder().getModelResources();
+          }
+
 }
+          
+        

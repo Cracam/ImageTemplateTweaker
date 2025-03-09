@@ -2,6 +2,7 @@ package AppInterface;
 
 import Exceptions.XMLExeptions.GetAttributeValueException;
 import javafx.scene.layout.VBox;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -35,8 +36,14 @@ public class InterfaceContainer extends InterfaceNode {
                 return DesignInterfaceLinker.getIdentifier(this.getClass()) + name;
         }
 
+
         @Override
-        public Element DRYsaveDesign() {
+        public Element DRYsaveDesign(Document doc) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
+        protected void initialiseInterface() {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
