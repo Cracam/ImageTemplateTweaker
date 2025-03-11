@@ -4,8 +4,9 @@ import Exceptions.XMLExeptions.XMLErrorInModelException;
 import AppInterface.DesignBuilder;
 import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceNode;
+import static ResourcesManager.XmlManager.getFloatAttribute;
+import static ResourcesManager.XmlManager.getStringAttribute;
 import interfaces.Interface;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.Element;
@@ -37,6 +38,11 @@ public class ImageBuilder extends ImageDimentioner {
                 String key;
                 Element subElt;
                 DesignNode currentUpperDN;
+                
+                
+                this.name = getStringAttribute(elt, "name", "ERROR");
+                  x_size = getFloatAttribute(elt, "size_x", 0);
+                y_size= getFloatAttribute(elt, "size_y", 0);
 
                 currentUpperDN = this;
                 //        subElt = (Element) elt.getElementsByTagName("Layers").item(0);

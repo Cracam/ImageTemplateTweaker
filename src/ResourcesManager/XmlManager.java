@@ -116,16 +116,11 @@ public class XmlManager {
                         throw new XMLErrorInModelException("Attribute " + attributeName + " is missing.");
                 }
         }
-            /**
-     * Extrait le seul élément d'une NodeList s'il existe.
-     *
-     * @param nodeList La NodeList à vérifier.
-     * @return L'élément unique s'il existe, sinon null.
-     */
+   // Méthode pour extraire le premier élément de type ELEMENT_NODE d'une NodeList
     public static Element extractSingleElement(NodeList nodeList) {
-        if (nodeList != null && nodeList.getLength() == 1) {
-            Node node = nodeList.item(0);
-            if (node instanceof Element) {
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
                 return (Element) node;
             }
         }

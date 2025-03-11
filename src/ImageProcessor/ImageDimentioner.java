@@ -36,11 +36,11 @@ public abstract class ImageDimentioner extends DesignNode {
         public void generateFromElement() throws XMLErrorInModelException {
                 Element subElt;
                 
-                this.name = getStringAttribute(elt, "name", "ERROR");
+//                this.name = getStringAttribute(elt, "name", "ERROR");
                 
-                 subElt = (Element) elt.getElementsByTagName("size").item(0);
-                x_size = XmlManager.getFloatAttribute(subElt, "size_x", 0);
-                y_size= XmlManager.getFloatAttribute(subElt, "size_y", 0);
+//                 subElt = (Element) elt.getElementsByTagName("size").item(0);
+//                x_size = XmlManager.getFloatAttribute(subElt, "size_x", 0);
+//                y_size= XmlManager.getFloatAttribute(subElt, "size_y", 0);
                 
                 DRYgenerateFromElement(elt);
         }

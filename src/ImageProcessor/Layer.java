@@ -17,6 +17,7 @@ import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.Element;
@@ -121,12 +122,12 @@ public class Layer extends DesignNode {
                 subSubElt = extractSingleElement(subElt.getChildNodes());
 
                 if (subSubElt == null) {
-                        throw new XMLErrorInModelException("Le bloc generator du Layer " + this.name + "n'a pas de sous générateur valide\n\n " + subElt.toString());
+                        throw new XMLErrorInModelException("Le bloc generator du Layer " + this.name + "n'a pas de sous générateur valide\n\n " + subElt.getChildNodes().getLength());
                 }
 
                 key = subSubElt.getNodeName();
 
-                currentUpperDN = createGenerator(key, currentUpperDN, subSubElt);
+                currentUpperDN = createGenerator(key, currentUpperDN, subSubElt);//mettre 
                 ((ImageGenerator) currentUpperDN).setDim(pixelPosSize.getSize_x(), pixelPosSize.getSize_y());
 
         }

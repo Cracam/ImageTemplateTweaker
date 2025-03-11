@@ -44,12 +44,12 @@ public abstract class ImageGenerator extends ImageDimentioner {
          * type of the Layer
          *
          * @param type
-         * @param uppersDE
+         * @param upperDE
          * @param elt
          * @return
          * @throws XMLErrorInModelException
          */
-        public static ImageGenerator createGenerator(String type, ArrayList<DesignNode> uppersDE, Element elt) throws XMLErrorInModelException {
+        public static ImageGenerator createGenerator(String type, DesignNode upperDE, Element elt) throws XMLErrorInModelException {
 
                 if (!generatorTypesMap.containsKey(type)) {
                         throw new XMLErrorInModelException("This generator type does not exist : " + type);
@@ -58,9 +58,9 @@ public abstract class ImageGenerator extends ImageDimentioner {
                 try {
 
                         Class<? extends ImageGenerator> subclass = generatorTypesMap.get(type);
-                        Constructor<? extends ImageGenerator> constructor = subclass.getConstructor(ArrayList.class, Element.class);
+                        Constructor<? extends ImageGenerator> constructor = subclass.getConstructor(DesignNode.class, Element.class);
 
-                        return constructor.newInstance(uppersDE, elt);
+                        return constructor.newInstance(upperDE, elt);
 
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
                         Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
@@ -70,20 +70,6 @@ public abstract class ImageGenerator extends ImageDimentioner {
                 }
         }
 
-        /**
-         * This code will load the layer using a Strin identifier to get the
-         * type of the Layer
-         *
-         * @param type
-         * @param upperDE
-         * @param elt
-         * @return
-         * @throws XMLErrorInModelException
-         */
-        public static ImageGenerator createGenerator(String type, DesignNode upperDE, Element elt) throws XMLErrorInModelException {
-                ArrayList<DesignNode> arr = new ArrayList<>();
-                arr.add(upperDE);
-                return createGenerator(type, arr, elt);
-        }
+        
 
 }
