@@ -5,7 +5,7 @@
 package ImageProcessor;
 
 import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import static ImageProcessor.ImageGenerator.generatorTypesMap;
 import ImageProcessor.ImagesTransformers.TransformerCustomColor;
 import ImageProcessor.ImagesTransformers.TransformerMovableFixedImage;
@@ -30,18 +30,12 @@ public abstract class ImageTransformer extends DesignNode{
 
         
         
-        public ImageTransformer( DesignNode upperDE,  Element elt,String name) throws GetAttributeValueException {
+        public ImageTransformer( DesignNode upperDE,  Element elt) throws XMLErrorInModelException {
                 super( upperDE,  elt);
-                this.name=name;
+                generateFromElement();
         }
 
-        @Override
-         void generateFromElement(Element elt) throws GetAttributeValueException  {
-                
-                 DRYgenerateFromElement(elt);
-        }
-         
-        protected abstract void DRYgenerateFromElement(Element elt) throws GetAttributeValueException;
+      
 
         @Override
         public void DRYUpdate() {              
@@ -88,12 +82,12 @@ public abstract class ImageTransformer extends DesignNode{
          * @param uppersDE
          * @param elt
          * @return
-         * @throws GetAttributeValueException 
+         * @throws XMLErrorInModelException 
          */
-          public static ImageTransformer createTransformer(String type,  ArrayList<DesignNode> uppersDE,Element elt ) throws GetAttributeValueException {
+          public static ImageTransformer createTransformer(String type,  ArrayList<DesignNode> uppersDE,Element elt ) throws XMLErrorInModelException {
 
                 if (!generatorTypesMap.containsKey(type)) {
-                        throw new GetAttributeValueException("This generator type does not exist : " + type);
+                        throw new XMLErrorInModelException("This generator type does not exist : " + type);
                 }
                 
                 try {
@@ -119,9 +113,9 @@ public abstract class ImageTransformer extends DesignNode{
          * @param upperDE
          * @param elt
          * @return
-         * @throws GetAttributeValueException 
+         * @throws XMLErrorInModelException 
          */
-          public static ImageTransformer createTransformer(String type,  DesignNode upperDE,Element elt ) throws GetAttributeValueException {
+          public static ImageTransformer createTransformer(String type,  DesignNode upperDE,Element elt ) throws XMLErrorInModelException {
                   ArrayList<DesignNode> arr = new ArrayList<>();
                           arr.add(upperDE);
                   return createTransformer(type,arr,elt);

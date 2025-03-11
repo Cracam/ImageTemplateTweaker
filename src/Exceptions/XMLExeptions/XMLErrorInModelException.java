@@ -8,12 +8,12 @@ package Exceptions.XMLExeptions;
  *
  * @author LECOURT Camille
  */
-public class GetAttributeValueException extends Exception{
-          public GetAttributeValueException() {
+public class XMLErrorInModelException extends Exception{
+          public XMLErrorInModelException() {
         super();
     }
 
-    public GetAttributeValueException(String string) {
+    public XMLErrorInModelException(String string) {
         super(string);
     }
 }

@@ -2,7 +2,7 @@ package ImageProcessor.ImageGenerators;
 
 import ImageProcessor.ImageGenerator;
 import Exceptions.ResourcesFileErrorException;
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
 import java.io.File;
@@ -21,7 +21,7 @@ public class GeneratorFixedImage extends ImageGenerator {
 
         private String imageName;
 
-       public GeneratorFixedImage(DesignNode upperDE,Element elt ) throws GetAttributeValueException {
+       public GeneratorFixedImage(DesignNode upperDE,Element elt ) throws XMLErrorInModelException {
                 super(upperDE,elt);
         }
 
@@ -42,7 +42,7 @@ public class GeneratorFixedImage extends ImageGenerator {
         }
 
         @Override
-        public void DRYgenerateFromElement(Element elt) throws GetAttributeValueException {
+        public void DRYgenerateFromElement(Element elt) throws XMLErrorInModelException {
               this.imageName = elt.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
         }
 

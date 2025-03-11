@@ -6,7 +6,7 @@ package Layers;
 
 
 import imageBuilder.ImageBuilder_old;
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.ResourcesManager;
@@ -89,12 +89,12 @@ public abstract class Layer_old {
          * class
          */
         public void refreshDPI() {
-                pixelPosSize.computePixelPosSize(posSize, linkedImagesBuilder.getPixelMmFactor());
-                //   System.out.println("Pos Image builder : "+anotherImageBuilder.getX_p_size()+"   "+anotherImageBuilder.getY_p_size());
-                this.image_get = new BufferedImage(pixelPosSize.getSize_x(), pixelPosSize.getSize_y(), BufferedImage.TYPE_INT_ARGB);
-                this.image_in = new BufferedImage(linkedImagesBuilder.getX_p_size(), linkedImagesBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB);
-                this.image_out = new BufferedImage(linkedImagesBuilder.getX_p_size(), linkedImagesBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB);
-                DPIChanged();
+//                pixelPosSize.computePixelPosSize(posSize, linkedImagesBuilder.getPixelMmFactor());
+//                //   System.out.println("Pos Image builder : "+anotherImageBuilder.getX_p_size()+"   "+anotherImageBuilder.getY_p_size());
+//                this.image_get = new BufferedImage(pixelPosSize.getSize_x(), pixelPosSize.getSize_y(), BufferedImage.TYPE_INT_ARGB);
+//                this.image_in = new BufferedImage(linkedImagesBuilder.getX_p_size(), linkedImagesBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB);
+//                this.image_out = new BufferedImage(linkedImagesBuilder.getX_p_size(), linkedImagesBuilder.getY_p_size(), BufferedImage.TYPE_INT_ARGB);
+//                DPIChanged();
         }
         
         /**
@@ -136,7 +136,7 @@ public abstract class Layer_old {
         * Change the preview (it will just enter the preview Image box object)
         */
         public void refreshPreview() {
-              this.linkedInterface.refreshPreview(this.linkedImagesBuilder.getName(),StaticImageEditing.createImageView(this.image_out));
+//              this.linkedInterface.refreshPreview(this.linkedImagesBuilder.getName(),StaticImageEditing.createImageView(this.image_out));
                 //   System.out.println(toString());
         }
           

@@ -1,9 +1,11 @@
 package ImageProcessor;
 
+import AppInterface.DesignBuilder;
 import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceNode;
 import Exceptions.InvalidLinkbetweenNode;
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ResourcesManager.ResourcesManager;
 import interfaces.Interface;
 import java.awt.image.BufferedImage;
@@ -19,35 +21,43 @@ import org.w3c.dom.Element;
  * @author Camille LECOURT
  */
 public abstract class DesignNode {
-
+        
         private final ArrayList<DesignNode> upperDN;
         protected String name;
         private ArrayList<DesignNode> lowersDN;
        protected BufferedImage imageOut;
        protected InterfaceNode linkedinterface;
-
+       protected Element elt;
+       
+       
         // Constructeur prenant un seul upperDN
-        public DesignNode(DesignNode upperDE, Element elt) throws GetAttributeValueException {
+        public DesignNode(DesignNode upperDE, Element eltConstruct) throws XMLErrorInModelException {
                 this.upperDN = new ArrayList<>();
+               this.lowersDN= new ArrayList<>();
                 if (upperDE != null) {
                         this.upperDN.add(upperDE);
                         upperDE.addLowerDN(this);
                 }
-                generateFromElement(elt);
+          this.elt=eltConstruct;
         }
 
         // Constructeur prenant une ArrayList d'upperDN
-        public DesignNode(ArrayList<DesignNode> upperDEs, Element elt) throws GetAttributeValueException {
+        public DesignNode(ArrayList<DesignNode> upperDEs, Element eltConstruct) throws XMLErrorInModelException {
                 this.upperDN = new ArrayList<>(upperDEs);
+                  this.lowersDN= new ArrayList<>();
                 for (DesignNode upperDE : upperDEs) {
                         if (upperDE != null) {
                                 upperDE.addLowerDN(this);
                         }
                 }
-                generateFromElement(elt);
+                this.elt=eltConstruct;
         }
+        
+        
+          
+        
 
-        abstract void generateFromElement(Element elt) throws GetAttributeValueException;
+       protected abstract void generateFromElement() throws XMLErrorInModelException;
 
         /**
          * Thes update program consserning the element
@@ -83,6 +93,7 @@ public abstract class DesignNode {
         
 
         public void updateLower() {
+                
                 for (DesignNode lower : lowersDN) {
                         lower.updateLower();
                 }
@@ -126,6 +137,7 @@ public abstract class DesignNode {
 
         public DesignNode getUpperDN(Class<?> nodeClass) {
                 if (upperDN == null) {
+                        System.out.println("### case 1");
                         return null;
                 }
 
@@ -141,6 +153,8 @@ public abstract class DesignNode {
                 }
                 return null;
         }
+        
+ 
 
         public DesignNode getUpperOrHimselfDN(Class<?> nodeClass) {
                 if(this.getClass()==nodeClass) return this;

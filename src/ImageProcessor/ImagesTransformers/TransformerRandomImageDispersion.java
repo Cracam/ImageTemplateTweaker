@@ -4,7 +4,7 @@
  */
 package ImageProcessor.ImagesTransformers;
 
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageTransformer;
 import java.awt.image.BufferedImage;
@@ -24,8 +24,8 @@ public class TransformerRandomImageDispersion extends ImageTransformer {
         private float maxInterval;
         private float minInterval;
 
-        public TransformerRandomImageDispersion(DesignNode upperDE, Element elt, String name) throws GetAttributeValueException {
-                super(upperDE, elt, name);
+        public TransformerRandomImageDispersion(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
+                super(upperDE, elt);
         }
 
 
@@ -94,7 +94,7 @@ public class TransformerRandomImageDispersion extends ImageTransformer {
 
         
         @Override
-        protected void DRYgenerateFromElement(Element elt) throws GetAttributeValueException {
+        protected void generateFromElement() throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 

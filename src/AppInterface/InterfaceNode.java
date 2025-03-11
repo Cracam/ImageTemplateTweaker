@@ -4,7 +4,7 @@
  */
 package AppInterface;
 
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
 import ResourcesManager.ResourcesManager;
@@ -62,9 +62,9 @@ public abstract class InterfaceNode extends VBox {
                 lowerInterfaces.add(lowerIN);
         }
         
-        protected abstract Element DRYLoadDesign(Element element, int index) throws GetAttributeValueException;
+        protected abstract Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException;
         
-        public void loadDesign(Element element, int index) throws GetAttributeValueException {
+        public void loadDesign(Element element, int index) throws XMLErrorInModelException {
                 Element subelt = DRYLoadDesign(element, index);
                 index++;
                 if (subelt != element) {

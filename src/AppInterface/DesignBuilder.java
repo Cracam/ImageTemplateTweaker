@@ -2,9 +2,10 @@ package AppInterface;
 
 import imageBuilder.ImageBuilder_old;
 import Exceptions.ResourcesFileErrorException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
+import ImageProcessor.DesignNode;
+import ImageProcessor.ImageBuilder;
 import ResourcesManager.ResourcesManager;
-import interfaces.Interface;
-import static interfaces.Interface.interfacesTypesMap;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +39,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import previewimagebox.PreviewImageBox;
-import taboftiltedpane.TabOfTiltedPane;
 
 /**
  *
@@ -60,7 +60,7 @@ public class DesignBuilder extends Application {
         private String author;
         private String designPath = null; // the path of the desing currently opened ==null if nothing save yet (use to save function)
 
-        private final ArrayList<ImageBuilder_old> imageBuilders = new ArrayList<>();
+        private final ArrayList<ImageBuilder> imageBuilders = new ArrayList<>();
 
       private  InterfacesManager interfacesManager;
         
@@ -125,8 +125,13 @@ public class DesignBuilder extends Application {
                                 Node outputNode = outputNodes.item(i);
 
                                 System.out.println("Output Node: " + outputNode.getNodeName());
-                                imageBuilders.add(new ImageBuilder_old(this, outputNode));
-                                System.out.println(this.toString());
+                                try{
+                                    ImageBuilder imgBuild= new ImageBuilder(null, (Element) outputNode, this);
+                                           imageBuilders.add(imgBuild);
+                                }catch(XMLErrorInModelException ex){
+                                            Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                //                System.out.println(this.toString());
                         }
 
                         designPath = null; //reset the design path to null to force a new document
@@ -139,7 +144,7 @@ public class DesignBuilder extends Application {
 
         private void refreshEverything() {
                 for (int i = 0; i < imageBuilders.size(); i++) {
-                        this.imageBuilders.get(i).refreshAll();
+                        this.imageBuilders.get(i).updateLower();
                 }
         }
 
@@ -409,10 +414,10 @@ public class DesignBuilder extends Application {
          * This method will refresh the main preview
          */
         public void refreshPreview() {
-                this.preview.clearAllImagesViews();
-                for (ImageBuilder_old imageBuilder : imageBuilders) {
-                        imageBuilder.refreshPreview(this.preview);
-                }
+//                this.preview.clearAllImagesViews();
+//                for (ImageBuilder_old imageBuilder : imageBuilders) {
+//                        imageBuilder.refreshPreview(this.preview);
+//                }
         }
 
      

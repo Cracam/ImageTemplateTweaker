@@ -5,7 +5,6 @@
 package ImageProcessor;
 
 import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
-import Exceptions.XMLExeptions.GetAttributeValueException;
 import static ImageProcessor.ImageGenerator.createGenerator;
 import static ImageProcessor.ImageTransformer.createTransformer;
 import Layers.SubClasses.QuadrupletFloat;
@@ -15,6 +14,8 @@ import static ResourcesManager.XmlManager.getStringAttribute;
 import AppInterface.DesignBuilder;
 import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceNode;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
+import static ResourcesManager.XmlManager.extractSingleElement;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,12 +28,14 @@ import static staticFunctions.StaticImageEditing.overlayImages;
  *
  * @author Camille LECOURT
  */
-public abstract class Layer extends DesignNode {
- protected QuadrupletFloat posSize;
-        protected QuadrupletInt pixelPosSize;
-        
-        public Layer(DesignNode upperDE, Element elt) throws GetAttributeValueException {
+public class Layer extends DesignNode {
+
+        protected QuadrupletFloat posSize;
+        protected QuadrupletInt pixelPosSize = new QuadrupletInt(0, 0, 0, 0);
+
+        public Layer(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
+                generateFromElement();
         }
 
         @Override
@@ -57,78 +60,89 @@ public abstract class Layer extends DesignNode {
                                 this.imageOut = overlayImages(lowerLayer.getImageOut(), image_get);
                         }
 
-                }catch (DesingNodeLowerNodeIsAnormalyVoidException ex) {
+                } catch (DesingNodeLowerNodeIsAnormalyVoidException ex) {
                         Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
 
-        
         @Override
-        void generateFromElement(Element elt) throws GetAttributeValueException {
+        protected void generateFromElement() throws XMLErrorInModelException {
                 String key;
-                Element subElt,subSubElt;
+                Element subElt, subSubElt;
                 DesignNode currentUpperDN;
-                
+
                 this.name = getStringAttribute(elt, "name", "ERROR");
-                
-                 subElt = (Element) elt.getElementsByTagName("pos").item(0);
-                 float pos_x = XmlManager.getFloatAttribute(subElt, "pos_x", 0);
-                 float pos_y = XmlManager.getFloatAttribute(subElt, "pos_y", 0);
 
-                 subElt = (Element) elt.getElementsByTagName("size").item(0);
-                 float size_x = XmlManager.getFloatAttribute(subElt, "size_x", 0);
-                 float size_y = XmlManager.getFloatAttribute(subElt, "size_y", 0);
+                subElt = extractSingleElement(elt.getElementsByTagName("pos"));
+                if (subElt == null) {
+                        throw new XMLErrorInModelException("L'élément 'pos' du Layer " + this.name + "est manquant ou invalide.");
+                }
+                float pos_x = XmlManager.getFloatAttribute(subElt, "pos_x", 0);
+                float pos_y = XmlManager.getFloatAttribute(subElt, "pos_y", 0);
 
-                 posSize = new QuadrupletFloat(pos_x, pos_y, size_x, size_y);
-                 DRYRefreshDPI();
-                
-                
-                
-               
+                subElt = extractSingleElement(elt.getElementsByTagName("size"));
+                if (subElt == null) {
+                        throw new XMLErrorInModelException("L'élément 'size du Layer " + this.name + "est manquant ou invalide.");
+                }
+                float size_x = XmlManager.getFloatAttribute(subElt, "size_x", 0);
+                float size_y = XmlManager.getFloatAttribute(subElt, "size_y", 0);
 
-                currentUpperDN=this;
+                posSize = new QuadrupletFloat(pos_x, pos_y, size_x, size_y);
+                DRYRefreshDPI();
+
+                currentUpperDN = this;
                 subElt = (Element) elt.getElementsByTagName("Transformers").item(0);
-                NodeList nodeTransformersList = subElt.getChildNodes();
+                if (subElt != null) {
 
-                //running in the inverse 
-                for (int i = nodeTransformersList.getLength()-1; i >=0; i--) {
-                        if (nodeTransformersList.item(i).getNodeType() == Node.ELEMENT_NODE) { //To avoid text node and comment node
+                        NodeList nodeTransformersList = subElt.getChildNodes();
 
-                                subSubElt = (Element) nodeTransformersList.item(i);
-                                key = subSubElt.getNodeName(); // key for defining the layer and the Interface
+                        //running in the inverse 
+                        for (int i = nodeTransformersList.getLength() - 1; i >= 0; i--) {
+                                if (nodeTransformersList.item(i).getNodeType() == Node.ELEMENT_NODE) { //To avoid text node and comment node
 
-                                currentUpperDN = createTransformer(key, currentUpperDN, subSubElt);
+                                        subSubElt = (Element) nodeTransformersList.item(i);
+                                        key = subSubElt.getNodeName(); // key for defining the layer and the Interface
+
+                                        currentUpperDN = createTransformer(key, currentUpperDN, subSubElt);
+                                }
                         }
                 }
-                
-                
-                
+
                 ////////
                 //creating the last element of the chain if there is generator.
                 //if not it will be linked to another layer.
-                 subElt = (Element) elt.getElementsByTagName("Generator").item(0);
-                 if(subElt!=null){
-                        key = subElt.getNodeName();
+                System.out.println("\n\n####### " + elt.toString() + "\n#########");
+                subElt = extractSingleElement(elt.getElementsByTagName("Generator"));
 
-                        currentUpperDN = createGenerator(key, currentUpperDN, subElt);
-                       ((ImageGenerator)currentUpperDN).setDim(pixelPosSize.getSize_x(),pixelPosSize.getSize_y());
+                if (subElt == null) {
+                        throw new XMLErrorInModelException("Le Layer " + this.name + "n'a pas de bloc: Generator valide");
                 }
+
+                subSubElt = extractSingleElement(subElt.getChildNodes());
+
+                if (subSubElt == null) {
+                        throw new XMLErrorInModelException("Le bloc generator du Layer " + this.name + "n'a pas de sous générateur valide\n\n " + subElt.toString());
+                }
+
+                key = subSubElt.getNodeName();
+
+                currentUpperDN = createGenerator(key, currentUpperDN, subSubElt);
+                ((ImageGenerator) currentUpperDN).setDim(pixelPosSize.getSize_x(), pixelPosSize.getSize_y());
+
         }
-        
 
         @Override
         public void DRYRefreshDPI() {
+                System.out.println(this.getUpperDN(ImageBuilder.class));
                 DesignBuilder designBuilder = ((ImageBuilder) this.getUpperDN(ImageBuilder.class)).getDesignBuilder();
                 pixelPosSize.computePixelPosSize(posSize, designBuilder.getPixelMmFactor());
         }
 
- 
-               @Override
+        @Override
         public String DRYComputeUniqueID() {
                 return DesignInterfaceLinker.getIdentifier(this.getClass()) + name;
         }
-        
-        
+
         @Override
         public InterfaceNode createLinkedInterface(InterfaceNode upperInter) {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

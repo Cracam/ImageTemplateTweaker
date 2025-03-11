@@ -5,7 +5,7 @@
 package ImageProcessor.ImageGenerators;
 
 import ImageProcessor.ImageGenerator;
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import AppInterface.Interfaces.InterfaceCustomImage;
 import ResourcesManager.XmlManager;
@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  */
 public class GeneratorCustomImage extends ImageGenerator {
 
-        public GeneratorCustomImage(DesignNode upperDE, Element elt) throws GetAttributeValueException {
+        public GeneratorCustomImage(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
         }
 
@@ -27,7 +27,7 @@ public class GeneratorCustomImage extends ImageGenerator {
         }
 
         @Override
-        public void DRYgenerateFromElement(Element elt) throws GetAttributeValueException {
+        public void DRYgenerateFromElement(Element elt) throws XMLErrorInModelException {
         }
 
        

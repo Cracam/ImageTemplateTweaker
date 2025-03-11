@@ -13,13 +13,24 @@
 
 
 		<Output name="Recto" size_x="88" size_y="58" ><!-- Verso de la carte (côte nom prenom) -->
+				<Layer name="test">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="RECTO_fond.png"/>
+						</G_Fixed_Image>
+					</Generator>
+				</Layer>
 
-			<Custom_Color name="Fond Recto"  tab_name="Commun">
-					<pos pos_x="6.72" pos_y="0"/>
-					<size size_x="74.55" size_y="58"/>
-					<Param>
-						<Image image_name="RECTO_fond.png"/>
-					</Param>
+
+
+				<Custom_Color name="Fond Recto"  tab_name="Commun">
+						<pos pos_x="6.72" pos_y="0"/>
+						<size size_x="74.55" size_y="58"/>
+						<Param>
+							<Image image_name="RECTO_fond.png"/>
+						</Param>
 				</Custom_Color>
 
 
@@ -31,284 +42,7 @@
 					</Param>
 				</Custom_Image>
 
-
-<!-- Cadre pour mettre le nom prenom-->
-<Fixed_Image name="Zone Texte" >
-					<pos pos_x="10" pos_y="20" />
-					<size size_x="30" size_y="10" />
-					<Param>
-						<Image  image_name="RECTO_ZoneTexte.png"/>
-					</Param>
-				</Fixed_Image>
-
-<Custom_Color name="Cadre Texte" tab_name="Recto">
-					<pos pos_x="10" pos_y="20"/>
-					<size size_x="30" size_y="10" />
-					<Param>
-						<Image image_name="RECTO_CadreTexte.png"/>
-					</Param>
-			</Custom_Color>
-
-<Fixed_Image name="Zone Texte">
-					<pos pos_x="10" pos_y="40" />
-					<size size_x="30" size_y="10" />
-					<Param>
-						<Image  image_name="RECTO_ZoneTexte.png"/>
-					</Param>
-				</Fixed_Image>
-
-<Custom_Color name="Cadre Texte" tab_name="Recto">
-					<pos pos_x="10" pos_y="40"/>
-					<size size_x="30" size_y="10" />
-					<Param>
-						<Image image_name="RECTO_CadreTexte.png"/>
-					</Param>
-			</Custom_Color>
-
-
-<!-- Premier plan de la carte-->
-<Custom_Image name="Premier Plan" tab_name="Recto" >
-					<pos pos_x="0" pos_y="0"/>
-					<size size_x="88" size_y="58"/>
-					<Param>
-					</Param>
-				</Custom_Image>
-
-
-				<Custom_Text name="Texte Principal" tab_name="Recto" >
-					<pos pos_x="44" pos_y="5"/>
-					<size size_x="88" size_y="58"/>
-					<Param>
-						<Text TextHeightFactor="2.0" TextSizeMin="2.0" TextSizeMax="10.0"/>
-					</Param>
-				</Custom_Text>
-
-
-<Mouvable_Fixed_Image name="mouvable image" tab_name="Recto" >
-					<pos pos_x="22" pos_y="20"/>
-					<size size_x="12" size_y="23"/>
-					<Param>
-						<Image image_name="testmovableimage.png"/>
-						<OffSet X_MaxOffset="1.0"  X_MinOffset="-1.0"  Y_MaxOffset="1.0"  Y_MinOffset="-1.0"/>
-    				</Param>
-				</Mouvable_Fixed_Image>
-
-<Custom_Shape_Custom_Color  name="Img TKT" tab_name="Recto" >
-					<pos pos_x="0" pos_y="0"/>
-					<size size_x="88" size_y="58"/>
-					<Param>
-					</Param>
-				</Custom_Shape_Custom_Color>
-
-
-
-				<Fixed_Text_Custom_Color_Custom_Style name="Texte Fixe" tab_name="Recto" >
-					<pos pos_x="44" pos_y="20"/>
-					<size size_x="88" size_y="58"/>
-					<Param>
-						<Text Text="Ceci est Un test" TextHeightFactor="2.0" TextSizeMin="5.0" TextSizeMax="15.0"/>
-					</Param>
-				</Fixed_Text_Custom_Color_Custom_Style>
-
-
-				<Random_Image_Dispersion name="randomdips" tab_name="Recto" >
-					<pos pos_x="0" pos_y="0"/>
-					<size size_x="88" size_y="58"/>
-					<Param>
-						<Size maxXSize="5" minXSize="1" maxYSize="5" minYSize="1"/>
-						<Interval maxInterval="7" minInterval="3"/>
-						<Interface name="SubBuildee">
-							<Custom_Color name="graine" tab_name="Recto">
-									<pos pos_x="0" pos_y="0"/>
-									<size size_x="5" size_y="5" />
-									<Param>
-										<Image image_name="graine.png"/>
-									</Param>
-							</Custom_Color>
-
-							<Mouvable_Fixed_Image name="mouvable image" tab_name="Recto" >
-					<pos pos_x="0" pos_y="0"/>
-					<size size_x="1" size_y="2"/>
-					<Param>
-						<Image image_name="testmovableimage.png"/>
-						<OffSet X_MaxOffset="1.0"  X_MinOffset="-1.0"  Y_MaxOffset="1.0"  Y_MinOffset="-1.0"/>
-    				</Param>
-				</Mouvable_Fixed_Image>
-						</Interface>
-					</Param>
-				</Random_Image_Dispersion>
-
-
-
-
-
-			<Custom_Color name="Arrière Plan Bords" tab_name="Commun">
-					<pos pos_x="0" pos_y="0"/>
-					<size size_x="88" size_y="58"/>
-					<Param>
-						<Image image_name="RECTO_arrierePlan.png"/>
-					</Param>
-			</Custom_Color>
-
-
-
-			<Custom_Color name="Bordure" tab_name="Commun">
-					<pos pos_x="0" pos_y="0"/>
-					<size size_x="88" size_y="58"/>
-					<Param>
-						<Image image_name="RECTO_Bordure.png"/>
-					</Param>
-			</Custom_Color>
-
-
-			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-				
-
-		</Output>
-
-
-
-
-
-
-
-
-		<Output name="Verso" size_x="88" size_y="58" ><!-- Recto de la carte (côté consos)--> 
-				
-
-<Custom_Color name="Fond" tab_name="Commun">
-					<pos pos_x="6.72" pos_y="0"/>
-					<size size_x="74.55" size_y="58"/>
-					<Param>
-						<Image image_name="RECTO_fond.png"/>
-					</Param>
-				</Custom_Color>
-
-
-
-
-
-
-
-
-
-
-
-
-				<Fixed_Image name="Fond">
-					<pos pos_x="0" pos_y="0"/>
-					<size size_x="88" size_y="58"/>
-					<Param>
-						<Image image_name="RECTO_Bordure.png"/>
-					</Param>
-				</Fixed_Image>
-
-
-				<img_color name="Bordure">
-					<pos pos_x="0" pos_y="0"/>
-					<size size_x="88" size_y="58"/>
-					<Param>
-						<Image image_name="RECTO_Bordure.png"/>
-						<Color ID="1"/>
-					</Param>
-				</img_color>
-
-
-				<Custom_Image name="Tasses45" tab_name="Images Verso">
-					<pos pos_x="15" pos_y="5"/>
-					<size size_x="40" size_y="20"/>
-					<Param>
-					</Param>
-				</Custom_Image>
-
-
-				<img_custom_shape name="consos Verte"> <!-- pas utilisé dans le modèle V3 --> 
-					<pos pos_x="25" pos_y="5"/>
-					<size size_x="10" size_y="10"/>
-					<Param>
-						<Color color="#23EF34"/>
-					</Param>
-				</img_custom_shape>
-
-
-				<img_Consos>
-					<size size_x="14.5" size_y="14.5"/>
-				</img_Consos>
-
-
-				<img_Items>
-					<size size_x="14.5" size_y="14.5"/>
-				</img_Items>
-
-
-				<Custom_Image name="Tasses" tab_name="Images" >
-					<pos pos_x="15" pos_y="5"/>
-					<size size_x="40" size_y="20"/>
-					<Param>
-					</Param>
-				</Custom_Image>
-
-
-
-				<img_custom_shape name="consos Verte"> <!-- pas utilisé dans le modèle V3 --> 
-					<pos pos_x="25" pos_y="5"/>
-					<size size_x="10" size_y="10"/>
-					<Param>
-						<Color color="#23EF34"/>
-					</Param>
-				</img_custom_shape>
-
-
-
-					<Random_Image_Allocations name="randompos" tab_name="Verso" >
-					<pos pos_x="0" pos_y="0"/>
-					<size size_x="88" size_y="58"/>
-					<Param>
-						<SubImagesData>
-							<SubImageData size_x="14.5" size_y="14.5" pos_x="10.2" pos_y="6.45"/>
-							<SubImageData size_x="14.5" size_y="14.5" pos_x="10.2" pos_y="20.2"/>
-							<SubImageData size_x="14.5" size_y="14.5" pos_x="10.2" pos_y="33.45"/>
-						</SubImagesData>
-
-						<Interface name="SubBuildee">
-							<Custom_Color name="graine" tab_name="Recto">
-									<pos pos_x="0" pos_y="0"/>
-									<size size_x="5" size_y="5" />
-									<Param>
-										<Image image_name="graine.png"/>
-									</Param>
-							</Custom_Color>
-
-							<Mouvable_Fixed_Image name="mouvable image" tab_name="Recto" >
-								<pos pos_x="0" pos_y="0"/>
-								<size size_x="1" size_y="2"/>
-								<Param>
-									<Image image_name="testmovableimage.png"/>
-									<OffSet X_MaxOffset="1.0"  X_MinOffset="-1.0"  Y_MaxOffset="1.0"  Y_MinOffset="-1.0"/>
-			    				</Param>
-							</Mouvable_Fixed_Image>
-							
-						</Interface>
-					</Param>
-				</Random_Image_Allocations>
-
-		</Output>
-
-
+		</Output>	
 
 </Model>
 	

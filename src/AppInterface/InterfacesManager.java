@@ -4,7 +4,7 @@
  */
 package AppInterface;
 
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ResourcesManager.XmlManager;
 import interfaces.Interface;
 import java.util.ArrayList;
@@ -71,36 +71,7 @@ public class InterfacesManager {
                 interfaces.add(interf);
         }
 
-        /**
-         * return an interface identifie by is type and it's name
-         *
-         * @param type
-         * @param name
-         * @return
-         */
-        public InterfaceContainer getInterface(String type, String name) {
-                // Check if the type exists in the map
-                if (interfacesTypesMap.containsKey(type)) {
-                        // Get the class of the interface
-                        Class<? extends Interface> interfaceClass = interfacesTypesMap.get(type);
-
-                        // Iterate through the list of interfaces
-                        for (InterfaceContainer interf : interfaces) {
-                                // Check if the interface is of the correct type
-                                if (interfaceClass.isInstance(interf)) {
-                                        // Get the name of the interface
-                                        String interfaceName = interf.ComputeUniqueID();
-
-                                        // Compare the name with the provided name
-                                        if (interfaceName.equals(name)) {
-                                                return interf;
-                                        }
-                                }
-                        }
-                }
-                // Return null if the interface does not exist
-                return null;
-        }
+   
 
         /**
          * This function assign a layer to a tab (in main interface) It can
@@ -134,14 +105,14 @@ public class InterfacesManager {
 
                         try {
                                 tempInterface = findInterfaceByUniqueID(XmlManager.getStringAttribute(interfaceElt, "name", ""));
-                        } catch (GetAttributeValueException ex) {
+                        } catch (XMLErrorInModelException ex) {
                                 Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                 tempInterface = null;
                         }
                         if (tempInterface != null) {
                                 try {
                                         tempInterface.loadDesign(interfaceElt, 0);
-                                } catch (GetAttributeValueException ex) {
+                                } catch (XMLErrorInModelException ex) {
                                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                         tempInterface = null;
                                 }

@@ -1,6 +1,6 @@
 package ImageProcessor;
 
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 
 import ImageProcessor.ImageGenerators.GeneratorCustomImage;
 import ImageProcessor.ImageGenerators.GeneratorCustomText;
@@ -21,8 +21,9 @@ import org.w3c.dom.Element;
  */
 public abstract class ImageGenerator extends ImageDimentioner {
 
-        public ImageGenerator(DesignNode upperDE, Element elt) throws GetAttributeValueException {
+        public ImageGenerator(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
+                generateFromElement();
         }
 
        
@@ -46,12 +47,12 @@ public abstract class ImageGenerator extends ImageDimentioner {
          * @param uppersDE
          * @param elt
          * @return
-         * @throws GetAttributeValueException
+         * @throws XMLErrorInModelException
          */
-        public static ImageGenerator createGenerator(String type, ArrayList<DesignNode> uppersDE, Element elt) throws GetAttributeValueException {
+        public static ImageGenerator createGenerator(String type, ArrayList<DesignNode> uppersDE, Element elt) throws XMLErrorInModelException {
 
                 if (!generatorTypesMap.containsKey(type)) {
-                        throw new GetAttributeValueException("This generator type does not exist : " + type);
+                        throw new XMLErrorInModelException("This generator type does not exist : " + type);
                 }
 
                 try {
@@ -77,9 +78,9 @@ public abstract class ImageGenerator extends ImageDimentioner {
          * @param upperDE
          * @param elt
          * @return
-         * @throws GetAttributeValueException
+         * @throws XMLErrorInModelException
          */
-        public static ImageGenerator createGenerator(String type, DesignNode upperDE, Element elt) throws GetAttributeValueException {
+        public static ImageGenerator createGenerator(String type, DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 ArrayList<DesignNode> arr = new ArrayList<>();
                 arr.add(upperDE);
                 return createGenerator(type, arr, elt);

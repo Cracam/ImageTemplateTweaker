@@ -1,7 +1,7 @@
 package ImageProcessor.ImageGenerators;
 
 import ImageProcessor.ImageGenerator;
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ResourcesManager.XmlManager;
 import interfaces.InterfaceFixedTextCustomStyleCustomColor;
@@ -15,7 +15,7 @@ public class GeneratorFixedTextCustomStyle extends ImageGenerator {
         private int[][] opacityMap;
         private String text;
 
-        public GeneratorFixedTextCustomStyle(DesignNode upperDE, Element elt) throws GetAttributeValueException {
+        public GeneratorFixedTextCustomStyle(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
         }
        
@@ -44,7 +44,7 @@ public class GeneratorFixedTextCustomStyle extends ImageGenerator {
         }
 
         @Override
-        public void DRYgenerateFromElement(Element elt) throws GetAttributeValueException {
+        public void DRYgenerateFromElement(Element elt) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 

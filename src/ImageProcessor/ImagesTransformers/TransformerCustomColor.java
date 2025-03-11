@@ -4,7 +4,7 @@
  */
 package ImageProcessor.ImagesTransformers;
 
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageTransformer;
 import java.awt.image.BufferedImage;
@@ -20,8 +20,8 @@ public  class TransformerCustomColor extends ImageTransformer {
         private int[][]opacityMap;
         private BufferedImage image_getRaw;
 
-        public TransformerCustomColor(DesignNode upperDE, Element elt, String name) throws GetAttributeValueException {
-                super(upperDE, elt, name);
+        public TransformerCustomColor(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
+                super(upperDE, elt);
         }
 
       
@@ -63,11 +63,10 @@ public  class TransformerCustomColor extends ImageTransformer {
     
        
 
-
-       @Override
-        protected void DRYgenerateFromElement(Element elt) throws GetAttributeValueException {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        @Override
+        protected void generateFromElement() throws XMLErrorInModelException {
         }
+        
         public void DRY_DRYUpdate(BufferedImage img_in) {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }

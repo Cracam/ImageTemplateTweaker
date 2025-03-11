@@ -6,7 +6,7 @@ package AppInterface.Interfaces;
 
 import Exeptions.ResourcesFileErrorException;
 import AppInterface.InterfaceNode;
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -92,7 +92,7 @@ public class InterfaceCustomImage extends InterfaceNode {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element, int index) throws GetAttributeValueException {
+        protected Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException {
                 //                Element nodeimageName = (Element) dataOfTheLayer.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name");
 //                      if(nodeimageName!=null){
 //                             

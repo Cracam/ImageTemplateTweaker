@@ -5,7 +5,7 @@
 package ImageProcessor.ImageGenerators;
 
 import ImageProcessor.ImageGenerator;
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ResourcesManager.XmlManager;
 import interfaces.InterfaceCustomText;
@@ -25,7 +25,7 @@ public class GeneratorCustomText extends ImageGenerator {
         float textSizeMin=(float) 5.0; //in mm
         float textSizeMax =(float) 25.0;//in mm
 
-         public GeneratorCustomText(DesignNode upperDE,Element elt ) throws GetAttributeValueException {
+         public GeneratorCustomText(DesignNode upperDE,Element elt ) throws XMLErrorInModelException {
                 super(upperDE,elt);
         }
         
@@ -94,10 +94,7 @@ public class GeneratorCustomText extends ImageGenerator {
                 this.textChanged = textChanged;
         }
 
-        @Override
-        public void generateFromElement(Element elt) throws GetAttributeValueException {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
+     
 
         @Override
         public void DRYUpdate() {
@@ -105,7 +102,7 @@ public class GeneratorCustomText extends ImageGenerator {
         }
 
         @Override
-        public void DRYgenerateFromElement(Element elt) throws GetAttributeValueException {
+        public void DRYgenerateFromElement(Element elt) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 }

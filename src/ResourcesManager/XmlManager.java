@@ -4,12 +4,13 @@
  */
 package ResourcesManager;
 
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import java.util.ArrayList;
 import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Represents a child element with its attributes.
@@ -69,13 +70,13 @@ public class XmlManager {
          * @param ret
          * @return The parsed float value of the attribute, or null if the
          * attribute is not found.
-         * @throws Exceptions.XMLExeptions.GetAttributeValueException
+         * @throws Exceptions.XMLExeptions.XMLErrorInModelException
          */
-        static public Float getFloatAttribute(Element element, String attributeName, float ret) throws   GetAttributeValueException {
+        static public Float getFloatAttribute(Element element, String attributeName, float ret) throws   XMLErrorInModelException {
                 try {
                         return Float.valueOf(getAttributeValue(element, attributeName));
                 } catch (NumberFormatException e) {
-                        throw new GetAttributeValueException("Invalid value for attribute " + attributeName + ": " + getAttributeValue(element, attributeName));
+                        throw new XMLErrorInModelException("Invalid value for attribute " + attributeName + ": " + getAttributeValue(element, attributeName));
                 }
         }
 
@@ -89,31 +90,45 @@ public class XmlManager {
          * or is invalid.
          * @return The value of the attribute as a string, or the default value
          * if the attribute is not found or is invalid.
-         * @throws Exceptions.XMLExeptions.GetAttributeValueException
+         * @throws Exceptions.XMLExeptions.XMLErrorInModelException
          */
-        public static String getStringAttribute(Element element, String attributeName, String ret) throws  GetAttributeValueException  {
+        public static String getStringAttribute(Element element, String attributeName, String ret) throws  XMLErrorInModelException  {
                
                         String attributeValue = getAttributeValue(element, attributeName);
                         if (attributeValue != null && !attributeValue.isEmpty()) {
                                 return attributeValue;
                         } else {
-                                    throw new GetAttributeValueException("Invalid value for attribute " + attributeName + ": " + getAttributeValue(element, attributeName));
+                                    throw new XMLErrorInModelException("Invalid value for attribute " + attributeName + ": " + getAttributeValue(element, attributeName));
                         }
         }
         
         
 
-        private static String getAttributeValue(Element element, String attributeName) throws GetAttributeValueException {
+        private static String getAttributeValue(Element element, String attributeName) throws XMLErrorInModelException {
                 if (element == null) {
-                        throw new GetAttributeValueException("Element that qhould be linked to " + attributeName + " is null.");
+                        throw new XMLErrorInModelException("Element that qhould be linked to " + attributeName + " is null.");
                 }
 
                 Node attributeNode = element.getAttributes().getNamedItem(attributeName);
                 if (attributeNode != null) {
                         return attributeNode.getNodeValue();
                 } else {
-                        throw new GetAttributeValueException("Attribute " + attributeName + " is missing.");
+                        throw new XMLErrorInModelException("Attribute " + attributeName + " is missing.");
                 }
         }
-
+            /**
+     * Extrait le seul élément d'une NodeList s'il existe.
+     *
+     * @param nodeList La NodeList à vérifier.
+     * @return L'élément unique s'il existe, sinon null.
+     */
+    public static Element extractSingleElement(NodeList nodeList) {
+        if (nodeList != null && nodeList.getLength() == 1) {
+            Node node = nodeList.item(0);
+            if (node instanceof Element) {
+                return (Element) node;
+            }
+        }
+        return null;
+    }
 }

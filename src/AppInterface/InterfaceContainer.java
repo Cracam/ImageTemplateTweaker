@@ -1,6 +1,6 @@
 package AppInterface;
 
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import javafx.scene.layout.VBox;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,7 +22,7 @@ public class InterfaceContainer extends InterfaceNode {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element, int index) throws GetAttributeValueException {
+        protected Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 

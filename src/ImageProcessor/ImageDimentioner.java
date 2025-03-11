@@ -1,7 +1,7 @@
 
 package ImageProcessor;
 
-import Exceptions.XMLExeptions.GetAttributeValueException;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.getStringAttribute;
 
@@ -18,7 +18,7 @@ public abstract class ImageDimentioner extends DesignNode {
     protected     int x_p_size;
      protected    int y_p_size;
 
- public ImageDimentioner(DesignNode upperDE,Element elt) throws GetAttributeValueException {
+ public ImageDimentioner(DesignNode upperDE,Element elt) throws XMLErrorInModelException {
                 super( upperDE, elt);
         }
         
@@ -30,10 +30,10 @@ public abstract class ImageDimentioner extends DesignNode {
        
 
         
-      public abstract void DRYgenerateFromElement(Element elt) throws GetAttributeValueException;
+      public abstract void DRYgenerateFromElement(Element elt) throws XMLErrorInModelException;
       
        @Override
-        public void generateFromElement(Element elt) throws GetAttributeValueException {
+        public void generateFromElement() throws XMLErrorInModelException {
                 Element subElt;
                 
                 this.name = getStringAttribute(elt, "name", "ERROR");
