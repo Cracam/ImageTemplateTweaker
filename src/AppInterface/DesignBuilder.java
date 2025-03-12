@@ -1,6 +1,5 @@
 package AppInterface;
 
-import imageBuilder.ImageBuilder_old;
 import Exceptions.ResourcesFileErrorException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
@@ -11,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -62,8 +63,8 @@ public class DesignBuilder extends Application {
 
         private final ArrayList<ImageBuilder> imageBuilders = new ArrayList<>();
 
-      private  InterfacesManager interfacesManager;
-        
+        private InterfacesManager interfacesManager;
+
         private Scene scene;
 
         private int DPI = 150;
@@ -84,7 +85,7 @@ public class DesignBuilder extends Application {
          * @param args the command line arguments
          */
         public static void main(String[] args) {
-                
+
                 launch(args);
         }
 
@@ -125,21 +126,36 @@ public class DesignBuilder extends Application {
                                 Node outputNode = outputNodes.item(i);
 
                                 System.out.println("Output Node: " + outputNode.getNodeName());
-                                try{
-                                    ImageBuilder imgBuild= new ImageBuilder(null, (Element) outputNode, this);
-                                           imageBuilders.add(imgBuild);
-                                }catch(XMLErrorInModelException ex){
-                                            Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                                try {
+                                        ImageBuilder imgBuild = new ImageBuilder(null, (Element) outputNode, this);
+                                        imageBuilders.add(imgBuild);
+                                } catch (XMLErrorInModelException ex) {
+                                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                //                System.out.println(this.toString());
+                                //                System.out.println(this.toString());
                         }
 
                         designPath = null; //reset the design path to null to force a new document
+                        ArrayList<DesignNode> layersList = new ArrayList<>();
+                        for (int i = 0; i < imageBuilders.size(); i++) {
+                                Set<DesignNode> combinedSet = new HashSet<>(imageBuilders.get(i).getAllDirectLowerDN());
+                                combinedSet.addAll(layersList);
+                                layersList = new ArrayList<>(combinedSet);
+                        }
+
+                        System.out.println(layersList.size());
                         refreshEverything();
 
                 } catch (ParserConfigurationException | SAXException | IOException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
+        }
+
+// Méthode statique pour combiner deux ArrayList en évitant les doublons
+        public static <T> ArrayList<T> combineArrayLists(ArrayList<T> list1, ArrayList<T> list2) {
+                Set<T> combinedSet = new HashSet<>(list1);
+                combinedSet.addAll(list2);
+                return new ArrayList<>(combinedSet);
         }
 
         private void refreshEverything() {
@@ -201,10 +217,7 @@ public class DesignBuilder extends Application {
 
                         NodeList InterfacesNodes = allInterfaces.item(0).getChildNodes();
                         //  System.out.println("#####"+InterfacesNodes.getLength());
-                     this.interfacesManager.loadInterfaces(InterfacesNodes);
-                        
-                        
-                        
+                        this.interfacesManager.loadInterfaces(InterfacesNodes);
 
                         refreshEverything();
 
@@ -213,7 +226,7 @@ public class DesignBuilder extends Application {
                 }
         }
 
-               /**
+        /**
          * This method saves the current design to an XML file.
          *
          * @param filepath
@@ -240,10 +253,8 @@ public class DesignBuilder extends Application {
 
                         // Save interfaces
                         Element interfacesElement = document.createElement("Interfaces");
-                       
 
-                     //  interfacesManager.saveInterfaces(interfacesElement,document);
-                       
+                        //  interfacesManager.saveInterfaces(interfacesElement,document);
                         rootElement.appendChild(interfacesElement);
                         // Write the content into XML file
                         TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -291,9 +302,9 @@ public class DesignBuilder extends Application {
                         FXMLLoader loader = new FXMLLoader(inter_principalle);
                         loader.setController(this);
                         Parent root = loader.load();
-                        
-                       interfacesManager=new InterfacesManager(tabPane);
-                        
+
+                        interfacesManager = new InterfacesManager(tabPane);
+
                         loadNewModel("C:\\BACKUP\\ENSE3\\Foyer\\Programme_Java\\Batcher_Foyer\\test_data\\modelTest.zip");
 
                         primarystage.setTitle("Batcher FOYER");
@@ -349,10 +360,6 @@ public class DesignBuilder extends Application {
 
         }
 
-  
-
-        
-
         public int getId() {
                 return id;
         }
@@ -389,7 +396,6 @@ public class DesignBuilder extends Application {
                 return currentDir.getAbsolutePath() + "/resources/" + fileName;
         }
 
-   
         public float getPixelMmFactor() {
                 return (float) (this.DPI / 25.4);
         }
@@ -420,12 +426,9 @@ public class DesignBuilder extends Application {
 //                }
         }
 
-     
-
         @FXML
         private void updateScale() {
 
-          
         }
 
 }

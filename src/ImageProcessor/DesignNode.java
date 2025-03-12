@@ -1,10 +1,8 @@
 package ImageProcessor;
 
-import AppInterface.DesignBuilder;
 import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceNode;
 import Exceptions.InvalidLinkbetweenNode;
-import Exceptions.XMLExeptions.XMLErrorInModelException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ResourcesManager.ResourcesManager;
 import interfaces.Interface;
@@ -12,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.Element;
@@ -237,6 +237,10 @@ public abstract class DesignNode {
           
           public ResourcesManager getModelRessources(){
                  return  ((ImageBuilder)this.getUpperDN(ImageBuilder.class)).getDesignBuilder().getModelResources();
+          }
+
+          public ArrayList<DesignNode> getAllDirectLowerDN(){
+                  return this.lowersDN;
           }
 
 }
