@@ -13,11 +13,9 @@ import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.getStringAttribute;
 import AppInterface.DesignBuilder;
 import AppInterface.DesignInterfaceLinker;
-import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.Element;
@@ -33,7 +31,8 @@ public class Layer extends DesignNode {
 
         protected QuadrupletFloat posSize;
         protected QuadrupletInt pixelPosSize = new QuadrupletInt(0, 0, 0, 0);
-
+        protected String tabName;
+        
         public Layer(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
                 generateFromElement();
@@ -73,7 +72,8 @@ public class Layer extends DesignNode {
                 DesignNode currentUpperDN;
 
                 this.name = getStringAttribute(elt, "name", "ERROR");
-
+                 this.tabName = getStringAttribute(elt, "tab_name", "ERROR");
+                
                 subElt = extractSingleElement(elt.getElementsByTagName("pos"));
                 if (subElt == null) {
                         throw new XMLErrorInModelException("L'élément 'pos' du Layer " + this.name + "est manquant ou invalide.");
@@ -144,8 +144,8 @@ public class Layer extends DesignNode {
                 return DesignInterfaceLinker.getIdentifier(this.getClass()) + name;
         }
 
-        @Override
-        public InterfaceNode createLinkedInterface(InterfaceNode upperInter) {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        public String getTabName() {
+                return tabName;
         }
+
 }

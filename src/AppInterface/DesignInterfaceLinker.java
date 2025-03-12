@@ -4,14 +4,15 @@
  */
 package AppInterface;
 
+import AppInterface.Interfaces.InterfaceCustomImage;
 import AppInterface.Interfaces.VoidInterface;
-import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerators.GeneratorCustomImage;
 import ImageProcessor.ImageGenerators.GeneratorCustomText;
 import ImageProcessor.ImageGenerators.GeneratorFixedImage;
 import ImageProcessor.ImageGenerators.GeneratorFixedTextCustomStyle;
 import ImageProcessor.ImagesTransformers.TransformerCustomColor;
+import ImageProcessor.Layer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,10 +27,11 @@ public class DesignInterfaceLinker {
         static {
                 linkMap = new HashMap<>();
                 linkMap.put("G_Fixed_Image", new DesignInterfacePair(GeneratorFixedImage.class, VoidInterface.class));
-                linkMap.put("G_Custom_Image", new DesignInterfacePair(GeneratorCustomImage.class, VoidInterface.class));
+                linkMap.put("G_Custom_Image", new DesignInterfacePair(GeneratorCustomImage.class, InterfaceCustomImage.class));
                 linkMap.put("G_Custom_Text", new DesignInterfacePair(GeneratorCustomText.class, VoidInterface.class));
                 linkMap.put("G_Fixed_Text_Custom_Color_Custom_Style", new DesignInterfacePair(GeneratorFixedTextCustomStyle.class, VoidInterface.class));
                  linkMap.put("T_Custom_Color", new DesignInterfacePair(TransformerCustomColor.class, VoidInterface.class));
+                 linkMap.put("Layer", new DesignInterfacePair(Layer.class, InterfaceContainer.class));
         }
 
         public static Class<? extends InterfaceNode> getLinkedInterface(Class<? extends DesignNode> designNodeClass) {

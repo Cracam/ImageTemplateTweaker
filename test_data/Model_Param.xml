@@ -12,14 +12,13 @@
 		</Informations>
 
 
-		<Output name="Recto" tab_name="Commun" size_x="88" size_y="58" ><!-- Verso de la carte (côte nom prenom) -->
-				<Layer name="test">
+		<Output name="Recto" size_x="88" size_y="58" ><!-- Verso de la carte (côte nom prenom) -->
+				<Layer name="test" tab_name="Commun">
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>
 					<Generator>
-						<G_Fixed_Image>
-							<Image image_name="RECTO_fond.png"/>
-						</G_Fixed_Image>
+						<G_Custom_Image>
+						</G_Custom_Image>
 					</Generator>
 					<Transformers>
 						<T_Custom_Color>

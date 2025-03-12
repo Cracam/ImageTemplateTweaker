@@ -29,8 +29,10 @@ public abstract class InterfaceNode extends VBox {
                 
                 upperInterface = upperIN;
                 initialiseInterface();
-                upperInterface.addLowerIN(this);
-                upperInterface.placeInterface(this);
+                if(upperInterface!=null){
+                        upperInterface.addLowerIN(this);
+                        upperInterface.placeInterface(this);
+                }
                 
         }
         
@@ -85,6 +87,7 @@ public abstract class InterfaceNode extends VBox {
         
         public void addDesignNode(DesignNode DN) {
                 linkedDesignNodes.add(DN);
+                DN.setLinkedInterface(this);
         }
 
         public ArrayList<InterfaceNode> getLowerInterfaces() {

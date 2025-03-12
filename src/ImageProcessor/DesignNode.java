@@ -3,6 +3,7 @@ package ImageProcessor;
 import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceNode;
 import Exceptions.InvalidLinkbetweenNode;
+import Exceptions.ThisInterfaceDoesNotExistException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ResourcesManager.ResourcesManager;
 import interfaces.Interface;
@@ -10,8 +11,6 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.Element;
@@ -168,11 +167,14 @@ public abstract class DesignNode {
                 try {
 
                         Class<? extends InterfaceNode> subclass = DesignInterfaceLinker.getLinkedInterface(this.getClass());
+                        if(subclass==null || subclass.isAssignableFrom(InterfaceNode.class)){
+                                        throw new ThisInterfaceDoesNotExistException("this interface node dont exist yet for "+this.getClass().getName());
+                        }
                         Constructor<? extends InterfaceNode> constructor = subclass.getConstructor(InterfaceNode.class);
+                        linkedinterface=constructor.newInstance(upperInter);
+                        return linkedinterface;
 
-                        return constructor.newInstance(upperInter);
-
-                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+                } catch (ThisInterfaceDoesNotExistException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
                         Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
                         ex.printStackTrace(); // Print the stack trace
 
@@ -183,7 +185,9 @@ public abstract class DesignNode {
         
         
         
-  
+  public void setLinkedInterface(InterfaceNode node){
+          linkedinterface=node;
+  }
         
         
         
@@ -196,7 +200,7 @@ public abstract class DesignNode {
         }
           
           /**
-           * This program take as root a desing node and create the corresponding InterfaceNode
+           * This program take as root a interface node and link the corresponding InterfaceNode
            * @param interNode
            * @throws InvalidLinkbetweenNode 
            */
@@ -243,6 +247,11 @@ public abstract class DesignNode {
                   return this.lowersDN;
           }
 
+        public InterfaceNode getLinkedinterface() {
+                return linkedinterface;
+        }
+
+          
 }
           
         

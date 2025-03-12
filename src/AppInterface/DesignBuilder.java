@@ -2,7 +2,6 @@ package AppInterface;
 
 import Exceptions.ResourcesFileErrorException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
-import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
 import ResourcesManager.ResourcesManager;
 import java.io.ByteArrayOutputStream;
@@ -136,14 +135,9 @@ public class DesignBuilder extends Application {
                         }
 
                         designPath = null; //reset the design path to null to force a new document
-                        ArrayList<DesignNode> layersList = new ArrayList<>();
-                        for (int i = 0; i < imageBuilders.size(); i++) {
-                                Set<DesignNode> combinedSet = new HashSet<>(imageBuilders.get(i).getAllDirectLowerDN());
-                                combinedSet.addAll(layersList);
-                                layersList = new ArrayList<>(combinedSet);
-                        }
-
-                        System.out.println(layersList.size());
+                       
+                        interfacesManager.createInterfaceFromImageBuilderList(this.imageBuilders);
+                        
                         refreshEverything();
 
                 } catch (ParserConfigurationException | SAXException | IOException ex) {

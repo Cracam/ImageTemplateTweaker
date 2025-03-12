@@ -4,14 +4,19 @@
  */
 package AppInterface;
 
+import Exceptions.InvalidLinkbetweenNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
+import ImageProcessor.DesignNode;
+import ImageProcessor.ImageBuilder;
+import ImageProcessor.Layer;
 import ResourcesManager.XmlManager;
 import interfaces.Interface;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.TabPane;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -62,6 +67,51 @@ public class InterfacesManager {
 //                }
 //        }
 
+        
+        public void createInterfaceFromImageBuilderList(ArrayList<ImageBuilder> imageBuilders){
+                
+                 ArrayList<DesignNode> layersList = new ArrayList<>();
+                 
+                        for (int i = 0; i < imageBuilders.size(); i++) {
+                                Set<DesignNode> combinedSet = new HashSet<>(imageBuilders.get(i).getAllDirectLowerDN());
+                                combinedSet.addAll(layersList);
+                                layersList = new ArrayList<>(combinedSet);
+                        }
+
+                   
+                            ArrayList<Layer> linkedLayers = new ArrayList<>();
+                      
+                      
+                       boolean alreadyCreated=false;
+                       Layer alredyCreatedLayer=null;
+                        for(DesignNode layer : layersList ){
+                                if(layer.getClass()==Layer.class){
+                                        
+                                        for(Layer linkedLayer : linkedLayers){
+                                                if(linkedLayer.ComputeUniqueID().equals(layer.ComputeUniqueID())){
+                                                        alreadyCreated=true;
+                                                        alredyCreatedLayer=linkedLayer;
+                                                        break;
+                                                }
+                                        }
+                                        
+                                       if(alreadyCreated){
+                                                try {
+                                                        layer.linkDesignNodeToInterfaceNodes(alredyCreatedLayer.getLinkedinterface());
+                                                } catch (InvalidLinkbetweenNode ex) {
+                                                        Logger.getLogger(InterfacesManager.class.getName()).log(Level.SEVERE, null, ex);
+                                                }
+                                       }else{
+                                                 layer.createInterfaceTreeFromNodeTree(null);
+                                                 addInterface((InterfaceContainer) layer.getLinkedinterface());
+                                                         assignInterfaceToTab( ((Layer) layer).getTabName(),layer.getLinkedinterface());
+                                       }
+                                }
+                        }
+                        
+        }
+        
+        
         /**
          * Add an interface in the arrayList of the Desing builder
          *
@@ -80,7 +130,7 @@ public class InterfacesManager {
          * @param inter
          * @param tabName
          */
-        public void assignInterfaceToTab(String tabName, Interface inter) {
+        public void assignInterfaceToTab(String tabName, InterfaceNode inter) {
                 for (TabOfTiltedPane tab : tabs) {
 
                         if (tab.getText().equals(tabName)) {
