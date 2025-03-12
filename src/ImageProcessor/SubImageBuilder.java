@@ -34,7 +34,7 @@ public class SubImageBuilder extends ImageDimentioner {
         }
 
         @Override
-        public void DRYgenerateFromElement(Element elt) throws XMLErrorInModelException {
+        protected void generateFromElement() throws XMLErrorInModelException {
                  String key;
                 Element subElt,subSubElt;
                 DesignNode currentUpperDN;

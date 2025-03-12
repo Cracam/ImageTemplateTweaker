@@ -6,12 +6,11 @@ package ImageProcessor;
 
 import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
-import static ImageProcessor.ImageGenerator.generatorTypesMap;
 import ImageProcessor.ImagesTransformers.TransformerCustomColor;
 import ImageProcessor.ImagesTransformers.TransformerMovableFixedImage;
 import ImageProcessor.ImagesTransformers.TransformerRandomImageAllocation;
 import ImageProcessor.ImagesTransformers.TransformerRandomImageDispersion;
-import AppInterface.DesignBuilder;
+import AppInterface.DesignInterfaceLinker;
 import interfaces.Interface;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
@@ -84,40 +83,27 @@ public abstract class ImageTransformer extends DesignNode{
          * @return
          * @throws XMLErrorInModelException 
          */
-          public static ImageTransformer createTransformer(String type,  ArrayList<DesignNode> uppersDE,Element elt ) throws XMLErrorInModelException {
-
-                if (!generatorTypesMap.containsKey(type)) {
-                        throw new XMLErrorInModelException("This generator type does not exist : " + type);
-                }
+          public static ImageTransformer createTransformer(String type,  DesignNode uppersDE,Element elt ) throws XMLErrorInModelException {
+                Class classBuilder = DesignInterfaceLinker.getDesignNode(type);
+                
+                if (classBuilder==null || classBuilder.isAssignableFrom(ImageTransformer.class)) {
+                        throw new XMLErrorInModelException("This Transformer type does not exist : " + type);
+                } 
+                
                 
                 try {
-
-                        Class<? extends ImageTransformer> subclass = transformersTypesMap.get(type);
-                        Constructor<? extends ImageTransformer> constructor = subclass.getConstructor(ArrayList.class, Element.class );
+                        Class<? extends ImageTransformer> subclass = classBuilder;
+                        Constructor<? extends ImageTransformer> constructor = subclass.getConstructor(DesignNode.class, Element.class );
                         
                         return constructor.newInstance( uppersDE, elt  );
 
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-                        Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(Interface.class.getName()).log(Level.WARNING, null, ex);
                             ex.printStackTrace(); // Print the stack trace
-
-                        return null;
+                                 throw new XMLErrorInModelException("Error in the creation of this Transformer :  " + type);
                 }
 }
           
           
           
-             /**
-         * This code will load the layer using a Strin identifier to get the type of the Layer
-         * @param type
-         * @param upperDE
-         * @param elt
-         * @return
-         * @throws XMLErrorInModelException 
-         */
-          public static ImageTransformer createTransformer(String type,  DesignNode upperDE,Element elt ) throws XMLErrorInModelException {
-                  ArrayList<DesignNode> arr = new ArrayList<>();
-                          arr.add(upperDE);
-                  return createTransformer(type,arr,elt);
-          }
 }

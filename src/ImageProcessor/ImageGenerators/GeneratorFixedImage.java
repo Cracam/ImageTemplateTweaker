@@ -42,7 +42,7 @@ public class GeneratorFixedImage extends ImageGenerator {
         }
 
         @Override
-        public void DRYgenerateFromElement(Element elt) throws XMLErrorInModelException {
+        protected void generateFromElement() throws XMLErrorInModelException {
               this.imageName = elt.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
         }
 

@@ -1,5 +1,6 @@
 package ImageProcessor;
 
+import AppInterface.DesignInterfaceLinker;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 
 import ImageProcessor.ImageGenerators.GeneratorCustomImage;
@@ -51,13 +52,16 @@ public abstract class ImageGenerator extends ImageDimentioner {
          */
         public static ImageGenerator createGenerator(String type, DesignNode upperDE, Element elt) throws XMLErrorInModelException {
 
-                if (!generatorTypesMap.containsKey(type)) {
+              Class classBuilder = DesignInterfaceLinker.getDesignNode(type);
+                
+                if (classBuilder==null || classBuilder.isAssignableFrom(ImageGenerator.class)) {
                         throw new XMLErrorInModelException("This generator type does not exist : " + type);
-                }
+                } 
+                
 
                 try {
 
-                        Class<? extends ImageGenerator> subclass = generatorTypesMap.get(type);
+                        Class<? extends ImageGenerator> subclass = classBuilder;
                         Constructor<? extends ImageGenerator> constructor = subclass.getConstructor(DesignNode.class, Element.class);
 
                         return constructor.newInstance(upperDE, elt);
@@ -65,8 +69,8 @@ public abstract class ImageGenerator extends ImageDimentioner {
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
                         Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
                         ex.printStackTrace(); // Print the stack trace
-
-                        return null;
+                         throw new XMLErrorInModelException("Error in the creation of this Generator :  " + type);
+                         
                 }
         }
 

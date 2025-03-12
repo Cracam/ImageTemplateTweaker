@@ -34,7 +34,7 @@ public class ImageBuilder extends ImageDimentioner {
         }
 
         @Override
-        public void DRYgenerateFromElement(Element elt) throws XMLErrorInModelException {
+        protected void generateFromElement() throws XMLErrorInModelException {
                 String key;
                 Element subElt;
                 DesignNode currentUpperDN;
@@ -55,7 +55,7 @@ public class ImageBuilder extends ImageDimentioner {
                                         try {
                                                 throw new XMLErrorInModelException("A XmlBloc named " + nodeTransformersList.item(i).getNodeName() + " in the imageBuilder : " + this.name + " xas detected ignoringit");
                                         } catch (XMLErrorInModelException ex) {
-                                                Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                                                Logger.getLogger(Interface.class.getName()).log(Level.WARNING , null, ex);
                                                 //ex.printStackTrace(); // Print the stack trace
                                         }
 
@@ -65,7 +65,7 @@ public class ImageBuilder extends ImageDimentioner {
                                         try {
                                                 currentUpperDN = new Layer(currentUpperDN, subElt);
                                         } catch (XMLErrorInModelException ex) {
-                                                Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                                                Logger.getLogger(DesignBuilder.class.getName()).log(Level.WARNING , null, ex);
                                         }
                                 }
                         }

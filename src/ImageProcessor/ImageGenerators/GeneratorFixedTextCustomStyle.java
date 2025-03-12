@@ -44,7 +44,7 @@ public class GeneratorFixedTextCustomStyle extends ImageGenerator {
         }
 
         @Override
-        public void DRYgenerateFromElement(Element elt) throws XMLErrorInModelException {
+        protected void generateFromElement() throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 

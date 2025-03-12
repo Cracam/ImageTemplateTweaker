@@ -27,9 +27,9 @@ public class GeneratorCustomImage extends ImageGenerator {
         }
 
         @Override
-        public void DRYgenerateFromElement(Element elt) throws XMLErrorInModelException {
+        protected void generateFromElement() throws XMLErrorInModelException {
         }
 
-       
+      
 
 }

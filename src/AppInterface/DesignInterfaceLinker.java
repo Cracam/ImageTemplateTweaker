@@ -5,11 +5,13 @@
 package AppInterface;
 
 import AppInterface.Interfaces.VoidInterface;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerators.GeneratorCustomImage;
 import ImageProcessor.ImageGenerators.GeneratorCustomText;
 import ImageProcessor.ImageGenerators.GeneratorFixedImage;
 import ImageProcessor.ImageGenerators.GeneratorFixedTextCustomStyle;
+import ImageProcessor.ImagesTransformers.TransformerCustomColor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +29,7 @@ public class DesignInterfaceLinker {
                 linkMap.put("G_Custom_Image", new DesignInterfacePair(GeneratorCustomImage.class, VoidInterface.class));
                 linkMap.put("G_Custom_Text", new DesignInterfacePair(GeneratorCustomText.class, VoidInterface.class));
                 linkMap.put("G_Fixed_Text_Custom_Color_Custom_Style", new DesignInterfacePair(GeneratorFixedTextCustomStyle.class, VoidInterface.class));
+                 linkMap.put("T_Custom_Color", new DesignInterfacePair(TransformerCustomColor.class, VoidInterface.class));
         }
 
         public static Class<? extends InterfaceNode> getLinkedInterface(Class<? extends DesignNode> designNodeClass) {
@@ -51,7 +54,12 @@ public class DesignInterfaceLinker {
                 }
                 return null; // ou lancer une exception si l'élément n'est pas trouvé
         }
-
+        
+        
+   
+        
+        
+        
         private static class DesignInterfacePair {
 
                 Class<? extends DesignNode> designNodeClass;

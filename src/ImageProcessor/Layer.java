@@ -92,7 +92,7 @@ public class Layer extends DesignNode {
                 DRYRefreshDPI();
 
                 currentUpperDN = this;
-                subElt = (Element) elt.getElementsByTagName("Transformers").item(0);
+                subElt = extractSingleElement(elt.getElementsByTagName("Transformers"));
                 if (subElt != null) {
 
                         NodeList nodeTransformersList = subElt.getChildNodes();
