@@ -13,13 +13,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.layout.VBox;
 import org.w3c.dom.Element;
 
 /**
  *
  * @author Camille LECOURT
  */
-public abstract class DesignNode {
+public abstract class DesignNode extends VBox{
         
         private final ArrayList<DesignNode> upperDN;
         protected String name;

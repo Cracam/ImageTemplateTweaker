@@ -9,21 +9,24 @@ import org.w3c.dom.Element;
  *
  * @author Camille LECOURT
  */
-public class InterfaceContainer extends InterfaceNode {
+public abstract class InterfaceContainer extends InterfaceNode {
 
         private final String name;
 
-        private final VBox containerVbox;
+        private  VBox containerVbox;
 
-        public InterfaceContainer(String name, InterfaceNode upperIN, VBox containerVbox) {
+        public InterfaceContainer(String name, InterfaceNode upperIN) {
                 super(upperIN);
                 this.name = name;
+        }
+        
+        protected void giveVBox(VBox containerVbox){
                 this.containerVbox = containerVbox;
         }
 
         @Override
         protected Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                return null;
         }
 
         @Override
@@ -37,14 +40,6 @@ public class InterfaceContainer extends InterfaceNode {
         }
 
 
-        @Override
-        public Element DRYsaveDesign(Document doc) {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
-
-        @Override
-        protected void initialiseInterface() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
+      
 
 }

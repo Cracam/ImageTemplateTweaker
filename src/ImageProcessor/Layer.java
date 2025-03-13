@@ -13,6 +13,8 @@ import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.getStringAttribute;
 import AppInterface.DesignBuilder;
 import AppInterface.DesignInterfaceLinker;
+import AppInterface.InterfaceNode;
+import AppInterface.LayerContainer;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import java.awt.image.BufferedImage;
@@ -147,5 +149,10 @@ public class Layer extends DesignNode {
         public String getTabName() {
                 return tabName;
         }
+                @Override
+                public  InterfaceNode createLinkedInterface(InterfaceNode upperInter){
+                        return new LayerContainer(name, upperInter);
+                }
+
 
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<fx:root type="VBox" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TitledPane fx:id="titledPane">
+         <content>
+            <VBox fx:id="containerVBox" />
+         </content>
+      </TitledPane>
+   </children>
+</fx:root>

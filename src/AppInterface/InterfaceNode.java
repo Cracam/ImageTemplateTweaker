@@ -9,6 +9,8 @@ import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
 import ResourcesManager.ResourcesManager;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.layout.VBox;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -72,9 +74,12 @@ public abstract class InterfaceNode extends VBox {
                 if (subelt != element) {
                         index = 0;
                 }
-                
-                for (InterfaceNode lInter : lowerInterfaces) {
-                        lInter.DRYLoadDesign(subelt, index);
+                try{
+                        for (InterfaceNode lInter : lowerInterfaces) {
+                                lInter.DRYLoadDesign(subelt, index);
+                        }
+                }catch(XMLErrorInModelException ex){
+                            Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
         }
