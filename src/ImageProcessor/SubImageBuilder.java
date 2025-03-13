@@ -24,6 +24,8 @@ public class SubImageBuilder extends ImageDimentioner {
         public SubImageBuilder(DesignNode upperDE, Element elt ) throws XMLErrorInModelException {
                 super(upperDE, elt);
                 generateFromElement();
+                                DRYRefreshDPI();
+
         }
 
         

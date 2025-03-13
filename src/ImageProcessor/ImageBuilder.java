@@ -26,6 +26,8 @@ public class ImageBuilder extends ImageDimentioner {
                 super(upperDE, elt);
                 this.designBuilder = designBuilder;
                 generateFromElement();
+                 DRYRefreshDPI();
+
         }
 
         @Override
@@ -64,6 +66,7 @@ public class ImageBuilder extends ImageDimentioner {
                                         //  key = subSubElt.getNodeName(); // key for defining the layer and the Interface
                                         try {
                                                 currentUpperDN = new Layer(currentUpperDN, subElt);
+                                                System.out.println( currentUpperDN.toString());
                                         } catch (XMLErrorInModelException ex) {
                                                 Logger.getLogger(DesignBuilder.class.getName()).log(Level.WARNING , null, ex);
                                         }

@@ -32,6 +32,8 @@ public abstract class ImageTransformer extends DesignNode{
         public ImageTransformer( DesignNode upperDE,  Element elt) throws XMLErrorInModelException {
                 super( upperDE,  elt);
                 generateFromElement();
+                                DRYRefreshDPI();
+
         }
 
       
@@ -39,12 +41,12 @@ public abstract class ImageTransformer extends DesignNode{
         @Override
         public void DRYUpdate() {              
                 try {
-                 DesignNode lowerDN = this.getLowerDN(ImageTransformer.class);
+                 DesignNode lowerDN = this.getLowerDNForChilds(ImageTransformer.class);
                         if (lowerDN == null) {
-                                lowerDN = this.getLowerDN(ImageGenerator.class);
+                                lowerDN = this.getLowerDNForChilds(ImageGenerator.class);
                         }
                         if (lowerDN == null) {
-                                 throw new DesingNodeLowerNodeIsAnormalyVoidException("The Layer" + this.name + " does not have the ImageGenerator");
+                                 throw new DesingNodeLowerNodeIsAnormalyVoidException("The Transformer " + this.name + " does not have the ImageGenerator or Image Transformer under him");
                         }
                         DRY_DRYUpdate( lowerDN.getImageOut()); 
                         
@@ -103,7 +105,10 @@ public abstract class ImageTransformer extends DesignNode{
                                  throw new XMLErrorInModelException("Error in the creation of this Transformer :  " + type);
                 }
 }
-          
+          @Override
+          protected String DRYtoString(){
+                  return "";
+          }
           
           
 }

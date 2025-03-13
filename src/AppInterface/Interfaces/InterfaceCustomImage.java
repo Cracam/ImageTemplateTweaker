@@ -27,7 +27,7 @@ import staticFunctions.StaticImageEditing;
 public class InterfaceCustomImage extends InterfaceNode {
 
         @FXML
-        private ImageLoaderInterface LoaderInterface;
+        private ImageLoaderInterface loaderInterface;
 
         public InterfaceCustomImage(InterfaceNode upperIN) {
                 super(upperIN);
@@ -46,10 +46,10 @@ public class InterfaceCustomImage extends InterfaceNode {
                         fxmlLoader.load();
 
                         // Add a listener to the changed property
-                        LoaderInterface.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                        loaderInterface.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                                 if (newValue) {
                                         //    System.out.println("trigered");
-                                        LoaderInterface.setChanged(false);
+                                        loaderInterface.setChanged(false);
                                         this.updateLinkedDesignNodes();
                                 }
                         });
@@ -88,7 +88,7 @@ public class InterfaceCustomImage extends InterfaceNode {
          * @return
          */
         public BufferedImage getImageOut(int x, int y) {
-                return StaticImageEditing.ResizeImage(LoaderInterface.getImage_out(), x, y);
+                return StaticImageEditing.ResizeImage(loaderInterface.getImage_out(), x, y);
         }
 
         @Override

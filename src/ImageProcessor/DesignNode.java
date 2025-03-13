@@ -154,6 +154,48 @@ public abstract class DesignNode extends VBox{
                 return null;
         }
         
+        
+        
+      /**
+       * this return all the class that are sub classes of the entry
+       * @param nodeClass
+       * @return 
+       */
+    public DesignNode getLowerDNForChilds(Class<?> nodeClass) {
+        if (lowersDN == null) {
+            return null;
+        }
+        for (DesignNode designNode : lowersDN) {
+            if (nodeClass.isAssignableFrom(designNode.getClass())) {
+                return designNode;
+            }
+        }
+        return null; // Retourne null si aucun élément correspondant n'est trouvé
+    }
+
+/**
+ *  this return all the class that are sub classes of the entry
+ * @param nodeClass
+ * @return 
+ */
+    public DesignNode getUpperDNForChilds(Class<?> nodeClass) {
+        if (upperDN == null) {
+            System.out.println("### case 1");
+            return null;
+        }
+
+        for (DesignNode upper : upperDN) {
+            if (nodeClass.isAssignableFrom(upper.getClass())) {
+                return upper;
+            } else {
+                DesignNode result = upper.getUpperDN(nodeClass);
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+        return null;
+    }
  
 
         public DesignNode getUpperOrHimselfDN(Class<?> nodeClass) {
@@ -172,13 +214,13 @@ public abstract class DesignNode extends VBox{
                                         throw new ThisInterfaceDoesNotExistException("this interface node dont exist yet for "+this.getClass().getName());
                         }
                         Constructor<? extends InterfaceNode> constructor = subclass.getConstructor(InterfaceNode.class);
-                        linkedinterface=constructor.newInstance(upperInter);
+                        constructor.newInstance(upperInter).addDesignNode(this);//Set the link between the interface and the layer in both directions
                         return linkedinterface;
 
                 } catch (ThisInterfaceDoesNotExistException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
                         Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
                         ex.printStackTrace(); // Print the stack trace
-
+                        System.out.println("ERROR for "+this.getClass().getName());
                         return null;
                 }
         }
@@ -251,8 +293,21 @@ public abstract class DesignNode extends VBox{
         public InterfaceNode getLinkedinterface() {
                 return linkedinterface;
         }
+        
+        @Override
+        public String toString(){
+                return toString("");
+        }
 
+          public String toString(String deb){
+                  deb=deb+this.DRYtoString();
+                     for (DesignNode lInter : lowersDN) {
+                        deb = "\n     "+deb +lInter.getClass().getName()+"   "+ lInter.toString();
+                }
+                  return deb;
+          }
           
+          protected abstract String DRYtoString();
 }
           
         

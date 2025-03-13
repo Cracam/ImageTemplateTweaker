@@ -23,14 +23,19 @@ public abstract class ImageDimentioner extends DesignNode {
         }
         
         
- public void setDim(int x_size,int y_size){
+ public void setDim(float  x_size,float y_size){
          this.x_size=x_size;
          this.y_size=y_size;
+         DRYRefreshDPI();
+         
  }
        
 
         
-     
+        @Override
+          protected String DRYtoString(){
+                  return " of size : "+this.x_p_size+"  ,  "+this.y_p_size;
+          }
       
         
         
@@ -39,19 +44,13 @@ public abstract class ImageDimentioner extends DesignNode {
         
          
          
-         
-           /**
-         * this function is use to compute the size of the image in pixel
-         */
-        private void computeXY_p_size() {
-                float factor =( (ImageBuilder )getUpperOrHimselfDN(ImageBuilder.class)).getDesignBuilder().getPixelMmFactor();
-                this.x_p_size = (int) (this.x_size * factor);
-                this.y_p_size = (int) (this.y_size * factor);
-        }
-         
+
             @Override
         public void DRYRefreshDPI() {
-              computeXY_p_size();
+               float factor =( (ImageBuilder )getUpperOrHimselfDN(ImageBuilder.class)).getDesignBuilder().getPixelMmFactor();
+                System.out.println("taille du facteur"+factor);
+                this.x_p_size = (int) (this.x_size * factor);
+                this.y_p_size = (int) (this.y_size * factor);
         }
         
 }

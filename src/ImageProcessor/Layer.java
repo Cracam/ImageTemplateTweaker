@@ -20,6 +20,7 @@ import static ResourcesManager.XmlManager.extractSingleElement;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.transform.Transformer;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -38,6 +39,8 @@ public class Layer extends DesignNode {
         public Layer(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
                 generateFromElement();
+                                DRYRefreshDPI();
+
         }
 
         @Override
@@ -46,12 +49,12 @@ public class Layer extends DesignNode {
                         BufferedImage image_get;
 
                         // Getting the right imageGet
-                        DesignNode lowerDN = this.getLowerDN(ImageTransformer.class);
+                        DesignNode lowerDN = this.getLowerDNForChilds(ImageTransformer.class);
                         if (lowerDN == null) {
-                                lowerDN = this.getLowerDN(ImageGenerator.class);
+                                lowerDN = this.getLowerDNForChilds(ImageGenerator.class);
                         }
                         if (lowerDN == null) {
-                                throw new DesingNodeLowerNodeIsAnormalyVoidException("The Layer" + this.name + " does not have the ImageGenerator");
+                                throw new DesingNodeLowerNodeIsAnormalyVoidException("The Layer : " + this.name + " does not have the ImageGenerator");
                         }
                         image_get = lowerDN.getImageOut();
 
@@ -114,7 +117,6 @@ public class Layer extends DesignNode {
                 ////////
                 //creating the last element of the chain if there is generator.
                 //if not it will be linked to another layer.
-                System.out.println("\n\n####### " + elt.toString() + "\n#########");
                 subElt = extractSingleElement(elt.getElementsByTagName("Generator"));
 
                 if (subElt == null) {
@@ -130,7 +132,7 @@ public class Layer extends DesignNode {
                 key = subSubElt.getNodeName();
 
                 currentUpperDN = createGenerator(key, currentUpperDN, subSubElt);//mettre 
-                ((ImageGenerator) currentUpperDN).setDim(pixelPosSize.getSize_x(), pixelPosSize.getSize_y());
+                ((ImageGenerator) currentUpperDN).setDim(posSize.getSize_x(), posSize.getSize_y());
 
         }
 
@@ -151,8 +153,14 @@ public class Layer extends DesignNode {
         }
                 @Override
                 public  InterfaceNode createLinkedInterface(InterfaceNode upperInter){
-                        return new LayerContainer(name, upperInter);
+                         
+                           InterfaceNode inter=     new LayerContainer(name, upperInter);
+                        inter.addDesignNode(this);
+                        return inter;
                 }
 
-
+   @Override
+          protected String DRYtoString(){
+                  return "of name : "+this.name+" of Pos Size : "+this.pixelPosSize.toString();
+          }
 }

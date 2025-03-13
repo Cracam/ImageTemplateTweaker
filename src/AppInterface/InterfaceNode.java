@@ -23,8 +23,8 @@ import org.w3c.dom.NodeList;
 public abstract class InterfaceNode extends VBox {
         
         InterfaceNode upperInterface;
-        private ArrayList<InterfaceNode> lowerInterfaces;
-        private ArrayList<DesignNode> linkedDesignNodes;
+        private final ArrayList<InterfaceNode> lowerInterfaces=new ArrayList<>();
+        private final ArrayList<DesignNode> linkedDesignNodes=new ArrayList<>();
 
         // Constructeur prenant un seul upperDN
         public InterfaceNode(InterfaceNode upperIN) {
@@ -135,6 +135,13 @@ public abstract class InterfaceNode extends VBox {
                        }
                               
           }
+
+        public ArrayList<DesignNode> getLinkedDesignNodes() {
+                return linkedDesignNodes;
+        }
+               
+               
+               
 }
             
             

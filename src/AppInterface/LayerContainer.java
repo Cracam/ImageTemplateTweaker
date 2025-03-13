@@ -27,6 +27,8 @@ public class LayerContainer extends InterfaceContainer {
         
         @FXML
         private TitledPane titledPane;
+        
+        
 
         public LayerContainer(String name, InterfaceNode upperIN) {
                 super(name, upperIN);

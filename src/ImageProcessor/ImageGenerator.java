@@ -25,6 +25,8 @@ public abstract class ImageGenerator extends ImageDimentioner {
         public ImageGenerator(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
                 generateFromElement();
+                                DRYRefreshDPI();
+
         }
 
        
@@ -75,5 +77,6 @@ public abstract class ImageGenerator extends ImageDimentioner {
         }
 
         
+          
 
 }
