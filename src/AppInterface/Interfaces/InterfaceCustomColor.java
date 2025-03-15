@@ -2,27 +2,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package interfaces;
+package AppInterface.Interfaces;
 
 import Exeptions.ResourcesFileErrorException;
 import GradientCreatorInterface.GradientCreatorInterface;
-import ResourcesManager.XmlManager;
-import AppInterface.DesignBuilder;
+import AppInterface.InterfaceNode;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TitledPane;
-import javafx.scene.image.ImageView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import previewimagebox.PreviewImageBox;
 import staticFunctions.StaticImageEditing;
 
@@ -30,18 +25,18 @@ import staticFunctions.StaticImageEditing;
  *
  * @author Camille LECOURT
  */
-public class InterfaceCustomColor extends Interface {
+public class InterfaceCustomColor extends InterfaceNode {
 
-        @FXML
-        private PreviewImageBox Preview;
+        
 
         @FXML
         private GradientCreatorInterface gradientPicker;
 
         
-        public InterfaceCustomColor(String interfaceName, DesignBuilder designBuilder) {
-                super(interfaceName, designBuilder);
+        public InterfaceCustomColor(InterfaceNode upperIN) {
+                super(upperIN);
         }
+
 
         @Override
         protected void initialiseInterface() {
@@ -61,13 +56,12 @@ public class InterfaceCustomColor extends Interface {
                                 if (newValue) {
                                         // System.out.println("trigered");
                                         gradientPicker.setChanged(false);
-                                        
-                                        this.refreshLayers();
-                                        this.refreshImageBuilders();
+                                          this.updateLinkedDesignNodes();
+
+                                    
                                  //       System.out.println("(1) CHANGGE DEECTED " + linkedImagesBuilders.size());
                                 }
                         });
-                        setPreview(Preview);
                                 
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
@@ -79,16 +73,17 @@ public class InterfaceCustomColor extends Interface {
         
         
         @Override
-        public Node saveInterfaceData(Document doc) {
-                  XmlManager xmlManager = new XmlManager(doc);
-                xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()), "Color_2", StaticImageEditing.colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
-                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
+            public Element DRYsaveDesign(Document doc) {
+//                  XmlManager xmlManager = new XmlManager(doc);
+//                xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()), "Color_2", StaticImageEditing.colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
+//                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
+return null;
         }
 
         
         
         @Override
-        public void loadInterfaceData(Element dataOfTheLayer) {
+        protected Element  DRYLoadDesign(Element dataOfTheLayer,int index) {
                String gradientName = dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Gradient_Name").getNodeValue();
 
                 Color color1 = StaticImageEditing.hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_1").getNodeValue());
@@ -100,15 +95,19 @@ public class InterfaceCustomColor extends Interface {
                 
                 System.out.println(" gradient  "+gradientName+"  "+ color1+"  "+ color2+"  "+colorIntensity+"  "+ param1+"  "+ param2);
                 gradientPicker.setInterfaceState(gradientName, color1, color2, colorIntensity, param1, param2);
+                return null;
         }
         
         
         
         
-        public BufferedImage getImageOut(int x,int y, int[][] opacityMap){
+        public BufferedImage getImageOut(int[][] opacityMap){
                 return this.gradientPicker.getImageOut(opacityMap);
         }
-        
+
+       
+
+       
 
 
         

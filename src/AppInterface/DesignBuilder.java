@@ -425,6 +425,9 @@ public class DesignBuilder extends Application {
 
         }
 
+        public void refreshPreviewImageBox(ImageBuilder imgBuilder){
+                preview.setImageView(imgBuilder.getId(),staticFunctions.StaticImageEditing.createImageView(imgBuilder.getImageOut()));
+        }
 }
 
 //CMD to  package in .exe

@@ -20,7 +20,6 @@ import static ResourcesManager.XmlManager.extractSingleElement;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.transform.Transformer;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -35,11 +34,11 @@ public class Layer extends DesignNode {
         protected QuadrupletFloat posSize;
         protected QuadrupletInt pixelPosSize = new QuadrupletInt(0, 0, 0, 0);
         protected String tabName;
-        
+
         public Layer(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
                 generateFromElement();
-                                DRYRefreshDPI();
+                DRYRefreshDPI();
 
         }
 
@@ -77,8 +76,8 @@ public class Layer extends DesignNode {
                 DesignNode currentUpperDN;
 
                 this.name = getStringAttribute(elt, "name", "ERROR");
-                 this.tabName = getStringAttribute(elt, "tab_name", "ERROR");
-                
+                this.tabName = getStringAttribute(elt, "tab_name", "ERROR");
+
                 subElt = extractSingleElement(elt.getElementsByTagName("pos"));
                 if (subElt == null) {
                         throw new XMLErrorInModelException("L'élément 'pos' du Layer " + this.name + "est manquant ou invalide.");
@@ -151,16 +150,17 @@ public class Layer extends DesignNode {
         public String getTabName() {
                 return tabName;
         }
-                @Override
-                public  InterfaceNode createLinkedInterface(InterfaceNode upperInter){
-                         
-                           InterfaceNode inter=     new LayerContainer(name, upperInter);
-                        inter.addDesignNode(this);
-                        return inter;
-                }
 
-   @Override
-          protected String DRYtoString(){
-                  return "of name : "+this.name+" of Pos Size : "+this.pixelPosSize.toString();
-          }
+        @Override
+        public InterfaceNode createLinkedInterface(InterfaceNode upperInter) {
+
+                InterfaceNode inter = new LayerContainer(name, upperInter);
+                inter.addDesignNode(this);
+                return inter;
+        }
+
+        @Override
+        protected String DRYtoString() {
+                return "of name : " + this.name + " of Pos Size : " + this.pixelPosSize.toString();
+        }
 }

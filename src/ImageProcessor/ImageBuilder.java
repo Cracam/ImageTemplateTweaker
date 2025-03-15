@@ -33,6 +33,7 @@ public class ImageBuilder extends ImageDimentioner {
         @Override
         public void DRYUpdate() {
                 this.imageOut = this.getLowerDN(Layer.class).getImageOut();
+                this.designBuilder.refreshPreviewImageBox(this);
         }
 
         @Override

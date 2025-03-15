@@ -4,6 +4,7 @@
  */
 package ImageProcessor.ImagesTransformers;
 
+import AppInterface.Interfaces.InterfaceCustomColor;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageTransformer;
@@ -67,11 +68,17 @@ public  class TransformerCustomColor extends ImageTransformer {
         protected void generateFromElement() throws XMLErrorInModelException {
         }
         
+        
+        @Override
         public void DRY_DRYUpdate(BufferedImage img_in) {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                if(image_getRaw!=img_in){
+                        image_getRaw=img_in;
+                        opacityMap=staticFunctions.StaticImageEditing.transformToOpacityArray(img_in);
+                }
+                this.imageOut=((InterfaceCustomColor) (this.linkedinterface)).getImageOut(opacityMap);
         }
 
- 
+
 
 
    

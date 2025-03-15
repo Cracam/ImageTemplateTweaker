@@ -51,12 +51,24 @@ public class LayerContainer extends InterfaceContainer {
                         fxmlLoader.setController(this);
 
                         fxmlLoader.load();
-
+                        
+                        this.titledPane.setText(this.getName());
 
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                        java.util.logging.Logger.getLogger(DesignBuilder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                 }
         }
         
+        
+        @Override
+        public void placeInterface(InterfaceNode lowerInerface) {
+//                if(lowerInerface.getClass()!=LayerContainer.class){
+                      this.containerVBox.getChildren().add(0,lowerInerface);
+//                }else{
+//                         if (upperInterface != null) {
+//                                upperInterface.placeInterface(lowerInerface);
+//                        }
+//                }
+        }
         
 }

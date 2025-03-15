@@ -31,12 +31,16 @@ public abstract class InterfaceContainer extends InterfaceNode {
 
         @Override
         public void placeInterface(InterfaceNode lowerInerface) {
-                this.containerVbox.getChildren().add(lowerInerface);
+                this.containerVbox.getChildren().add(0,lowerInerface);
         }
 
         @Override
         public String DRYComputeUniqueID() {
                 return DesignInterfaceLinker.getIdentifier(this.getClass()) + name;
+        }
+
+        public String getName() {
+                return name;
         }
 
 
