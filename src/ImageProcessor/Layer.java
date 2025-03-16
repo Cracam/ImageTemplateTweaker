@@ -58,7 +58,7 @@ public class Layer extends DesignNode {
                         image_get = lowerDN.getImageOut();
 
                         DesignNode lowerLayer = this.getLowerDN(Layer.class);
-                        if (lowerLayer == null) {
+                        if (lowerLayer == null || lowerLayer.getImageOut()==null) {
                                 this.imageOut = image_get;
                         } else {
                                 this.imageOut = overlayImages(lowerLayer.getImageOut(), image_get);
@@ -161,6 +161,6 @@ public class Layer extends DesignNode {
 
         @Override
         protected String DRYtoString() {
-                return "of name : " + this.name + " of Pos Size : ";
+                return "of name : " + this.name+"\n";
         }
 }

@@ -43,5 +43,37 @@
 
 		</Output>	
 
+		<Output name="Verso" size_x="88" size_y="58" ><!-- Verso de la carte (côte nom prenom) -->
+
+				<Layer name="test" tab_name="Commum_">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Custom_Image>
+						</G_Custom_Image>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+							<Param>
+							</Param>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+				<Layer name="test___2" tab_name="Verso">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Custom_Image>
+						</G_Custom_Image>
+					</Generator>
+					<Transformers>
+					</Transformers>
+				</Layer>
+
+				
+
+		</Output>	
+
 </Model>
 	

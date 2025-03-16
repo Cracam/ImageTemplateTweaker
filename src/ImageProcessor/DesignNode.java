@@ -86,9 +86,14 @@ public abstract class DesignNode extends VBox {
         }
 
         public void updateLower() {
-
-                for (DesignNode lower : lowersDN) {
-                        lower.updateLower();
+                if(lowersDN.isEmpty()){
+                //        System.out.println("TTTTTTTTTTT : "+this.getClass());
+                        update();
+                          
+                }else{
+                        for (DesignNode lower : lowersDN) {
+                                lower.updateLower();
+                        }
                 }
         }
 
@@ -289,7 +294,7 @@ public abstract class DesignNode extends VBox {
         public String toString(String deb) {
                 deb = deb + this.DRYtoString();
                 for (DesignNode lInter : lowersDN) {
-                        deb = "\n     " + deb + lInter.getClass().getName() + "   " + lInter.toString();
+                        deb = "\n ##########################################################################\n    " + deb + lInter.getClass().getName() + "   " + lInter.toString();
                 }
                 return deb;
         }

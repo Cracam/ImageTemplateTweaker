@@ -155,6 +155,8 @@ public class DesignBuilder extends Application {
         private void refreshEverything() {
                 for (int i = 0; i < imageBuilders.size(); i++) {
                         this.imageBuilders.get(i).updateLower();
+                       refreshPreviewImageBox( this.imageBuilders.get(i));
+                                 
                 }
         }
 
@@ -426,7 +428,8 @@ public class DesignBuilder extends Application {
         }
 
         public void refreshPreviewImageBox(ImageBuilder imgBuilder){
-                preview.setImageView(imgBuilder.getId(),staticFunctions.StaticImageEditing.createImageView(imgBuilder.getImageOut()));
+                preview.setImageView(imgBuilder.DRYComputeUniqueID(),staticFunctions.StaticImageEditing.createImageView(imgBuilder.getImageOut()));
+                //System.out.println("#######"+imgBuilder.getId());
         }
 }
 

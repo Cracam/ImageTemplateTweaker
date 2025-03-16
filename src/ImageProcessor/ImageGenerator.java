@@ -10,7 +10,6 @@ import ImageProcessor.ImageGenerators.GeneratorFixedTextCustomStyle;
 import interfaces.Interface;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,8 +24,6 @@ public abstract class ImageGenerator extends ImageDimentioner {
         public ImageGenerator(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
                 generateFromElement();
-                                DRYRefreshDPI();
-
         }
 
        

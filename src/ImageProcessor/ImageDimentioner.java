@@ -2,8 +2,7 @@
 package ImageProcessor;
 
 import Exceptions.XMLExeptions.XMLErrorInModelException;
-import ResourcesManager.XmlManager;
-import static ResourcesManager.XmlManager.getStringAttribute;
+import java.awt.image.BufferedImage;
 
 import org.w3c.dom.Element;
 
@@ -51,6 +50,7 @@ public abstract class ImageDimentioner extends DesignNode {
                 System.out.println("taille du facteur"+factor);
                 this.x_p_size = (int) (this.x_size * factor);
                 this.y_p_size = (int) (this.y_size * factor);
+                 this.imageOut=new BufferedImage(x_p_size, x_p_size, BufferedImage.TYPE_INT_ARGB);
         }
         
 }

@@ -27,7 +27,7 @@ public class ImageBuilder extends ImageDimentioner {
                 this.designBuilder = designBuilder;
                 generateFromElement();
                  DRYRefreshDPI();
-
+                 
         }
 
         @Override
@@ -44,7 +44,8 @@ public class ImageBuilder extends ImageDimentioner {
                 
                 
                 this.name = getStringAttribute(elt, "name", "ERROR");
-                  x_size = getFloatAttribute(elt, "size_x", 0);
+                //System.out.println("gggggggggggggggggggggg"+name);
+                x_size = getFloatAttribute(elt, "size_x", 0);
                 y_size= getFloatAttribute(elt, "size_y", 0);
 
                 currentUpperDN = this;
@@ -84,7 +85,7 @@ public class ImageBuilder extends ImageDimentioner {
 
         @Override
         public String DRYComputeUniqueID() {
-                return DesignInterfaceLinker.getIdentifier(this.getClass()) + name;
+                return "Interface : " + this.name;
         }
 
         @Override
