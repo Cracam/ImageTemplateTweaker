@@ -161,6 +161,6 @@ public class Layer extends DesignNode {
 
         @Override
         protected String DRYtoString() {
-                return "of name : " + this.name + " of Pos Size : " + this.pixelPosSize.toString();
+                return "of name : " + this.name + " of Pos Size : ";
         }
 }

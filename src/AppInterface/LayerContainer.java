@@ -60,15 +60,6 @@ public class LayerContainer extends InterfaceContainer {
         }
         
         
-        @Override
-        public void placeInterface(InterfaceNode lowerInerface) {
-//                if(lowerInerface.getClass()!=LayerContainer.class){
-                      this.containerVBox.getChildren().add(0,lowerInerface);
-//                }else{
-//                         if (upperInterface != null) {
-//                                upperInterface.placeInterface(lowerInerface);
-//                        }
-//                }
-        }
+      
         
 }

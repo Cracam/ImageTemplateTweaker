@@ -17,6 +17,7 @@ public class VoidInterface extends InterfaceNode {
 
         public VoidInterface(InterfaceNode upperIN) {
                 super(upperIN);
+           //      upperInterface.placeInterface(this);
         }
 
 

@@ -31,6 +31,7 @@ public class InterfaceCustomImage extends InterfaceNode {
 
         public InterfaceCustomImage(InterfaceNode upperIN) {
                 super(upperIN);
+                 upperInterface.placeInterface(this);
         }
 
         @Override

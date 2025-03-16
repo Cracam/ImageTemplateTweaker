@@ -78,7 +78,7 @@ public class ImageBuilder extends ImageDimentioner {
         }
 
         public DesignBuilder getDesignBuilder() {
-                System.out.println("Design builder dammanded");
+         //       System.out.println("Design builder dammanded");
                 return this.designBuilder;
         }
 

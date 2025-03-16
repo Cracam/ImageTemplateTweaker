@@ -22,7 +22,7 @@ import org.w3c.dom.NodeList;
  */
 public abstract class InterfaceNode extends VBox {
         
-        InterfaceNode upperInterface;
+        protected InterfaceNode upperInterface;
         private final ArrayList<InterfaceNode> lowerInterfaces=new ArrayList<>();
         private final ArrayList<DesignNode> linkedDesignNodes=new ArrayList<>();
 
@@ -33,7 +33,7 @@ public abstract class InterfaceNode extends VBox {
                 initialiseInterface();
                 if(upperInterface!=null){
                         upperInterface.addLowerIN(this);
-                        upperInterface.placeInterface(this);
+                      
                 }
                 
         }
@@ -140,8 +140,7 @@ public abstract class InterfaceNode extends VBox {
                 return linkedDesignNodes;
         }
                
-               
-               
+      
 }
             
             

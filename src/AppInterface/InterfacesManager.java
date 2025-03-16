@@ -69,19 +69,20 @@ public class InterfacesManager {
 
         
         public void createInterfaceFromImageBuilderList(ArrayList<ImageBuilder> imageBuilders){
-                
+                //We want to rassemble all the layer into only one lis aviding the duplicates
                  ArrayList<DesignNode> layersList = new ArrayList<>();
                  
                         for (int i = 0; i < imageBuilders.size(); i++) {
-                                Set<DesignNode> combinedSet = new HashSet<>(imageBuilders.get(i).getAllDirectLowerDN());
+                                Set<DesignNode> combinedSet = new HashSet<>(imageBuilders.get(i).getAllLowerDNOff(Layer.class));
                                 combinedSet.addAll(layersList);
                                 layersList = new ArrayList<>(combinedSet);
                         }
-
+                        
                    
                             ArrayList<Layer> linkedLayers = new ArrayList<>();
                       
                       
+                            //now wae want to create them
                        boolean alreadyCreated=false;
                        Layer alredyCreatedLayer=null;
                         for(DesignNode layer : layersList ){
@@ -102,7 +103,7 @@ public class InterfacesManager {
                                                         Logger.getLogger(InterfacesManager.class.getName()).log(Level.SEVERE, null, ex);
                                                 }
                                        }else{
-                                                 layer.createInterfaceTreeFromNodeTree(null);
+                                                 layer.createInterfaceTreeFromNodeTree(null,Layer.class);
                                                  addInterface((InterfaceContainer) layer.getLinkedinterface());
                                                  System.out.println("Interface qe want to add"+layer.getLinkedinterface());
                                                   assignInterfaceToTab( ((Layer) layer).getTabName(),layer.getLinkedinterface());
