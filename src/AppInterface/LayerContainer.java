@@ -5,10 +5,7 @@
 package AppInterface;
 
 import Exeptions.ResourcesFileErrorException;
-import com.sun.javafx.logging.PlatformLogger.Level;
-import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
-import java.lang.System.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TitledPane;
@@ -30,8 +27,8 @@ public class LayerContainer extends InterfaceContainer {
         
         
 
-        public LayerContainer(String name, InterfaceNode upperIN) {
-                super(name, upperIN);
+        public LayerContainer( InterfaceNode upperIN,String name) {
+                super( upperIN,name);
                 giveVBox(containerVBox);
         }
 
@@ -53,7 +50,9 @@ public class LayerContainer extends InterfaceContainer {
                         fxmlLoader.load();
                         
                         this.titledPane.setText(this.getName());
-
+//                        System.out.println("TTTTTTTTTTTTTTTTTTTTTTTT"+this.getName());
+                        
+                        
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                        java.util.logging.Logger.getLogger(DesignBuilder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                 }

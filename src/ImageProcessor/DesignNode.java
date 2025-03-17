@@ -207,8 +207,8 @@ public abstract class DesignNode extends VBox {
                         if (subclass == null || subclass.isAssignableFrom(InterfaceNode.class)) {
                                 throw new ThisInterfaceDoesNotExistException("this interface node dont exist yet for " + this.getClass().getName());
                         }
-                        Constructor<? extends InterfaceNode> constructor = subclass.getConstructor(InterfaceNode.class);
-                        constructor.newInstance(upperInter).addDesignNode(this);//Set the link between the interface and the layer in both directions
+                        Constructor<? extends InterfaceNode> constructor = subclass.getConstructor(InterfaceNode.class,String.class);
+                        constructor.newInstance(upperInter,"").addDesignNode(this);//Set the link between the interface and the layer in both directions
                         return linkedinterface;
 
                 } catch (ThisInterfaceDoesNotExistException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
@@ -271,6 +271,7 @@ public abstract class DesignNode extends VBox {
         }
 
         public String DRYComputeUniqueID() {
+          //      System.out.println("EEEEEEEE"+DesignInterfaceLinker.getIdentifier(this.getClass()));
                 return DesignInterfaceLinker.getIdentifier(this.getClass());
         }
 
@@ -294,7 +295,7 @@ public abstract class DesignNode extends VBox {
         public String toString(String deb) {
                 deb = deb + this.DRYtoString();
                 for (DesignNode lInter : lowersDN) {
-                        deb = "\n ##########################################################################\n    " + deb + lInter.getClass().getName() + "   " + lInter.toString();
+                        deb = "\n"+ deb + lInter.getClass().getName() + "   " + lInter.toString();
                 }
                 return deb;
         }

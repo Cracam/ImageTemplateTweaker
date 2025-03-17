@@ -2,7 +2,6 @@ package AppInterface;
 
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import javafx.scene.layout.VBox;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -11,13 +10,12 @@ import org.w3c.dom.Element;
  */
 public abstract class InterfaceContainer extends InterfaceNode {
 
-        private final String name;
+     
 
         private  VBox containerVbox;
 
-        public InterfaceContainer(String name, InterfaceNode upperIN) {
-                super(upperIN);
-                this.name = name;
+        public InterfaceContainer( InterfaceNode upperIN,String name) {
+                super(upperIN,name);
         }
         
         protected void giveVBox(VBox containerVbox){
@@ -36,14 +34,8 @@ public abstract class InterfaceContainer extends InterfaceNode {
 
         @Override
         public String DRYComputeUniqueID() {
-                return DesignInterfaceLinker.getIdentifier(this.getClass()) + name;
+                return DesignInterfaceLinker.getIdentifier(this.getClass()) + this.getName();
         }
 
-        public String getName() {
-                return name;
-        }
-
-
-      
-
+    
 }

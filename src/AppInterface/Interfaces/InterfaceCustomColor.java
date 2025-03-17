@@ -33,8 +33,8 @@ public class InterfaceCustomColor extends InterfaceNode {
         private GradientCreatorInterface gradientPicker;
 
         
-        public InterfaceCustomColor(InterfaceNode upperIN) {
-                super(upperIN);
+        public InterfaceCustomColor(InterfaceNode upperIN,String name) {
+                super(upperIN,name);
                 upperInterface.placeInterface(this);
         }
 

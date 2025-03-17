@@ -29,8 +29,8 @@ public class InterfaceCustomImage extends InterfaceNode {
         @FXML
         private ImageLoaderInterface loaderInterface;
 
-        public InterfaceCustomImage(InterfaceNode upperIN) {
-                super(upperIN);
+        public InterfaceCustomImage(InterfaceNode upperIN,String name) {
+                super(upperIN,name);
                  upperInterface.placeInterface(this);
         }
 

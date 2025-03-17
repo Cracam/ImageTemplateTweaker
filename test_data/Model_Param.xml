@@ -45,7 +45,7 @@
 
 		<Output name="Verso" size_x="88" size_y="58" ><!-- Verso de la carte (côte nom prenom) -->
 
-				<Layer name="test" tab_name="Commum_">
+				<Layer name="test" tab_name="Commum">
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>
 					<Generator>

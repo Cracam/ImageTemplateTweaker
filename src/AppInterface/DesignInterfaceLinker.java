@@ -32,7 +32,7 @@ public class DesignInterfaceLinker {
                 linkMap.put("G_Custom_Text", new DesignInterfacePair(GeneratorCustomText.class, VoidInterface.class));
                 linkMap.put("G_Fixed_Text_Custom_Color_Custom_Style", new DesignInterfacePair(GeneratorFixedTextCustomStyle.class, VoidInterface.class));
                  linkMap.put("T_Custom_Color", new DesignInterfacePair(TransformerCustomColor.class, InterfaceCustomColor.class));
-                 linkMap.put("Layer", new DesignInterfacePair(Layer.class, InterfaceContainer.class));
+                 linkMap.put("Layer", new DesignInterfacePair(Layer.class, LayerContainer.class));
         }
 
         public static Class<? extends InterfaceNode> getLinkedInterface(Class<? extends DesignNode> designNodeClass) {

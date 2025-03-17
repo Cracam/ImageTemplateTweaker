@@ -153,14 +153,13 @@ public class Layer extends DesignNode {
 
         @Override
         public InterfaceNode createLinkedInterface(InterfaceNode upperInter) {
-
-                InterfaceNode inter = new LayerContainer(name, upperInter);
+                InterfaceNode inter = new LayerContainer( upperInter,name);
                 inter.addDesignNode(this);
                 return inter;
         }
 
         @Override
         protected String DRYtoString() {
-                return "of name : " + this.name+"\n";
+                return "\n of name : " + this.name+"\n";
         }
 }

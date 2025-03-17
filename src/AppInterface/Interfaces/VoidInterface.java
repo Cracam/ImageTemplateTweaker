@@ -15,8 +15,8 @@ import org.w3c.dom.Element;
  */
 public class VoidInterface extends InterfaceNode {
 
-        public VoidInterface(InterfaceNode upperIN) {
-                super(upperIN);
+        public VoidInterface(InterfaceNode upperIN,String name) {
+                super(upperIN,name);
            //      upperInterface.placeInterface(this);
         }
 

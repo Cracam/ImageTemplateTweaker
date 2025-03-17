@@ -22,14 +22,17 @@ import org.w3c.dom.NodeList;
  */
 public abstract class InterfaceNode extends VBox {
         
+        private final  String name;
+           
         protected InterfaceNode upperInterface;
         private final ArrayList<InterfaceNode> lowerInterfaces=new ArrayList<>();
         private final ArrayList<DesignNode> linkedDesignNodes=new ArrayList<>();
 
         // Constructeur prenant un seul upperDN
-        public InterfaceNode(InterfaceNode upperIN) {
+        public InterfaceNode(InterfaceNode upperIN,String name) {
+                this.name=name;
+                this.upperInterface = upperIN;
                 
-                upperInterface = upperIN;
                 initialiseInterface();
                 if(upperInterface!=null){
                         upperInterface.addLowerIN(this);
@@ -139,7 +142,10 @@ public abstract class InterfaceNode extends VBox {
         public ArrayList<DesignNode> getLinkedDesignNodes() {
                 return linkedDesignNodes;
         }
-               
+             
+            public String getName() {
+                return name;
+        }
       
 }
             

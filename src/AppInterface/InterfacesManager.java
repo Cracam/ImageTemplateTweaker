@@ -77,7 +77,7 @@ public class InterfacesManager {
                                 combinedSet.addAll(layersList);
                                 layersList = new ArrayList<>(combinedSet);
                         }
-                        
+                         
                    
                             ArrayList<Layer> linkedLayers = new ArrayList<>();
                       
@@ -87,7 +87,6 @@ public class InterfacesManager {
                        Layer alredyCreatedLayer=null;
                         for(DesignNode layer : layersList ){
                                 if(layer.getClass()==Layer.class){
-                                        
                                         for(Layer linkedLayer : linkedLayers){
                                                 if(linkedLayer.ComputeUniqueID().equals(layer.ComputeUniqueID())){
                                                         alreadyCreated=true;
@@ -98,6 +97,7 @@ public class InterfacesManager {
                                         
                                        if(alreadyCreated){
                                                 try {
+                                                           System.out.println("########### unique ID to link : "+layer.ComputeUniqueID());
                                                         layer.linkDesignNodeToInterfaceNodes(alredyCreatedLayer.getLinkedinterface());
                                                 } catch (InvalidLinkbetweenNode ex) {
                                                         Logger.getLogger(InterfacesManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -107,6 +107,7 @@ public class InterfacesManager {
                                                  addInterface((InterfaceContainer) layer.getLinkedinterface());
                                                  System.out.println("Interface qe want to add"+layer.getLinkedinterface());
                                                   assignInterfaceToTab( ((Layer) layer).getTabName(),layer.getLinkedinterface());
+                                                  linkedLayers.add((Layer)layer);
                                        }
                                 }
                         }

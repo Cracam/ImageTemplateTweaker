@@ -128,6 +128,11 @@ public class DesignBuilder extends Application {
                                 try {
                                         ImageBuilder imgBuild = new ImageBuilder(null, (Element) outputNode, this);
                                         imageBuilders.add(imgBuild);
+                                        
+                                          System.out.println( "\n ##########################################################################\n    "
+                                                  +imgBuild.toString()
+                                                  +"\n ##########################################################################\n    ");
+                                          
                                 } catch (XMLErrorInModelException ex) {
                                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                 }
