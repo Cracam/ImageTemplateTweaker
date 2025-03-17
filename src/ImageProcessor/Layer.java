@@ -142,9 +142,13 @@ public class Layer extends DesignNode {
                 pixelPosSize.computePixelPosSize(posSize, designBuilder.getPixelMmFactor());
         }
 
+        /**
+         * TESTED 
+         * @return 
+         */
         @Override
         public String DRYComputeUniqueID() {
-                return DesignInterfaceLinker.getIdentifier(this.getClass()) + name;
+                return DesignInterfaceLinker.getIdentifier(this.getClass()) + name+tabName;
         }
 
         public String getTabName() {

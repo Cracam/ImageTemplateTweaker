@@ -85,20 +85,28 @@ public class InterfacesManager {
                             //now wae want to create them
                        boolean alreadyCreated=false;
                        Layer alredyCreatedLayer=null;
+                       String ID;
                         for(DesignNode layer : layersList ){
                                 if(layer.getClass()==Layer.class){
+                                        ID=layer.ComputeUniqueID(Layer.class);
+                                          System.out.println("--------------------------------------------------------------------------------------------------------------------------");
                                         for(Layer linkedLayer : linkedLayers){
-                                                if(linkedLayer.ComputeUniqueID().equals(layer.ComputeUniqueID())){
+                                                 System.out.println(linkedLayer.ComputeUniqueID(Layer.class)+"--------------"+ID);
+                                                if(linkedLayer.ComputeUniqueID(Layer.class).equals(ID)){
+                                                          System.out.println("===============================================");
                                                         alreadyCreated=true;
                                                         alredyCreatedLayer=linkedLayer;
                                                         break;
                                                 }
                                         }
                                         
+                                     
+                                        
                                        if(alreadyCreated){
                                                 try {
-                                                           System.out.println("########### unique ID to link : "+layer.ComputeUniqueID());
+                                                    //      System.out.println("########### unique ID to link : "+layer.ComputeUniqueID(Layer.class));
                                                         layer.linkDesignNodeToInterfaceNodes(alredyCreatedLayer.getLinkedinterface());
+                                                        alreadyCreated=false;
                                                 } catch (InvalidLinkbetweenNode ex) {
                                                         Logger.getLogger(InterfacesManager.class.getName()).log(Level.SEVERE, null, ex);
                                                 }

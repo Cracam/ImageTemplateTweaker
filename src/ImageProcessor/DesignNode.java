@@ -86,11 +86,11 @@ public abstract class DesignNode extends VBox {
         }
 
         public void updateLower() {
-                if(lowersDN.isEmpty()){
-                //        System.out.println("TTTTTTTTTTT : "+this.getClass());
+                if (lowersDN.isEmpty()) {
+                        //        System.out.println("TTTTTTTTTTT : "+this.getClass());
                         update();
-                          
-                }else{
+
+                } else {
                         for (DesignNode lower : lowersDN) {
                                 lower.updateLower();
                         }
@@ -207,8 +207,8 @@ public abstract class DesignNode extends VBox {
                         if (subclass == null || subclass.isAssignableFrom(InterfaceNode.class)) {
                                 throw new ThisInterfaceDoesNotExistException("this interface node dont exist yet for " + this.getClass().getName());
                         }
-                        Constructor<? extends InterfaceNode> constructor = subclass.getConstructor(InterfaceNode.class,String.class);
-                        constructor.newInstance(upperInter,"").addDesignNode(this);//Set the link between the interface and the layer in both directions
+                        Constructor<? extends InterfaceNode> constructor = subclass.getConstructor(InterfaceNode.class, String.class);
+                        constructor.newInstance(upperInter, "").addDesignNode(this);//Set the link between the interface and the layer in both directions
                         return linkedinterface;
 
                 } catch (ThisInterfaceDoesNotExistException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
@@ -227,7 +227,7 @@ public abstract class DesignNode extends VBox {
                 InterfaceNode InterfaceRoot = this.createLinkedInterface(upperIN);
                 for (DesignNode lowerDN : lowersDN) {
                         if (stopClass != lowerDN.getClass()) {
-                                lowerDN.createInterfaceTreeFromNodeTree(InterfaceRoot);
+                                lowerDN.createInterfaceTreeFromNodeTree(InterfaceRoot, stopClass);
                         }
                 }
                 return InterfaceRoot;
@@ -261,18 +261,23 @@ public abstract class DesignNode extends VBox {
 
         }
 
-        public String ComputeUniqueID() {
-                String ret = "";
-                this.DRYComputeUniqueID();
-                for (DesignNode lInter : lowersDN) {
-                        ret = ret + lInter.ComputeUniqueID();
+        public String ComputeUniqueID(Class<?> stopClass) {
+                String ret = this.DRYComputeUniqueID();
+                for (DesignNode lowerDN : lowersDN) {
+                        if (stopClass != lowerDN.getClass()) {
+                               // System.out.println("------------- Intermadiate calculation : "+ lowerDN.ComputeUniqueID(stopClass));
+                                ret = ret + lowerDN.ComputeUniqueID(stopClass);
+                        }
                 }
                 return ret;
         }
 
         public String DRYComputeUniqueID() {
-          //      System.out.println("EEEEEEEE"+DesignInterfaceLinker.getIdentifier(this.getClass()));
-                return DesignInterfaceLinker.getIdentifier(this.getClass());
+                String ret = DesignInterfaceLinker.getIdentifier(this.getClass());
+                if (ret == null) {
+                        return "";
+                }
+                return ret;
         }
 
         public ResourcesManager getModelRessources() {
@@ -295,7 +300,7 @@ public abstract class DesignNode extends VBox {
         public String toString(String deb) {
                 deb = deb + this.DRYtoString();
                 for (DesignNode lInter : lowersDN) {
-                        deb = "\n"+ deb + lInter.getClass().getName() + "   " + lInter.toString();
+                        deb = "\n" + deb + lInter.getClass().getName() + "   " + lInter.toString();
                 }
                 return deb;
         }

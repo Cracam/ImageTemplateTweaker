@@ -5,6 +5,8 @@ import Exceptions.ResourcesFileErrorException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
+import static ResourcesManager.XmlManager.extractSingleElement;
+import static ResourcesManager.XmlManager.getStringAttribute;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -43,7 +45,9 @@ public class GeneratorFixedImage extends ImageGenerator {
 
         @Override
         protected void generateFromElement() throws XMLErrorInModelException {
-              this.imageName = elt.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
+            //  this.imageName = elt.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
+               Element subElt = extractSingleElement(elt.getElementsByTagName("Image"));
+                 this.imageName = getStringAttribute(subElt, "image_name", "ERROR");
         }
 
     
