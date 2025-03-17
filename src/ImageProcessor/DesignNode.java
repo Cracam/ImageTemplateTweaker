@@ -115,22 +115,23 @@ public abstract class DesignNode extends VBox {
         /**
          * Return the first class of the
          *
+         * @param <T>
          * @param nodeClass
          * @return
          */
-        public DesignNode getLowerDN(Class<?> nodeClass) {
+        public <T extends DesignNode> T getLowerDN(Class<T> nodeClass) {
                 if (lowersDN == null) {
                         return null;
                 }
                 for (DesignNode designNode : lowersDN) {
                         if (designNode.getClass() == nodeClass) {
-                                return designNode;
+                                return (T) designNode;
                         }
                 }
                 return null; // Retourne null si aucun élément correspondant n'est trouvé
         }
 
-        public DesignNode getUpperDN(Class<?> nodeClass) {
+        public <T extends DesignNode> T  getUpperDN(Class<T> nodeClass) {
                 if (upperDN == null) {
                         //          System.out.println("### case 1");
                         return null;
@@ -138,9 +139,9 @@ public abstract class DesignNode extends VBox {
 
                 for (DesignNode upper : upperDN) {
                         if (upper.getClass() == nodeClass) {
-                                return upper;
+                                return (T) upper;
                         } else {
-                                DesignNode result = upper.getUpperDN(nodeClass);
+                                T result = upper.getUpperDN(nodeClass);
                                 if (result != null) {
                                         return result;
                                 }
@@ -155,13 +156,13 @@ public abstract class DesignNode extends VBox {
          * @param nodeClass
          * @return
          */
-        public DesignNode getLowerDNForChilds(Class<?> nodeClass) {
+        public <T extends DesignNode> T getLowerDNForChilds(Class<T> nodeClass) {
                 if (lowersDN == null) {
                         return null;
                 }
                 for (DesignNode designNode : lowersDN) {
                         if (nodeClass.isAssignableFrom(designNode.getClass())) {
-                                return designNode;
+                                return (T) designNode;
                         }
                 }
                 return null; // Retourne null si aucun élément correspondant n'est trouvé
@@ -170,10 +171,11 @@ public abstract class DesignNode extends VBox {
         /**
          * this return all the class that are sub classes of the entry
          *
+         * @param <T>
          * @param nodeClass
          * @return
          */
-        public DesignNode getUpperDNForChilds(Class<?> nodeClass) {
+        public <T extends DesignNode> T getUpperDNForChilds(Class<T> nodeClass) {
                 if (upperDN == null) {
                         // System.out.println("### case 1");
                         return null;
@@ -181,20 +183,20 @@ public abstract class DesignNode extends VBox {
 
                 for (DesignNode upper : upperDN) {
                         if (nodeClass.isAssignableFrom(upper.getClass())) {
-                                return upper;
+                                return (T) upper;
                         } else {
-                                DesignNode result = upper.getUpperDN(nodeClass);
+                                T result = upper.getUpperDN(nodeClass);
                                 if (result != null) {
-                                        return result;
+                                        return (T) result;
                                 }
                         }
                 }
                 return null;
         }
 
-        public DesignNode getUpperOrHimselfDN(Class<?> nodeClass) {
+        public <T extends DesignNode> T getUpperOrHimselfDN(Class<T> nodeClass) {
                 if (this.getClass() == nodeClass) {
-                        return this;
+                        return (T) this;
                 }
                 return this.getUpperDN(nodeClass);
         }
@@ -314,7 +316,7 @@ public abstract class DesignNode extends VBox {
          * @param nodeClass La classe des nœuds à récupérer.
          * @return Une liste de nœuds de type T.
          */
-        public <T> ArrayList<T> getAllLowerDNOff(Class<T> nodeClass) {
+        public <T extends DesignNode > ArrayList<T > getAllLowerDNOff(Class<T> nodeClass) {
                 ArrayList<T> result = new ArrayList<>();
                 if (lowersDN != null) {
                         for (DesignNode designNode : lowersDN) {

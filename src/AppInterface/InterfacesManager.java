@@ -89,11 +89,11 @@ public class InterfacesManager {
                         for(DesignNode layer : layersList ){
                                 if(layer.getClass()==Layer.class){
                                         ID=layer.ComputeUniqueID(Layer.class);
-                                          System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+                                         // System.out.println("--------------------------------------------------------------------------------------------------------------------------");
                                         for(Layer linkedLayer : linkedLayers){
                                                  System.out.println(linkedLayer.ComputeUniqueID(Layer.class)+"--------------"+ID);
                                                 if(linkedLayer.ComputeUniqueID(Layer.class).equals(ID)){
-                                                          System.out.println("===============================================");
+                                                    //      System.out.println("===============================================");
                                                         alreadyCreated=true;
                                                         alredyCreatedLayer=linkedLayer;
                                                         break;
@@ -112,10 +112,13 @@ public class InterfacesManager {
                                                 }
                                        }else{
                                                  layer.createInterfaceTreeFromNodeTree(null,Layer.class);
-                                                 addInterface((InterfaceContainer) layer.getLinkedinterface());
-                                                 System.out.println("Interface qe want to add"+layer.getLinkedinterface());
-                                                  assignInterfaceToTab( ((Layer) layer).getTabName(),layer.getLinkedinterface());
-                                                  linkedLayers.add((Layer)layer);
+                                                 
+                                               if(!layer.getLinkedinterface().interfaceBranchContainOnlyVoidInterfaces()){
+                                                        addInterface((InterfaceContainer) layer.getLinkedinterface());
+                                                        System.out.println("Interface qe want to add"+layer.getLinkedinterface());
+                                                         assignInterfaceToTab( ((Layer) layer).getTabName(),layer.getLinkedinterface());
+                                                         linkedLayers.add((Layer)layer);
+                                               }
                                        }
                                 }
                         }

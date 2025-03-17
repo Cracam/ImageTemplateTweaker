@@ -7,7 +7,7 @@ package ImageProcessor;
 import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.ImagesTransformers.TransformerCustomColor;
-import ImageProcessor.ImagesTransformers.TransformerMovableFixedImage;
+import ImageProcessor.ImagesTransformers.TransformerMovableImage;
 import ImageProcessor.ImagesTransformers.TransformerRandomImageAllocation;
 import ImageProcessor.ImagesTransformers.TransformerRandomImageDispersion;
 import AppInterface.DesignInterfaceLinker;
@@ -70,9 +70,8 @@ public abstract class ImageTransformer extends DesignNode{
         
         
           ////////////////////////////////////////////
-                   public static final Map<String, Class<? extends ImageTransformer>> transformersTypesMap = Map.of(
-                        "Custom_Color", TransformerCustomColor.class, 
-                        "Mouvable_Fixed_Image", TransformerMovableFixedImage.class,
+                   public static final Map<String, Class<? extends ImageTransformer>> transformersTypesMap = Map.of("Custom_Color", TransformerCustomColor.class, 
+                        "Mouvable_Fixed_Image", TransformerMovableImage.class,
                            "Random_Image_Dispersion",TransformerRandomImageDispersion.class,
                             "Random_Image_Allocations",TransformerRandomImageAllocation.class
         );

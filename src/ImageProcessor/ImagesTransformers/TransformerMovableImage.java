@@ -1,29 +1,20 @@
 package ImageProcessor.ImagesTransformers;
 
-import Exceptions.ResourcesFileErrorException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageTransformer;
-import Layers.SubClasses.QuadrupletFloat;
-import ResourcesManager.ResourcesManager;
-import ResourcesManager.XmlManager;
-import imageBuilder.ImageBuilder_old;
-import interfaces.Interface;
-import interfaces.InterfaceMouvableFixedImage;
+import ImageProcessor.Layer;
+import static ResourcesManager.XmlManager.extractSingleElement;
+import static ResourcesManager.XmlManager.getFloatAttribute;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import org.w3c.dom.Element;
-import staticFunctions.StaticImageEditing;
 
 /**
  *
  * @author camil
  */
-public class TransformerMovableFixedImage extends ImageTransformer {
+public class TransformerMovableImage extends ImageTransformer {
 
         private String imageName;
  private float X_MaxOffset=(float) 1.0;
@@ -35,7 +26,7 @@ public class TransformerMovableFixedImage extends ImageTransformer {
         private float posRefX;
         private float posRefY;
 
-        public TransformerMovableFixedImage(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
+        public TransformerMovableImage(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
         }
         
@@ -109,12 +100,17 @@ public class TransformerMovableFixedImage extends ImageTransformer {
 
         @Override
         protected void generateFromElement() throws XMLErrorInModelException {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+               
+              Element subElt= extractSingleElement(elt.getElementsByTagName("OffSet"));
+              this.X_MaxOffset=getFloatAttribute(subElt,"X_MaxOffset", this.X_MaxOffset);
+              this.X_MinOffset=getFloatAttribute(subElt,"X_MinOffset", this.X_MinOffset);
+              this.Y_MaxOffset=getFloatAttribute(subElt,"Y_MaxOffset", this.Y_MaxOffset);
+              this.Y_MinOffset=getFloatAttribute(subElt,"Y_MinOffset", this.Y_MinOffset);
         }
 
         @Override
         public void DRY_DRYUpdate(BufferedImage img_in) {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+              Layer layer = this.getUpperDN(Layer.class);
         }
         
      

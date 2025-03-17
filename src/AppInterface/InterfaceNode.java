@@ -4,6 +4,7 @@
  */
 package AppInterface;
 
+import AppInterface.Interfaces.VoidInterface;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
@@ -21,26 +22,26 @@ import org.w3c.dom.NodeList;
  * @author Camille LECOURT
  */
 public abstract class InterfaceNode extends VBox {
-        
-        private final  String name;
-           
+
+        private final String name;
+
         protected InterfaceNode upperInterface;
-        private final ArrayList<InterfaceNode> lowerInterfaces=new ArrayList<>();
-        private final ArrayList<DesignNode> linkedDesignNodes=new ArrayList<>();
+        private final ArrayList<InterfaceNode> lowerInterfaces = new ArrayList<>();
+        private final ArrayList<DesignNode> linkedDesignNodes = new ArrayList<>();
 
         // Constructeur prenant un seul upperDN
-        public InterfaceNode(InterfaceNode upperIN,String name) {
-                this.name=name;
+        public InterfaceNode(InterfaceNode upperIN, String name) {
+                this.name = name;
                 this.upperInterface = upperIN;
-                
+
                 initialiseInterface();
-                if(upperInterface!=null){
+                if (upperInterface != null) {
                         upperInterface.addLowerIN(this);
-                      
+
                 }
-                
+
         }
-        
+
         public String ComputeUniqueID() {
                 String ret = "";
                 this.DRYComputeUniqueID();
@@ -49,9 +50,9 @@ public abstract class InterfaceNode extends VBox {
                 }
                 return ret;
         }
-        
-        public  String DRYComputeUniqueID(){
-               return  DesignInterfaceLinker.getIdentifier(this.getClass());
+
+        public String DRYComputeUniqueID() {
+                return DesignInterfaceLinker.getIdentifier(this.getClass());
         }
 
         /**
@@ -64,35 +65,35 @@ public abstract class InterfaceNode extends VBox {
                         upperInterface.placeInterface(lowerInerface);
                 }
         }
-        
+
         public void addLowerIN(InterfaceNode lowerIN) {
                 lowerInterfaces.add(lowerIN);
         }
-        
+
         protected abstract Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException;
-        
+
         public void loadDesign(Element element, int index) throws XMLErrorInModelException {
                 Element subelt = DRYLoadDesign(element, index);
                 index++;
                 if (subelt != element) {
                         index = 0;
                 }
-                try{
+                try {
                         for (InterfaceNode lInter : lowerInterfaces) {
                                 lInter.DRYLoadDesign(subelt, index);
                         }
-                }catch(XMLErrorInModelException ex){
-                            Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (XMLErrorInModelException ex) {
+                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
         }
-        
+
         public void updateLinkedDesignNodes() {
                 for (DesignNode DN : linkedDesignNodes) {
                         DN.update();
                 }
         }
-        
+
         public void addDesignNode(DesignNode DN) {
                 linkedDesignNodes.add(DN);
                 DN.setLinkedInterface(this);
@@ -101,53 +102,59 @@ public abstract class InterfaceNode extends VBox {
         public ArrayList<InterfaceNode> getLowerInterfaces() {
                 return lowerInterfaces;
         }
-        
-        public  NodeList saveDesign(NodeList nodelist){
-                
-                              throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+        public NodeList saveDesign(NodeList nodelist) {
+
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
 
         }
-      
+
         public abstract Element DRYsaveDesign(Document doc);
-        
-            protected abstract void initialiseInterface() ;
-            
-            
-             public InterfaceNode getUpperDN(Class<?> nodeClass) {
+
+        protected abstract void initialiseInterface();
+
+        public InterfaceNode getUpperDN(Class<?> nodeClass) {
                 if (upperInterface == null) {
                         return null;
                 }
 
-                        if (upperInterface.getClass() == nodeClass) {
-                                return upperInterface;
-                        } else {
-                                InterfaceNode result = upperInterface.getUpperDN(nodeClass);
-                                if (result != null) {
-                                        return result;
-                                }
+                if (upperInterface.getClass() == nodeClass) {
+                        return upperInterface;
+                } else {
+                        InterfaceNode result = upperInterface.getUpperDN(nodeClass);
+                        if (result != null) {
+                                return result;
                         }
-                
+                }
+
                 return null;
         }
 
-               public ResourcesManager getDesignRessources(){
-                       if(!linkedDesignNodes.isEmpty()){
-                                   return  ((ImageBuilder)linkedDesignNodes.get(0).getUpperDN(ImageBuilder.class)).getDesignBuilder().getDesignResources();
-                       }else{
-                               return null;
-                       }
-                              
-          }
+        public ResourcesManager getDesignRessources() {
+                if (!linkedDesignNodes.isEmpty()) {
+                        return ((ImageBuilder) linkedDesignNodes.get(0).getUpperDN(ImageBuilder.class)).getDesignBuilder().getDesignResources();
+                } else {
+                        return null;
+                }
+
+        }
 
         public ArrayList<DesignNode> getLinkedDesignNodes() {
                 return linkedDesignNodes;
         }
-             
-            public String getName() {
+
+        public String getName() {
                 return name;
         }
-      
-}
-            
-            
 
+        public boolean interfaceBranchContainOnlyVoidInterfaces(boolean entry) {
+                if (this.getClass() != VoidInterface.class || !entry) {
+                        return false;
+                }
+                return true;
+        }
+
+        public boolean interfaceBranchContainOnlyVoidInterfaces() {
+                return interfaceBranchContainOnlyVoidInterfaces(true);
+        }
+}

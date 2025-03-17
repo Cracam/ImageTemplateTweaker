@@ -2,12 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package interfaces;
+package AppInterface.Interfaces;
 
 import Exeptions.ResourcesFileErrorException;
-import ResourcesManager.XmlChild;
-import ResourcesManager.XmlManager;
-import AppInterface.DesignBuilder;
+import AppInterface.InterfaceNode;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -16,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -26,15 +24,13 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import previewimagebox.PreviewImageBox;
 
 /**
  * This class have  the only function of generating the image out from a file
  * 
  * @author Camille LECOURT
  */
-public class InterfaceMouvableFixedImage extends Interface{
+public class InterfaceMouvableImage extends InterfaceNode{
 
         @FXML
         private ImageView PreviewBox;
@@ -44,41 +40,40 @@ public class InterfaceMouvableFixedImage extends Interface{
         
         @FXML
         private Slider slider_Y;
-        
-        @FXML
-        private PreviewImageBox Preview;
 
-        
-        
-        
-        public InterfaceMouvableFixedImage(String interfaceName, DesignBuilder designBuilder) {
-                super(interfaceName, designBuilder);
-        }
-        
-
-        @Override
-        public Node saveInterfaceData(Document doc) {
-              XmlManager xmlManager = new XmlManager(doc);
-
-                XmlChild Xmloffset = new XmlChild("OffSet");
-                Xmloffset.addAttribute("X_Offset", String.valueOf(slider_X.getValue()));
-                Xmloffset.addAttribute("Y_Offset", String.valueOf(slider_Y.getValue()));
-                xmlManager.addChild(Xmloffset);
-                 
-                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
+        public InterfaceMouvableImage(InterfaceNode upperIN, String name) {
+                super(upperIN, name);
         }
         
         
         
-
-        @Override
-        public void loadInterfaceData(Element dataOfTheLayer) {
-                slider_X.setValue( Double.parseDouble(dataOfTheLayer.getElementsByTagName("OffSet").item(0).getAttributes().getNamedItem("X_Offset").getNodeValue()));
-                slider_Y.setValue( Double.parseDouble(dataOfTheLayer.getElementsByTagName("OffSet").item(0).getAttributes().getNamedItem("Y_Offset").getNodeValue()));
-                refreshImagesBuilders();
-                
-        }
         
+//        
+//        
+//
+//        @Override
+//        public Node saveInterfaceData(Document doc) {
+//              XmlManager xmlManager = new XmlManager(doc);
+//
+//                XmlChild Xmloffset = new XmlChild("OffSet");
+//                Xmloffset.addAttribute("X_Offset", String.valueOf(slider_X.getValue()));
+//                Xmloffset.addAttribute("Y_Offset", String.valueOf(slider_Y.getValue()));
+//                xmlManager.addChild(Xmloffset);
+//                 
+//                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
+//        }
+//        
+//        
+//        
+//
+//        @Override
+//        public void loadInterfaceData(Element dataOfTheLayer) {
+//                slider_X.setValue( Double.parseDouble(dataOfTheLayer.getElementsByTagName("OffSet").item(0).getAttributes().getNamedItem("X_Offset").getNodeValue()));
+//                slider_Y.setValue( Double.parseDouble(dataOfTheLayer.getElementsByTagName("OffSet").item(0).getAttributes().getNamedItem("Y_Offset").getNodeValue()));
+//                refreshImagesBuilders();
+//                
+//        }
+//        
         
         
 
@@ -107,8 +102,6 @@ public class InterfaceMouvableFixedImage extends Interface{
                         
                         PreviewBox.setImage(generateIndicator((float) this.slider_X.getValue(),  (float)  this.slider_Y.getValue()));
                 
-                        setPreview(Preview);
-                        
                         
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,8 +117,7 @@ public class InterfaceMouvableFixedImage extends Interface{
         
         @FXML
         private void refreshImagesBuilders(){
-                  this.refreshLayers();
-                   this.refreshImageBuilders();
+                  this.updateLinkedDesignNodes();
                 
                    PreviewBox.setImage(generateIndicator((float) this.getSliderXValue(),  (float) this.getSliderYValue()));
         }
@@ -183,5 +175,15 @@ public class InterfaceMouvableFixedImage extends Interface{
     private static double mapRange(double value, double fromLow, double fromHigh, double toLow, double toHigh) {
         return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
     }
+
+        @Override
+        protected Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        @Override
+        public Element DRYsaveDesign(Document doc) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
         
 }
