@@ -4,6 +4,7 @@
  */
 package interfaces;
 
+import AppInterface.Interfaces.InterfaceCustomText;
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
 import AppInterface.DesignBuilder;

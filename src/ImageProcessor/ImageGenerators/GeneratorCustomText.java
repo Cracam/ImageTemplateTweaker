@@ -4,9 +4,15 @@
  */
 package ImageProcessor.ImageGenerators;
 
+import AppInterface.Interfaces.InterfaceCustomText;
 import ImageProcessor.ImageGenerator;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
+import ImageProcessor.ImageBuilder;
+import static ResourcesManager.XmlManager.extractSingleElement;
+import static ResourcesManager.XmlManager.getFloatAttribute;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import org.w3c.dom.Element;
 
 /**
@@ -16,10 +22,9 @@ import org.w3c.dom.Element;
 public class GeneratorCustomText extends ImageGenerator {
         boolean textChanged=true; //use only the the sub classe
 
-        private String imageName;
-        float textHeightFactor=(float) 1.0; //in mm
-        float textSizeMin=(float) 5.0; //in mm
-        float textSizeMax =(float) 25.0;//in mm
+        float textHeightFactor; //in mm
+        float textSizeMin; //in mm
+        float textSizeMax;//in mm
 
          public GeneratorCustomText(DesignNode upperDE,Element elt ) throws XMLErrorInModelException {
                 super(upperDE,elt);
@@ -30,28 +35,7 @@ public class GeneratorCustomText extends ImageGenerator {
 //        public void refreshImageGet() {
 //                this.image_get = ((InterfaceCustomText) (this.linkedInterface)).getImageOut( this.linkedImagesBuilder.getPixelMmFactor(),textSizeMin,textSizeMax);
 //        }
-//        
-//
-//        
-//        
-//
-//        /**
-//         * 
-//         * @param paramNode
-//         */
-//        @Override
-//        public void readNode(Element paramNode) {
-//              Element element=  (Element) paramNode.getElementsByTagName("Text").item(0);
-//
-//                this.textHeightFactor=XmlManager.getFloatAttribute(element,"TextHeightFactor",this.textHeightFactor);
-//                this.textSizeMin=XmlManager.getFloatAttribute(element,"TextSizeMin",this.textSizeMin);
-//                this.textSizeMax=XmlManager.getFloatAttribute(element,"TextSizeMax",this.textSizeMax);
-//        }
 
-        @Override
-        public String toString() {
-                return "LayerCustomColor{" + "imageName=" + imageName + '}';
-        }
         
         
         
@@ -94,11 +78,28 @@ public class GeneratorCustomText extends ImageGenerator {
 
         @Override
         public void DRYUpdate() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                
+                               this.imageOut = ((InterfaceCustomText) (this.getLinkedinterface())).getImageOut( this.getUpperDN(ImageBuilder.class).getDesignBuilder().getPixelMmFactor(),textSizeMin,textSizeMax);
+                        
+                        float y=y - imageOut.getHeight()/2;
+                        // on the line below we use minus to change the interface slidebar direction
+                        y=y-((InterfaceCustomText) this.getLinkedinterface()).getTextGenerator().getTextHeigthValue()*this.textHeightFactor;
+                        
+                        outputG2d.drawImage(image_get,this.x_p_size-this.y_p_size/2, y,  null);
+
+                        // Dispose of the Graphics2D object
+                        outputG2d.dispose();
+
+                        // Update image_out with the new image
+                        this.image_out = outputImage;
+                         this.refreshPreview();
         }
 
         @Override
         protected void generateFromElement() throws XMLErrorInModelException {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                Element subElt = extractSingleElement(elt.getElementsByTagName("Text"));
+                this.textHeightFactor = getFloatAttribute(subElt, "TextHeightFactor", (float) 1.0);
+                this.textSizeMin = getFloatAttribute(subElt, "TextSizeMin", (float) 2.0);
+                this.textSizeMax = getFloatAttribute(subElt, "TextSizeMax", (float) 7.0);
         }
 }

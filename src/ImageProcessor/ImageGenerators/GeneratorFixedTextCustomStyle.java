@@ -3,8 +3,6 @@ package ImageProcessor.ImageGenerators;
 import ImageProcessor.ImageGenerator;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
-import ResourcesManager.XmlManager;
-import interfaces.InterfaceFixedTextCustomStyleCustomColor;
 import org.w3c.dom.Element;
 
 /**

@@ -16,8 +16,13 @@ import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceNode;
 import AppInterface.LayerContainer;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
+import Layers.SubClasses.PosFloat;
+import Layers.SubClasses.PosInt;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import java.awt.image.BufferedImage;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.Element;
@@ -34,6 +39,8 @@ public class Layer extends DesignNode {
         protected QuadrupletFloat posSize;
         protected QuadrupletInt pixelPosSize = new QuadrupletInt(0, 0, 0, 0);
         protected String tabName;
+
+        protected Map<String, PosFloat> offsets = new HashMap<>();
 
         public Layer(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
@@ -58,10 +65,11 @@ public class Layer extends DesignNode {
                         image_get = lowerDN.getImageOut();
 
                         DesignNode lowerLayer = this.getLowerDN(Layer.class);
-                        if (lowerLayer == null || lowerLayer.getImageOut()==null) {
+                        if (lowerLayer == null || lowerLayer.getImageOut() == null) {
                                 this.imageOut = image_get;
                         } else {
-                                this.imageOut = overlayImages(lowerLayer.getImageOut(), image_get,this.pixelPosSize.getPos_x(),this.pixelPosSize.getPos_y());
+                                PosInt posOffset =getFinalOffset();
+                                this.imageOut = overlayImages(lowerLayer.getImageOut(), image_get, this.pixelPosSize.getPos_x()+posOffset.getPos_x(), this.pixelPosSize.getPos_y()+posOffset.getPos_y());
                         }
 
                 } catch (DesingNodeLowerNodeIsAnormalyVoidException ex) {
@@ -91,7 +99,6 @@ public class Layer extends DesignNode {
                 }
                 float size_x = XmlManager.getFloatAttribute(subElt, "size_x", 0);
                 float size_y = XmlManager.getFloatAttribute(subElt, "size_y", 0);
-
 
                 posSize = new QuadrupletFloat(pos_x, pos_y, size_x, size_y);
                 DRYRefreshDPI();
@@ -136,18 +143,19 @@ public class Layer extends DesignNode {
 
         @Override
         public void DRYRefreshDPI() {
-              //  System.out.println(this.getUpperDN(ImageBuilder.class));
+                //  System.out.println(this.getUpperDN(ImageBuilder.class));
                 DesignBuilder designBuilder = ((ImageBuilder) this.getUpperDN(ImageBuilder.class)).getDesignBuilder();
                 pixelPosSize.computePixelPosSize(posSize, designBuilder.getPixelMmFactor());
         }
 
         /**
-         * TESTED 
-         * @return 
+         * TESTED
+         *
+         * @return
          */
         @Override
         public String DRYComputeUniqueID() {
-                return DesignInterfaceLinker.getIdentifier(this.getClass()) + name+tabName;
+                return DesignInterfaceLinker.getIdentifier(this.getClass()) + name + tabName;
         }
 
         public String getTabName() {
@@ -156,14 +164,14 @@ public class Layer extends DesignNode {
 
         @Override
         public InterfaceNode createLinkedInterface(InterfaceNode upperInter) {
-                InterfaceNode inter = new LayerContainer( upperInter,name);
+                InterfaceNode inter = new LayerContainer(upperInter, name);
                 inter.addDesignNode(this);
                 return inter;
         }
 
         @Override
         protected String DRYtoString() {
-                return "\n of name : " + this.name+"\n";
+                return "\n of name : " + this.name + "\n";
         }
 
         public QuadrupletFloat getPosSize() {
@@ -173,8 +181,20 @@ public class Layer extends DesignNode {
         public void setPosSize(QuadrupletFloat posSize) {
                 this.posSize = posSize;
         }
-        
-        
-        
-        
+
+        //Management of the pos offset dictionary
+        public void addOffset(String id, PosFloat offset) {
+                this.offsets.put(id, offset);
+        }
+
+        private PosInt getFinalOffset() {
+                float pixelMilimeterFactor = this.getUpperDN(ImageBuilder.class).getDesignBuilder().getPixelMmFactor();
+                PosFloat preRet = new PosFloat(0, 0);
+
+                for (Map.Entry<String, PosFloat> offset : offsets.entrySet()) {
+                        preRet.add(offset.getValue());
+                }
+                return new PosInt(preRet,pixelMilimeterFactor);
+        }
+
 }
