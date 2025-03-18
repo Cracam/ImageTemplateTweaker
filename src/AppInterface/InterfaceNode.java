@@ -147,14 +147,25 @@ public abstract class InterfaceNode extends VBox {
                 return name;
         }
 
-        public boolean interfaceBranchContainOnlyVoidInterfaces(boolean entry) {
-                if (this.getClass() != VoidInterface.class || !entry) {
-                        return false;
-                }
-                return true;
-        }
-
+      
+        /**
+         * this return all the class that are sub classes of the entry
+         *
+         * @return
+         */
         public boolean interfaceBranchContainOnlyVoidInterfaces() {
-                return interfaceBranchContainOnlyVoidInterfaces(true);
+              
+
+                for (InterfaceNode lInter : lowerInterfaces) {
+                         if (lInter.getClass() != VoidInterface.class) {
+                                return false;
+                        }
+                         
+                        if (lInter.interfaceBranchContainOnlyVoidInterfaces() == false) {
+                                return false;
+                        }
+                }
+                
+                return true; // Retourne null si aucun élément correspondant n'est trouvé
         }
 }

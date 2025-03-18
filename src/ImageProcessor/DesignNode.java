@@ -153,6 +153,7 @@ public abstract class DesignNode extends VBox {
         /**
          * this return all the class that are sub classes of the entry
          *
+         * @param <T>
          * @param nodeClass
          * @return
          */

@@ -48,7 +48,7 @@ public class ImageBuilder extends ImageDimentioner {
                 x_size = getFloatAttribute(elt, "size_x", 0);
                 y_size= getFloatAttribute(elt, "size_y", 0);
 
-                currentUpperDN = this;
+              currentUpperDN=  this;
                 //        subElt = (Element) elt.getElementsByTagName("Layers").item(0);
                 NodeList nodeTransformersList = elt.getChildNodes();
 
@@ -75,11 +75,11 @@ public class ImageBuilder extends ImageDimentioner {
                                 }
                         }
                 }
-
+                
+                VoidImage voidImage = new VoidImage(currentUpperDN,null,(int) (x_size*this.getDesignBuilder().getPixelMmFactor()) ,(int) (y_size*this.getDesignBuilder().getPixelMmFactor()));
         }
 
         public DesignBuilder getDesignBuilder() {
-         //       System.out.println("Design builder dammanded");
                 return this.designBuilder;
         }
 

@@ -6,17 +6,11 @@ package ImageProcessor;
 
 import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
-import ImageProcessor.ImagesTransformers.TransformerCustomColor;
-import ImageProcessor.ImagesTransformers.TransformerMovableImage;
-import ImageProcessor.ImagesTransformers.TransformerRandomImageAllocation;
-import ImageProcessor.ImagesTransformers.TransformerRandomImageDispersion;
 import AppInterface.DesignInterfaceLinker;
 import interfaces.Interface;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.Element;
@@ -25,89 +19,73 @@ import org.w3c.dom.Element;
  *
  * @author Camille LECOURT
  */
-public abstract class ImageTransformer extends DesignNode{
+public abstract class ImageTransformer extends DesignNode {
 
-        
-        
-        public ImageTransformer( DesignNode upperDE,  Element elt) throws XMLErrorInModelException {
-                super( upperDE,  elt);
+        public ImageTransformer(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
+                super(upperDE, elt);
                 generateFromElement();
-                                DRYRefreshDPI();
+                DRYRefreshDPI();
 
         }
 
-      
-
         @Override
-        public void DRYUpdate() {              
+        public void DRYUpdate() {
                 try {
-                 DesignNode lowerDN = this.getLowerDNForChilds(ImageTransformer.class);
+                        DesignNode lowerDN = this.getLowerDNForChilds(ImageTransformer.class);
                         if (lowerDN == null) {
                                 lowerDN = this.getLowerDNForChilds(ImageGenerator.class);
                         }
                         if (lowerDN == null) {
-                                 throw new DesingNodeLowerNodeIsAnormalyVoidException("The Transformer " + this.name + " does not have the ImageGenerator or Image Transformer under him");
+                                throw new DesingNodeLowerNodeIsAnormalyVoidException("The Transformer " + this.name + " does not have the ImageGenerator or Image Transformer under him");
                         }
-                        DRY_DRYUpdate( lowerDN.getImageOut()); 
-                        
+                        DRY_DRYUpdate(lowerDN.getImageOut());
+
                 } catch (DesingNodeLowerNodeIsAnormalyVoidException ex) {
-                                 Logger.getLogger(ImageTransformer.class.getName()).log(Level.SEVERE, null, ex);
-                         }
+                        Logger.getLogger(ImageTransformer.class.getName()).log(Level.SEVERE, null, ex);
+                }
         }
-        
+
         public abstract void DRY_DRYUpdate(BufferedImage img_in);
-        
-        
-        
-         @Override
+
+        @Override
         public void DRYRefreshDPI() {
-             //no update to any sort of size in Imaes transformers
+                //no update to any sort of size in Imaes transformers
         }
-        
-        
-        
-        
-        
-        
-          ////////////////////////////////////////////
-                   public static final Map<String, Class<? extends ImageTransformer>> transformersTypesMap = Map.of("Custom_Color", TransformerCustomColor.class, 
-                        "Mouvable_Fixed_Image", TransformerMovableImage.class,
-                           "Random_Image_Dispersion",TransformerRandomImageDispersion.class,
-                            "Random_Image_Allocations",TransformerRandomImageAllocation.class
-        );
-         
-          /**
-         * This code will load the layer using a Strin identifier to get the type of the Layer
+
+        ////////////////////////////////////////////
+        /**
+         * This code will load the layer using a Strin identifier to get the
+         * type of the Layer
+         *
          * @param type
          * @param uppersDE
          * @param elt
          * @return
-         * @throws XMLErrorInModelException 
+         * @throws XMLErrorInModelException
          */
-          public static ImageTransformer createTransformer(String type,  DesignNode uppersDE,Element elt ) throws XMLErrorInModelException {
+        public static ImageTransformer createTransformer(String type, DesignNode uppersDE, Element elt) throws XMLErrorInModelException {
                 Class classBuilder = DesignInterfaceLinker.getDesignNode(type);
-                
-                if (classBuilder==null || classBuilder.isAssignableFrom(ImageTransformer.class)) {
+
+                if (classBuilder == null || classBuilder.isAssignableFrom(ImageTransformer.class)) {
                         throw new XMLErrorInModelException("This Transformer type does not exist : " + type);
-                } 
-                
-                
+                }
+
                 try {
                         Class<? extends ImageTransformer> subclass = classBuilder;
-                        Constructor<? extends ImageTransformer> constructor = subclass.getConstructor(DesignNode.class, Element.class );
-                        
-                        return constructor.newInstance( uppersDE, elt  );
+                        Constructor<? extends ImageTransformer> constructor = subclass.getConstructor(DesignNode.class, Element.class);
+
+                        return constructor.newInstance(uppersDE, elt);
 
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
                         Logger.getLogger(Interface.class.getName()).log(Level.WARNING, null, ex);
-                            ex.printStackTrace(); // Print the stack trace
-                                 throw new XMLErrorInModelException("Error in the creation of this Transformer :  " + type);
+                        ex.printStackTrace(); // Print the stack trace
+                        throw new XMLErrorInModelException("Error in the creation of this Transformer :  " + type);
                 }
-}
-          @Override
-          protected String DRYtoString(){
-                  return "";
-          }
-          
-          
+        }
+
+        @Override
+        protected String DRYtoString() {
+                return "";
+        }
+
 }

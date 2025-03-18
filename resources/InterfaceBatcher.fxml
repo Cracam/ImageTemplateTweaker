@@ -97,7 +97,7 @@
                      <children>
                         <PreviewImageBox fx:id="preview" HBox.hgrow="ALWAYS">
                            <HBox.margin>
-                              <Insets left="2.0" />
+                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                            </HBox.margin>
                         </PreviewImageBox>
                      </children>

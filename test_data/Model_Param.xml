@@ -36,13 +36,16 @@
 						</G_Custom_Image>
 					</Generator>
 					<Transformers>
+						<T_Mouvable_Image>
+							<OffSet X_MaxOffset="30.0" X_MinOffset="-3.0" Y_MaxOffset="30.0" Y_MinOffset="-14.5"/>
+						</T_Mouvable_Image>
 					</Transformers>
 				</Layer>
 
 
 				<Layer name="test FIXED Image" tab_name="Commun">
-					<pos pos_x="0" pos_y="0"/>
-					<size size_x="88" size_y="58"/>
+					<pos pos_x="10" pos_y="15"/>
+					<size size_x="68" size_y="18"/>
 					<Generator>
 						<G_Fixed_Image>
 							<Image image_name="RECTO_arrierePlan.png"/>
@@ -73,6 +76,7 @@
 						</T_Custom_Color>
 					</Transformers>
 				</Layer>
+
 
 				<Layer name="test___2" tab_name="Verso">
 					<pos pos_x="0" pos_y="0"/>

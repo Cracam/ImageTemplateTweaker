@@ -26,28 +26,27 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * This class have  the only function of generating the image out from a file
- * 
+ * This class have the only function of generating the image out from a file
+ *
  * @author Camille LECOURT
  */
-public class InterfaceMouvableImage extends InterfaceNode{
+public class InterfaceMouvableImage extends InterfaceNode {
 
         @FXML
         private ImageView PreviewBox;
-        
+
         @FXML
         private Slider slider_X;
-        
+
         @FXML
         private Slider slider_Y;
 
         public InterfaceMouvableImage(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
+               upperInterface.placeInterface(this);
+
         }
-        
-        
-        
-        
+
 //        
 //        
 //
@@ -74,13 +73,10 @@ public class InterfaceMouvableImage extends InterfaceNode{
 //                
 //        }
 //        
-        
-        
-
         @Override
         protected void initialiseInterface() {
-               try {
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InterfaceFixedMovableImage.fxml"));
+                try {
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InterfaceMovableImage.fxml"));
                         if (fxmlLoader == null) {
                                 throw new ResourcesFileErrorException();
                         }
@@ -88,93 +84,81 @@ public class InterfaceMouvableImage extends InterfaceNode{
                         fxmlLoader.setController(this);
 
                         fxmlLoader.load();
-                        
-                   
+
                         slider_X.setMin(-0.999);
                         slider_X.setMax(0.999);
                         slider_X.setValue(0.0);
                         slider_X.setBlockIncrement(0.001);
-                        
+
                         slider_Y.setMin(-0.999);
                         slider_Y.setMax(0.999);
                         slider_Y.setValue(0.0);
                         slider_Y.setBlockIncrement(0.001);
-                        
-                        PreviewBox.setImage(generateIndicator((float) this.slider_X.getValue(),  (float)  this.slider_Y.getValue()));
-                
-                        
+
+                        PreviewBox.setImage(generateIndicator((float) this.slider_X.getValue(), (float) this.slider_Y.getValue()));
+
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
-        
-        
-    
-        
-        
-         
-        
-        
+
         @FXML
-        private void refreshImagesBuilders(){
-                  this.updateLinkedDesignNodes();
-                
-                   PreviewBox.setImage(generateIndicator((float) this.getSliderXValue(),  (float) this.getSliderYValue()));
+        private void refreshImagesBuilders() {
+                this.updateLinkedDesignNodes();
+                PreviewBox.setImage(generateIndicator((float) this.getSliderXValue(), (float) this.getSliderYValue()));
         }
-        
+
         /**
          * return the vallue of the slider X
-         * @return 
+         *
+         * @return
          */
-        public float getSliderXValue(){
+        public float getSliderXValue() {
                 return (float) this.slider_X.getValue();
         }
-        
+
         /**
          * return the value of the slider y
-         * @return 
+         *
+         * @return
          */
-        public float getSliderYValue(){
+        public float getSliderYValue() {
                 return (float) -this.slider_Y.getValue();
         }
-        
-        
-        
-        
-        
-     public static Image generateIndicator(float X, float Y) {
-        // Taille du carré
-        double squareSize = 200;
 
-        // Création du carré
-        Rectangle square = new Rectangle(squareSize, squareSize);
-        square.setFill(Color.LIGHTGRAY);
-        square.setStroke(Color.BLACK);
+        public static Image generateIndicator(float X, float Y) {
+                // Taille du carré
+                double squareSize = 200;
 
-        // Mappage des coordonnées de [-1, 1] à [0, squareSize]
-        double mappedX = mapRange(X, -1.15, 1.15, 0, squareSize);
-        double mappedY = mapRange(Y, -1.15, 1.15, 0, squareSize);
+                // Création du carré
+                Rectangle square = new Rectangle(squareSize, squareSize);
+                square.setFill(Color.LIGHTGRAY);
+                square.setStroke(Color.BLACK);
 
-        // Création du cercle
-        Circle circle = new Circle(10, Color.RED);
-        circle.setCenterX(mappedX);
-        circle.setCenterY(mappedY);
+                // Mappage des coordonnées de [-1, 1] à [0, squareSize]
+                double mappedX = mapRange(X, -1.15, 1.15, 0, squareSize);
+                double mappedY = mapRange(Y, -1.15, 1.15, 0, squareSize);
 
-        // Création du Pane et ajout des formes
-        Pane pane = new Pane();
-        pane.getChildren().addAll(square, circle);
+                // Création du cercle
+                Circle circle = new Circle(10, Color.RED);
+                circle.setCenterX(mappedX);
+                circle.setCenterY(mappedY);
 
-        // Capture d'écran du Pane
-        SnapshotParameters params = new SnapshotParameters();
-        WritableImage image = pane.snapshot(params, null);
+                // Création du Pane et ajout des formes
+                Pane pane = new Pane();
+                pane.getChildren().addAll(square, circle);
 
-        return image;
-    }
+                // Capture d'écran du Pane
+                SnapshotParameters params = new SnapshotParameters();
+                WritableImage image = pane.snapshot(params, null);
 
-    // Fonction pour mapper une valeur d'un intervalle à un autre
-    private static double mapRange(double value, double fromLow, double fromHigh, double toLow, double toHigh) {
-        return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
-    }
+                return image;
+        }
+
+        // Fonction pour mapper une valeur d'un intervalle à un autre
+        private static double mapRange(double value, double fromLow, double fromHigh, double toLow, double toHigh) {
+                return (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
+        }
 
         @Override
         protected Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException {
@@ -185,5 +169,5 @@ public class InterfaceMouvableImage extends InterfaceNode{
         public Element DRYsaveDesign(Document doc) {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
-        
+
 }

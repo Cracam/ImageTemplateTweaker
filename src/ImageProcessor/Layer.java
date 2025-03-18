@@ -61,7 +61,7 @@ public class Layer extends DesignNode {
                         if (lowerLayer == null || lowerLayer.getImageOut()==null) {
                                 this.imageOut = image_get;
                         } else {
-                                this.imageOut = overlayImages(lowerLayer.getImageOut(), image_get);
+                                this.imageOut = overlayImages(lowerLayer.getImageOut(), image_get,this.pixelPosSize.getPos_x(),this.pixelPosSize.getPos_y());
                         }
 
                 } catch (DesingNodeLowerNodeIsAnormalyVoidException ex) {
@@ -92,13 +92,13 @@ public class Layer extends DesignNode {
                 float size_x = XmlManager.getFloatAttribute(subElt, "size_x", 0);
                 float size_y = XmlManager.getFloatAttribute(subElt, "size_y", 0);
 
+
                 posSize = new QuadrupletFloat(pos_x, pos_y, size_x, size_y);
                 DRYRefreshDPI();
 
                 currentUpperDN = this;
                 subElt = extractSingleElement(elt.getElementsByTagName("Transformers"));
                 if (subElt != null) {
-
                         NodeList nodeTransformersList = subElt.getChildNodes();
 
                         //running in the inverse 
@@ -107,7 +107,6 @@ public class Layer extends DesignNode {
 
                                         subSubElt = (Element) nodeTransformersList.item(i);
                                         key = subSubElt.getNodeName(); // key for defining the layer and the Interface
-
                                         currentUpperDN = createTransformer(key, currentUpperDN, subSubElt);
                                 }
                         }
@@ -137,7 +136,7 @@ public class Layer extends DesignNode {
 
         @Override
         public void DRYRefreshDPI() {
-                System.out.println(this.getUpperDN(ImageBuilder.class));
+              //  System.out.println(this.getUpperDN(ImageBuilder.class));
                 DesignBuilder designBuilder = ((ImageBuilder) this.getUpperDN(ImageBuilder.class)).getDesignBuilder();
                 pixelPosSize.computePixelPosSize(posSize, designBuilder.getPixelMmFactor());
         }
@@ -166,4 +165,16 @@ public class Layer extends DesignNode {
         protected String DRYtoString() {
                 return "\n of name : " + this.name+"\n";
         }
+
+        public QuadrupletFloat getPosSize() {
+                return posSize;
+        }
+
+        public void setPosSize(QuadrupletFloat posSize) {
+                this.posSize = posSize;
+        }
+        
+        
+        
+        
 }

@@ -7,6 +7,8 @@ package ResourcesManager;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -70,13 +72,13 @@ public class XmlManager {
          * @param ret
          * @return The parsed float value of the attribute, or null if the
          * attribute is not found.
-         * @throws Exceptions.XMLExeptions.XMLErrorInModelException
          */
-        static public Float getFloatAttribute(Element element, String attributeName, float ret) throws   XMLErrorInModelException {
+        static public Float getFloatAttribute(Element element, String attributeName, float ret) {
                 try {
                         return Float.valueOf(getAttributeValue(element, attributeName));
-                } catch (NumberFormatException e) {
-                        throw new XMLErrorInModelException("Invalid value for attribute " + attributeName + ": " + getAttributeValue(element, attributeName));
+                } catch (NumberFormatException | XMLErrorInModelException e) {
+                    System.out.println("Invalid value or XML loading error  for attribute " + attributeName + "--- remplacing by default value");
+                    return ret;
                 }
         }
 
@@ -90,17 +92,23 @@ public class XmlManager {
          * or is invalid.
          * @return The value of the attribute as a string, or the default value
          * if the attribute is not found or is invalid.
-         * @throws Exceptions.XMLExeptions.XMLErrorInModelException
          */
-        public static String getStringAttribute(Element element, String attributeName, String ret) throws  XMLErrorInModelException  {
-               
+        public static String getStringAttribute(Element element, String attributeName, String ret) {
+
+                try {
                         String attributeValue = getAttributeValue(element, attributeName);
                         if (attributeValue != null && !attributeValue.isEmpty()) {
                                 return attributeValue;
                         } else {
-                                    throw new XMLErrorInModelException("Invalid value for attribute " + attributeName + ": " + getAttributeValue(element, attributeName));
+                                System.out.println("Invalid value for attribute " + attributeName + "--- remplacing by default value");
+                                return ret;
                         }
+                } catch (XMLErrorInModelException ex) {
+                        System.out.println("XML loading error  for attribute " + attributeName + "--- remplacing by default value");
+                                return ret;
+                }
         }
+
         
         
 

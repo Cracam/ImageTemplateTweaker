@@ -16,6 +16,7 @@ import ImageProcessor.ImageGenerators.GeneratorFixedTextCustomStyle;
 import ImageProcessor.ImagesTransformers.TransformerCustomColor;
 import ImageProcessor.ImagesTransformers.TransformerMovableImage;
 import ImageProcessor.Layer;
+import ImageProcessor.VoidImage;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +36,9 @@ public class DesignInterfaceLinker {
                 linkMap.put("G_Fixed_Text_Custom_Color_Custom_Style", new DesignInterfacePair(GeneratorFixedTextCustomStyle.class, VoidInterface.class));
                  linkMap.put("T_Custom_Color", new DesignInterfacePair(TransformerCustomColor.class, InterfaceCustomColor.class));
                  linkMap.put("T_Mouvable_Image", new DesignInterfacePair(TransformerMovableImage.class, InterfaceMouvableImage.class));
-                 
+                
+                 linkMap.put("Void_Image", new DesignInterfacePair(VoidImage.class, VoidInterface.class));
+
                  linkMap.put("Layer", new DesignInterfacePair(Layer.class, LayerContainer.class));
         }
 

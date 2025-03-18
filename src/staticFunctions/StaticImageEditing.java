@@ -18,32 +18,31 @@ import javafx.scene.image.WritableImage;
  * @author Camille LECOURT
  */
 public class StaticImageEditing {
-       
+
         public static Image convertToFXImage(BufferedImage bufferedImage) {
-        if (bufferedImage == null) {
-            throw new IllegalArgumentException("BufferedImage cannot be null");
+                if (bufferedImage == null) {
+                        throw new IllegalArgumentException("BufferedImage cannot be null");
+                }
+                WritableImage writableImage = new WritableImage(bufferedImage.getWidth(), bufferedImage.getHeight());
+                return SwingFXUtils.toFXImage(bufferedImage, writableImage);
         }
-        WritableImage writableImage = new WritableImage(bufferedImage.getWidth(), bufferedImage.getHeight());
-        return SwingFXUtils.toFXImage(bufferedImage, writableImage);
-    }
-        
-        
-                /**
-     * Creates an ImageView from a BufferedImage.
-     *
-     * @param bufferedImage the BufferedImage to convert
-     * @return the ImageView containing the converted Image
-     */
-    public static ImageView createImageView(BufferedImage bufferedImage) {
-        WritableImage fxImage =SwingFXUtils.toFXImage(bufferedImage, null);
-      ImageView imageView =new ImageView(fxImage);
-        imageView.setPreserveRatio(true);
-       // imageView.setFitHeight(1000);
-         //imageView.setFitWidth(1000);
-        return imageView;
-    }
-        
-           /**
+
+        /**
+         * Creates an ImageView from a BufferedImage.
+         *
+         * @param bufferedImage the BufferedImage to convert
+         * @return the ImageView containing the converted Image
+         */
+        public static ImageView createImageView(BufferedImage bufferedImage) {
+                WritableImage fxImage = SwingFXUtils.toFXImage(bufferedImage, null);
+                ImageView imageView = new ImageView(fxImage);
+                imageView.setPreserveRatio(true);
+                // imageView.setFitHeight(1000);
+                //imageView.setFitWidth(1000);
+                return imageView;
+        }
+
+        /**
          * Creates a BufferedImage with the specified dimensions.
          *
          * @param x the width of the image
@@ -67,15 +66,14 @@ public class StaticImageEditing {
 
                 return image;
         }
-        
-        
-        
-          /**
+
+        /**
          * Tiis method will resize the image get to what we nedd
+         *
          * @param imageToBeResized
          * @param size_x
          * @param size_y
-         * @return 
+         * @return
          */
         public static BufferedImage ResizeImage(BufferedImage imageToBeResized, int size_x, int size_y) {
                 // Resize image_get to size_x and size_y
@@ -86,10 +84,6 @@ public class StaticImageEditing {
                 return resizedImageGet;
         }
 
-        
-        
-        
-        
         /**
          * This function extract the opacity data from the image to transform it
          * into array.
@@ -115,15 +109,12 @@ public class StaticImageEditing {
                 }
                 return opacityArray;
         }
-        
-        
-        
-        
+
         /**
          * This convert a hexadacimal color into a java color
-         * 
+         *
          * @param hex
-         * @return 
+         * @return
          */
         public static Color hexToColor(String hex) {
                 // Remove the '#' character if present
@@ -132,42 +123,54 @@ public class StaticImageEditing {
                 }
 
                 // Parse the hex string
-                int r = Integer.parseInt(hex.substring(0, 2),16);
-                int g = Integer.parseInt(hex.substring(2, 4),16);
-                int b = Integer.parseInt(hex.substring(4, 6),16);
+                int r = Integer.parseInt(hex.substring(0, 2), 16);
+                int g = Integer.parseInt(hex.substring(2, 4), 16);
+                int b = Integer.parseInt(hex.substring(4, 6), 16);
 
                 return new Color(r, g, b);
         }
-        
+
         /**
          * This convert a color into hexadecimal value (in sting form)
+         *
          * @param color
-         * @return 
+         * @return
          */
-          public static String colorToHex(Color color) {
+        public static String colorToHex(Color color) {
                 String hex = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
                 return hex;
         }
-          
-               
+
         public static BufferedImage overlayImages(BufferedImage img1, BufferedImage img2) {
-        // Crée une nouvelle image avec les dimensions de la plus grande des deux images
-        int width = Math.max(img1.getWidth(), img2.getWidth());
-        int height = Math.max(img1.getHeight(), img2.getHeight());
-        BufferedImage combined = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+                return overlayImages(img1, img2, 0, 0);
+        }
 
-        // Obtient le contexte graphique de la nouvelle image
-        Graphics2D g = combined.createGraphics();
+           /**
+         * Overlays two images with specified coordinates for the second image.
+         *
+         * @param img1 The first image (base image).
+         * @param img2 The second image to overlay on the first image.
+         * @param x The x-coordinate where img2 will be placed on img1.
+         * @param y The y-coordinate where img2 will be placed on img1.
+         * @return A new combined image.
+         */
+        public static BufferedImage overlayImages(BufferedImage img1, BufferedImage img2, int x, int y) {
+                // Crée une nouvelle image avec les dimensions de la plus grande des deux images
 
-        // Dessine la première image sur la nouvelle image
-        g.drawImage(img1, 0, 0, null);
+                BufferedImage combined = new BufferedImage(img1.getWidth(), img1.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
-        // Dessine la deuxième image par-dessus la première image
-        g.drawImage(img2, 0, 0, null);
+                // Obtient le contexte graphique de la nouvelle image
+                Graphics2D g = combined.createGraphics();
 
-        // Libère les ressources graphiques
-        g.dispose();
+                // Dessine la première image sur la nouvelle image
+                g.drawImage(img1, 0, 0, null);
 
-        return combined;
-    }
+                // Dessine la deuxième image par-dessus la première image aux coordonnées spécifiées
+                g.drawImage(img2, x, y, null);
+
+                // Libère les ressources graphiques
+                g.dispose();
+
+                return combined;
+        }
 }

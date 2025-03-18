@@ -32,12 +32,7 @@ public abstract class ImageGenerator extends ImageDimentioner {
         public abstract void DRYUpdate();
 
         ////////////////////////////////////////////
-        public static final Map<String, Class<? extends ImageGenerator>> generatorTypesMap = Map.of(
-                "G_Fixed_Image", GeneratorFixedImage.class,
-                "G_Custom_Image", GeneratorCustomImage.class,
-                "G_Custom_Text", GeneratorCustomText.class,
-                "G_Fixed_Text_Custom_Color_Custom_Style", GeneratorFixedTextCustomStyle.class
-        );
+ 
 
         /**
          * This code will load the layer using a Strin identifier to get the

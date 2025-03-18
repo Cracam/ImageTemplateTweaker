@@ -10,7 +10,6 @@ import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
 import ImageProcessor.Layer;
 import ResourcesManager.XmlManager;
-import interfaces.Interface;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -66,66 +65,59 @@ public class InterfacesManager {
 //                        }
 //                }
 //        }
-
-        
-        public void createInterfaceFromImageBuilderList(ArrayList<ImageBuilder> imageBuilders){
+        public void createInterfaceFromImageBuilderList(ArrayList<ImageBuilder> imageBuilders) {
                 //We want to rassemble all the layer into only one lis aviding the duplicates
-                 ArrayList<DesignNode> layersList = new ArrayList<>();
-                 
-                        for (int i = 0; i < imageBuilders.size(); i++) {
-                                Set<DesignNode> combinedSet = new HashSet<>(imageBuilders.get(i).getAllLowerDNOff(Layer.class));
-                                combinedSet.addAll(layersList);
-                                layersList = new ArrayList<>(combinedSet);
-                        }
-                         
-                   
-                            ArrayList<Layer> linkedLayers = new ArrayList<>();
-                      
-                      
-                            //now wae want to create them
-                       boolean alreadyCreated=false;
-                       Layer alredyCreatedLayer=null;
-                       String ID;
-                        for(DesignNode layer : layersList ){
-                                if(layer.getClass()==Layer.class){
-                                        ID=layer.ComputeUniqueID(Layer.class);
-                                         // System.out.println("--------------------------------------------------------------------------------------------------------------------------");
-                                        for(Layer linkedLayer : linkedLayers){
-                                                 System.out.println(linkedLayer.ComputeUniqueID(Layer.class)+"--------------"+ID);
-                                                if(linkedLayer.ComputeUniqueID(Layer.class).equals(ID)){
-                                                    //      System.out.println("===============================================");
-                                                        alreadyCreated=true;
-                                                        alredyCreatedLayer=linkedLayer;
-                                                        break;
-                                                }
+                ArrayList<DesignNode> layersList = new ArrayList<>();
+
+                for (int i = 0; i < imageBuilders.size(); i++) {
+                        Set<DesignNode> combinedSet = new HashSet<>(imageBuilders.get(i).getAllLowerDNOff(Layer.class));
+                        combinedSet.addAll(layersList);
+                        layersList = new ArrayList<>(combinedSet);
+                }
+
+                ArrayList<Layer> linkedLayers = new ArrayList<>();
+
+                //now wae want to create them
+                boolean alreadyCreated = false;
+                Layer alredyCreatedLayer = null;
+                String ID;
+                for (DesignNode layer : layersList) {
+                        if (layer.getClass() == Layer.class) {
+                                ID = layer.ComputeUniqueID(Layer.class);
+                                // System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+                                for (Layer linkedLayer : linkedLayers) {
+                                        //           System.out.println(linkedLayer.ComputeUniqueID(Layer.class)+"--------------"+ID);
+                                        if (linkedLayer.ComputeUniqueID(Layer.class).equals(ID)) {
+                                                //      System.out.println("===============================================");
+                                                alreadyCreated = true;
+                                                alredyCreatedLayer = linkedLayer;
+                                                break;
                                         }
-                                        
-                                     
-                                        
-                                       if(alreadyCreated){
-                                                try {
-                                                    //      System.out.println("########### unique ID to link : "+layer.ComputeUniqueID(Layer.class));
-                                                        layer.linkDesignNodeToInterfaceNodes(alredyCreatedLayer.getLinkedinterface());
-                                                        alreadyCreated=false;
-                                                } catch (InvalidLinkbetweenNode ex) {
-                                                        Logger.getLogger(InterfacesManager.class.getName()).log(Level.SEVERE, null, ex);
-                                                }
-                                       }else{
-                                                 layer.createInterfaceTreeFromNodeTree(null,Layer.class);
-                                                 
-                                               if(!layer.getLinkedinterface().interfaceBranchContainOnlyVoidInterfaces()){
-                                                        addInterface((InterfaceContainer) layer.getLinkedinterface());
-                                                        System.out.println("Interface qe want to add"+layer.getLinkedinterface());
-                                                         assignInterfaceToTab( ((Layer) layer).getTabName(),layer.getLinkedinterface());
-                                                         linkedLayers.add((Layer)layer);
-                                               }
-                                       }
+                                }
+
+                                if (alreadyCreated) {
+                                        try {
+                                                //      System.out.println("########### unique ID to link : "+layer.ComputeUniqueID(Layer.class));
+                                                layer.linkDesignNodeToInterfaceNodes(alredyCreatedLayer.getLinkedinterface());
+                                                alreadyCreated = false;
+                                        } catch (InvalidLinkbetweenNode ex) {
+                                                Logger.getLogger(InterfacesManager.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                } else {
+                                        layer.createInterfaceTreeFromNodeTree(null, Layer.class);
+                                        //   System.out.println("ONLY VOID ? : "+layer.getLinkedinterface().interfaceBranchContainOnlyVoidInterfaces());
+                                        if (!layer.getLinkedinterface().interfaceBranchContainOnlyVoidInterfaces()) {
+                                                addInterface((InterfaceContainer) layer.getLinkedinterface());
+                                                //   System.out.println("Interface qe want to add"+layer.getLinkedinterface());
+                                                assignInterfaceToTab(((Layer) layer).getTabName(), layer.getLinkedinterface());
+                                                linkedLayers.add((Layer) layer);
+                                        }
                                 }
                         }
-                        
+                }
+
         }
-        
-        
+
         /**
          * Add an interface in the arrayList of the Desing builder
          *
@@ -134,8 +126,6 @@ public class InterfacesManager {
         public void addInterface(InterfaceContainer interf) {
                 interfaces.add(interf);
         }
-
-   
 
         /**
          * This function assign a layer to a tab (in main interface) It can
@@ -167,12 +157,7 @@ public class InterfacesManager {
                         Node interfaceNode = interfacesNodes.item(i);
                         Element interfaceElt = (Element) interfaceNode;
 
-                        try {
-                                tempInterface = findInterfaceByUniqueID(XmlManager.getStringAttribute(interfaceElt, "name", ""));
-                        } catch (XMLErrorInModelException ex) {
-                                Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                                tempInterface = null;
-                        }
+                        tempInterface = findInterfaceByUniqueID(XmlManager.getStringAttribute(interfaceElt, "name", ""));
                         if (tempInterface != null) {
                                 try {
                                         tempInterface.loadDesign(interfaceElt, 0);

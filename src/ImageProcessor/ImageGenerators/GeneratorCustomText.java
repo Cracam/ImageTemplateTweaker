@@ -7,10 +7,6 @@ package ImageProcessor.ImageGenerators;
 import ImageProcessor.ImageGenerator;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
-import ResourcesManager.XmlManager;
-import interfaces.InterfaceCustomText;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import org.w3c.dom.Element;
 
 /**
