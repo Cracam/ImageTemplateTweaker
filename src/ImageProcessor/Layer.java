@@ -183,7 +183,7 @@ public class Layer extends DesignNode {
         }
 
         //Management of the pos offset dictionary
-        public void addOffset(String id, PosFloat offset) {
+        public void setAnOffset(String id, PosFloat offset) {
                 this.offsets.put(id, offset);
         }
 

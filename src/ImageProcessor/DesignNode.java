@@ -131,7 +131,7 @@ public abstract class DesignNode extends VBox {
                 return null; // Retourne null si aucun élément correspondant n'est trouvé
         }
 
-        public <T extends DesignNode> T  getUpperDN(Class<T> nodeClass) {
+        public <T extends DesignNode> T getUpperDN(Class<T> nodeClass) {
                 if (upperDN == null) {
                         //          System.out.println("### case 1");
                         return null;
@@ -268,7 +268,7 @@ public abstract class DesignNode extends VBox {
                 String ret = this.DRYComputeUniqueID();
                 for (DesignNode lowerDN : lowersDN) {
                         if (stopClass != lowerDN.getClass()) {
-                               // System.out.println("------------- Intermadiate calculation : "+ lowerDN.ComputeUniqueID(stopClass));
+                                // System.out.println("------------- Intermadiate calculation : "+ lowerDN.ComputeUniqueID(stopClass));
                                 ret = ret + lowerDN.ComputeUniqueID(stopClass);
                         }
                 }
@@ -317,7 +317,7 @@ public abstract class DesignNode extends VBox {
          * @param nodeClass La classe des nœuds à récupérer.
          * @return Une liste de nœuds de type T.
          */
-        public <T extends DesignNode > ArrayList<T > getAllLowerDNOff(Class<T> nodeClass) {
+        public <T extends DesignNode> ArrayList<T> getAllLowerDNOff(Class<T> nodeClass) {
                 ArrayList<T> result = new ArrayList<>();
                 if (lowersDN != null) {
                         for (DesignNode designNode : lowersDN) {

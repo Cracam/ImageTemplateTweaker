@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package AppInterface;
 
 import AppInterface.Interfaces.InterfaceCustomColor;
 import AppInterface.Interfaces.InterfaceCustomImage;
+import AppInterface.Interfaces.InterfaceCustomText;
 import AppInterface.Interfaces.InterfaceMouvableImage;
 import AppInterface.Interfaces.VoidInterface;
 import ImageProcessor.DesignNode;
@@ -32,7 +29,7 @@ public class DesignInterfaceLinker {
                 linkMap = new HashMap<>();
                 linkMap.put("G_Fixed_Image", new DesignInterfacePair(GeneratorFixedImage.class, VoidInterface.class));
                 linkMap.put("G_Custom_Image", new DesignInterfacePair(GeneratorCustomImage.class, InterfaceCustomImage.class));
-                linkMap.put("G_Custom_Text", new DesignInterfacePair(GeneratorCustomText.class, VoidInterface.class));
+                linkMap.put("G_Custom_Text", new DesignInterfacePair(GeneratorCustomText.class, InterfaceCustomText.class));
                 linkMap.put("G_Fixed_Text_Custom_Color_Custom_Style", new DesignInterfacePair(GeneratorFixedTextCustomStyle.class, VoidInterface.class));
                  linkMap.put("T_Custom_Color", new DesignInterfacePair(TransformerCustomColor.class, InterfaceCustomColor.class));
                  linkMap.put("T_Mouvable_Image", new DesignInterfacePair(TransformerMovableImage.class, InterfaceMouvableImage.class));
@@ -64,12 +61,7 @@ public class DesignInterfaceLinker {
                 }
                 return null; // ou lancer une exception si l'élément n'est pas trouvé
         }
-        
-        
-   
-        
-        
-        
+
         private static class DesignInterfacePair {
 
                 Class<? extends DesignNode> designNodeClass;

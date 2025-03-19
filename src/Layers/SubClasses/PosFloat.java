@@ -33,6 +33,14 @@ public class PosFloat {
                 this.pos_x = pos_x+otherPosFloat.getPos_x();
                 this.pos_y = pos_y+otherPosFloat.getPos_y();
         }
+
+        public void setPos_x(float pos_x) {
+                this.pos_x = pos_x;
+        }
+
+        public void setPos_y(float pos_y) {
+                this.pos_y = pos_y;
+        }
         
         
         

@@ -1,13 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package AppInterface.Interfaces;
 
 import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import Exeptions.ResourcesFileErrorException;
-import GradientCreatorInterface.GradientCreatorInterface;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -18,24 +13,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import staticFunctions.StaticImageEditing;
 import textinimagegenerator.TextInImageGenerator;
 
 /**
- * This class is a interface of a custom img Image loaded by the user
+ * 
  *
  * @author Camille LECOURT
  */
 public class InterfaceCustomText extends InterfaceNode {
-
   
         @FXML
         private TextInImageGenerator TextGenerator;
-
-    
-
-
-        private int[][] opacityMap = new int[1][1];
+        
         boolean textChanged = true;
 
         //The five different boolean to mdify the text bahavior
@@ -47,13 +36,9 @@ public class InterfaceCustomText extends InterfaceNode {
 
         public InterfaceCustomText(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
+                 upperInterface.placeInterface(this);
         }
 
-// canChangeText = true;
-//                canChangeTextSize = true;
-//                canChangeTextHeight = true;
-//                canChangeFont = true;
-//                canChangeColor = true;
         @Override
         protected void initialiseInterface() {
                 try {
@@ -61,13 +46,10 @@ public class InterfaceCustomText extends InterfaceNode {
                         if (fxmlLoader == null) {
                                 throw new ResourcesFileErrorException();
                         }
+                        
                         fxmlLoader.setRoot(this);
                         fxmlLoader.setController(this);
-
                         fxmlLoader.load();
-
-
-                       
 
                         // Add a listener to the changed property
                         TextGenerator.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -76,7 +58,6 @@ public class InterfaceCustomText extends InterfaceNode {
                                         this.textChanged();
                                         TextGenerator.setChanged(false);
                                      this.updateLinkedDesignNodes();
-
                                 }
                         });
 
@@ -176,13 +157,7 @@ public class InterfaceCustomText extends InterfaceNode {
          * @return
          */
         public BufferedImage getImageOut(float pixelMmFactor, float textSizeMin, float textSizeMax) {
-                if (textChanged) {
-                        //   refreshBlendTable();
-                        BufferedImage resizedImageGetRaw = this.TextGenerator.getImageOut(pixelMmFactor, textSizeMin, textSizeMax);
-                        this.opacityMap = StaticImageEditing.transformToOpacityArray(resizedImageGetRaw);
-                        textChanged = false;
-                }
-                return gradientPicker.getImageOut(opacityMap);
+                        return this.TextGenerator.getImageOut(pixelMmFactor, textSizeMin, textSizeMax);
         }
 
         /**
@@ -191,8 +166,6 @@ public class InterfaceCustomText extends InterfaceNode {
         private void textChanged() {
                 textChanged = true;
         }
-
-    
 
         public boolean isCanChangeText() {
                 return canChangeText;
@@ -238,10 +211,6 @@ public class InterfaceCustomText extends InterfaceNode {
                 return TextGenerator;
         }
 
-        public GradientCreatorInterface getGradientPicker() {
-                return gradientPicker;
-        }
-
         @Override
         protected Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -251,7 +220,5 @@ public class InterfaceCustomText extends InterfaceNode {
         public Element DRYsaveDesign(Document doc) {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
-
-
-
+        
 }
