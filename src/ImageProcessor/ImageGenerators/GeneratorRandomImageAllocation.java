@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ImageProcessor.ImagesTransformers;
+package ImageProcessor.ImageGenerators;
 
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
  *
  * @author Camille LECOURT
  */
-public class TransformerRandomImageAllocation extends ImageTransformer {
+public class GeneratorRandomImageAllocation extends ImageTransformer {
 
         private ArrayList<QuadrupletFloat> positions;
         private ArrayList<QuadrupletInt> pixelPositions;
@@ -30,7 +30,7 @@ public class TransformerRandomImageAllocation extends ImageTransformer {
           private float maxXSize = 0;
           private      float maxYSize = 0;
 
-        public TransformerRandomImageAllocation(DesignNode upperDE, Element elt ) throws XMLErrorInModelException {
+        public GeneratorRandomImageAllocation(DesignNode upperDE, Element elt ) throws XMLErrorInModelException {
                 super(upperDE, elt);
         }
                 

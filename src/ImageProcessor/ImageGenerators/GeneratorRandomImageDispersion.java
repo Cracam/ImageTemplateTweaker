@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package ImageProcessor.ImagesTransformers;
+package ImageProcessor.ImageGenerators;
 
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
@@ -14,7 +14,7 @@ import org.w3c.dom.Element;
  *
  * @author Camille LECOURT
  */
-public class TransformerRandomImageDispersion extends ImageTransformer {
+public class GeneratorRandomImageDispersion extends ImageTransformer {
 
         private float maxXSize;
         private float minXSize;
@@ -24,7 +24,7 @@ public class TransformerRandomImageDispersion extends ImageTransformer {
         private float maxInterval;
         private float minInterval;
 
-        public TransformerRandomImageDispersion(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
+        public GeneratorRandomImageDispersion(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
         }
 
