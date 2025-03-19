@@ -5,12 +5,14 @@ import AppInterface.Interfaces.InterfaceCustomImage;
 import AppInterface.Interfaces.InterfaceCustomText;
 import AppInterface.Interfaces.InterfaceFixedTextCustomStyle;
 import AppInterface.Interfaces.InterfaceMouvableImage;
+import AppInterface.Interfaces.InterfaceRandomImageDispersion;
 import AppInterface.Interfaces.VoidInterface;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerators.GeneratorCustomImage;
 import ImageProcessor.ImageGenerators.GeneratorCustomText;
 import ImageProcessor.ImageGenerators.GeneratorFixedImage;
 import ImageProcessor.ImageGenerators.GeneratorFixedTextCustomStyle;
+import ImageProcessor.ImageGenerators.GeneratorRandomImageDispersion;
 import ImageProcessor.ImagesTransformers.TransformerCustomColor;
 import ImageProcessor.ImagesTransformers.TransformerMovableImage;
 import ImageProcessor.Layer;
@@ -32,9 +34,12 @@ public class DesignInterfaceLinker {
                 linkMap.put("G_Custom_Image", new DesignInterfacePair(GeneratorCustomImage.class, InterfaceCustomImage.class));
                 linkMap.put("G_Custom_Text", new DesignInterfacePair(GeneratorCustomText.class, InterfaceCustomText.class));
                 linkMap.put("G_Fixed_Text_Custom_Color_Custom_Style", new DesignInterfacePair(GeneratorFixedTextCustomStyle.class, InterfaceFixedTextCustomStyle.class));
-                 linkMap.put("T_Custom_Color", new DesignInterfacePair(TransformerCustomColor.class, InterfaceCustomColor.class));
+                  linkMap.put("G_Random_Image_Dispersion", new DesignInterfacePair(GeneratorRandomImageDispersion.class, InterfaceRandomImageDispersion.class));
+
+                  linkMap.put("T_Custom_Color", new DesignInterfacePair(TransformerCustomColor.class, InterfaceCustomColor.class));
                  linkMap.put("T_Mouvable_Image", new DesignInterfacePair(TransformerMovableImage.class, InterfaceMouvableImage.class));
-                
+               
+                 
                  linkMap.put("Void_Image", new DesignInterfacePair(VoidImage.class, VoidInterface.class));
 
                  linkMap.put("Layer", new DesignInterfacePair(Layer.class, LayerContainer.class));

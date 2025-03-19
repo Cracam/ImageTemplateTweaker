@@ -6,7 +6,7 @@ package ImageProcessor.ImageGenerators;
 
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
-import ImageProcessor.ImageTransformer;
+import ImageProcessor.ImageGenerator;
 import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
 import interfaces.SubInterfaceRandomImageAllocation;
@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
  *
  * @author Camille LECOURT
  */
-public class GeneratorRandomImageAllocation extends ImageTransformer {
+public class GeneratorRandomImageAllocation extends ImageGenerator {
 
         private ArrayList<QuadrupletFloat> positions;
         private ArrayList<QuadrupletInt> pixelPositions;
@@ -88,8 +88,9 @@ public class GeneratorRandomImageAllocation extends ImageTransformer {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
+
         @Override
-        public void DRY_DRYUpdate(BufferedImage img_in) {
+        public void DRYUpdate() {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 }

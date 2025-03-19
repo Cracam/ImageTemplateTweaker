@@ -42,8 +42,8 @@
 
 
 				<Layer name="test FIXED Image" tab_name="Commun">
-					<pos pos_x="10" pos_y="15"/>
-					<size size_x="68" size_y="18"/>
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="40"/>
 					<Generator>
 						<G_Fixed_Image>
 							<Image image_name="RECTO_arrierePlan.png"/>
@@ -82,6 +82,32 @@
 						</T_Custom_Color>
 					</Transformers>
 				</Layer>
+
+
+				<Layer name="test rdn disp" tab_name="disp">
+					<pos pos_x="40" pos_y="15"/>
+					<size size_x="68" size_y="14"/>
+					<Generator>
+						<G_Random_Image_Dispersion>
+							<Size maxXSize="5.0" minXSize="2.0" maxYSize="3.0" minYSize="1.0"/>
+							<Interval maxInterval="10.0" minInterval="4.0"/>
+							<SubLayer>
+								<Generator>
+								<G_Fixed_Image>
+									<Image image_name="graine.png"/>
+								</G_Fixed_Image>
+								</Generator>
+								<Transformers>
+									<T_Custom_Color>
+									</T_Custom_Color>
+								</Transformers>
+							</SubLayer>
+						</G_Random_Image_Dispersion>
+					</Generator>
+					<Transformers>
+					</Transformers>
+				</Layer>
+				
 
 		</Output>	
 

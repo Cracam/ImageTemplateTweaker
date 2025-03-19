@@ -12,7 +12,7 @@ import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.ResourcesManager;
 import interfaces.Interface;
 import interfaces.InterfaceRandomImageAllocations;
-import interfaces.InterfaceRandomImageDispersion;
+import AppInterface.Interfaces.InterfaceRandomImageDispersion;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;

@@ -84,11 +84,11 @@ public class InterfacesManager {
                 for (DesignNode layer : layersList) {
                         if (layer.getClass() == Layer.class) {
                                 ID = layer.ComputeUniqueID(Layer.class);
-                                // System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+                               //  System.out.println("--------------------------------------------------------------------------------------------------------------------------");
                                 for (Layer linkedLayer : linkedLayers) {
-                                          //       System.out.println(linkedLayer.ComputeUniqueID(Layer.class)+"--------------"+ID);
+                                      //           System.out.println(linkedLayer.ComputeUniqueID(Layer.class)+"--------------"+ID);
                                         if (linkedLayer.ComputeUniqueID(Layer.class).equals(ID)) {
-                                                //     System.out.println("===============================================");
+                                   //                  System.out.println("===============================================");
                                                 alreadyCreated = true;
                                                 alredyCreatedLayer = linkedLayer;
                                                 break;

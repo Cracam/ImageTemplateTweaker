@@ -20,7 +20,6 @@ import Layers.SubClasses.PosFloat;
 import Layers.SubClasses.PosInt;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import java.awt.image.BufferedImage;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
