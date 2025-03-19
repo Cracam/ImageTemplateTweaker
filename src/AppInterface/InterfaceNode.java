@@ -27,7 +27,7 @@ public abstract class InterfaceNode extends VBox {
 
         protected InterfaceNode upperInterface;
         private final ArrayList<InterfaceNode> lowerInterfaces = new ArrayList<>();
-        private final ArrayList<DesignNode> linkedDesignNodes = new ArrayList<>();
+        protected final ArrayList<DesignNode> linkedDesignNodes = new ArrayList<>();
 
         // Constructeur prenant un seul upperDN
         public InterfaceNode(InterfaceNode upperIN, String name) {

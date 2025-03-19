@@ -69,6 +69,19 @@
 				</Layer>	
 
 				
+				<Layer name="test Custom TEXT" tab_name="Commun">
+					<pos pos_x="40" pos_y="15"/>
+					<size size_x="68" size_y="18"/>
+					<Generator>
+						<G_Fixed_Text_Custom_Color_Custom_Style>
+							<Text TextHeightFactor="3.0" TextSizeMin="2.5" TextSizeMax="15" Text="Bla __ Blaé"/>
+						</G_Fixed_Text_Custom_Color_Custom_Style>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
 
 		</Output>	
 

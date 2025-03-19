@@ -24,9 +24,9 @@ public class GeneratorCustomText extends ImageGenerator {
 
         boolean textChanged = true; //use only the the sub classe
 
-        float textHeightFactor; //in mm
-        float textSizeMin; //in mm
-        float textSizeMax;//in mm
+        protected float textHeightFactor; //in mm
+        protected float textSizeMin; //in mm
+        protected float textSizeMax;//in mm
 
         public GeneratorCustomText(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
@@ -73,15 +73,15 @@ public class GeneratorCustomText extends ImageGenerator {
 
         @Override
         public void DRYUpdate() {
-                float pixelMillimeterFactor =this.getUpperDN(ImageBuilder.class).getDesignBuilder().getPixelMmFactor();
+                float pixelMillimeterFactor = this.getUpperDN(ImageBuilder.class).getDesignBuilder().getPixelMmFactor();
                 this.imageOut = ((InterfaceCustomText) (this.getLinkedinterface())).getImageOut(pixelMillimeterFactor, textSizeMin, textSizeMax);
                 PosFloat offset = new PosFloat(0, 0);
 
-                float x = -this.imageOut.getWidth() / 2/pixelMillimeterFactor;
+                float x = -this.imageOut.getWidth() / 2 / pixelMillimeterFactor;
                 offset.setPos_x(x);
 
                 TextInImageGenerator textGen = ((InterfaceCustomText) this.getLinkedinterface()).getTextGenerator();
-                float y = (float) (textSizeMin + (textSizeMax - textSizeMin) * textGen.getTextSizeValue());
+                float y = (float) - (textSizeMin + (textSizeMax - textSizeMin) * textGen.getTextSizeValue());
                 y = (float) (y - textGen.getTextHeigthValue() * this.textHeightFactor);
                 offset.setPos_y(y);
 

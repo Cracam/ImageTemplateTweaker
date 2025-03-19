@@ -1,18 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package AppInterface.Interfaces;
 
 import AppInterface.InterfaceNode;
+import ImageProcessor.DesignNode;
+import ImageProcessor.ImageGenerators.GeneratorFixedTextCustomStyle;
 
 /**
  *
  * @author Camille LECOURT
  */
-public class InterfaceFixedTextCustomStyleCustomColor extends InterfaceCustomText {
+public class InterfaceFixedTextCustomStyle extends InterfaceCustomText {
 
-        public InterfaceFixedTextCustomStyleCustomColor(InterfaceNode upperIN, String name) {
+        public InterfaceFixedTextCustomStyle(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
                 canChangeText = false;
                 canChangeTextSize = true;
@@ -98,4 +96,12 @@ public class InterfaceFixedTextCustomStyleCustomColor extends InterfaceCustomTex
 //                return StaticImageEditing.transformToOpacityArray(resizedImageGetRaw);
 //        }
 
+        @Override
+          public void addDesignNode(DesignNode DN) {
+                linkedDesignNodes.add(DN);
+                DN.setLinkedInterface(this);
+                        this.getTextGenerator().setText(((GeneratorFixedTextCustomStyle)DN).getText());
+        }
+          
+     
 }
