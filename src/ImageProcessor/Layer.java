@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package ImageProcessor;
 
 import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
@@ -68,8 +64,8 @@ public class Layer extends DesignNode {
                         if (lowerLayer == null || lowerLayer.getImageOut() == null) {
                                 this.imageOut = image_get;
                         } else {
-                                PosInt posOffset =getFinalOffset();
-                                this.imageOut = overlayImages(lowerLayer.getImageOut(), image_get, this.pixelPosSize.getPos_x()+posOffset.getPos_x(), this.pixelPosSize.getPos_y()+posOffset.getPos_y());
+                                PosInt posOffset = getFinalOffset();
+                                this.imageOut = overlayImages(lowerLayer.getImageOut(), image_get, this.pixelPosSize.getPos_x() + posOffset.getPos_x(), this.pixelPosSize.getPos_y() + posOffset.getPos_y());
                         }
 
                 } catch (DesingNodeLowerNodeIsAnormalyVoidException ex) {
@@ -120,11 +116,7 @@ public class Layer extends DesignNode {
                 }
 
                 ////////
-                //creating the last element of the chain if there is generator.
-                //if not it will be linked to another layer.
-            //    subElt = extractSingleElement(elt.getElementsByTagName("Generator"));
-                                subElt = getDirectChildByTagName(elt, "Generator");
-
+                subElt = getDirectChildByTagName(elt, "Generator");
 
                 if (subElt == null) {
                         throw new XMLErrorInModelException("Le Layer " + this.name + "n'a pas de bloc: Generator valide");
@@ -196,7 +188,7 @@ public class Layer extends DesignNode {
                 for (Map.Entry<String, PosFloat> offset : offsets.entrySet()) {
                         preRet.add(offset.getValue());
                 }
-                return new PosInt(preRet,pixelMilimeterFactor);
+                return new PosInt(preRet, pixelMilimeterFactor);
         }
 
 }

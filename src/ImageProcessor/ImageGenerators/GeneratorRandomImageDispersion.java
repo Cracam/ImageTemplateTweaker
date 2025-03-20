@@ -97,8 +97,6 @@ public class GeneratorRandomImageDispersion extends ImageGenerator {
                 ((ImageGenerator) currentUpperDN).setDim(LOCAL_UPSCALE * maxXSize, LOCAL_UPSCALE * maxYSize);
         }
 
-        
-        
         @Override
         public void DRYUpdate() {
                 float pixelMillimeterFactor = this.getUpperDN(ImageBuilder.class).getDesignBuilder().getPixelMmFactor();
