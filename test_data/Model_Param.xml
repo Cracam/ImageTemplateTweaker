@@ -105,6 +105,9 @@
 						</G_Random_Image_Dispersion>
 					</Generator>
 					<Transformers>
+						<T_Mouvable_Image>
+							<OffSet X_MaxOffset="30.0" X_MinOffset="-3.0" Y_MaxOffset="30.0" Y_MinOffset="-14.5"/>
+						</T_Mouvable_Image>
 					</Transformers>
 				</Layer>
 				
@@ -122,8 +125,6 @@
 					</Generator>
 					<Transformers>
 						<T_Custom_Color>
-							<Param>
-							</Param>
 						</T_Custom_Color>
 					</Transformers>
 				</Layer>

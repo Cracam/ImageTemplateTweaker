@@ -36,15 +36,17 @@ public class InterfaceRandomImageDispersion extends InterfaceContainer {
         private RangeSlider DS_intervalSize;
 
         @FXML
-        private VBox vboxInterface;
+        private VBox vboxContainer;
 
         @FXML
         private ImageView prev;
 
         public InterfaceRandomImageDispersion(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
-                 upperInterface.placeInterface(this);
-                 // giveVBox(vboxInterface);
+                 
+                  giveVBox(vboxContainer);
+                  System.out.println("##########################LINK ######################################");
+                  upperInterface.placeInterface(this);
         }
 
 

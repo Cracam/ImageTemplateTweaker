@@ -116,14 +116,17 @@ public class XmlManager {
                 if (element == null) {
                         throw new XMLErrorInModelException("Element that qhould be linked to " + attributeName + " is null.");
                 }
-
+           //    System.out.println( "=================="+element.getAttributes().getNamedItem(attributeName).getFirstChild().getNodeValue());
                 Node attributeNode = element.getAttributes().getNamedItem(attributeName);
                 if (attributeNode != null) {
                         return attributeNode.getNodeValue();
                 } else {
                         throw new XMLErrorInModelException("Attribute " + attributeName + " is missing.");
                 }
-        }
+        }     
+        
+        
+        
    // Méthode pour extraire le premier élément de type ELEMENT_NODE d'une NodeList
     public static Element extractSingleElement(NodeList nodeList) {
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -134,4 +137,20 @@ public class XmlManager {
         }
         return null;
     }
+    
+
+        // Méthode pour obtenir le premier enfant direct d'un élément parent avec un nom de balise spécifique
+    public static Element getDirectChildByTagName(Element parentElement, String tagName) {
+        NodeList allChildren = parentElement.getChildNodes();
+
+        for (int i = 0; i < allChildren.getLength(); i++) {
+            Node childNode = allChildren.item(i);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE && childNode.getNodeName().equals(tagName)) {
+                return (Element) childNode;
+            }
+        }
+
+        return null; // Retourne null si aucun enfant direct correspondant n'est trouvé
+    }
+
 }

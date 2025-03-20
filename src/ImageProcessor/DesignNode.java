@@ -228,6 +228,7 @@ public abstract class DesignNode extends VBox {
 
         public InterfaceNode createInterfaceTreeFromNodeTree(InterfaceNode upperIN, Class<?> stopClass) {
                 InterfaceNode InterfaceRoot = this.createLinkedInterface(upperIN);
+             //   System.out.println("CCCCCCCCCCC---- :  "+InterfaceRoot.getClass().getName());
                 for (DesignNode lowerDN : lowersDN) {
                         if (stopClass != lowerDN.getClass()) {
                                 lowerDN.createInterfaceTreeFromNodeTree(InterfaceRoot, stopClass);

@@ -19,6 +19,7 @@ import Exceptions.XMLExeptions.XMLErrorInModelException;
 import Layers.SubClasses.PosFloat;
 import Layers.SubClasses.PosInt;
 import static ResourcesManager.XmlManager.extractSingleElement;
+import static ResourcesManager.XmlManager.getDirectChildByTagName;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
@@ -103,7 +104,7 @@ public class Layer extends DesignNode {
                 DRYRefreshDPI();
 
                 currentUpperDN = this;
-                subElt = extractSingleElement(elt.getElementsByTagName("Transformers"));
+                subElt = getDirectChildByTagName(elt, "Transformers");
                 if (subElt != null) {
                         NodeList nodeTransformersList = subElt.getChildNodes();
 
@@ -121,7 +122,9 @@ public class Layer extends DesignNode {
                 ////////
                 //creating the last element of the chain if there is generator.
                 //if not it will be linked to another layer.
-                subElt = extractSingleElement(elt.getElementsByTagName("Generator"));
+            //    subElt = extractSingleElement(elt.getElementsByTagName("Generator"));
+                                subElt = getDirectChildByTagName(elt, "Generator");
+
 
                 if (subElt == null) {
                         throw new XMLErrorInModelException("Le Layer " + this.name + "n'a pas de bloc: Generator valide");

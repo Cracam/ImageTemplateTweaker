@@ -27,7 +27,7 @@ import taboftiltedpane.TabOfTiltedPane;
  */
 public class InterfacesManager {
 
-        private final ArrayList<InterfaceContainer> interfaces = new ArrayList<>();
+        private final ArrayList<LayerContainer> interfaces = new ArrayList<>();
         private final ArrayList<TabOfTiltedPane> tabs = new ArrayList<>();
         private TabPane tabPane;
 
@@ -47,7 +47,7 @@ public class InterfacesManager {
                         return null;
                 }
 
-                for (InterfaceContainer myInterface : this.interfaces) {
+                for (LayerContainer myInterface : this.interfaces) {
                         if (targetName.equals(myInterface.ComputeUniqueID())) {
                                 return myInterface;
                         }
@@ -107,7 +107,7 @@ public class InterfacesManager {
                                         layer.createInterfaceTreeFromNodeTree(null, Layer.class);
                                         //   System.out.println("ONLY VOID ? : "+layer.getLinkedinterface().interfaceBranchContainOnlyVoidInterfaces());
                                         if (!layer.getLinkedinterface().interfaceBranchContainOnlyVoidInterfaces()) {
-                                                addInterface((InterfaceContainer) layer.getLinkedinterface());
+                                                addInterface((LayerContainer) layer.getLinkedinterface());
                                                 //   System.out.println("Interface qe want to add"+layer.getLinkedinterface());
                                                 assignInterfaceToTab(((Layer) layer).getTabName(), layer.getLinkedinterface());
                                                 linkedLayers.add((Layer) layer);
@@ -123,7 +123,7 @@ public class InterfacesManager {
          *
          * @param interf
          */
-        public void addInterface(InterfaceContainer interf) {
+        public void addInterface(LayerContainer interf) {
                 interfaces.add(interf);
         }
 
