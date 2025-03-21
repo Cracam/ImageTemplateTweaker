@@ -33,8 +33,10 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
 
         @Override
         protected void generateFromElement() throws XMLErrorInModelException {
-                //Loading each positions
+                positions = new ArrayList<>();
+                pixelPositions = new ArrayList<>();
 
+//Loading each positions
                 Element subElt = extractSingleElement(elt.getElementsByTagName("PosSizes"));
 
                 NodeList subElements = subElt.getElementsByTagName("PosSize");
@@ -55,16 +57,15 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                         if (maxSizeY < size_y) {
                                 maxSizeY = size_y;
                         }
-                        DRYRefreshDPI();
+                  ///      DRYRefreshDPI();
                 }
-                
-                 interfaceLoaderElement = extractSingleElement( subElt.getElementsByTagName("SubLayer"));
-                
+
+                interfaceLoaderElement = extractSingleElement(subElt.getElementsByTagName("SubLayer"));
+
         }
 
         @Override
         public void DRYUpdate() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
         @Override
@@ -79,6 +80,5 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                 for (QuadrupletFloat posSize : positions) {
                         pixelPositions.add(new QuadrupletInt(posSize, factor));
                 }
-
         }
 }

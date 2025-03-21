@@ -7,17 +7,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <fx:root type="VBox" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox fx:id="InterfaceContainer">
+      <Label text="Dispersion Alléatoire des Eléments suivants : ">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
          <VBox.margin>
-            <Insets />
+            <Insets bottom="10.0" left="10.0" top="5.0" />
          </VBox.margin>
-      </VBox>
+      </Label>
       <HBox>
          <children>
-            <Label text="Nombre minimum à avoir : ">
+            <Label fx:id="MinimumNumberLabel" text="Nombre minimum à avoir : ">
                <font>
                   <Font size="14.0" />
                </font>

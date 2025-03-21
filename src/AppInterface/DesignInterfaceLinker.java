@@ -5,14 +5,18 @@ import AppInterface.Interfaces.InterfaceCustomImage;
 import AppInterface.Interfaces.InterfaceCustomText;
 import AppInterface.Interfaces.InterfaceFixedTextCustomStyle;
 import AppInterface.Interfaces.InterfaceMouvableImage;
+import AppInterface.Interfaces.InterfaceRandomImageAllocation;
 import AppInterface.Interfaces.InterfaceRandomImageDispersion;
+import AppInterface.Interfaces.InterfaceRandomSubImageAllocation;
 import AppInterface.Interfaces.VoidInterface;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerators.GeneratorCustomImage;
 import ImageProcessor.ImageGenerators.GeneratorCustomText;
 import ImageProcessor.ImageGenerators.GeneratorFixedImage;
 import ImageProcessor.ImageGenerators.GeneratorFixedTextCustomStyle;
+import ImageProcessor.ImageGenerators.GeneratorRandomImageAllocation;
 import ImageProcessor.ImageGenerators.GeneratorRandomImageDispersion;
+import ImageProcessor.ImageGenerators.GeneratorRandomSubImageAllocation;
 import ImageProcessor.ImagesTransformers.TransformerCustomColor;
 import ImageProcessor.ImagesTransformers.TransformerMovableImage;
 import ImageProcessor.Layer;
@@ -35,7 +39,10 @@ public class DesignInterfaceLinker {
                 linkMap.put("G_Custom_Text", new DesignInterfacePair(GeneratorCustomText.class, InterfaceCustomText.class));
                 linkMap.put("G_Fixed_Text_Custom_Color_Custom_Style", new DesignInterfacePair(GeneratorFixedTextCustomStyle.class, InterfaceFixedTextCustomStyle.class));
                   linkMap.put("G_Random_Image_Dispersion", new DesignInterfacePair(GeneratorRandomImageDispersion.class, InterfaceRandomImageDispersion.class));
+                  linkMap.put("G_ONLY_USED_IN_CODE", new DesignInterfacePair(GeneratorRandomSubImageAllocation.class, InterfaceRandomSubImageAllocation.class));
+                  linkMap.put("G_Random_Image_Allocation", new DesignInterfacePair(GeneratorRandomImageAllocation.class, InterfaceRandomImageAllocation.class));
 
+                  
                   linkMap.put("T_Custom_Color", new DesignInterfacePair(TransformerCustomColor.class, InterfaceCustomColor.class));
                  linkMap.put("T_Mouvable_Image", new DesignInterfacePair(TransformerMovableImage.class, InterfaceMouvableImage.class));
                

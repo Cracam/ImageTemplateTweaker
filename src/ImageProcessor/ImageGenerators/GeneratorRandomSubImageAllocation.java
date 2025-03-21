@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package ImageProcessor.ImageGenerators;
 
 import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
@@ -43,14 +40,6 @@ public class GeneratorRandomSubImageAllocation extends ImageGenerator {
 
                 
 
-                subElt = extractSingleElement(elt.getElementsByTagName("size"));
-                if (subElt == null) {
-                        throw new XMLErrorInModelException("L'élément 'size du Layer " + this.name + "est manquant ou invalide.");
-                }
-                float size_x = XmlManager.getFloatAttribute(subElt, "size_x", 0);
-                float size_y = XmlManager.getFloatAttribute(subElt, "size_y", 0);
-                setDim(size_x,size_y);
-                
                 
                 currentUpperDN = this;
                 subElt = getDirectChildByTagName(elt, "Transformers");
@@ -72,13 +61,13 @@ public class GeneratorRandomSubImageAllocation extends ImageGenerator {
                 subElt = getDirectChildByTagName(elt, "Generator");
 
                 if (subElt == null) {
-                        throw new XMLErrorInModelException("Le Layer " + this.name + "n'a pas de bloc: Generator valide");
+                        throw new XMLErrorInModelException("Le SubLayer " + this.name + "n'a pas de bloc: Generator valide");
                 }
 
                 subSubElt = extractSingleElement(subElt.getChildNodes());
 
                 if (subSubElt == null) {
-                        throw new XMLErrorInModelException("Le bloc generator du Layer " + this.name + "n'a pas de sous générateur valide\n\n " + subElt.getChildNodes().getLength());
+                        throw new XMLErrorInModelException("Le bloc generator du SubLayer " + this.name + "n'a pas de sous générateur valide\n\n " + subElt.getChildNodes().getLength());
                 }
 
                 key = subSubElt.getNodeName();

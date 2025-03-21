@@ -125,11 +125,11 @@
 								<PosSize pos_x="30" pos_y="40" size_x="10.5" size_y="10.5"/>
 							</PosSizes>
 
-							<SubLayer>
+							<SubLayer name="Consos">
 								<Generator>
-								<G_Fixed_Image>
-									<Image image_name="graine.png"/>
-								</G_Fixed_Image>
+									<G_Fixed_Image>
+										<Image image_name="graine.png"/>
+									</G_Fixed_Image>
 								</Generator>
 								<Transformers>
 									<T_Custom_Color>

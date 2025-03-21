@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <fx:root type="VBox" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox>
@@ -31,7 +30,7 @@
                   </Spinner>
                   <Button maxHeight="36.0" maxWidth="36.0" mnemonicParsing="false" onAction="#deleteThis" prefHeight="36.0" prefWidth="36.0">
                      <graphic>
-                        <ImageView fx:id="ButtonImage" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>
                      <VBox.margin>
                         <Insets bottom="5.0" top="25.0" />

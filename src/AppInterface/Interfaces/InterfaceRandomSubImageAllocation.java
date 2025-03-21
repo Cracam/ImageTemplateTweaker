@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Spinner;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.RangeSlider;
@@ -26,25 +27,23 @@ import org.w3c.dom.Element;
  *
  * @author Camille LECOURT
  */
-public class InterfaceRandomImageDispersion extends InterfaceContainer {
+public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 
 
-        @FXML
-        private RangeSlider DS_imageSize;
-
-        @FXML
-        private RangeSlider DS_intervalSize;
+  
 
         @FXML
-        private VBox vboxContainer;
+        private VBox SubInterfaceContainer;
 
         @FXML
-        private ImageView prev;
+        private Spinner NumberSelector;
+        
+        
 
-        public InterfaceRandomImageDispersion(InterfaceNode upperIN, String name) {
+        public InterfaceRandomSubImageAllocation(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
                  
-                  giveVBox(vboxContainer);
+                  giveVBox(SubInterfaceContainer);
                   upperInterface.placeInterface(this);
         }
 
@@ -52,7 +51,7 @@ public class InterfaceRandomImageDispersion extends InterfaceContainer {
         @Override
         protected void initialiseInterface() {
                 try {
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InterfaceRandomImagedispersion.fxml"));
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/SubInterfaceRandomAllocation.fxml"));
                         if (fxmlLoader == null) {
                                 throw new ResourcesFileErrorException();
                         }
@@ -61,15 +60,7 @@ public class InterfaceRandomImageDispersion extends InterfaceContainer {
 
                         fxmlLoader.load();
 
-                        DS_intervalSize.setMin(0);
-                        DS_intervalSize.setMax(1);
-                        DS_intervalSize.setLowValue(0.25);
-                        DS_intervalSize.setHighValue(0.75);
-
-                        DS_imageSize.setMin(0);
-                        DS_imageSize.setMax(1);
-                        DS_imageSize.setLowValue(0.25);
-                        DS_imageSize.setHighValue(0.75);
+                 
 
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
@@ -145,23 +136,9 @@ public class InterfaceRandomImageDispersion extends InterfaceContainer {
 //                DS_imageSize.setHighValue(Double.parseDouble(dataOfTheLayer.getElementsByTagName("Size").item(0).getAttributes().getNamedItem("Max_Size").getNodeValue()));
 //
 //        }
+        
 
-        public float getLowIntervalSize() {
-                return (float) this.DS_intervalSize.getLowValue();
-        }
-
-        public float getHighIntervalSize() {
-                return (float) this.DS_intervalSize.getHighValue();
-        }
-
-        public float getLowImageSize() {
-                return (float) this.DS_imageSize.getLowValue();
-        }
-
-        public float getHighImageSize() {
-                return (float) this.DS_imageSize.getHighValue();
-        }
-
+ 
         @Override
         protected Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

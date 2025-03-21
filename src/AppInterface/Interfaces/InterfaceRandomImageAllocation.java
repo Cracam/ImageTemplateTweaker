@@ -1,13 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package AppInterface.Interfaces;
 
 import AppInterface.InterfaceContainer;
 import Exeptions.ResourcesFileErrorException;
-import ResourcesManager.XmlChild;
-import ResourcesManager.XmlManager;
 import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import imageloaderinterface.ImageLoaderInterface;
@@ -16,9 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import org.controlsfx.control.RangeSlider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -26,25 +19,20 @@ import org.w3c.dom.Element;
  *
  * @author Camille LECOURT
  */
-public class InterfaceRandomImageDispersion extends InterfaceContainer {
-
-
-        @FXML
-        private RangeSlider DS_imageSize;
+public class InterfaceRandomImageAllocation extends InterfaceContainer {
 
         @FXML
-        private RangeSlider DS_intervalSize;
+        private Label MinimumNumberLabel;
+        
 
         @FXML
-        private VBox vboxContainer;
+        private VBox SubInterfaceContainer;
 
-        @FXML
-        private ImageView prev;
 
-        public InterfaceRandomImageDispersion(InterfaceNode upperIN, String name) {
+        public InterfaceRandomImageAllocation(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
                  
-                  giveVBox(vboxContainer);
+                  giveVBox(SubInterfaceContainer);
                   upperInterface.placeInterface(this);
         }
 
@@ -52,7 +40,7 @@ public class InterfaceRandomImageDispersion extends InterfaceContainer {
         @Override
         protected void initialiseInterface() {
                 try {
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InterfaceRandomImagedispersion.fxml"));
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InterfaceRandomAllocation.fxml"));
                         if (fxmlLoader == null) {
                                 throw new ResourcesFileErrorException();
                         }
@@ -61,15 +49,6 @@ public class InterfaceRandomImageDispersion extends InterfaceContainer {
 
                         fxmlLoader.load();
 
-                        DS_intervalSize.setMin(0);
-                        DS_intervalSize.setMax(1);
-                        DS_intervalSize.setLowValue(0.25);
-                        DS_intervalSize.setHighValue(0.75);
-
-                        DS_imageSize.setMin(0);
-                        DS_imageSize.setMax(1);
-                        DS_imageSize.setLowValue(0.25);
-                        DS_imageSize.setHighValue(0.75);
 
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
@@ -146,20 +125,9 @@ public class InterfaceRandomImageDispersion extends InterfaceContainer {
 //
 //        }
 
-        public float getLowIntervalSize() {
-                return (float) this.DS_intervalSize.getLowValue();
-        }
-
-        public float getHighIntervalSize() {
-                return (float) this.DS_intervalSize.getHighValue();
-        }
-
-        public float getLowImageSize() {
-                return (float) this.DS_imageSize.getLowValue();
-        }
-
-        public float getHighImageSize() {
-                return (float) this.DS_imageSize.getHighValue();
+          @FXML
+        private void createNewSubImgBuilder(){
+                
         }
 
         @Override
