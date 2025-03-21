@@ -110,6 +110,41 @@
 						</T_Mouvable_Image>
 					</Transformers>
 				</Layer>
+
+
+
+				<Layer name="test rdn alloc" tab_name="dispAl">
+					<pos pos_x="0" pos_y="5"/>
+					<size size_x="88" size_y="54"/>
+					<Generator>
+						<G_Random_Image_Allocation>
+							<PosSizes>
+								<PosSize pos_x="10" pos_y="15" size_x="18.5" size_y="18.5"/>
+								<PosSize pos_x="30" pos_y="20" size_x="14.5" size_y="14.5"/>
+								<PosSize pos_x="10" pos_y="35" size_x="14.5" size_y="14.5"/>
+								<PosSize pos_x="30" pos_y="40" size_x="10.5" size_y="10.5"/>
+							</PosSizes>
+
+							<SubLayer>
+								<Generator>
+								<G_Fixed_Image>
+									<Image image_name="graine.png"/>
+								</G_Fixed_Image>
+								</Generator>
+								<Transformers>
+									<T_Custom_Color>
+									</T_Custom_Color>
+								</Transformers>
+							</SubLayer>
+						</G_Random_Image_Allocation>
+					</Generator>
+					<Transformers>
+						<T_Mouvable_Image>
+							<OffSet X_MaxOffset="30.0" X_MinOffset="-3.0" Y_MaxOffset="30.0" Y_MinOffset="-14.5"/>
+						</T_Mouvable_Image>
+					</Transformers>
+				</Layer>
+				
 				
 
 		</Output>	

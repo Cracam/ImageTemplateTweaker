@@ -4,15 +4,20 @@
  */
 package ImageProcessor.ImageGenerators;
 
+import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerator;
 import static ImageProcessor.ImageGenerator.createGenerator;
+import ImageProcessor.ImageTransformer;
 import static ImageProcessor.ImageTransformer.createTransformer;
+import ImageProcessor.Layer;
 import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getDirectChildByTagName;
 import static ResourcesManager.XmlManager.getStringAttribute;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -26,56 +31,6 @@ public class GeneratorRandomSubImageAllocation extends ImageGenerator {
         public GeneratorRandomSubImageAllocation(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
         }
-
-    
-                
-
-
-//
-//        @Override
-//        public void readNode(Element paramNode) {
-//
-//                //Loading each positions
-//                //    Element element = (Element) 
-//                Element element = (Element) paramNode.getElementsByTagName("SubImagesData").item(0);
-//                NodeList subElements = element.getElementsByTagName("SubImagesData");
-//                float pos_x, pos_y, size_x, size_y;
-//                Element subElement;
-//
-//              
-//
-//                for (int i = 0; i < subElements.getLength(); i++) {
-//                        subElement = (Element) subElements.item(i);
-//                        pos_x = XmlManager.getFloatAttribute(subElement, "pos_x", 0);
-//                        pos_y = XmlManager.getFloatAttribute(subElement, "pos_y", 0);
-//                        size_x = XmlManager.getFloatAttribute(subElement, "size_x", 0);
-//                        size_y = XmlManager.getFloatAttribute(subElement, "size_y", 0);
-//                        positions.add(new QuadrupletFloat(pos_x, pos_y, size_x, size_y));
-//                        pixelPositions.add(new QuadrupletInt(0, 0, 0, 0));
-//                        pixelPositions.get(i).computePixelPosSize(positions.get(i), linkedImagesBuilder.getPixelMmFactor());
-//
-//                        if (maxXSize < size_x) {
-//                                maxXSize = size_x;
-//                        }
-//                        if (maxYSize < size_y) {
-//                                maxYSize = size_y;
-//                        }
-//                }
-//                interfaceLoaderElement = (Element) paramNode.getElementsByTagName("Interface").item(0);
-//
-//                subImageBuilders.add(new SubImageBuilder(this.linkedImagesBuilder.getDesignBuilder(), interfaceLoaderElement, maxXSize, maxYSize, this));
-//        }
-//
-//        
-//          
-//        public SubInterfaceRandomImageAllocation createNewImgBuilder() {
-//                lowerImageBuilders.add(new SubImageBuilder(this.linkedImagesBuilder.getDesignBuilder(), interfaceLoaderElement,  maxXSize, maxYSize, this));
-//             
-//                SubInterfaceRandomImageAllocation subInter=new SubInterfaceRandomImageAllocation("Item de"+ this.layerName+" : " + lowerInterfaces.size(), (InterfaceRandomImageAllocations) this.getLinkedInterface(),lowerImageBuilders.get(lowerImageBuilders.size()-1));
-//                lowerInterfaces.add(subInter);
-//
-//                return subInter;
-//        }
         
 
         @Override
@@ -136,6 +91,20 @@ public class GeneratorRandomSubImageAllocation extends ImageGenerator {
 
         @Override
         public void DRYUpdate() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                 try {
+                        // Getting the right imageGet
+                        DesignNode lowerDN = this.getLowerDNForChilds(ImageTransformer.class);
+                        if (lowerDN == null) {
+                                lowerDN = this.getLowerDNForChilds(ImageGenerator.class);
+                        }
+                        if (lowerDN == null) {
+                                throw new DesingNodeLowerNodeIsAnormalyVoidException("The Layer : " + this.name + " does not have the ImageGenerator");
+                        }
+                        imageOut = lowerDN.getImageOut();
+
+
+                } catch (DesingNodeLowerNodeIsAnormalyVoidException ex) {
+                        Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
+                }
         }
 }

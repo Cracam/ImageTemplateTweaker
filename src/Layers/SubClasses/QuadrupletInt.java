@@ -21,6 +21,10 @@ public class QuadrupletInt {
                 this.size_x = size_x;
                 this.size_y = size_y;
         }
+        
+        public QuadrupletInt(QuadrupletFloat posSize,float pixelPerMilimeterFactor){
+                computePixelPosSize(posSize,pixelPerMilimeterFactor);
+        }
 
         public int getPos_x() {
                 return pos_x;

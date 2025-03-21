@@ -29,7 +29,7 @@ public abstract class InterfaceContainer extends InterfaceNode {
 
         @Override
         public void placeInterface(InterfaceNode lowerInerface) {
-                this.containerVbox.getChildren().add(0,lowerInerface);
+                        this.containerVbox.getChildren().add(0, lowerInerface);
         }
 
         @Override
