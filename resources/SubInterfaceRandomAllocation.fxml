@@ -30,7 +30,7 @@
                         <Insets left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Label>
-                  <Spinner fx:id="NumberSelector" editable="true" maxWidth="60.0" prefWidth="60.0">
+                  <Spinner fx:id="NumberSelector" editable="true" maxWidth="60.0" onKeyPressed="#uptadeInterface" onMousePressed="#uptadeInterface" prefWidth="60.0">
                      <VBox.margin>
                         <Insets top="20.0" />
                      </VBox.margin>

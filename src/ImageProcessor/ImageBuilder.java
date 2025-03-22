@@ -89,7 +89,7 @@ public class ImageBuilder extends ImageDimentioner {
 
         @Override
         public InterfaceNode createLinkedInterface(InterfaceNode upperInter) {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                return null;
         }
 
 }

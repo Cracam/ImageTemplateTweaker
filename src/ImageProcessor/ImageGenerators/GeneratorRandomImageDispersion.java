@@ -17,6 +17,7 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.Element;
@@ -118,11 +119,13 @@ public class GeneratorRandomImageDispersion extends ImageGenerator {
 
                         int lowImageXSize = (int) ((this.minXSize + inter.getLowImageSize() * (maxXSize - minXSize)) * pixelMillimeterFactor);
                         int highImageXSize = (int) ((this.minXSize + inter.getHighImageSize() * (maxXSize - minXSize)) * pixelMillimeterFactor);
-
+                        
+                        
                         ObjectDispersion disperser = new ObjectDispersion(image_get, lowIntervalSize, highIntervalSize, lowImageXSize, highImageXSize, this.x_p_size, this.y_p_size);
 
                         // Disperser les objets
-                        List<ObjectDispersion.ObjectPosition> positions = disperser.disperseObjects();
+                        Random random = this.getUpperDN(ImageBuilder.class).getDesignBuilder().getRandom();
+                        List<ObjectDispersion.ObjectPosition> positions = disperser.disperseObjects(random);
 
                         this.imageOut = new BufferedImage(this.x_p_size, this.y_p_size, BufferedImage.TYPE_INT_ARGB);
                         Graphics2D g2d = this.imageOut.createGraphics();

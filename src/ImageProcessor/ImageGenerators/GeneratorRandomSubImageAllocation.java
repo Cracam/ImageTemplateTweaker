@@ -12,8 +12,11 @@ import ImageProcessor.Layer;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getDirectChildByTagName;
 import static ResourcesManager.XmlManager.getStringAttribute;
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -75,7 +78,7 @@ public class GeneratorRandomSubImageAllocation extends ImageGenerator {
 
                 gen = createGenerator(key, currentUpperDN, subSubElt);//mettre 
                // ((ImageGenerator) currentUpperDN).setDim(this.x_size,this.y_size);
-
+              
         }
 
 
@@ -91,7 +94,13 @@ public class GeneratorRandomSubImageAllocation extends ImageGenerator {
                                 throw new DesingNodeLowerNodeIsAnormalyVoidException("The Layer : " + this.name + " does not have the ImageGenerator");
                         }
                         imageOut = lowerDN.getImageOut();
-
+//                                try {
+//                                        File outputfile = new File("C:\\BACKUP\\ENSE3\\Foyer\\Programme_Java\\Batcher_Foyer\\test_data\\saved_image.png");
+//                                        ImageIO.write(imageOut, "png", outputfile);
+//                                        System.out.println("Image enregistrée avec succès !");
+//                                } catch (IOException e) {
+//                                        System.err.println("Erreur lors de l'enregistrement de l'image : " + e.getMessage());
+//                                }
 
                 } catch (DesingNodeLowerNodeIsAnormalyVoidException ex) {
                         Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);

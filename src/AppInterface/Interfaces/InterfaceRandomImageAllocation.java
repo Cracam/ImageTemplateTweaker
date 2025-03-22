@@ -27,19 +27,16 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
 
         @FXML
         private Label MinimumNumberLabel;
-        
 
         @FXML
         private VBox SubInterfaceContainer;
 
-
         public InterfaceRandomImageAllocation(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
-                 
-                  giveVBox(SubInterfaceContainer);
-                  upperInterface.placeInterface(this);
-        }
 
+                giveVBox(SubInterfaceContainer);
+                upperInterface.placeInterface(this);
+        }
 
         @Override
         protected void initialiseInterface() {
@@ -52,7 +49,6 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
                         fxmlLoader.setController(this);
 
                         fxmlLoader.load();
-
 
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
@@ -84,13 +80,11 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
 ////                }
 //
 //        }
-
 //        public void linkInterface(Interface inter) {
 //                vboxInterface.getChildren().add(inter);
 //                inter.refreshLayers();
 //                inter.refreshImageBuilders();
 //        }
-
         @FXML
         public void uptadeInterface() {
                 this.updateLinkedDesignNodes();
@@ -101,8 +95,6 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
 //                prev.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-style: solid;");
 //                //System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 //        }
-
-        
 //        public Node saveInterfaceData(Document doc) {
 //                XmlManager xmlManager = new XmlManager(doc);
 //
@@ -118,7 +110,6 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
 //
 //                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
 //        }
-
 //        @Override
 //        public void loadInterfaceData(Element dataOfTheLayer) {
 //                DS_intervalSize.setLowValue(Double.parseDouble(dataOfTheLayer.getElementsByTagName("Interval").item(0).getAttributes().getNamedItem("Min_Interval").getNodeValue()));
@@ -128,20 +119,18 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
 //                DS_imageSize.setHighValue(Double.parseDouble(dataOfTheLayer.getElementsByTagName("Size").item(0).getAttributes().getNamedItem("Max_Size").getNodeValue()));
 //
 //        }
-
         /**
          * this function create a new subimageBuilder
          */
-          @FXML
-        private void createNewSubImgBuilder(){
-               
+        @FXML
+        private void createNewSubImgBuilder() {
+
                 // Exécuter le code sur le premier élément
                 DesignNode DN = linkedDesignNodes.get(0);
                 GeneratorRandomImageAllocation imgAll = (GeneratorRandomImageAllocation) DN;
-                 GeneratorRandomSubImageAllocation subDN = imgAll.createSubImageAllocationBuilder();
-                InterfaceRandomSubImageAllocation newInter =  (InterfaceRandomSubImageAllocation) subDN.createInterfaceTreeFromNodeTree(this);
-                 
-  
+                GeneratorRandomSubImageAllocation subDN = imgAll.createSubImageAllocationBuilder();
+                InterfaceRandomSubImageAllocation newInter = (InterfaceRandomSubImageAllocation) subDN.createInterfaceTreeFromNodeTree(this);
+
                 for (int i = 1; i < linkedDesignNodes.size(); i++) {
                         try {
                                 DN = linkedDesignNodes.get(i);
@@ -152,8 +141,9 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
                                 Logger.getLogger(InterfaceRandomImageAllocation.class.getName()).log(Level.SEVERE, null, ex);
                         }
                 }
-              this.updateLinkedDesignNodes();
-
+                //  this.updateLinkedDesignNodes();
+                DN.updateLower();
+                uptadeInterface();
         }
 
         @Override

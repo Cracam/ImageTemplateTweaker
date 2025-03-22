@@ -153,6 +153,7 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                 try {
                         GeneratorRandomSubImageAllocation DN = createGenerator(GeneratorRandomSubImageAllocation.class, this, interfaceLoaderElement);
                         DN.setDim(this.x_size, this.y_size);
+                       // System.out.println("New subAll created  : "+DN.toString());
                         return DN;
                 } catch (XMLErrorInModelException ex) {
                         Logger.getLogger(GeneratorRandomImageAllocation.class.getName()).log(Level.SEVERE, null, ex);

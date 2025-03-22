@@ -30,11 +30,10 @@ public class ObjectDispersion {
         this.maxHeight = maxHeight;
         this.areaWidth = areaWidth;
         this.areaHeight = areaHeight;
-        this.random = new Random();
         this.aspectRatio = (double) image.getWidth() / image.getHeight();
     }
 
-    public List<ObjectPosition> disperseObjects() {
+    public List<ObjectPosition> disperseObjects(Random random) {
         List<ObjectPosition> positions = new ArrayList<>();
         int attempts = 0;
 
