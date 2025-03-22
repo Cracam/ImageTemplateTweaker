@@ -47,23 +47,37 @@ public abstract class ImageGenerator extends ImageDimentioner {
                         throw new XMLErrorInModelException("This generator type does not exist : " + type);
                 } 
                 
+                return createGenerator(  classBuilder ,  upperDE,  elt);
+           
+        }
+
+        
+           /**
+         * This code will load the layer using a Strin identifier to get the
+         * type of the Layer
+         *
+         * @param <T>
+         * @param classBuilder
+         * @param upperDE
+         * @param elt
+         * @return
+         * @throws XMLErrorInModelException
+         */
+        public static <T extends ImageGenerator>T  createGenerator( Class<T> classBuilder , DesignNode upperDE, Element elt) throws XMLErrorInModelException {
+
 
                 try {
 
-                        Class<? extends ImageGenerator> subclass = classBuilder;
-                        Constructor<? extends ImageGenerator> constructor = subclass.getConstructor(DesignNode.class, Element.class);
+                        Constructor<? extends ImageGenerator> constructor = classBuilder.getConstructor(DesignNode.class, Element.class);
 
-                        return constructor.newInstance(upperDE, elt);
+                        return (T) constructor.newInstance(upperDE, elt);
 
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
                         Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
                         ex.printStackTrace(); // Print the stack trace
-                         throw new XMLErrorInModelException("Error in the creation of this Generator :  " + type);
+                         throw new XMLErrorInModelException("Error in the creation of this Generator :  " + classBuilder.getName());
                          
                 }
         }
-
-        
-          
 
 }

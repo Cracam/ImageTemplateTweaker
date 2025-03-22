@@ -1,15 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package AppInterface.Interfaces;
 
 import AppInterface.InterfaceContainer;
 import Exeptions.ResourcesFileErrorException;
-import ResourcesManager.XmlChild;
-import ResourcesManager.XmlManager;
 import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
+import ImageProcessor.DesignNode;
+import ImageProcessor.ImageGenerators.GeneratorRandomImageAllocation;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -17,9 +13,8 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Spinner;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.VBox;
-import org.controlsfx.control.RangeSlider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -29,24 +24,18 @@ import org.w3c.dom.Element;
  */
 public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 
-
-  
-
         @FXML
         private VBox SubInterfaceContainer;
 
         @FXML
-        private Spinner NumberSelector;
-        
-        
+        private Spinner<Integer> NumberSelector;
 
         public InterfaceRandomSubImageAllocation(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
-                 
-                  giveVBox(SubInterfaceContainer);
-                  upperInterface.placeInterface(this);
-        }
 
+                giveVBox(SubInterfaceContainer);
+                upperInterface.placeInterface(this);
+        }
 
         @Override
         protected void initialiseInterface() {
@@ -60,7 +49,10 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 
                         fxmlLoader.load();
 
-                 
+
+                        
+                        SpinnerValueFactory<Integer> valueFactory = ((GeneratorRandomImageAllocation) this.getUpperIN(InterfaceRandomImageAllocation.class).getLinkedDesignNodes().get(0)).getSpinnerFactory();
+                        NumberSelector.setValueFactory(valueFactory);
 
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,13 +84,11 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 ////                }
 //
 //        }
-
 //        public void linkInterface(Interface inter) {
 //                vboxInterface.getChildren().add(inter);
 //                inter.refreshLayers();
 //                inter.refreshImageBuilders();
 //        }
-
         @FXML
         public void uptadeInterface() {
                 this.updateLinkedDesignNodes();
@@ -109,8 +99,6 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 //                prev.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-style: solid;");
 //                //System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 //        }
-
-        
 //        public Node saveInterfaceData(Document doc) {
 //                XmlManager xmlManager = new XmlManager(doc);
 //
@@ -126,7 +114,6 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 //
 //                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
 //        }
-
 //        @Override
 //        public void loadInterfaceData(Element dataOfTheLayer) {
 //                DS_intervalSize.setLowValue(Double.parseDouble(dataOfTheLayer.getElementsByTagName("Interval").item(0).getAttributes().getNamedItem("Min_Interval").getNodeValue()));
@@ -137,8 +124,15 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 //
 //        }
         
+        
+        @FXML
+        private void deleteThis() {
+                for(DesignNode DN : linkedDesignNodes){
+                        DN.destroyItSelf();
+                }
+                this.destroyItSelf();
+        }
 
- 
         @Override
         protected Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

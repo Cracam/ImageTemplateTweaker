@@ -10,6 +10,9 @@ import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.scene.control.SpinnerValueFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -26,6 +29,10 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
         private ArrayList<QuadrupletInt> pixelPositions;
 
         private Element interfaceLoaderElement; //the element info to load every 
+        
+        private int minNumber;
+        private int maxNumber;
+        private int defaultNumber;
 
         public GeneratorRandomImageAllocation(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
@@ -35,9 +42,14 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
         protected void generateFromElement() throws XMLErrorInModelException {
                 positions = new ArrayList<>();
                 pixelPositions = new ArrayList<>();
+							
+                                Element subElt = extractSingleElement(elt.getElementsByTagName("Param"));
+                                minNumber= XmlManager.getIntAttribute(subElt, "minNumber", 1);
+                                 maxNumber= XmlManager.getIntAttribute(subElt, "maxNumber", 20);
+                                  defaultNumber= XmlManager.getIntAttribute(subElt, "defaultNumber", 5);
 
 //Loading each positions
-                Element subElt = extractSingleElement(elt.getElementsByTagName("PosSizes"));
+                 subElt = extractSingleElement(elt.getElementsByTagName("PosSizes"));
 
                 NodeList subElements = subElt.getElementsByTagName("PosSize");
                 float pos_x, pos_y, size_x, size_y;
@@ -57,10 +69,12 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                         if (maxSizeY < size_y) {
                                 maxSizeY = size_y;
                         }
-                  ///      DRYRefreshDPI();
+                        
                 }
+                 
+                //  System.out.println("THE RANDOM ALLOCATION is CREATED : MaxSIzeX : "+maxSizeX+"  MAx sizeY : "+maxSizeY);
 
-                interfaceLoaderElement = extractSingleElement(subElt.getElementsByTagName("SubLayer"));
+                interfaceLoaderElement = extractSingleElement(elt.getElementsByTagName("SubLayer"));
 
         }
 
@@ -81,4 +95,24 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                         pixelPositions.add(new QuadrupletInt(posSize, factor));
                 }
         }
+        
+        public GeneratorRandomSubImageAllocation createSubImageAllocationBuilder() {
+                try {
+                        GeneratorRandomSubImageAllocation DN  = createGenerator(GeneratorRandomSubImageAllocation.class, this, interfaceLoaderElement);
+                        DN.setDim(this.x_size,this.y_size);
+                        return DN;
+                } catch (XMLErrorInModelException ex) {
+                        Logger.getLogger(GeneratorRandomImageAllocation.class.getName()).log(Level.SEVERE, null, ex);
+                        return null;
+                }
+        }
+        
+        
+        public  SpinnerValueFactory.IntegerSpinnerValueFactory getSpinnerFactory(){
+                return new SpinnerValueFactory.IntegerSpinnerValueFactory(minNumber, maxNumber, defaultNumber);
+        }
+        
+
+        
+        
 }

@@ -37,5 +37,15 @@ public abstract class InterfaceContainer extends InterfaceNode {
                 return DesignInterfaceLinker.getIdentifier(this.getClass()) + this.getName();
         }
 
+        public void delete(InterfaceNode InterfaceNodeToDelete) {
+                if (lowerInterfaces.contains(InterfaceNodeToDelete)) {
+                        lowerInterfaces.remove(InterfaceNodeToDelete);
+                                containerVbox.getChildren().remove(InterfaceNodeToDelete);
+
+                        System.out.println("DesignNodeToDelete a été supprimé de lowersDN.");
+                } else {
+                        System.out.println("DesignNodeToDelete n'est pas présent dans lowersDN.");
+                }
+        }
     
 }

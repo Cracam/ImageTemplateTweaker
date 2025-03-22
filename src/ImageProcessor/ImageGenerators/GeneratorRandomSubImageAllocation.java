@@ -9,7 +9,6 @@ import static ImageProcessor.ImageGenerator.createGenerator;
 import ImageProcessor.ImageTransformer;
 import static ImageProcessor.ImageTransformer.createTransformer;
 import ImageProcessor.Layer;
-import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getDirectChildByTagName;
 import static ResourcesManager.XmlManager.getStringAttribute;
@@ -24,7 +23,9 @@ import org.w3c.dom.NodeList;
  * @author Camille LECOURT
  */
 public class GeneratorRandomSubImageAllocation extends ImageGenerator {
-
+        
+        private ImageGenerator gen;
+        
         public GeneratorRandomSubImageAllocation(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
         }
@@ -72,8 +73,8 @@ public class GeneratorRandomSubImageAllocation extends ImageGenerator {
 
                 key = subSubElt.getNodeName();
 
-                currentUpperDN = createGenerator(key, currentUpperDN, subSubElt);//mettre 
-                ((ImageGenerator) currentUpperDN).setDim(this.x_size,this.y_size);
+                gen = createGenerator(key, currentUpperDN, subSubElt);//mettre 
+               // ((ImageGenerator) currentUpperDN).setDim(this.x_size,this.y_size);
 
         }
 
@@ -96,4 +97,15 @@ public class GeneratorRandomSubImageAllocation extends ImageGenerator {
                         Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
+        
+        
+        @Override
+        public void setDim(float  x_size,float y_size){
+         this.x_size=x_size;
+         this.y_size=y_size;
+        gen.setDim(x_size,y_size);
+         DRYRefreshDPI();
+ }
+        
+  
 }

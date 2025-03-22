@@ -26,7 +26,7 @@ public abstract class InterfaceNode extends VBox {
         private final String name;
 
         protected InterfaceNode upperInterface;
-        private final ArrayList<InterfaceNode> lowerInterfaces = new ArrayList<>();
+        final ArrayList<InterfaceNode> lowerInterfaces = new ArrayList<>();
         protected final ArrayList<DesignNode> linkedDesignNodes = new ArrayList<>();
 
         // Constructeur prenant un seul upperDN
@@ -113,7 +113,7 @@ public abstract class InterfaceNode extends VBox {
 
         protected abstract void initialiseInterface();
 
-        public InterfaceNode getUpperDN(Class<?> nodeClass) {
+        public InterfaceNode getUpperIN(Class<?> nodeClass) {
                 if (upperInterface == null) {
                         return null;
                 }
@@ -121,7 +121,7 @@ public abstract class InterfaceNode extends VBox {
                 if (upperInterface.getClass() == nodeClass) {
                         return upperInterface;
                 } else {
-                        InterfaceNode result = upperInterface.getUpperDN(nodeClass);
+                        InterfaceNode result = upperInterface.getUpperIN(nodeClass);
                         if (result != null) {
                                 return result;
                         }
@@ -168,4 +168,23 @@ public abstract class InterfaceNode extends VBox {
                 
                 return true; // Retourne null si aucun élément correspondant n'est trouvé
         }
+        
+        
+        
+        
+        
+            public void delete(InterfaceNode InterfaceNodeToDelete) {
+                if (lowerInterfaces.contains(InterfaceNodeToDelete)) {
+                        lowerInterfaces.remove(InterfaceNodeToDelete);
+                        System.out.println("DesignNodeToDelete a été supprimé de lowersDN.");
+                } else {
+                        System.out.println("DesignNodeToDelete n'est pas présent dans lowersDN.");
+                }
+        }
+          
+          public void destroyItSelf(){
+                    upperInterface.delete(this);
+          }
+          
+          
 }

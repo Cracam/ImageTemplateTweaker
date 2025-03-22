@@ -330,4 +330,20 @@ public abstract class DesignNode extends VBox {
                 }
                 return result;
         }
+        
+        
+          public void delete(DesignNode DesignNodeToDelete) {
+                if (lowersDN.contains(DesignNodeToDelete)) {
+                        lowersDN.remove(DesignNodeToDelete);
+                        System.out.println("DesignNodeToDelete a été supprimé de lowersDN.");
+                } else {
+                        System.out.println("DesignNodeToDelete n'est pas présent dans lowersDN.");
+                }
+        }
+          
+          public void destroyItSelf(){
+                   for (DesignNode designNode : upperDN) {
+                           designNode.delete(this);
+                   }
+          }
 }
