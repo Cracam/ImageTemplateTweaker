@@ -346,4 +346,10 @@ public abstract class DesignNode extends VBox {
                            designNode.delete(this);
                    }
           }
+
+        public ArrayList<DesignNode> getLowersDN() {
+                return lowersDN;
+        }
+          
+          
 }

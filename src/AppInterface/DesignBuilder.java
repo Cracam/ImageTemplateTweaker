@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,6 +68,8 @@ public class DesignBuilder extends Application {
         private Scene scene;
 
         private int DPI = 150;
+
+        private Random random;
 
         @FXML
         private TabPane tabPane;
@@ -128,11 +131,11 @@ public class DesignBuilder extends Application {
                                 try {
                                         ImageBuilder imgBuild = new ImageBuilder(null, (Element) outputNode, this);
                                         imageBuilders.add(imgBuild);
-                                        
-                                          System.out.println( "\n ##########################################################################\n    "
-                                                  +imgBuild.toString()
-                                                  +"\n ##########################################################################\n    ");
-                                          
+
+                                        System.out.println("\n ##########################################################################\n    "
+                                                + imgBuild.toString()
+                                                + "\n ##########################################################################\n    ");
+
                                 } catch (XMLErrorInModelException ex) {
                                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                 }
@@ -140,9 +143,9 @@ public class DesignBuilder extends Application {
                         }
 
                         designPath = null; //reset the design path to null to force a new document
-                       
+
                         interfacesManager.createInterfaceFromImageBuilderList(this.imageBuilders);
-                        
+
                         refreshEverything();
 
                 } catch (ParserConfigurationException | SAXException | IOException ex) {
@@ -160,8 +163,8 @@ public class DesignBuilder extends Application {
         private void refreshEverything() {
                 for (int i = 0; i < imageBuilders.size(); i++) {
                         this.imageBuilders.get(i).updateLower();
-                       refreshPreviewImageBox( this.imageBuilders.get(i));
-                                 
+                        refreshPreviewImageBox(this.imageBuilders.get(i));
+
                 }
         }
 
@@ -288,6 +291,8 @@ public class DesignBuilder extends Application {
         @Override
         public void start(Stage primarystage) throws Exception {
                 try {
+                        newSeed();
+
                         this.id = DesignBuilder.index;
                         DesignBuilder.index++;
 
@@ -432,10 +437,30 @@ public class DesignBuilder extends Application {
 
         }
 
-        public void refreshPreviewImageBox(ImageBuilder imgBuilder){
-                preview.setImageView(imgBuilder.DRYComputeUniqueID(),staticFunctions.StaticImageEditing.createImageView(imgBuilder.getImageOut()));
+        public void refreshPreviewImageBox(ImageBuilder imgBuilder) {
+                preview.setImageView(imgBuilder.DRYComputeUniqueID(), staticFunctions.StaticImageEditing.createImageView(imgBuilder.getImageOut()));
                 //System.out.println("#######"+imgBuilder.getId());
         }
+
+        public Random getRandom() {
+                return random;
+        }
+
+        // Méthode pour générer une nouvelle graine et créer un nouvel objet Random
+        public void newSeed() {
+                long newSeed;
+                if (random == null) {
+                        newSeed = 84844551;
+                } else {
+                        newSeed = this.random.nextLong();
+
+                }
+
+                // Créer un nouvel objet Random avec la nouvelle graine
+                this.random = new Random(newSeed);
+                System.out.println("Nouvelle graine générée : " + newSeed);
+        }
+
 }
 
 //CMD to  package in .exe

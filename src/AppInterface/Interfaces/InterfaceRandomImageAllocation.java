@@ -152,6 +152,7 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
                                 Logger.getLogger(InterfaceRandomImageAllocation.class.getName()).log(Level.SEVERE, null, ex);
                         }
                 }
+              this.updateLinkedDesignNodes();
 
         }
 

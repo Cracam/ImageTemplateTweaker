@@ -130,7 +130,9 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
                 for(DesignNode DN : linkedDesignNodes){
                         DN.destroyItSelf();
                 }
+                 this.updateLinkedDesignNodes();
                 this.destroyItSelf();
+                
         }
 
         @Override
@@ -143,4 +145,9 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
+        public int getNumberSelectorValue() {
+                return NumberSelector.getValue();
+        }
+
+        
 }

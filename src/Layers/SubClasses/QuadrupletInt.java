@@ -48,6 +48,14 @@ public class QuadrupletInt {
                 this.size_x = (int) (posSize.getSize_x() * pixelPerMilimeterFactor);
                 this.size_y = (int) (posSize.getSize_y() * pixelPerMilimeterFactor);
         }
+
+        @Override
+        public String toString() {
+                return "QuadrupletInt{" + "pos_x=" + pos_x + ", pos_y=" + pos_y + ", size_x=" + size_x + ", size_y=" + size_y + '}';
+        }
+        
+        
+        
         
         
 }
