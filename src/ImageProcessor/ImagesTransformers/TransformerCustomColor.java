@@ -25,44 +25,7 @@ public  class TransformerCustomColor extends ImageTransformer {
                 super(upperDE, elt);
         }
 
-      
-       
-
- 
-//        public void refreshImageGet(){
-//                this.image_get=((InterfaceCustomColor) (this.linkedInterface)).getImageOut(0,0,opacityMap);
-//        }
-//        
-//
-//      
-//        
-//        
-//        void DPIChanged() {
-//                BufferedImage resizedImageGetRaw = StaticImageEditing.ResizeImage(this.image_getRaw, this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y());
-//                this.opacityMap =StaticImageEditing.transformToOpacityArray(resizedImageGetRaw);
-//        }
-//     
-//
-//        
-//
-//        
-//        public void readNode(Element paramNode) {
-//                this.imageName = paramNode.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
-//                try {
-//                        File imageFile = this.modelResources.get(this.imageName);
-//                        this.image_getRaw= ImageIO.read(imageFile);
-//
-//                        //set the default size of the image_raw
-//                        BufferedImage resizedImageGetRaw = StaticImageEditing.ResizeImage(this.image_getRaw, this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y());
-//                        this.opacityMap=StaticImageEditing.transformToOpacityArray(resizedImageGetRaw);
-//
-//                } catch (IOException ex) {
-//                        Logger.getLogger(TransformerCustomColor.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//        }
-
-    
-       
+  
 
         @Override
         protected void generateFromElement() throws XMLErrorInModelException {

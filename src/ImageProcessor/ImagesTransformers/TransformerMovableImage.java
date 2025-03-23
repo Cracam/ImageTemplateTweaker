@@ -30,26 +30,7 @@ public class TransformerMovableImage extends ImageTransformer {
                DRYRefreshDPI();
         }
 
-//        @Override
-//        public void refreshImageGet() {
-//                    refreshOffset(((InterfaceMouvableFixedImage) (this.linkedInterface)).getSliderXValue(),((InterfaceMouvableFixedImage) (this.linkedInterface)).getSliderYValue());
-//               
-//                try {
-//                        if (imageGetRaw == null) {
-//                                imageGetRaw = this.modelResources.get(this.imageName);
-//
-//                                if (imageGetRaw == null) {
-//                                        throw new ResourcesFileErrorException("This file dont exist : " + this.imageName);
-//                                }
-//
-//                        }
-//                        this.image_get = StaticImageEditing.ResizeImage(ImageIO.read(imageGetRaw), this.pixelPosSize.getSize_x(), this.pixelPosSize.getSize_y());
-//
-//                } catch (IOException | ResourcesFileErrorException ex) {
-//                        Logger.getLogger(TransformerMovableFixedImage.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//
-//        }
+
         
         @Override
         protected void generateFromElement() throws XMLErrorInModelException {

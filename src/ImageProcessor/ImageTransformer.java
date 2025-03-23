@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
  * @author Camille LECOURT
  */
 public abstract class ImageTransformer extends DesignNode {
-
+        
         public ImageTransformer(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
                 generateFromElement();

@@ -127,8 +127,7 @@
 								<PosSize pos_x="30" pos_y="40" size_x="10.5" size_y="10.5"/>
 							</PosSizes>
 
-							<SubLayer name="Consos">
-								<Common_Componments>
+							<Common_Componments>
 									<Generator>
 										<G_Fixed_Image>
 											<Image image_name="graine.png"/>
@@ -138,9 +137,9 @@
 										<T_Custom_Color>
 										</T_Custom_Color>
 									</Transformers>
+							</Common_Componments>
 
-								</Common_Componments>
-								
+							<SubLayer name="Consos">
 								<Transformers>
 									<T_Custom_Color>
 									</T_Custom_Color>
@@ -172,10 +171,11 @@
 								<PosSize pos_x="30" pos_y="40" size_x="10.5" size_y="10.5"/>
 							</PosSizes>
 
-							<SubLayer name="Consos">
-								<Common_Componments>
 
-								</Common_Componments>
+								
+
+							<SubLayer name="Consos_img">
+								
 								<Generator>
 									<G_Fixed_Image>
 										<Image image_name="graine.png"/>

@@ -100,6 +100,7 @@ public class Layer extends DesignNode {
                 DRYRefreshDPI();
 
                 currentUpperDN = this;
+                
                 subElt = getDirectChildByTagName(elt, "Transformers");
                 if (subElt != null) {
                         NodeList nodeTransformersList = subElt.getChildNodes();

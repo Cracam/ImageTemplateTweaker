@@ -5,21 +5,23 @@ import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
 import ImageProcessor.ImageGenerator;
+import static ImageProcessor.ImageGenerator.createGenerator;
+import static ImageProcessor.ImageTransformer.createTransformer;
+import ImageProcessor.ImagesTransformers.TransformerInert;
 import Layers.SubClasses.QuadrupletFloat;
 import Layers.SubClasses.QuadrupletInt;
 import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.extractSingleElement;
+import static ResourcesManager.XmlManager.getDirectChildByTagName;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.SpinnerValueFactory;
-import javax.imageio.ImageIO;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import static staticFunctions.StaticImageEditing.ResizeImage;
 import static staticFunctions.StaticImageEditing.createBufferedImage;
@@ -42,6 +44,8 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
         private int minNumber;
         private int maxNumber;
         private int defaultNumber;
+
+        private DesignNode commonDN = null;
 
         public GeneratorRandomImageAllocation(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
@@ -81,9 +85,60 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
 
                 }
 
-                //  System.out.println("THE RANDOM ALLOCATION is CREATED : MaxSIzeX : "+maxSizeX+"  MAx sizeY : "+maxSizeY);
-                interfaceLoaderElement = extractSingleElement(elt.getElementsByTagName("SubLayer"));
+              
 
+                subElt = extractSingleElement(elt.getElementsByTagName("Common_Componments"));
+                Element subSubSubElt;
+                
+                if (subElt != null) {
+                        DesignNode currentUpperDN =new TransformerInert(null,null);
+                        commonDN=currentUpperDN;
+                        System.out.println("-----############################################################"+commonDN+"##################################################----------------INERTINERT");
+                        
+                        Element subSubElt = extractSingleElement(subElt.getElementsByTagName("Generator"));
+                        if (subSubElt != null) {
+                                
+
+                                subSubElt = getDirectChildByTagName(subElt, "Transformers");
+                                if (subSubElt != null) {
+                                        NodeList nodeTransformersList = subSubElt.getChildNodes();
+
+                                        //running in the inverse 
+                                        for (int i = nodeTransformersList.getLength() - 1; i >= 0; i--) {
+                                                if (nodeTransformersList.item(i).getNodeType() == Node.ELEMENT_NODE) { //To avoid text node and comment node
+
+                                                        subSubSubElt = (Element) nodeTransformersList.item(i);
+                                                        String key = subSubSubElt.getNodeName(); // key for defining the layer and the Interface
+                                                        currentUpperDN = createTransformer(key, currentUpperDN, subSubSubElt);
+                                                }
+                                        }
+                                }
+
+                                ////////
+                                subSubElt = getDirectChildByTagName(subElt, "Generator");
+
+                                if (subSubElt == null) {
+                                        throw new XMLErrorInModelException("Le Layer " + this.name + "n'a pas de bloc: Generator valide");
+                                }
+
+                                subSubSubElt = extractSingleElement(subSubElt.getChildNodes());
+
+                                if (subSubElt == null) {
+                                        throw new XMLErrorInModelException("Le bloc generator du Layer " + this.name + "n'a pas de sous générateur valide\n\n " + subSubElt.getChildNodes().getLength());
+                                }
+
+                                String key = subSubSubElt.getNodeName();
+
+                                currentUpperDN = createGenerator(key, currentUpperDN, subSubSubElt);//mettre 
+      
+
+                               }
+                }
+                
+                
+                  interfaceLoaderElement = extractSingleElement(elt.getElementsByTagName("SubLayer"));
+
+                //  System.out.println("THE RANDOM ALLOCATION is CREATED : MaxSIzeX : "+maxSizeX+"  MAx sizeY : "+maxSizeY);
         }
 
         @Override
@@ -151,9 +206,18 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
 
         public GeneratorRandomSubImageAllocation createSubImageAllocationBuilder() {
                 try {
-                        GeneratorRandomSubImageAllocation DN = createGenerator(GeneratorRandomSubImageAllocation.class, this, interfaceLoaderElement);
+                        GeneratorRandomSubImageAllocation DN = new GeneratorRandomSubImageAllocation(this, interfaceLoaderElement,commonDN);
                         DN.setDim(this.x_size, this.y_size);
-                       // System.out.println("New subAll created  : "+DN.toString());
+
+//                        if (commonDN == null) {
+//                                ArrayList<DesignNode> DNs = DN.getLowestDN();
+//                                for (DesignNode DNsub : DNs) {
+//                                        DNsub.addLowerDN(commonDN);
+//                                }
+//                        }
+                        
+                        ((ImageGenerator) DN).setDim(maxSizeX, maxSizeY);
+                        // System.out.println("New subAll created  : "+DN.toString());
                         return DN;
                 } catch (XMLErrorInModelException ex) {
                         Logger.getLogger(GeneratorRandomImageAllocation.class.getName()).log(Level.SEVERE, null, ex);
@@ -161,6 +225,19 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                 }
         }
 
+        
+        
+//        public void linkTheCommonDN(DesignNode upperDN){
+//                if (commonDN == null) {
+//                                ArrayList<DesignNode> DNs = upperDN.getLowestDN();
+//                                for (DesignNode DNsub : DNs) {
+//                                        DNsub.addLowerDN(commonDN);
+//                                }
+//                        }
+//        }
+        
+        
+        
         public SpinnerValueFactory.IntegerSpinnerValueFactory getSpinnerFactory() {
                 return new SpinnerValueFactory.IntegerSpinnerValueFactory(minNumber, maxNumber, defaultNumber);
         }

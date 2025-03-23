@@ -228,7 +228,7 @@ public abstract class DesignNode extends VBox {
 
         public InterfaceNode createInterfaceTreeFromNodeTree(InterfaceNode upperIN, Class<?> stopClass) {
                 InterfaceNode InterfaceRoot = this.createLinkedInterface(upperIN);
-             //   System.out.println("CCCCCCCCCCC---- :  "+InterfaceRoot.getClass().getName());
+                //   System.out.println("CCCCCCCCCCC---- :  "+InterfaceRoot.getClass().getName());
                 for (DesignNode lowerDN : lowersDN) {
                         if (stopClass != lowerDN.getClass()) {
                                 lowerDN.createInterfaceTreeFromNodeTree(InterfaceRoot, stopClass);
@@ -330,9 +330,8 @@ public abstract class DesignNode extends VBox {
                 }
                 return result;
         }
-        
-        
-          public void delete(DesignNode DesignNodeToDelete) {
+
+        public void delete(DesignNode DesignNodeToDelete) {
                 if (lowersDN.contains(DesignNodeToDelete)) {
                         lowersDN.remove(DesignNodeToDelete);
                         System.out.println("DesignNodeToDelete a été supprimé de lowersDN.");
@@ -340,16 +339,32 @@ public abstract class DesignNode extends VBox {
                         System.out.println("DesignNodeToDelete n'est pas présent dans lowersDN.");
                 }
         }
-          
-          public void destroyItSelf(){
-                   for (DesignNode designNode : upperDN) {
-                           designNode.delete(this);
-                   }
-          }
+
+        public void destroyItSelf() {
+                for (DesignNode designNode : upperDN) {
+                        designNode.delete(this);
+                }
+        }
 
         public ArrayList<DesignNode> getLowersDN() {
                 return lowersDN;
         }
-          
-          
+
+        protected ArrayList<DesignNode> getLowestDN(ArrayList<DesignNode> DNs) {
+                if (this.lowersDN.isEmpty()) {
+                        DNs.add(this);
+                        return DNs;
+                }
+
+                for (DesignNode DN : lowersDN) {
+                        DNs = DN.getLowestDN(DNs);
+                }
+                return DNs;
+        }
+
+        public ArrayList<DesignNode> getLowestDN() {
+                ArrayList<DesignNode> DNs = new ArrayList<>();
+                return getLowestDN(DNs);
+        }
+
 }

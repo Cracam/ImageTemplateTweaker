@@ -12,11 +12,8 @@ import ImageProcessor.Layer;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getDirectChildByTagName;
 import static ResourcesManager.XmlManager.getStringAttribute;
-import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -27,10 +24,14 @@ import org.w3c.dom.NodeList;
  */
 public class GeneratorRandomSubImageAllocation extends ImageGenerator {
         
+        private final DesignNode lowerDN;
         private ImageGenerator gen;
         
-        public GeneratorRandomSubImageAllocation(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
+        
+        public GeneratorRandomSubImageAllocation(DesignNode upperDE, Element elt,DesignNode lowerDN) throws XMLErrorInModelException {
                 super(upperDE, elt);
+                this.lowerDN=lowerDN;//#######################
+                //################################### devrait etre executé avnat
         }
         
 
@@ -38,14 +39,10 @@ public class GeneratorRandomSubImageAllocation extends ImageGenerator {
         protected void generateFromElement() throws XMLErrorInModelException {
                                String key;
                 Element subElt, subSubElt;
-                DesignNode currentUpperDN;
+                DesignNode currentUpperDN=this;
 
                 this.name = getStringAttribute(elt, "name", "ERROR");
-
                 
-
-                
-                currentUpperDN = this;
                 subElt = getDirectChildByTagName(elt, "Transformers");
                 if (subElt != null) {
                         NodeList nodeTransformersList = subElt.getChildNodes();
@@ -61,23 +58,27 @@ public class GeneratorRandomSubImageAllocation extends ImageGenerator {
                         }
                 }
 
-                ////////
-                subElt = getDirectChildByTagName(elt, "Generator");
+                if(lowerDN==null){
+                        ////////
+                        subElt = getDirectChildByTagName(elt, "Generator");
 
-                if (subElt == null) {
-                        throw new XMLErrorInModelException("Le SubLayer " + this.name + "n'a pas de bloc: Generator valide");
+                        if (subElt == null) {
+                                throw new XMLErrorInModelException("Le SubLayer " + this.name + " n'a pas de bloc: Generator valide");
+                        }
+
+                        subSubElt = extractSingleElement(subElt.getChildNodes());
+
+                        if (subSubElt == null) {
+                                throw new XMLErrorInModelException("Le bloc generator du SubLayer " + this.name + " n'a pas de sous générateur valide\n\n " + subElt.getChildNodes().getLength());
+                        }
+
+                        key = subSubElt.getNodeName();
+
+                        gen=createGenerator(key, currentUpperDN, subSubElt);//mettre 
+                       // ((ImageGenerator) currentUpperDN).setDim(this.x_size,this.y_size);
+                }else{
+                      currentUpperDN.addLowerDN( lowerDN);
                 }
-
-                subSubElt = extractSingleElement(subElt.getChildNodes());
-
-                if (subSubElt == null) {
-                        throw new XMLErrorInModelException("Le bloc generator du SubLayer " + this.name + "n'a pas de sous générateur valide\n\n " + subElt.getChildNodes().getLength());
-                }
-
-                key = subSubElt.getNodeName();
-
-                gen = createGenerator(key, currentUpperDN, subSubElt);//mettre 
-               // ((ImageGenerator) currentUpperDN).setDim(this.x_size,this.y_size);
               
         }
 

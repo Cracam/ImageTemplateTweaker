@@ -8,6 +8,7 @@ import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerators.GeneratorRandomImageAllocation;
 import ImageProcessor.ImageGenerators.GeneratorRandomSubImageAllocation;
+import ImageProcessor.ImagesTransformers.TransformerInert;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -129,7 +130,8 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
                 DesignNode DN = linkedDesignNodes.get(0);
                 GeneratorRandomImageAllocation imgAll = (GeneratorRandomImageAllocation) DN;
                 GeneratorRandomSubImageAllocation subDN = imgAll.createSubImageAllocationBuilder();
-                InterfaceRandomSubImageAllocation newInter = (InterfaceRandomSubImageAllocation) subDN.createInterfaceTreeFromNodeTree(this);
+                
+                InterfaceRandomSubImageAllocation newInter = (InterfaceRandomSubImageAllocation) subDN.createInterfaceTreeFromNodeTree(this,TransformerInert.class);
 
                 for (int i = 1; i < linkedDesignNodes.size(); i++) {
                         try {
