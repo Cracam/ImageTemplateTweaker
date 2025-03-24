@@ -137,6 +137,9 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                 }
                 interfaceLoaderElement = extractSingleElement(elt.getElementsByTagName("SubLayer"));
         }
+        
+        
+        
 
         @Override
         public void DRYUpdate() {
@@ -147,7 +150,7 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                 // Add every element to a weighted list (to be able to count them)
                 if (!DNs.isEmpty()) {
                         for (DesignNode DN : DNs) {
-                                int weight = ((InterfaceRandomSubImageAllocation) DN.getLinkedinterface()).getNumberSelectorValue();
+                                int weight = ((InterfaceRandomSubImageAllocation) DN.getLinkedinterface()).getNumberSelectorValue()-1;
                                 for (int i = 0; i < weight; i++) {
                                         DNsWeighted.add(DN);
                                 }
@@ -220,7 +223,6 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                 
                 if(commonDN!=null){
                         ((InterfaceRandomImageAllocation) inter).createCommomInterface(commonDN);
-                        System.out.println("----------------èèèèèèèèèèèèèèèèèèèèèèè Comon Interface created");
                 }
 
                 return inter;
