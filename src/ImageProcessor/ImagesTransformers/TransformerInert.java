@@ -27,5 +27,10 @@ public  class TransformerInert extends ImageTransformer {
         public void DRY_DRYUpdate(BufferedImage img_in) {
                 this.imageOut=img_in;
         }
+        
+          @Override
+        protected String DRYtoString() {
+                return "INETTTRRRRRRRRRTTTTTT";
+        }
 
 }

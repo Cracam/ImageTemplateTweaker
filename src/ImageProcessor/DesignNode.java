@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
  */
 public abstract class DesignNode extends VBox {
 
-        private final ArrayList<DesignNode> upperDN;
+        private  ArrayList<DesignNode> upperDN;
         protected String name;
         private ArrayList<DesignNode> lowersDN;
         protected BufferedImage imageOut;
@@ -102,6 +102,13 @@ public abstract class DesignNode extends VBox {
                         this.lowersDN = new ArrayList<>();
                 }
                 this.lowersDN.add(lowerDN);
+        }
+        
+               public void addUpperDN(DesignNode upperDN) {
+                if (this.upperDN == null) {
+                        this.upperDN = new ArrayList<>();
+                }
+                this.upperDN.add(upperDN);
         }
 
         public BufferedImage getImageOut() {

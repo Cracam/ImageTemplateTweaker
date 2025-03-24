@@ -129,13 +129,10 @@
 
 							<Common_Componments>
 									<Generator>
-										<G_Fixed_Image>
-											<Image image_name="graine.png"/>
-										</G_Fixed_Image>
+										<G_Custom_Image>
+										</G_Custom_Image>
 									</Generator>
 									<Transformers>
-										<T_Custom_Color>
-										</T_Custom_Color>
 									</Transformers>
 							</Common_Componments>
 

@@ -18,6 +18,7 @@
             <Insets bottom="10.0" left="10.0" top="5.0" />
          </VBox.margin>
       </Label>
+      <VBox fx:id="CommonContainer" />
       <HBox>
          <children>
             <Label fx:id="MinimumNumberLabel" text="Nombre minimum à avoir : ">

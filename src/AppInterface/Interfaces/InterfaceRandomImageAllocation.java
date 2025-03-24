@@ -31,6 +31,9 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
 
         @FXML
         private VBox SubInterfaceContainer;
+        
+        @FXML
+        private VBox CommonContainer;
 
         public InterfaceRandomImageAllocation(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
@@ -146,6 +149,12 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
                 //  this.updateLinkedDesignNodes();
                 DN.updateLower();
                 uptadeInterface();
+        }
+        
+        
+        public void createCommomInterface(DesignNode commonInterface){
+                InterfaceNode interNode = commonInterface.createInterfaceTreeFromNodeTree(this);
+               // CommonContainer.getChildren().add(interNode);
         }
 
         @Override

@@ -1,6 +1,9 @@
 package ImageProcessor.ImageGenerators;
 
+import AppInterface.InterfaceNode;
+import AppInterface.Interfaces.InterfaceRandomImageAllocation;
 import AppInterface.Interfaces.InterfaceRandomSubImageAllocation;
+import AppInterface.LayerContainer;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
@@ -45,7 +48,8 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
         private int maxNumber;
         private int defaultNumber;
 
-        private DesignNode commonDN = null;
+        private DesignNode commonDN;
+        private ImageGenerator gen;
 
         public GeneratorRandomImageAllocation(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
                 super(upperDE, elt);
@@ -85,19 +89,15 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
 
                 }
 
-              
-
                 subElt = extractSingleElement(elt.getElementsByTagName("Common_Componments"));
                 Element subSubSubElt;
-                
+
                 if (subElt != null) {
-                        DesignNode currentUpperDN =new TransformerInert(null,null);
-                        commonDN=currentUpperDN;
-                        System.out.println("-----############################################################"+commonDN+"##################################################----------------INERTINERT");
-                        
+                        DesignNode currentUpperDN = new TransformerInert(null, null);
+                        commonDN = currentUpperDN;
+
                         Element subSubElt = extractSingleElement(subElt.getElementsByTagName("Generator"));
                         if (subSubElt != null) {
-                                
 
                                 subSubElt = getDirectChildByTagName(subElt, "Transformers");
                                 if (subSubElt != null) {
@@ -111,6 +111,7 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                                                         String key = subSubSubElt.getNodeName(); // key for defining the layer and the Interface
                                                         currentUpperDN = createTransformer(key, currentUpperDN, subSubSubElt);
                                                 }
+
                                         }
                                 }
 
@@ -129,16 +130,12 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
 
                                 String key = subSubSubElt.getNodeName();
 
-                                currentUpperDN = createGenerator(key, currentUpperDN, subSubSubElt);//mettre 
-      
-
-                               }
+                                gen = createGenerator(key, currentUpperDN, subSubSubElt);//mettre 
+                                
+                              
+                        }
                 }
-                
-                
-                  interfaceLoaderElement = extractSingleElement(elt.getElementsByTagName("SubLayer"));
-
-                //  System.out.println("THE RANDOM ALLOCATION is CREATED : MaxSIzeX : "+maxSizeX+"  MAx sizeY : "+maxSizeY);
+                interfaceLoaderElement = extractSingleElement(elt.getElementsByTagName("SubLayer"));
         }
 
         @Override
@@ -175,17 +172,7 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
 
                                 itemImage = ResizeImage(itemImage, pixelPosSize.getSize_x(), pixelPosSize.getSize_y());
                                 imageGet = overlayImages(imageGet, itemImage, pixelPosSize.getPos_x(), pixelPosSize.getPos_y());
-
-//                                System.out.println("printed at : " + pixelPosSize.toString());
-//                                try {
-//                                        File outputfile = new File("C:\\BACKUP\\ENSE3\\Foyer\\Programme_Java\\Batcher_Foyer\\test_data\\saved_image.png");
-//                                        ImageIO.write(itemImage, "png", outputfile);
-//                                        System.out.println("Image enregistrée avec succès !");
-//                                } catch (IOException e) {
-//                                        System.err.println("Erreur lors de l'enregistrement de l'image : " + e.getMessage());
-//                                }
                         }
-
                         this.imageOut = imageGet;
                 }
         }
@@ -202,22 +189,18 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                 for (QuadrupletFloat posSize : positions) {
                         pixelPositions.add(new QuadrupletInt(posSize, factor));
                 }
+
         }
 
         public GeneratorRandomSubImageAllocation createSubImageAllocationBuilder() {
                 try {
-                        GeneratorRandomSubImageAllocation DN = new GeneratorRandomSubImageAllocation(this, interfaceLoaderElement,commonDN);
-                        DN.setDim(this.x_size, this.y_size);
+                        GeneratorRandomSubImageAllocation DN = new GeneratorRandomSubImageAllocation(this, interfaceLoaderElement, commonDN);
 
-//                        if (commonDN == null) {
-//                                ArrayList<DesignNode> DNs = DN.getLowestDN();
-//                                for (DesignNode DNsub : DNs) {
-//                                        DNsub.addLowerDN(commonDN);
-//                                }
-//                        }
-                        
                         ((ImageGenerator) DN).setDim(maxSizeX, maxSizeY);
-                        // System.out.println("New subAll created  : "+DN.toString());
+                        if (gen != null) {
+                                gen.setDim(maxSizeX, maxSizeY);
+                        }
+
                         return DN;
                 } catch (XMLErrorInModelException ex) {
                         Logger.getLogger(GeneratorRandomImageAllocation.class.getName()).log(Level.SEVERE, null, ex);
@@ -225,21 +208,21 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                 }
         }
 
-        
-        
-//        public void linkTheCommonDN(DesignNode upperDN){
-//                if (commonDN == null) {
-//                                ArrayList<DesignNode> DNs = upperDN.getLowestDN();
-//                                for (DesignNode DNsub : DNs) {
-//                                        DNsub.addLowerDN(commonDN);
-//                                }
-//                        }
-//        }
-        
-        
-        
         public SpinnerValueFactory.IntegerSpinnerValueFactory getSpinnerFactory() {
                 return new SpinnerValueFactory.IntegerSpinnerValueFactory(minNumber, maxNumber, defaultNumber);
         }
+ 
+ 
+     @Override
+        public InterfaceNode createLinkedInterface(InterfaceNode upperInter) {
+                InterfaceNode inter = new InterfaceRandomImageAllocation(upperInter, name);
+                inter.addDesignNode(this);
+                
+                if(commonDN!=null){
+                        ((InterfaceRandomImageAllocation) inter).createCommomInterface(commonDN);
+                        System.out.println("----------------èèèèèèèèèèèèèèèèèèèèèèè Comon Interface created");
+                }
 
+                return inter;
+        }
 }

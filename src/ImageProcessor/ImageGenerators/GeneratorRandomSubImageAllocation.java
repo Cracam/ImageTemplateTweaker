@@ -1,4 +1,3 @@
-
 package ImageProcessor.ImageGenerators;
 
 import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
@@ -23,26 +22,27 @@ import org.w3c.dom.NodeList;
  * @author Camille LECOURT
  */
 public class GeneratorRandomSubImageAllocation extends ImageGenerator {
-        
+
         private final DesignNode lowerDN;
         private ImageGenerator gen;
-        
-        
-        public GeneratorRandomSubImageAllocation(DesignNode upperDE, Element elt,DesignNode lowerDN) throws XMLErrorInModelException {
+        private DesignNode currentUpperDN;
+
+        public GeneratorRandomSubImageAllocation(DesignNode upperDE, Element elt, DesignNode lowerDN) throws XMLErrorInModelException {
                 super(upperDE, elt);
-                this.lowerDN=lowerDN;//#######################
+                this.lowerDN = lowerDN;//#######################
+
                 //################################### devrait etre executé avnat
+                REPgenerateFromElement();
         }
-        
 
         @Override
         protected void generateFromElement() throws XMLErrorInModelException {
-                               String key;
+                String key;
                 Element subElt, subSubElt;
-                DesignNode currentUpperDN=this;
+                currentUpperDN = this;
 
                 this.name = getStringAttribute(elt, "name", "ERROR");
-                
+
                 subElt = getDirectChildByTagName(elt, "Transformers");
                 if (subElt != null) {
                         NodeList nodeTransformersList = subElt.getChildNodes();
@@ -58,34 +58,36 @@ public class GeneratorRandomSubImageAllocation extends ImageGenerator {
                         }
                 }
 
-                if(lowerDN==null){
+        }
+
+        private void REPgenerateFromElement() throws XMLErrorInModelException {
+                if (lowerDN == null) {
                         ////////
-                        subElt = getDirectChildByTagName(elt, "Generator");
+                        Element subElt = getDirectChildByTagName(elt, "Generator");
 
                         if (subElt == null) {
                                 throw new XMLErrorInModelException("Le SubLayer " + this.name + " n'a pas de bloc: Generator valide");
                         }
 
-                        subSubElt = extractSingleElement(subElt.getChildNodes());
+                        Element subSubElt = extractSingleElement(subElt.getChildNodes());
 
                         if (subSubElt == null) {
                                 throw new XMLErrorInModelException("Le bloc generator du SubLayer " + this.name + " n'a pas de sous générateur valide\n\n " + subElt.getChildNodes().getLength());
                         }
 
-                        key = subSubElt.getNodeName();
+                        String key = subSubElt.getNodeName();
 
-                        gen=createGenerator(key, currentUpperDN, subSubElt);//mettre 
-                       // ((ImageGenerator) currentUpperDN).setDim(this.x_size,this.y_size);
-                }else{
-                      currentUpperDN.addLowerDN( lowerDN);
+                        gen = createGenerator(key, currentUpperDN, subSubElt);//mettre 
+                        // ((ImageGenerator) currentUpperDN).setDim(this.x_size,this.y_size);
+                } else {
+                        currentUpperDN.addLowerDN(lowerDN);
+                        lowerDN.addUpperDN(currentUpperDN);
                 }
-              
         }
-
 
         @Override
         public void DRYUpdate() {
-                 try {
+                try {
                         // Getting the right imageGet
                         DesignNode lowerDN = this.getLowerDNForChilds(ImageTransformer.class);
                         if (lowerDN == null) {
@@ -95,27 +97,20 @@ public class GeneratorRandomSubImageAllocation extends ImageGenerator {
                                 throw new DesingNodeLowerNodeIsAnormalyVoidException("The Layer : " + this.name + " does not have the ImageGenerator");
                         }
                         imageOut = lowerDN.getImageOut();
-//                                try {
-//                                        File outputfile = new File("C:\\BACKUP\\ENSE3\\Foyer\\Programme_Java\\Batcher_Foyer\\test_data\\saved_image.png");
-//                                        ImageIO.write(imageOut, "png", outputfile);
-//                                        System.out.println("Image enregistrée avec succès !");
-//                                } catch (IOException e) {
-//                                        System.err.println("Erreur lors de l'enregistrement de l'image : " + e.getMessage());
-//                                }
 
                 } catch (DesingNodeLowerNodeIsAnormalyVoidException ex) {
                         Logger.getLogger(Layer.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
-        
-        
+
         @Override
-        public void setDim(float  x_size,float y_size){
-         this.x_size=x_size;
-         this.y_size=y_size;
-        gen.setDim(x_size,y_size);
-         DRYRefreshDPI();
- }
-        
-  
+        public void setDim(float x_size, float y_size) {
+                this.x_size = x_size;
+                this.y_size = y_size;
+                if (gen != null) {
+                        gen.setDim(x_size, y_size);
+                }
+                DRYRefreshDPI();
+        }
+
 }
