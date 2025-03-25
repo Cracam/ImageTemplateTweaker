@@ -44,7 +44,7 @@ public class InterfaceRandomImageDispersion extends InterfaceContainer {
         public InterfaceRandomImageDispersion(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
                  
-                  giveVBox(vboxContainer);
+                  setContainerVBox(vboxContainer);
                   upperInterface.placeInterface(this);
         }
 

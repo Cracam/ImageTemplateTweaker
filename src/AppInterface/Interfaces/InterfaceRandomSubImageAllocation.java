@@ -33,7 +33,7 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
         public InterfaceRandomSubImageAllocation(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
 
-                giveVBox(SubInterfaceContainer);
+                setContainerVBox(SubInterfaceContainer);
                 upperInterface.placeInterface(this);
         }
 

@@ -29,7 +29,7 @@ public class LayerContainer extends InterfaceContainer {
 
         public LayerContainer( InterfaceNode upperIN,String name) {
                 super( upperIN,name);
-                giveVBox(containerVBox);
+                setContainerVBox(containerVBox);
         }
 
         @Override

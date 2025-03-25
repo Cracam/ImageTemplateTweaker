@@ -33,7 +33,7 @@ public abstract class ImageDimentioner extends DesignNode {
         
         @Override
           protected String DRYtoString(){
-                  return " of size : "+this.x_p_size+"  ,  "+this.y_p_size;
+                  return "";
           }
       
         

@@ -38,7 +38,7 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
         public InterfaceRandomImageAllocation(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
 
-                giveVBox(SubInterfaceContainer);
+                setContainerVBox(SubInterfaceContainer);
                 upperInterface.placeInterface(this);
         }
 
@@ -153,7 +153,9 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
         
         
         public void createCommomInterface(DesignNode commonInterface){
+                this.setContainerVBox(CommonContainer);
                 InterfaceNode interNode = commonInterface.createInterfaceTreeFromNodeTree(this);
+               this.setContainerVBox(SubInterfaceContainer);  
                // CommonContainer.getChildren().add(interNode);
         }
 

@@ -18,7 +18,7 @@ public abstract class InterfaceContainer extends InterfaceNode {
                 super(upperIN,name);
         }
         
-        protected void giveVBox(VBox containerVbox){
+        protected void setContainerVBox(VBox containerVbox){
                 this.containerVbox = containerVbox;
         }
 
