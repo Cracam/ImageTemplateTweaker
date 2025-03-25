@@ -6,7 +6,7 @@ import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
 import ImageProcessor.Layer;
-import Layers.SubClasses.PosFloat;
+import ImageProcessor.SubClasses.PosFloat;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getFloatAttribute;
 import org.w3c.dom.Element;

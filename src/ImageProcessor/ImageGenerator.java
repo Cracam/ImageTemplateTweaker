@@ -1,9 +1,9 @@
 package ImageProcessor;
 
 import AppInterface.DesignInterfaceLinker;
+import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 
-import interfaces.Interface;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -73,7 +73,7 @@ public abstract class ImageGenerator extends ImageDimentioner {
                         return (T) constructor.newInstance(upperDE, elt);
 
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-                        Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(InterfaceNode.class.getName()).log(Level.SEVERE, null, ex);
                         ex.printStackTrace(); // Print the stack trace
                          throw new XMLErrorInModelException("Error in the creation of this Generator :  " + classBuilder.getName());
                          

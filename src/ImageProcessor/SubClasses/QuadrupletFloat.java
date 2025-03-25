@@ -2,22 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Layers.SubClasses;
+package ImageProcessor.SubClasses;
 
 /**
  *
  * @author camil
  */
-public class PosFloat {
+public class QuadrupletFloat {
 
-        private  float  pos_x ;
-        private  float  pos_y ;
+        private final float  pos_x ;
+        private final float  pos_y ;
+        private final float   size_x ;
+        private final float  size_y ;
 
-
-        public PosFloat(float pos_x, float pos_y) {
+        public QuadrupletFloat(float pos_x, float pos_y, float size_x, float size_y) {
                 this.pos_x = pos_x;
                 this.pos_y = pos_y;
-
+                this.size_x = size_x;
+                this.size_y = size_y;
         }
 
         public float getPos_x() {
@@ -28,19 +30,14 @@ public class PosFloat {
                 return pos_y;
         }
 
- 
-        public void add(PosFloat otherPosFloat){
-                this.pos_x = pos_x+otherPosFloat.getPos_x();
-                this.pos_y = pos_y+otherPosFloat.getPos_y();
+        public float getSize_x() {
+                return size_x;
         }
 
-        public void setPos_x(float pos_x) {
-                this.pos_x = pos_x;
+        public float getSize_y() {
+                return size_y;
         }
 
-        public void setPos_y(float pos_y) {
-                this.pos_y = pos_y;
-        }
         
         
         

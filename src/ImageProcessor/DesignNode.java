@@ -6,7 +6,6 @@ import Exceptions.InvalidLinkbetweenNode;
 import Exceptions.ThisInterfaceDoesNotExistException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ResourcesManager.ResourcesManager;
-import interfaces.Interface;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -222,7 +221,7 @@ public abstract class DesignNode extends VBox {
                         return linkedinterface;
 
                 } catch (ThisInterfaceDoesNotExistException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-                        Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(InterfaceNode.class.getName()).log(Level.SEVERE, null, ex);
                         ex.printStackTrace(); // Print the stack trace
                         System.out.println("ERROR for " + this.getClass().getName());
                         return null;

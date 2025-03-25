@@ -7,7 +7,7 @@ package ImageProcessor;
 import Exceptions.DesingNodeLowerNodeIsAnormalyVoidException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import AppInterface.DesignInterfaceLinker;
-import interfaces.Interface;
+import AppInterface.InterfaceNode;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -77,7 +77,7 @@ public abstract class ImageTransformer extends DesignNode {
                         return constructor.newInstance(uppersDE, elt);
 
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-                        Logger.getLogger(Interface.class.getName()).log(Level.WARNING, null, ex);
+                        Logger.getLogger(InterfaceNode.class.getName()).log(Level.WARNING, null, ex);
                         ex.printStackTrace(); // Print the stack trace
                         throw new XMLErrorInModelException("Error in the creation of this Transformer :  " + type);
                 }

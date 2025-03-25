@@ -5,7 +5,6 @@ import AppInterface.DesignBuilder;
 import AppInterface.InterfaceNode;
 import static ResourcesManager.XmlManager.getFloatAttribute;
 import static ResourcesManager.XmlManager.getStringAttribute;
-import interfaces.Interface;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.w3c.dom.Element;
@@ -58,7 +57,7 @@ public class ImageBuilder extends ImageDimentioner {
                                         try {
                                                 throw new XMLErrorInModelException("A XmlBloc named " + nodeTransformersList.item(i).getNodeName() + " in the imageBuilder : " + this.name + " xas detected ignoringit");
                                         } catch (XMLErrorInModelException ex) {
-                                                Logger.getLogger(Interface.class.getName()).log(Level.WARNING , null, ex);
+                                                Logger.getLogger(InterfaceNode.class.getName()).log(Level.WARNING , null, ex);
                                                 //ex.printStackTrace(); // Print the stack trace
                                         }
 

@@ -7,7 +7,7 @@ import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
 import ImageProcessor.ImageGenerator;
 import ImageProcessor.Layer;
-import Layers.SubClasses.PosFloat;
+import ImageProcessor.SubClasses.PosFloat;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getFloatAttribute;
 import static ResourcesManager.XmlManager.getStringAttribute;

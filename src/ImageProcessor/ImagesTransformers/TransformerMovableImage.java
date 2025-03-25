@@ -5,7 +5,7 @@ import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageTransformer;
 import ImageProcessor.Layer;
-import Layers.SubClasses.QuadrupletFloat;
+import ImageProcessor.SubClasses.QuadrupletFloat;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getFloatAttribute;
 import java.awt.image.BufferedImage;
