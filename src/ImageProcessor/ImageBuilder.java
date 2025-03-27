@@ -48,21 +48,21 @@ public class ImageBuilder extends ImageDimentioner {
 
               currentUpperDN=  this;
                 //        subElt = (Element) elt.getElementsByTagName("Layers").item(0);
-                NodeList nodeTransformersList = elt.getChildNodes();
+                NodeList layerNodeList = elt.getChildNodes();
 
                 //running in the inverse 
-                for (int i = nodeTransformersList.getLength() - 1; i >= 0; i--) {
-                        if (nodeTransformersList.item(i).getNodeType() == Node.ELEMENT_NODE) { //To avoid text node and comment node
-                                if (!"Layer".equals(nodeTransformersList.item(i).getNodeName())) {
+                for (int i = layerNodeList.getLength() - 1; i >= 0; i--) {
+                        if (layerNodeList.item(i).getNodeType() == Node.ELEMENT_NODE) { //To avoid text node and comment node
+                                if (!"Layer".equals(layerNodeList.item(i).getNodeName())) {
                                         try {
-                                                throw new XMLErrorInModelException("A XmlBloc named " + nodeTransformersList.item(i).getNodeName() + " in the imageBuilder : " + this.name + " xas detected ignoringit");
+                                                throw new XMLErrorInModelException("A XmlBloc named " + layerNodeList.item(i).getNodeName() + " in the imageBuilder : " + this.name + " xas detected ignoringit");
                                         } catch (XMLErrorInModelException ex) {
                                                 Logger.getLogger(InterfaceNode.class.getName()).log(Level.WARNING , null, ex);
                                                 //ex.printStackTrace(); // Print the stack trace
                                         }
 
                                 } else {
-                                        subElt = (Element) nodeTransformersList.item(i);
+                                        subElt = (Element) layerNodeList.item(i);
                                         //  key = subSubElt.getNodeName(); // key for defining the layer and the Interface
                                         try {
                                                 currentUpperDN = new Layer(currentUpperDN, subElt);

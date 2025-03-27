@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -274,15 +273,31 @@ public abstract class DesignNode extends VBox {
                 interNode.addDesignNode(this);
 
                 ArrayList<InterfaceNode> subInterfaceNodeList = interNode.getLowerInterfaces();
-                if (subInterfaceNodeList.size() != lowersDN.size()) {
-                        throw new InvalidLinkbetweenNode("The number of sub DesignNode ( " + lowersDN.size() + " ) and  InterfaceNode ( " + interNode.getLowerInterfaces().size() + " ) are not equal");
+                if (subInterfaceNodeList.size() != getSizeExcludingClass(lowersDN,Layer.class)) {
+       
+                        for (DesignNode dn : lowersDN) {
+                                System.out.println("################" + dn.getClass().getName());
+                        }
+                        throw new InvalidLinkbetweenNode("The number of sub DesignNode ( " + getSizeExcludingClass(lowersDN, Layer.class) + " ) and  InterfaceNode ( " + interNode.getLowerInterfaces().size() + " ) are not equal");
                 }
 
                 for (int i = 0; i < subInterfaceNodeList.size(); i++) {
-                        lowersDN.get(i).linkDesignNodeToInterfaceNodes(subInterfaceNodeList.get(i));
+                        if (lowersDN.get(i).getClass() != Layer.class ){
+                                lowersDN.get(i).linkDesignNodeToInterfaceNodes(subInterfaceNodeList.get(i));
+                        }
                 }
-
         }
+
+        public static int getSizeExcludingClass(ArrayList<?> list, Class<?> excludeClass) {
+                int count = 0;
+                for (Object element : list) {
+                        if (element != null && !excludeClass.isInstance(element)) {
+                                count++;
+                        }
+                }
+                return count;
+        }
+
 
         public String ComputeUniqueID(Class<?> stopClass) {
                 String ret = this.DRYComputeUniqueID();

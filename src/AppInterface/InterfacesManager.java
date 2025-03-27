@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package AppInterface;
 
 import Exceptions.InvalidLinkbetweenNode;
@@ -86,12 +82,12 @@ public class InterfacesManager {
                 for (DesignNode layer : layersList) {
                         if (layer.getClass() == Layer.class) {
                                 ID = layer.ComputeUniqueID(Layer.class);
-                                System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+                            //    System.out.println("--------------------------------------------------------------------------------------------------------------------------");
                                 for (Layer linkedLayer : linkedLayers) {
                                                 System.out.println(linkedLayer.ComputeUniqueID(Layer.class)+"--------------"+ID);
-                                                System.out.println("\\\\\\\\\\\\\\\\\\"+linkedLayer.toString());
+                               //                 System.out.println("\\\\\\\\\\\\\\\\\\"+linkedLayer.toString());
                                         if (linkedLayer.ComputeUniqueID(Layer.class).equals(ID)) {
-                                                    System.out.println("===============================================");
+                            //                        System.out.println("===============================================");
                                                 alreadyCreated = true;
                                                 alredyCreatedLayer = linkedLayer;
                                                 break;

@@ -176,7 +176,7 @@ public abstract class InterfaceNode extends VBox {
             public void delete(InterfaceNode InterfaceNodeToDelete) {
                 if (lowerInterfaces.contains(InterfaceNodeToDelete)) {
                         lowerInterfaces.remove(InterfaceNodeToDelete);
-                        System.out.println("DesignNodeToDelete a été supprimé de lowersDN.");
+                   //     System.out.println("DesignNodeToDelete a été supprimé de lowersDN.");
                 } else {
                         System.out.println("DesignNodeToDelete n'est pas présent dans lowersDN.");
                 }
