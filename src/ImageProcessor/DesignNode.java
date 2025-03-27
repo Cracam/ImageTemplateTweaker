@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.layout.VBox;
@@ -243,8 +245,19 @@ public abstract class DesignNode extends VBox {
                 return InterfaceRoot;
         }
 
+        public InterfaceNode createInterfaceTreeFromNodeTree(InterfaceNode upperIN, List<Class<?>> stopClasses) {
+                InterfaceNode InterfaceRoot = this.createLinkedInterface(upperIN);
+                //   System.out.println("CCCCCCCCCCC---- :  "+InterfaceRoot.getClass().getName());
+                for (DesignNode lowerDN : lowersDN) {
+                        if (!stopClasses.contains(lowerDN.getClass())) {
+                                lowerDN.createInterfaceTreeFromNodeTree(InterfaceRoot, stopClasses);
+                        }
+                }
+                return InterfaceRoot;
+        }
+        
         public InterfaceNode createInterfaceTreeFromNodeTree(InterfaceNode upperIN) {
-                return createInterfaceTreeFromNodeTree(upperIN, null);
+                return createInterfaceTreeFromNodeTree(upperIN, (Class) null);
         }
 
         /**

@@ -3,7 +3,6 @@ package ImageProcessor.ImageGenerators;
 import AppInterface.InterfaceNode;
 import AppInterface.Interfaces.InterfaceRandomImageAllocation;
 import AppInterface.Interfaces.InterfaceRandomSubImageAllocation;
-import AppInterface.LayerContainer;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
@@ -49,6 +48,7 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
         private int defaultNumber;
 
         private DesignNode commonDN;
+        private DesignNode SubDNInit ;
         private ImageGenerator gen;
 
         public GeneratorRandomImageAllocation(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
@@ -132,10 +132,10 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
 
                                 gen = createGenerator(key, currentUpperDN, subSubSubElt);//mettre 
                                 
-                              
                         }
                 }
                 interfaceLoaderElement = extractSingleElement(elt.getElementsByTagName("SubLayer"));
+                createSubImageAllocationBuilder();
         }
         
         
@@ -210,6 +210,8 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                         return null;
                 }
         }
+        
+
 
         public SpinnerValueFactory.IntegerSpinnerValueFactory getSpinnerFactory() {
                 return new SpinnerValueFactory.IntegerSpinnerValueFactory(minNumber, maxNumber, defaultNumber);
@@ -221,8 +223,10 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                 InterfaceNode inter = new InterfaceRandomImageAllocation(upperInter, name);
                 inter.addDesignNode(this);
                 
-                if(commonDN!=null){
+                if(commonDN!=null ){
                         ((InterfaceRandomImageAllocation) inter).createCommomInterface(commonDN);
+                       // SubDNInit.getLinkedinterface().destroyItSelf();
+                       // SubDNInit.destroyItSelf();
                 }
 
                 return inter;

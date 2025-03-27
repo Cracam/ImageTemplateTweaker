@@ -8,9 +8,11 @@ import Exceptions.InvalidLinkbetweenNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
+import ImageProcessor.ImagesTransformers.TransformerInert;
 import ImageProcessor.Layer;
 import ResourcesManager.XmlManager;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -105,7 +107,7 @@ public class InterfacesManager {
                                                 Logger.getLogger(InterfacesManager.class.getName()).log(Level.SEVERE, null, ex);
                                         }
                                 } else {
-                                        layer.createInterfaceTreeFromNodeTree(null, Layer.class);
+                                        layer.createInterfaceTreeFromNodeTree(null, Arrays.asList(Layer.class, TransformerInert.class));
                                         //   System.out.println("ONLY VOID ? : "+layer.getLinkedinterface().interfaceBranchContainOnlyVoidInterfaces());
                                         if (!layer.getLinkedinterface().interfaceBranchContainOnlyVoidInterfaces()) {
                                                 addInterface((LayerContainer) layer.getLinkedinterface());
