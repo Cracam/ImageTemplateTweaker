@@ -278,6 +278,9 @@ public abstract class DesignNode extends VBox {
                         for (DesignNode dn : lowersDN) {
                                 System.out.println("################" + dn.getClass().getName());
                         }
+                        for (InterfaceNode dn : interNode.getLowerInterfaces()) {
+                                System.out.println("#########---#######" + dn.getClass().getName());
+                        }
                         throw new InvalidLinkbetweenNode("The number of sub DesignNode ( " + getSizeExcludingClass(lowersDN, Layer.class) + " ) and  InterfaceNode ( " + interNode.getLowerInterfaces().size() + " ) are not equal");
                 }
 

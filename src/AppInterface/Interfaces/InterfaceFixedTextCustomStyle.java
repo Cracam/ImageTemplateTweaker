@@ -3,6 +3,7 @@ package AppInterface.Interfaces;
 import AppInterface.InterfaceNode;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerators.GeneratorFixedTextCustomStyle;
+import java.awt.image.BufferedImage;
 
 /**
  *
@@ -103,5 +104,20 @@ public class InterfaceFixedTextCustomStyle extends InterfaceCustomText {
                         this.getTextGenerator().setText(((GeneratorFixedTextCustomStyle)DN).getText());
         }
           
+          
+              /**
+         * Return the out of this interface with the good size
+         *
+         * @param text
+         * @param pixelMmFactor
+         * @param textSizeMin
+         * @param textSizeMax
+         * @return
+         */
+        public BufferedImage getImageOut(String text, float pixelMmFactor, float textSizeMin, float textSizeMax) {
+                         this.getTextGenerator().setText(text);
+                        return this.getTextGenerator().getImageOut(pixelMmFactor, textSizeMin, textSizeMax);
+        }
+
      
 }

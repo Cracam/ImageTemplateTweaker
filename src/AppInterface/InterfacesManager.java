@@ -84,7 +84,7 @@ public class InterfacesManager {
                                 ID = layer.ComputeUniqueID(Layer.class);
                             //    System.out.println("--------------------------------------------------------------------------------------------------------------------------");
                                 for (Layer linkedLayer : linkedLayers) {
-                                                System.out.println(linkedLayer.ComputeUniqueID(Layer.class)+"--------------"+ID);
+                              //                  System.out.println(linkedLayer.ComputeUniqueID(Layer.class)+"--------------"+ID);
                                //                 System.out.println("\\\\\\\\\\\\\\\\\\"+linkedLayer.toString());
                                         if (linkedLayer.ComputeUniqueID(Layer.class).equals(ID)) {
                             //                        System.out.println("===============================================");

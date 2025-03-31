@@ -173,4 +173,58 @@ public class StaticImageEditing {
 
                 return combined;
         }
+        public static BufferedImage applyMask(BufferedImage imageIn, int[][] mask) {
+        // Vérifie que les dimensions du masque correspondent à celles de l'image
+        if (mask.length != imageIn.getWidth() || mask[0].length != imageIn.getHeight()) {
+            throw new IllegalArgumentException("Les dimensions du masque doivent correspondre à celles de l'image.  "+imageIn.getWidth()+"  "+ imageIn.getHeight()+"   "+mask.length+"   "+mask[0].length);
+        }
+
+        // Crée une nouvelle image pour stocker le résultat
+        BufferedImage imageOut = new BufferedImage(imageIn.getWidth(), imageIn.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+        // Parcourt chaque pixel de l'image
+        for (int y = 0; y < imageIn.getHeight(); y++) {
+            for (int x = 0; x < imageIn.getWidth(); x++) {
+                // Récupère la valeur du masque pour le pixel courant
+                int maskValue = mask[x][y];
+
+                // Récupère la couleur du pixel courant dans l'image d'entrée
+                int rgb = imageIn.getRGB(x, y);
+
+                // Applique le masque en multipliant la couleur par la valeur du masque
+                int alpha = ((rgb >> 24) & 0xFF) * maskValue / 255;
+                int red = ((rgb >> 16) & 0xFF) * maskValue / 255;
+                int green = ((rgb >> 8) & 0xFF) * maskValue / 255;
+                int blue = (rgb & 0xFF) * maskValue / 255;
+
+                // Combine les nouvelles valeurs de couleur en une seule valeur ARGB
+                int newRgb = (alpha << 24) | (red << 16) | (green << 8) | blue;
+
+                // Définit la nouvelle couleur dans l'image de sortie
+                imageOut.setRGB(x, y, newRgb);
+            }
+        }
+
+        return imageOut;
+    }
+        
+         public static int[][] invertOpacityTable(int[][] table) {
+                if (table == null) {
+                        throw new IllegalArgumentException("Table cannot be null");
+                }
+
+                for (int i = 0; i < table.length; i++) {
+                        for (int j = 0; j < table[i].length; j++) {
+                                try {
+                                        if (table[i][j] < 0 || table[i][j] > 255) {
+                                                throw new IllegalArgumentException("Table values must be between 0 and 255");
+                                        }
+                                        table[i][j] = 255 - table[i][j];
+                                } catch (IllegalArgumentException e) {
+                                        table[i][j] = 0;
+                                }
+                        }
+                }
+                return table;
+        }
 }

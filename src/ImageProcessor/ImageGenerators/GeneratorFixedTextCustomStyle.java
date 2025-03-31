@@ -51,7 +51,7 @@ public class GeneratorFixedTextCustomStyle extends ImageGenerator {
               @Override
         public void DRYUpdate() {
                 float pixelMillimeterFactor = this.getUpperDN(ImageBuilder.class).getDesignBuilder().getPixelMmFactor();
-                this.imageOut = ((InterfaceFixedTextCustomStyle) (this.getLinkedinterface())).getImageOut(pixelMillimeterFactor, textSizeMin, textSizeMax);
+                this.imageOut = ((InterfaceFixedTextCustomStyle) (this.getLinkedinterface())).getImageOut(this.text,pixelMillimeterFactor, textSizeMin, textSizeMax);
                 PosFloat offset = new PosFloat(0, 0);
 
                 float x = -this.imageOut.getWidth() / 2 / pixelMillimeterFactor;
