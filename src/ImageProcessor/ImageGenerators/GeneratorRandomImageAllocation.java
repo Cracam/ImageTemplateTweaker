@@ -159,7 +159,8 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                         // Find an image for each position until all the positions or all the weighted list is empty
                         BufferedImage itemImage;
                         Random random = this.getUpperDN(ImageBuilder.class).getDesignBuilder().getRandom();
-                        Iterator<QuadrupletInt> pixelPositionIterator = pixelPositions.iterator();
+                        ArrayList<QuadrupletInt> shuffledPositions = shuffleArrayList(pixelPositions,random);
+                        Iterator<QuadrupletInt> pixelPositionIterator = shuffledPositions.iterator();
 
                         while (pixelPositionIterator.hasNext()) {
                                 QuadrupletInt pixelPosSize = pixelPositionIterator.next();
@@ -231,4 +232,24 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
 
                 return inter;
         }
+        
+        
+  
+        
+    public static <T> ArrayList<T> shuffleArrayList(ArrayList<T> arrayList, Random random) {
+        // Créer une copie de l'ArrayList pour ne pas modifier l'originale
+        ArrayList<T> shuffledArrayList = new ArrayList<>(arrayList);
+
+        for (int i = shuffledArrayList.size() - 1; i > 0; i--) {
+            int j = random.nextInt(i + 1);
+            // Échanger les éléments à l'index i et j
+            T temp = shuffledArrayList.get(i);
+            shuffledArrayList.set(i, shuffledArrayList.get(j));
+            shuffledArrayList.set(j, temp);
+        }
+
+        return shuffledArrayList;
+    }
+
+
 }
