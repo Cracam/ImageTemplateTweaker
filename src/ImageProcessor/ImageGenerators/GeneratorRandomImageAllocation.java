@@ -151,8 +151,10 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
                 if (!DNs.isEmpty()) {
                         for (DesignNode DN : DNs) {
                                 int weight = ((InterfaceRandomSubImageAllocation) DN.getLinkedinterface()).getNumberSelectorValue()-1;
+                                System.out.println("Weight : "+weight);
                                 for (int i = 0; i < weight; i++) {
                                         DNsWeighted.add(DN);
+                                        System.out.println("EXECUTED");
                                 }
                         }
 

@@ -81,6 +81,29 @@ public class XmlManager {
                     return ret;
                 }
         }
+        
+        
+        /**
+ * Helper function to safely retrieve and parse a double attribute from
+ * an element.
+ *
+ * @param element The element from which to retrieve the attribute.
+ * @param attributeName The name of the attribute to retrieve.
+ * @param ret The default value to return if the attribute is not found or is invalid.
+ * @return The parsed double value of the attribute, or the default value if the
+ * attribute is not found or is invalid.
+ */
+static public Double getDoubleAttribute(Element element, String attributeName, double ret) {
+    try {
+        return Double.valueOf(getAttributeValue(element, attributeName));
+    } catch (NumberFormatException | XMLErrorInModelException e) {
+        System.out.println("Invalid value or XML loading error for attribute " + attributeName + "--- replacing by default value");
+        return ret;
+    }
+}
+
+
+
 
         /**
  * Helper function to safely retrieve and parse an integer attribute from

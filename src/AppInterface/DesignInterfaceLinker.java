@@ -18,6 +18,7 @@ import ImageProcessor.ImageGenerators.GeneratorRandomImageAllocation;
 import ImageProcessor.ImageGenerators.GeneratorRandomImageDispersion;
 import ImageProcessor.ImageGenerators.GeneratorRandomSubImageAllocation;
 import ImageProcessor.ImagesTransformers.TransformerCustomColor;
+import ImageProcessor.ImagesTransformers.TransformerFixedColor;
 import ImageProcessor.ImagesTransformers.TransformerInert;
 import ImageProcessor.ImagesTransformers.TransformerMask;
 import ImageProcessor.ImagesTransformers.TransformerMovableImage;
@@ -49,6 +50,8 @@ public class DesignInterfaceLinker {
                   linkMap.put("T_ONLY_USED_IN_CODE", new DesignInterfacePair(TransformerInert.class, VoidInterface.class));
                   linkMap.put("T_Custom_Color", new DesignInterfacePair(TransformerCustomColor.class, InterfaceCustomColor.class));
                  linkMap.put("T_Mouvable_Image", new DesignInterfacePair(TransformerMovableImage.class, InterfaceMouvableImage.class));
+                 linkMap.put("T_Fixed_Color", new DesignInterfacePair(TransformerFixedColor.class, VoidInterface.class));
+
                linkMap.put("T_Mask", new DesignInterfacePair(TransformerMask.class, VoidInterface.class));
                  
                  linkMap.put("Void_Image", new DesignInterfacePair(VoidImage.class, VoidInterface.class));
