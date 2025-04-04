@@ -129,7 +129,7 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
         private void deleteThis() {
                 for(DesignNode DN : linkedDesignNodes){
                         this.NumberSelector.setValueFactory( new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1));
-                        this.NumberSelector.getValueFactory().setValue(1);
+                        this.NumberSelector.getValueFactory().setValue(0);
                         System.out.println("FACTVAL : "+this.NumberSelector.getValueFactory().getValue());
                        DN.update();
                         DN.destroyItSelf();
