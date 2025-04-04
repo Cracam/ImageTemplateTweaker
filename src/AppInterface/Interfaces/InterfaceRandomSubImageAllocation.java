@@ -127,22 +127,17 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
         
         @FXML
         private void deleteThis() {
-                InterfaceRandomImageAllocation allocator = (InterfaceRandomImageAllocation) this.getUpperIN(InterfaceRandomImageAllocation.class);
                 for(DesignNode DN : linkedDesignNodes){
-//                        this.NumberSelector.setValueFactory( new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1));
-//                        this.NumberSelector.getValueFactory().setValue(0);
-//                        System.out.println("FACTVAL : "+this.NumberSelector.getValueFactory().getValue());
-//                        DN.update();
+                        this.NumberSelector.setValueFactory( new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1));
+                        this.NumberSelector.getValueFactory().setValue(1);
+                        System.out.println("FACTVAL : "+this.NumberSelector.getValueFactory().getValue());
+                       DN.update();
                         DN.destroyItSelf();
-                        
                 }
                 this.destroyItSelf();
                 if(  this.getLinkedDesignNodes().isEmpty()){
                     this.getLinkedDesignNodes().get(0).getUpperDN(GeneratorRandomImageAllocation.class).updateLower();
                 }
-                
-                
-               allocator.updateLinkedDesignNodes();
         }
 
         @Override

@@ -144,18 +144,18 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
         @Override
         public void DRYUpdate() {
                 ArrayList<DesignNode> DNs = this.getLowersDN();
-                ArrayList<DesignNode> DNsWeighted = new ArrayList<>(DNs);
+                ArrayList<DesignNode> DNsWeighted = new ArrayList<>();
                 BufferedImage imageGet = createBufferedImage(this.x_p_size, this.y_p_size);
 
                 // Add every element to a weighted list (to be able to count them)
                 if (!DNs.isEmpty()) {
                         for (DesignNode DN : DNs) {
-                                int weight = ((InterfaceRandomSubImageAllocation) DN.getLinkedinterface()).getNumberSelectorValue()-1;
-                                System.out.println("Weight : "+weight);
-                                for (int i = 0; i < weight; i++) {
-                                        DNsWeighted.add(DN);
-                                        System.out.println("EXECUTED");
-                                }
+                                int weight = ((InterfaceRandomSubImageAllocation) DN.getLinkedinterface()).getNumberSelectorValue() - 1;
+                                //System.out.println("Weight : " + weight + "     number sub " + DN.getClass().getName() + "  ISZE " + DNs.size());
+                                        for (int i = 0; i < weight; i++) {
+                                                DNsWeighted.add(DN);
+                                           //     System.out.println("EXECUTED");
+                                        }
                         }
 
                         // Find an image for each position until all the positions or all the weighted list is empty
@@ -249,7 +249,6 @@ public class GeneratorRandomImageAllocation extends ImageGenerator {
             shuffledArrayList.set(i, shuffledArrayList.get(j));
             shuffledArrayList.set(j, temp);
         }
-
         return shuffledArrayList;
     }
 
