@@ -5,13 +5,13 @@
 package AppInterface;
 
 import Exeptions.ResourcesFileErrorException;
+import ResourcesManager.XmlChild;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  *
@@ -25,6 +25,7 @@ public class LayerContainer extends InterfaceContainer {
         @FXML
         private TitledPane titledPane;
         
+        private String tabName;
         
 
         public LayerContainer( InterfaceNode upperIN,String name) {
@@ -33,8 +34,8 @@ public class LayerContainer extends InterfaceContainer {
         }
 
         @Override
-        public Element DRYsaveDesign(Document doc) {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        public XmlChild DRYsaveDesign() {
+                return null; // nothing to save
         }
 
         @Override
@@ -50,7 +51,8 @@ public class LayerContainer extends InterfaceContainer {
                         fxmlLoader.load();
                         
                         this.titledPane.setText(this.getName());
-//                        System.out.println("TTTTTTTTTTTTTTTTTTTTTTTT"+this.getName());
+                          // Définir le style CSS pour changer la taille du texte
+     //   titledPane.setStyle("-fx-font-size: 20px;");
                         
                         
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
@@ -58,7 +60,23 @@ public class LayerContainer extends InterfaceContainer {
                 }
         }
         
-        
+           /**
+         * TESTED
+         *
+         * @return
+         */
+        @Override
+        public String DRYComputeUniqueID() {
+                return DesignInterfaceLinker.getIdentifier(this.getClass()) + getName() + tabName;
+        }
+
+        public String getTabName() {
+                return tabName;
+        }
+
+        public void setTabName(String tabName) {
+                this.tabName = tabName;
+        }
       
         
 }

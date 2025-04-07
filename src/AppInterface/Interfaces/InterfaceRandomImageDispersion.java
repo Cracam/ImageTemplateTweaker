@@ -168,7 +168,7 @@ public class InterfaceRandomImageDispersion extends InterfaceContainer {
         }
 
         @Override
-        public Element DRYsaveDesign(Document doc) {
+        public XmlChild DRYsaveDesign() {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 

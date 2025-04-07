@@ -6,6 +6,7 @@ package AppInterface.Interfaces;
 
 import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
+import ResourcesManager.XmlChild;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -28,7 +29,7 @@ public class VoidInterface extends InterfaceNode {
         }
 
         @Override
-        public Element DRYsaveDesign(Document doc) {
+        public XmlChild DRYsaveDesign() {
                 return null;
         }
 

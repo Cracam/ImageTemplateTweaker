@@ -3,6 +3,7 @@ package AppInterface.Interfaces;
 import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import Exeptions.ResourcesFileErrorException;
+import ResourcesManager.XmlChild;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -217,7 +218,7 @@ public class InterfaceCustomText extends InterfaceNode {
         }
 
         @Override
-        public Element DRYsaveDesign(Document doc) {
+        public XmlChild DRYsaveDesign() {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
         

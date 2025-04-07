@@ -9,13 +9,14 @@ import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
 import ResourcesManager.ResourcesManager;
+import ResourcesManager.XmlChild;
+import ResourcesManager.XmlManager;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.layout.VBox;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  *
@@ -42,18 +43,7 @@ public abstract class InterfaceNode extends VBox {
 
         }
 
-        public String ComputeUniqueID() {
-                String ret = "";
-                this.DRYComputeUniqueID();
-                for (InterfaceNode lInter : lowerInterfaces) {
-                        ret = ret + lInter.ComputeUniqueID();
-                }
-                return ret;
-        }
 
-        public String DRYComputeUniqueID() {
-                return DesignInterfaceLinker.getIdentifier(this.getClass());
-        }
 
         /**
          * Schearch the next nearest interface container in the tree
@@ -103,13 +93,28 @@ public abstract class InterfaceNode extends VBox {
                 return lowerInterfaces;
         }
 
-        public NodeList saveDesign(NodeList nodelist) {
+        /**
+         * 
+         * 
+         * @param managerIn
+         * @return 
+         */
+        public XmlManager saveDesign(XmlManager managerIn) {
+                XmlChild child = this.DRYsaveDesign();
+                if (child != null) {
+                        managerIn.addChild(child);
+                }
 
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-
+                for (int i = 0; i < lowerInterfaces.size(); i++) {
+                        lowerInterfaces.get(i).saveDesign(managerIn);
+                }
+                return managerIn;
         }
 
-        public abstract Element DRYsaveDesign(Document doc);
+        public abstract XmlChild DRYsaveDesign();
+        
+        
+        
 
         protected abstract void initialiseInterface();
 
@@ -186,5 +191,29 @@ public abstract class InterfaceNode extends VBox {
                     upperInterface.delete(this);
           }
           
+          
+          
+  
+
+ 
+        
+         
+        
+        public String ComputeUniqueID() {
+                String ret = "";
+                this.DRYComputeUniqueID();
+                for (InterfaceNode lInter : lowerInterfaces) {
+                        ret = ret + lInter.ComputeUniqueID();
+                }
+                return ret;
+        }
+
+       public String DRYComputeUniqueID() {
+                String ret = DesignInterfaceLinker.getIdentifier(this.getClass());
+                if (ret == null) {
+                        return "";
+                }
+                return ret;
+        }
           
 }

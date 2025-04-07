@@ -7,6 +7,8 @@ package AppInterface.Interfaces;
 import Exeptions.ResourcesFileErrorException;
 import GradientCreatorInterface.GradientCreatorInterface;
 import AppInterface.InterfaceNode;
+import ResourcesManager.XmlChild;
+import ResourcesManager.XmlManager;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -18,7 +20,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import previewimagebox.PreviewImageBox;
 import staticFunctions.StaticImageEditing;
 
 /**
@@ -58,9 +59,6 @@ public class InterfaceCustomColor extends InterfaceNode {
                                         // System.out.println("trigered");
                                         gradientPicker.setChanged(false);
                                           this.updateLinkedDesignNodes();
-
-                                    
-                                 //       System.out.println("(1) CHANGGE DEECTED " + linkedImagesBuilders.size());
                                 }
                         });
                                 
@@ -72,13 +70,18 @@ public class InterfaceCustomColor extends InterfaceNode {
 
         
         
-        
-        @Override
-            public Element DRYsaveDesign(Document doc) {
-//                  XmlManager xmlManager = new XmlManager(doc);
-//                xmlManager.addChild("Gradient", Map.of("Gradient_Name", gradientPicker.getSelectedGradientName(), "Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()), "Color_2", StaticImageEditing.colorToHex(gradientPicker.getColor2()), "ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()), "Param_1", String.valueOf(gradientPicker.getParam1()), "Param_2", String.valueOf(gradientPicker.getParam2())));
-//                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
-return null;
+          @Override
+        public XmlChild DRYsaveDesign() {
+
+                XmlChild XmlGradient = new XmlChild("Gradient");
+                XmlGradient.addAttribute("Gradient_Name", gradientPicker.getSelectedGradientName());
+                XmlGradient.addAttribute("Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()));
+                XmlGradient.addAttribute("Color_2", StaticImageEditing.colorToHex(this.gradientPicker.getColor2()));
+                XmlGradient.addAttribute("ColorIntensity", String.valueOf(this.gradientPicker.getColorIntensity()));
+                XmlGradient.addAttribute("Param_1", String.valueOf(this.gradientPicker.getParam1()));
+                XmlGradient.addAttribute("Param_2", String.valueOf(this.gradientPicker.getParam2()));
+
+                 return XmlGradient;
         }
 
         
@@ -105,12 +108,5 @@ return null;
         public BufferedImage getImageOut(int[][] opacityMap){
                 return this.gradientPicker.getImageOut(opacityMap);
         }
-
-       
-
-       
-
-
-        
 
 }

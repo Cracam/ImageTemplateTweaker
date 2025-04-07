@@ -108,7 +108,7 @@ public class InterfacesManager {
                                         if (!layer.getLinkedinterface().interfaceBranchContainOnlyVoidInterfaces()) {
                                                 addInterface((LayerContainer) layer.getLinkedinterface());
                                                 //   System.out.println("Interface qe want to add"+layer.getLinkedinterface());
-                                                assignInterfaceToTab(((Layer) layer).getTabName(), layer.getLinkedinterface());
+                                                assignInterfaceToTab(((Layer) layer).getTabName(), (LayerContainer) layer.getLinkedinterface());
                                                 linkedLayers.add((Layer) layer);
                                         }
                                 }
@@ -133,9 +133,9 @@ public class InterfacesManager {
          * @param inter
          * @param tabName
          */
-        public void assignInterfaceToTab(String tabName, InterfaceNode inter) {
+        public void assignInterfaceToTab(String tabName, LayerContainer inter) {
+                inter.setTabName(tabName);//set value of the tab name (use for Compute unique ID of layer container)
                 for (TabOfTiltedPane tab : tabs) {
-
                         if (tab.getText().equals(tabName)) {
                                 tab.addNodeToVBox(inter);
                                 return;
@@ -146,7 +146,6 @@ public class InterfacesManager {
                 tabPane.getTabs().add(tab);
                 tab.addNodeToVBox(inter);
                 tabs.add(tab);
-
         }
 
         public void loadInterfaces(NodeList interfacesNodes) {

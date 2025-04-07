@@ -9,6 +9,7 @@ import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerators.GeneratorRandomImageAllocation;
 import ImageProcessor.ImageGenerators.GeneratorRandomSubImageAllocation;
 import ImageProcessor.ImagesTransformers.TransformerInert;
+import ResourcesManager.XmlChild;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -165,7 +166,7 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
         }
 
         @Override
-        public Element DRYsaveDesign(Document doc) {
+        public XmlChild DRYsaveDesign() {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 

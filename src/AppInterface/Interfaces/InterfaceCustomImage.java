@@ -7,6 +7,7 @@ package AppInterface.Interfaces;
 import Exeptions.ResourcesFileErrorException;
 import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
+import ResourcesManager.XmlChild;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -61,7 +62,7 @@ public class InterfaceCustomImage extends InterfaceNode {
         }
 
         @Override
-        public Element DRYsaveDesign(Document doc) {
+        public XmlChild DRYsaveDesign() {
 //                String imageName = "Image_" + this.getUpperDN(InterfaceContainer.class).ComputeUniqueID() + ".png";
 //
 //                XmlManager xmlManager = new XmlManager(doc);
