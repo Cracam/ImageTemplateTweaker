@@ -25,7 +25,7 @@ import taboftiltedpane.TabOfTiltedPane;
  */
 public class InterfacesManager {
 
-        private final ArrayList<LayerContainer> interfaces = new ArrayList<>();
+        private final ArrayList<LayersContainer> interfaces = new ArrayList<>();
         private final ArrayList<TabOfTiltedPane> tabs = new ArrayList<>();
         private TabPane tabPane;
 
@@ -45,7 +45,7 @@ public class InterfacesManager {
                         return null;
                 }
 
-                for (LayerContainer myInterface : this.interfaces) {
+                for (LayersContainer myInterface : this.interfaces) {
                         if (targetName.equals(myInterface.ComputeUniqueID())) {
                                 return myInterface;
                         }
@@ -106,9 +106,9 @@ public class InterfacesManager {
                                         layer.createInterfaceTreeFromNodeTree(null, Arrays.asList(Layer.class, TransformerInert.class));
                                         //   System.out.println("ONLY VOID ? : "+layer.getLinkedinterface().interfaceBranchContainOnlyVoidInterfaces());
                                         if (!layer.getLinkedinterface().interfaceBranchContainOnlyVoidInterfaces()) {
-                                                addInterface((LayerContainer) layer.getLinkedinterface());
+                                                addInterface((LayersContainer) layer.getLinkedinterface());
                                                 //   System.out.println("Interface qe want to add"+layer.getLinkedinterface());
-                                                assignInterfaceToTab(((Layer) layer).getTabName(), (LayerContainer) layer.getLinkedinterface());
+                                                assignInterfaceToTab(((Layer) layer).getTabName(), (LayersContainer) layer.getLinkedinterface());
                                                 linkedLayers.add((Layer) layer);
                                         }
                                 }
@@ -122,7 +122,7 @@ public class InterfacesManager {
          *
          * @param interf
          */
-        public void addInterface(LayerContainer interf) {
+        public void addInterface(LayersContainer interf) {
                 interfaces.add(interf);
         }
 
@@ -133,7 +133,7 @@ public class InterfacesManager {
          * @param inter
          * @param tabName
          */
-        public void assignInterfaceToTab(String tabName, LayerContainer inter) {
+        public void assignInterfaceToTab(String tabName, LayersContainer inter) {
                 inter.setTabName(tabName);//set value of the tab name (use for Compute unique ID of layer container)
                 for (TabOfTiltedPane tab : tabs) {
                         if (tab.getText().equals(tabName)) {
@@ -158,7 +158,7 @@ public class InterfacesManager {
                         tempInterface = findInterfaceByUniqueID(XmlManager.getStringAttribute(interfaceElt, "name", ""));
                         if (tempInterface != null) {
                                 try {
-                                        tempInterface.loadDesign(interfaceElt, 0);
+                                        tempInterface.loadDesign(interfaceElt);
                                 } catch (XMLErrorInModelException ex) {
                                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                         tempInterface = null;

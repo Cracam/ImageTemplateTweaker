@@ -161,13 +161,13 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
+                //nothing to load
         }
 
         @Override
         public XmlChild DRYsaveDesign() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                return null;
         }
 
 }

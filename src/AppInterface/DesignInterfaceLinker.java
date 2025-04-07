@@ -56,7 +56,7 @@ public class DesignInterfaceLinker {
                  
                  linkMap.put("Void_Image", new DesignInterfacePair(VoidImage.class, VoidInterface.class));
 
-                 linkMap.put("Layer", new DesignInterfacePair(Layer.class, LayerContainer.class));
+                 linkMap.put("Layer", new DesignInterfacePair(Layer.class, LayersContainer.class));
         }
 
         public static Class<? extends InterfaceNode> getLinkedInterface(Class<? extends DesignNode> designNodeClass) {

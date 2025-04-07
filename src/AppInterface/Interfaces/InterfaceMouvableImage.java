@@ -162,13 +162,17 @@ public class InterfaceMouvableImage extends InterfaceNode {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException {
+        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
         @Override
         public XmlChild DRYsaveDesign() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        }
+                
+                XmlChild Xmloffset = new XmlChild("OffSet");
+                Xmloffset.addAttribute("X_Offset", String.valueOf(slider_X.getValue()));
+                Xmloffset.addAttribute("Y_Offset", String.valueOf(slider_Y.getValue()));
 
+                return Xmloffset;
+        }
 }

@@ -43,8 +43,6 @@ public abstract class InterfaceNode extends VBox {
 
         }
 
-
-
         /**
          * Schearch the next nearest interface container in the tree
          *
@@ -60,22 +58,18 @@ public abstract class InterfaceNode extends VBox {
                 lowerInterfaces.add(lowerIN);
         }
 
-        protected abstract Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException;
+        protected abstract Element DRYLoadDesign(Element element) throws XMLErrorInModelException;
 
-        public void loadDesign(Element element, int index) throws XMLErrorInModelException {
-                Element subelt = DRYLoadDesign(element, index);
-                index++;
-                if (subelt != element) {
-                        index = 0;
-                }
+        public void loadDesign(Element element) throws XMLErrorInModelException {
+                Element subelt = DRYLoadDesign(element);
+
                 try {
                         for (InterfaceNode lInter : lowerInterfaces) {
-                                lInter.DRYLoadDesign(subelt, index);
+                                lInter.loadDesign(subelt);
                         }
                 } catch (XMLErrorInModelException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
         }
 
         public void updateLinkedDesignNodes() {
@@ -94,10 +88,13 @@ public abstract class InterfaceNode extends VBox {
         }
 
         /**
+         *this program save the design info of the current interface
+         * and order to do it on the subinterface
          * 
-         * 
+         * the fisrt will be launch in the Interface manager for each layersContainer
+         *
          * @param managerIn
-         * @return 
+         * @return
          */
         public XmlManager saveDesign(XmlManager managerIn) {
                 XmlChild child = this.DRYsaveDesign();
@@ -115,8 +112,13 @@ public abstract class InterfaceNode extends VBox {
         
         
         
+        
 
         protected abstract void initialiseInterface();
+
+        public InterfaceNode getUpperIN() {
+                return getUpperIN(null);
+        }
 
         public InterfaceNode getUpperIN(Class<?> nodeClass) {
                 if (upperInterface == null) {
@@ -139,7 +141,7 @@ public abstract class InterfaceNode extends VBox {
                 if (!linkedDesignNodes.isEmpty()) {
                         return ((ImageBuilder) linkedDesignNodes.get(0).getUpperDN(ImageBuilder.class)).getDesignBuilder().getDesignResources();
                 } else {
-                        return null;
+                        return this.getUpperIN().getDesignRessources();
                 }
 
         }
@@ -152,53 +154,39 @@ public abstract class InterfaceNode extends VBox {
                 return name;
         }
 
-      
         /**
          * this return all the class that are sub classes of the entry
          *
          * @return
          */
         public boolean interfaceBranchContainOnlyVoidInterfaces() {
-              
 
                 for (InterfaceNode lInter : lowerInterfaces) {
-                         if (lInter.getClass() != VoidInterface.class) {
+                        if (lInter.getClass() != VoidInterface.class) {
                                 return false;
                         }
-                         
+
                         if (lInter.interfaceBranchContainOnlyVoidInterfaces() == false) {
                                 return false;
                         }
                 }
-                
+
                 return true; // Retourne null si aucun élément correspondant n'est trouvé
         }
-        
-        
-        
-        
-        
-            public void delete(InterfaceNode InterfaceNodeToDelete) {
+
+        public void delete(InterfaceNode InterfaceNodeToDelete) {
                 if (lowerInterfaces.contains(InterfaceNodeToDelete)) {
                         lowerInterfaces.remove(InterfaceNodeToDelete);
-                   //     System.out.println("DesignNodeToDelete a été supprimé de lowersDN.");
+                        //     System.out.println("DesignNodeToDelete a été supprimé de lowersDN.");
                 } else {
                         System.out.println("DesignNodeToDelete n'est pas présent dans lowersDN.");
                 }
         }
-          
-          public void destroyItSelf(){
-                    upperInterface.delete(this);
-          }
-          
-          
-          
-  
 
- 
-        
-         
-        
+        public void destroyItSelf() {
+                upperInterface.delete(this);
+        }
+
         public String ComputeUniqueID() {
                 String ret = "";
                 this.DRYComputeUniqueID();
@@ -208,12 +196,12 @@ public abstract class InterfaceNode extends VBox {
                 return ret;
         }
 
-       public String DRYComputeUniqueID() {
+        public String DRYComputeUniqueID() {
                 String ret = DesignInterfaceLinker.getIdentifier(this.getClass());
                 if (ret == null) {
                         return "";
                 }
                 return ret;
         }
-          
+
 }

@@ -17,7 +17,7 @@ import org.w3c.dom.Document;
  *
  * @author Camille LECOURT
  */
-public class LayerContainer extends InterfaceContainer {
+public class LayersContainer extends InterfaceContainer {
 
         @FXML 
         private VBox containerVBox;
@@ -28,7 +28,7 @@ public class LayerContainer extends InterfaceContainer {
         private String tabName;
         
 
-        public LayerContainer( InterfaceNode upperIN,String name) {
+        public LayersContainer( InterfaceNode upperIN,String name) {
                 super( upperIN,name);
                 setContainerVBox(containerVBox);
         }

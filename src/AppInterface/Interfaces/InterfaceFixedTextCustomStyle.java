@@ -1,9 +1,13 @@
 package AppInterface.Interfaces;
 
 import AppInterface.InterfaceNode;
+import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerators.GeneratorFixedTextCustomStyle;
+import ResourcesManager.XmlChild;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import org.w3c.dom.Element;
 
 /**
  *
@@ -119,5 +123,24 @@ public class InterfaceFixedTextCustomStyle extends InterfaceCustomText {
                         return this.getTextGenerator().getImageOut(pixelMmFactor, textSizeMin, textSizeMax);
         }
 
-     
+             @Override
+        public XmlChild DRYsaveDesign() {
+
+                XmlChild XmlTextBuilder = new XmlChild("TextBuilder");
+                XmlTextBuilder.addAttribute("Text_Size", String.valueOf(this.getTextGenerator().getTextSizeValue()));
+                XmlTextBuilder.addAttribute("Text_Height", String.valueOf(this.getTextGenerator().getTextHeigthValue()));
+
+                File fontToSave = this.getTextGenerator().getFontFile();
+                if (fontToSave != null) {
+                        String fontName = fontToSave.getName();
+                        this.getDesignRessources().set(fontName, fontToSave);
+                        XmlTextBuilder.addAttribute("Font_name", fontName);
+                }
+                return XmlTextBuilder;
+        }
+        
+              @Override
+        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
 }

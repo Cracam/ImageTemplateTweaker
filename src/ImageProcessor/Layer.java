@@ -10,7 +10,7 @@ import static ResourcesManager.XmlManager.getStringAttribute;
 import AppInterface.DesignBuilder;
 import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceNode;
-import AppInterface.LayerContainer;
+import AppInterface.LayersContainer;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.SubClasses.PosFloat;
 import ImageProcessor.SubClasses.PosInt;
@@ -159,7 +159,7 @@ public class Layer extends DesignNode {
 
         @Override
         public InterfaceNode createLinkedInterface(InterfaceNode upperInter) {
-                InterfaceNode inter = new LayerContainer(upperInter, name);
+                InterfaceNode inter = new LayersContainer(upperInter, name);
                 inter.addDesignNode(this);
                 return inter;
         }

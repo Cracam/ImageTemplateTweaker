@@ -120,21 +120,7 @@ public class InterfaceRandomImageDispersion extends InterfaceContainer {
 //        }
 
         
-//        public Node saveInterfaceData(Document doc) {
-//                XmlManager xmlManager = new XmlManager(doc);
-//
-//                XmlChild Xmlinterval = new XmlChild("Interval");
-//                Xmlinterval.addAttribute("Min_Interval", String.valueOf(DS_intervalSize.getLowValue()));
-//                Xmlinterval.addAttribute("Max_Interval", String.valueOf(DS_intervalSize.getHighValue()));
-//                xmlManager.addChild(Xmlinterval);
-//
-//                XmlChild XmlSize = new XmlChild("Size");
-//                XmlSize.addAttribute("Min_Size", String.valueOf(DS_imageSize.getLowValue()));
-//                XmlSize.addAttribute("Max_Size", String.valueOf(DS_imageSize.getHighValue()));
-//                xmlManager.addChild(XmlSize);
-//
-//                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
-//        }
+
 
 //        @Override
 //        public void loadInterfaceData(Element dataOfTheLayer) {
@@ -163,13 +149,20 @@ public class InterfaceRandomImageDispersion extends InterfaceContainer {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException {
+        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
         @Override
         public XmlChild DRYsaveDesign() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+                XmlChild XMLRet = new XmlChild("Interval and Size");
+                XMLRet.addAttribute("Min_Interval", String.valueOf(DS_intervalSize.getLowValue()));
+                XMLRet.addAttribute("Max_Interval", String.valueOf(DS_intervalSize.getHighValue()));
+                XMLRet.addAttribute("Min_Size", String.valueOf(DS_imageSize.getLowValue()));
+                XMLRet.addAttribute("Max_Size", String.valueOf(DS_imageSize.getHighValue()));
+
+                return XMLRet;
         }
 
 }

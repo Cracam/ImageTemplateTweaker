@@ -100,21 +100,8 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 //                prev.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-style: solid;");
 //                //System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 //        }
-//        public Node saveInterfaceData(Document doc) {
-//                XmlManager xmlManager = new XmlManager(doc);
-//
-//                XmlChild Xmlinterval = new XmlChild("Interval");
-//                Xmlinterval.addAttribute("Min_Interval", String.valueOf(DS_intervalSize.getLowValue()));
-//                Xmlinterval.addAttribute("Max_Interval", String.valueOf(DS_intervalSize.getHighValue()));
-//                xmlManager.addChild(Xmlinterval);
-//
-//                XmlChild XmlSize = new XmlChild("Size");
-//                XmlSize.addAttribute("Min_Size", String.valueOf(DS_imageSize.getLowValue()));
-//                XmlSize.addAttribute("Max_Size", String.valueOf(DS_imageSize.getHighValue()));
-//                xmlManager.addChild(XmlSize);
-//
-//                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
-//        }
+
+        
 //        @Override
 //        public void loadInterfaceData(Element dataOfTheLayer) {
 //                DS_intervalSize.setLowValue(Double.parseDouble(dataOfTheLayer.getElementsByTagName("Interval").item(0).getAttributes().getNamedItem("Min_Interval").getNodeValue()));
@@ -142,13 +129,17 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException {
+        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
       @Override
         public XmlChild DRYsaveDesign() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+         
+                XmlChild XMLAllocator = new XmlChild("SubAllocator");
+                XMLAllocator.addAttribute("MaxNumberOfAllocation", String.valueOf(NumberSelector.getValue()));
+
+                return XMLAllocator;
         }
 
         public int getNumberSelectorValue() {

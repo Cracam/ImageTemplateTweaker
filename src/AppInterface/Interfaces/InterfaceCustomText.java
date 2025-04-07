@@ -6,26 +6,27 @@ import Exeptions.ResourcesFileErrorException;
 import ResourcesManager.XmlChild;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import staticFunctions.StaticImageEditing;
 import textinimagegenerator.TextInImageGenerator;
 
 /**
- * 
+ *
  *
  * @author Camille LECOURT
  */
 public class InterfaceCustomText extends InterfaceNode {
-  
+
         @FXML
         private TextInImageGenerator TextGenerator;
-        
+
         boolean textChanged = true;
 
         //The five different boolean to mdify the text bahavior
@@ -37,7 +38,7 @@ public class InterfaceCustomText extends InterfaceNode {
 
         public InterfaceCustomText(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
-                 upperInterface.placeInterface(this);
+                upperInterface.placeInterface(this);
         }
 
         @Override
@@ -47,7 +48,7 @@ public class InterfaceCustomText extends InterfaceNode {
                         if (fxmlLoader == null) {
                                 throw new ResourcesFileErrorException();
                         }
-                        
+
                         fxmlLoader.setRoot(this);
                         fxmlLoader.setController(this);
                         fxmlLoader.load();
@@ -58,7 +59,7 @@ public class InterfaceCustomText extends InterfaceNode {
                                         //    System.out.println("trigered");
                                         this.textChanged();
                                         TextGenerator.setChanged(false);
-                                     this.updateLinkedDesignNodes();
+                                        this.updateLinkedDesignNodes();
                                 }
                         });
 
@@ -71,7 +72,6 @@ public class InterfaceCustomText extends InterfaceNode {
          * refresh the visibility of the different interface
          */
         public void checkInterfaceHidding() {
-
 
                 if (!this.canChangeText) {
                         TextGenerator.desactivateTextField();
@@ -119,9 +119,7 @@ public class InterfaceCustomText extends InterfaceNode {
 //                xmlManager.addChild(XmlTextBuilder);
 //
 //                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
-
 //        }
-
 //        @Override
 //        public void loadInterfaceData(Element dataOfTheLayer) {
 //
@@ -148,7 +146,6 @@ public class InterfaceCustomText extends InterfaceNode {
 //
 //                TextGenerator.loadValues(text, textSize, textheight);
 //        }
-
         /**
          * Return the out of this interface with the good size
          *
@@ -158,7 +155,7 @@ public class InterfaceCustomText extends InterfaceNode {
          * @return
          */
         public BufferedImage getImageOut(float pixelMmFactor, float textSizeMin, float textSizeMax) {
-                        return this.TextGenerator.getImageOut(pixelMmFactor, textSizeMin, textSizeMax);
+                return this.TextGenerator.getImageOut(pixelMmFactor, textSizeMin, textSizeMax);
         }
 
         /**
@@ -213,13 +210,25 @@ public class InterfaceCustomText extends InterfaceNode {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element, int index) throws XMLErrorInModelException {
+        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
         @Override
         public XmlChild DRYsaveDesign() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+                XmlChild XmlTextBuilder = new XmlChild("TextBuilder");
+                XmlTextBuilder.addAttribute("Text", this.getTextGenerator().getTextValue());
+                XmlTextBuilder.addAttribute("Text_Size", String.valueOf(this.getTextGenerator().getTextSizeValue()));
+                XmlTextBuilder.addAttribute("Text_Height", String.valueOf(this.getTextGenerator().getTextHeigthValue()));
+
+                File fontToSave = TextGenerator.getFontFile();
+                if (fontToSave != null) {
+                        String fontName = fontToSave.getName();
+                        this.getDesignRessources().set(fontName, fontToSave);
+                        XmlTextBuilder.addAttribute("Font_name", fontName);
+                }
+                return XmlTextBuilder;
         }
-        
+
 }

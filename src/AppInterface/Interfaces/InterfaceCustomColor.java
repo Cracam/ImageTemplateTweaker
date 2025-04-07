@@ -28,17 +28,13 @@ import staticFunctions.StaticImageEditing;
  */
 public class InterfaceCustomColor extends InterfaceNode {
 
-        
-
         @FXML
         private GradientCreatorInterface gradientPicker;
 
-        
-        public InterfaceCustomColor(InterfaceNode upperIN,String name) {
-                super(upperIN,name);
+        public InterfaceCustomColor(InterfaceNode upperIN, String name) {
+                super(upperIN, name);
                 upperInterface.placeInterface(this);
         }
-
 
         @Override
         protected void initialiseInterface() {
@@ -52,25 +48,23 @@ public class InterfaceCustomColor extends InterfaceNode {
 
                         fxmlLoader.load();
 
-                    //    System.out.println("gradientPicker initialized: " + (gradientPicker != null) + " value : " + gradientPicker.isChanged());
+                        //    System.out.println("gradientPicker initialized: " + (gradientPicker != null) + " value : " + gradientPicker.isChanged());
                         // Add a listener to the changed property
                         gradientPicker.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                                 if (newValue) {
                                         // System.out.println("trigered");
                                         gradientPicker.setChanged(false);
-                                          this.updateLinkedDesignNodes();
+                                        this.updateLinkedDesignNodes();
                                 }
                         });
-                                
+
                 } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
                         Logger.getLogger(ImageLoaderInterface.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+
         }
 
-        
-        
-          @Override
+        @Override
         public XmlChild DRYsaveDesign() {
 
                 XmlChild XmlGradient = new XmlChild("Gradient");
@@ -81,31 +75,26 @@ public class InterfaceCustomColor extends InterfaceNode {
                 XmlGradient.addAttribute("Param_1", String.valueOf(this.gradientPicker.getParam1()));
                 XmlGradient.addAttribute("Param_2", String.valueOf(this.gradientPicker.getParam2()));
 
-                 return XmlGradient;
+                return XmlGradient;
         }
 
-        
-        
         @Override
-        protected Element  DRYLoadDesign(Element dataOfTheLayer,int index) {
-               String gradientName = dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Gradient_Name").getNodeValue();
-
-                Color color1 = StaticImageEditing.hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_1").getNodeValue());
-                Color color2 = StaticImageEditing.hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_2").getNodeValue());
-
-                double colorIntensity = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("ColorIntensity").getNodeValue());
-                double param1 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_1").getNodeValue());
-                double param2 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_2").getNodeValue());
-                
-                System.out.println(" gradient  "+gradientName+"  "+ color1+"  "+ color2+"  "+colorIntensity+"  "+ param1+"  "+ param2);
-                gradientPicker.setInterfaceState(gradientName, color1, color2, colorIntensity, param1, param2);
+        protected Element DRYLoadDesign(Element dataOfTheLayer) {
+//                String gradientName = dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Gradient_Name").getNodeValue();
+//
+//                Color color1 = StaticImageEditing.hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_1").getNodeValue());
+//                Color color2 = StaticImageEditing.hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_2").getNodeValue());
+//
+//                double colorIntensity = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("ColorIntensity").getNodeValue());
+//                double param1 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_1").getNodeValue());
+//                double param2 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_2").getNodeValue());
+//
+//                System.out.println(" gradient  " + gradientName + "  " + color1 + "  " + color2 + "  " + colorIntensity + "  " + param1 + "  " + param2);
+//                gradientPicker.setInterfaceState(gradientName, color1, color2, colorIntensity, param1, param2);
                 return null;
         }
-        
-        
-        
-        
-        public BufferedImage getImageOut(int[][] opacityMap){
+
+        public BufferedImage getImageOut(int[][] opacityMap) {
                 return this.gradientPicker.getImageOut(opacityMap);
         }
 
