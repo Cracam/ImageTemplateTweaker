@@ -190,8 +190,7 @@ public abstract class InterfaceNode extends VBox {
         }
 
         public String ComputeUniqueID() {
-                String ret = "";
-                this.DRYComputeUniqueID();
+                String ret = this.DRYComputeUniqueID();
                 for (InterfaceNode lInter : lowerInterfaces) {
                         ret = ret + lInter.ComputeUniqueID();
                 }
@@ -199,7 +198,13 @@ public abstract class InterfaceNode extends VBox {
         }
 
         public String DRYComputeUniqueID() {
-                String ret = DesignInterfaceLinker.getIdentifier(this.getClass());
+                 String ret;
+                if(linkedDesignNodes.size()>0){
+                        ret = DesignInterfaceLinker.getIdentifier(linkedDesignNodes.get(0).getClass()); //better to use the linked DN 
+                }else{
+                        ret = DesignInterfaceLinker.getIdentifier(this.getClass()); //in case of node
+                        System.out.println("Error no linked DN"+DesignInterfaceLinker.getIdentifier(this.getClass()));
+                }
                 if (ret == null) {
                         return "";
                 }

@@ -47,6 +47,7 @@ public class InterfacesManager {
                 }
 
                 for (LayersContainer myInterface : this.interfaces) {
+                       // System.out.println("DDDDdd______"+myInterface.ComputeUniqueID());
                         if (targetName.equals(myInterface.ComputeUniqueID())) {
                                 return myInterface;
                         }
@@ -153,10 +154,9 @@ public class InterfacesManager {
                 InterfaceContainer tempInterface;
                 // Print the names of all "Output" nodes
                 for (int i = 0; i < interfacesNodes.getLength(); i++) {//we begin by one to avoid the description node
-                        Node interfaceNode = interfacesNodes.item(i);
-                        Element interfaceElt = (Element) interfaceNode;
+                        Element interfaceElt = (Element) interfacesNodes.item(i);
+                        tempInterface = findInterfaceByUniqueID(DesignInterfaceLinker.getIdentifier(LayersContainer.class) +interfaceElt.getAttribute("ID")+concatenateSubElementNames(interfaceElt));
 
-                        tempInterface = findInterfaceByUniqueID(XmlManager.getStringAttribute(interfaceElt, "name", ""));
                         if (tempInterface != null) {
                                 try {
                                         tempInterface.loadDesign(interfaceElt, 0);
@@ -167,16 +167,31 @@ public class InterfacesManager {
                                 //     System.out.println("InterfacesNodes: " + interfaceElt.getAttribute("InterfaceName"));
 
                         } else {
-                                System.out.println("Interface Loading failed " + interfaceElt.getAttribute("InterfaceName"));
+                                System.out.println("Interface Loading failed " + "   ____  "+DesignInterfaceLinker.getIdentifier(LayersContainer.class) +interfaceElt.getAttribute("ID")+concatenateSubElementNames(interfaceElt));
                         }
                 }
         }
+        
+        
+        public static String concatenateSubElementNames(Element rootElement) {
+                // Concaténer les noms des sous-éléments
+                StringBuilder concatenatedNames = new StringBuilder();
+                NodeList childNodes = rootElement.getChildNodes();
+                for (int i = 0; i < childNodes.getLength(); i++) {
+                        Node childNode = childNodes.item(i);
+                        if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                                concatenatedNames.append(childNode.getNodeName());
+                        }
+                }
+                return concatenatedNames.toString();
+        }
+
 
         public Element saveInterfaces(Element eltIn, Document doc) {
                 XmlManager manager = new XmlManager(doc);
                 for (LayersContainer interfaceRoot : interfaces) {
                         interfaceRoot.saveDesign(manager);
-                        eltIn.appendChild(manager.createDesignParamElement("Interfaces", "ID", ));//mettre id A NOM + TAB
+                        eltIn.appendChild(manager.createDesignParamElement("Interfaces", "ID", interfaceRoot.getName()+interfaceRoot.getTabName()));//mettre id A NOM + TAB
                 }
                 return eltIn;
 

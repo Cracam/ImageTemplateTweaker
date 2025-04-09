@@ -31,10 +31,7 @@ public abstract class InterfaceContainer extends InterfaceNode {
                         this.containerVbox.getChildren().add(0, lowerInerface);
         }
 
-        @Override
-        public String DRYComputeUniqueID() {
-                return DesignInterfaceLinker.getIdentifier(this.getClass()) + this.getName();
-        }
+
 
         public void delete(InterfaceNode InterfaceNodeToDelete) {
                 if (lowerInterfaces.contains(InterfaceNodeToDelete)) {

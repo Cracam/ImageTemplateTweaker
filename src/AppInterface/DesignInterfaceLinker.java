@@ -42,12 +42,12 @@ public class DesignInterfaceLinker {
                 linkMap.put("G_Custom_Text", new DesignInterfacePair(GeneratorCustomText.class, InterfaceCustomText.class));
                 linkMap.put("G_Fixed_Text_Custom_Color_Custom_Style", new DesignInterfacePair(GeneratorFixedTextCustomStyle.class, InterfaceFixedTextCustomStyle.class));
                   linkMap.put("G_Random_Image_Dispersion", new DesignInterfacePair(GeneratorRandomImageDispersion.class, InterfaceRandomImageDispersion.class));
-                  linkMap.put("G_ONLY_USED_IN_CODE", new DesignInterfacePair(GeneratorRandomSubImageAllocation.class, InterfaceRandomSubImageAllocation.class));
+                  linkMap.put("G_Random_Sub_Image_Allocation", new DesignInterfacePair(GeneratorRandomSubImageAllocation.class, InterfaceRandomSubImageAllocation.class));
                   linkMap.put("G_Random_Image_Allocation", new DesignInterfacePair(GeneratorRandomImageAllocation.class, InterfaceRandomImageAllocation.class));
                   
                   
 
-                  linkMap.put("T_ONLY_USED_IN_CODE", new DesignInterfacePair(TransformerInert.class, VoidInterface.class));
+                  linkMap.put("T_Inert", new DesignInterfacePair(TransformerInert.class, VoidInterface.class));
                   linkMap.put("T_Custom_Color", new DesignInterfacePair(TransformerCustomColor.class, InterfaceCustomColor.class));
                  linkMap.put("T_Mouvable_Image", new DesignInterfacePair(TransformerMovableImage.class, InterfaceMouvableImage.class));
                  linkMap.put("T_Fixed_Color", new DesignInterfacePair(TransformerFixedColor.class, VoidInterface.class));
