@@ -58,18 +58,20 @@ public abstract class InterfaceNode extends VBox {
                 lowerInterfaces.add(lowerIN);
         }
 
-        protected abstract Element DRYLoadDesign(Element element) throws XMLErrorInModelException;
+        protected abstract void DRYLoadDesign(Element element) throws XMLErrorInModelException;
 
-        public void loadDesign(Element element) throws XMLErrorInModelException {
-                Element subelt = DRYLoadDesign(element);
+        public int loadDesign(Element element,int index) throws XMLErrorInModelException {
+                this.DRYLoadDesign((Element) element.getChildNodes().item(index));
+                index=index+1;
 
                 try {
                         for (InterfaceNode lInter : lowerInterfaces) {
-                                lInter.loadDesign(subelt);
+                               index = lInter.loadDesign(element,index);
                         }
                 } catch (XMLErrorInModelException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                return index;
         }
 
         public void updateLinkedDesignNodes() {

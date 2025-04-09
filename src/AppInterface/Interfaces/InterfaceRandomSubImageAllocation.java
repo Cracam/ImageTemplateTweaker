@@ -1,5 +1,6 @@
 package AppInterface.Interfaces;
 
+import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceContainer;
 import Exeptions.ResourcesFileErrorException;
 import AppInterface.InterfaceNode;
@@ -129,14 +130,14 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
+        protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
       @Override
         public XmlChild DRYsaveDesign() {
          
-                XmlChild XMLAllocator = new XmlChild("SubAllocator");
+                XmlChild XMLAllocator = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
                 XMLAllocator.addAttribute("MaxNumberOfAllocation", String.valueOf(NumberSelector.getValue()));
 
                 return XMLAllocator;

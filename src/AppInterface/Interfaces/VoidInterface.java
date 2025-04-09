@@ -24,8 +24,7 @@ public class VoidInterface extends InterfaceNode {
 
 
         @Override
-        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
-                return element;
+        protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {//no interface
         }
 
         @Override

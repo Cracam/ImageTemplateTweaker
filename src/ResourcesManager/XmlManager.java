@@ -43,6 +43,7 @@ public class XmlManager {
 
                 // Create and append each child element
                 for (XmlChild childElement : childs) {
+                        System.out.println("CHILD"+childElement.getName());
                         Element element = doc.createElement(childElement.getName());
                         for (Map.Entry<String, String> entry : childElement.getAttributes().entrySet()) {
                                 element.setAttribute(entry.getKey(), entry.getValue());

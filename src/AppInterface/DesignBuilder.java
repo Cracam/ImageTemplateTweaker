@@ -258,7 +258,7 @@ public class DesignBuilder extends Application {
                         // Save interfaces
                         Element interfacesElement = document.createElement("Interfaces");
 
-                        //  interfacesManager.saveInterfaces(interfacesElement,document);
+                        interfacesElement= interfacesManager.saveInterfaces(interfacesElement,document);
                         rootElement.appendChild(interfacesElement);
                         // Write the content into XML file
                         TransformerFactory transformerFactory = TransformerFactory.newInstance();

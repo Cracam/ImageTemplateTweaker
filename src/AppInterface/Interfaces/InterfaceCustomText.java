@@ -1,5 +1,6 @@
 package AppInterface.Interfaces;
 
+import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import Exeptions.ResourcesFileErrorException;
@@ -210,14 +211,14 @@ public class InterfaceCustomText extends InterfaceNode {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
+        protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
         @Override
         public XmlChild DRYsaveDesign() {
 
-                XmlChild XmlTextBuilder = new XmlChild("TextBuilder");
+                XmlChild XmlTextBuilder = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
                 XmlTextBuilder.addAttribute("Text", this.getTextGenerator().getTextValue());
                 XmlTextBuilder.addAttribute("Text_Size", String.valueOf(this.getTextGenerator().getTextSizeValue()));
                 XmlTextBuilder.addAttribute("Text_Height", String.valueOf(this.getTextGenerator().getTextHeigthValue()));

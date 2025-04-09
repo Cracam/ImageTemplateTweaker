@@ -4,6 +4,7 @@
  */
 package AppInterface.Interfaces;
 
+import AppInterface.DesignInterfaceLinker;
 import Exeptions.ResourcesFileErrorException;
 import GradientCreatorInterface.GradientCreatorInterface;
 import AppInterface.InterfaceNode;
@@ -67,7 +68,7 @@ public class InterfaceCustomColor extends InterfaceNode {
         @Override
         public XmlChild DRYsaveDesign() {
 
-                XmlChild XmlGradient = new XmlChild("Gradient");
+                XmlChild XmlGradient = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
                 XmlGradient.addAttribute("Gradient_Name", gradientPicker.getSelectedGradientName());
                 XmlGradient.addAttribute("Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()));
                 XmlGradient.addAttribute("Color_2", StaticImageEditing.colorToHex(this.gradientPicker.getColor2()));
@@ -79,7 +80,7 @@ public class InterfaceCustomColor extends InterfaceNode {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element dataOfTheLayer) {
+        protected void DRYLoadDesign(Element dataOfTheLayer) {
 //                String gradientName = dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Gradient_Name").getNodeValue();
 //
 //                Color color1 = StaticImageEditing.hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_1").getNodeValue());
@@ -91,7 +92,6 @@ public class InterfaceCustomColor extends InterfaceNode {
 //
 //                System.out.println(" gradient  " + gradientName + "  " + color1 + "  " + color2 + "  " + colorIntensity + "  " + param1 + "  " + param2);
 //                gradientPicker.setInterfaceState(gradientName, color1, color2, colorIntensity, param1, param2);
-                return null;
         }
 
         public BufferedImage getImageOut(int[][] opacityMap) {

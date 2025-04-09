@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.TabPane;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -82,12 +83,12 @@ public class InterfacesManager {
                 for (DesignNode layer : layersList) {
                         if (layer.getClass() == Layer.class) {
                                 ID = layer.ComputeUniqueID(Layer.class);
-                            //    System.out.println("--------------------------------------------------------------------------------------------------------------------------");
+                                //    System.out.println("--------------------------------------------------------------------------------------------------------------------------");
                                 for (Layer linkedLayer : linkedLayers) {
-                              //                  System.out.println(linkedLayer.ComputeUniqueID(Layer.class)+"--------------"+ID);
-                               //                 System.out.println("\\\\\\\\\\\\\\\\\\"+linkedLayer.toString());
+                                        //                  System.out.println(linkedLayer.ComputeUniqueID(Layer.class)+"--------------"+ID);
+                                        //                 System.out.println("\\\\\\\\\\\\\\\\\\"+linkedLayer.toString());
                                         if (linkedLayer.ComputeUniqueID(Layer.class).equals(ID)) {
-                            //                        System.out.println("===============================================");
+                                                //                        System.out.println("===============================================");
                                                 alreadyCreated = true;
                                                 alredyCreatedLayer = linkedLayer;
                                                 break;
@@ -158,7 +159,7 @@ public class InterfacesManager {
                         tempInterface = findInterfaceByUniqueID(XmlManager.getStringAttribute(interfaceElt, "name", ""));
                         if (tempInterface != null) {
                                 try {
-                                        tempInterface.loadDesign(interfaceElt);
+                                        tempInterface.loadDesign(interfaceElt, 0);
                                 } catch (XMLErrorInModelException ex) {
                                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                         tempInterface = null;
@@ -171,4 +172,13 @@ public class InterfacesManager {
                 }
         }
 
+        public Element saveInterfaces(Element eltIn, Document doc) {
+                XmlManager manager = new XmlManager(doc);
+                for (LayersContainer interfaceRoot : interfaces) {
+                        interfaceRoot.saveDesign(manager);
+                        eltIn.appendChild(manager.createDesignParamElement("Interfaces", "ID", ));//mettre id A NOM + TAB
+                }
+                return eltIn;
+
+        }
 }

@@ -23,8 +23,7 @@ public abstract class InterfaceContainer extends InterfaceNode {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
-                return null;
+        protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
         }
 
         @Override

@@ -4,6 +4,7 @@
  */
 package AppInterface.Interfaces;
 
+import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceContainer;
 import Exeptions.ResourcesFileErrorException;
 import ResourcesManager.XmlChild;
@@ -149,14 +150,14 @@ public class InterfaceRandomImageDispersion extends InterfaceContainer {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
+        protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
         @Override
         public XmlChild DRYsaveDesign() {
 
-                XmlChild XMLRet = new XmlChild("Interval and Size");
+                XmlChild XMLRet = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
                 XMLRet.addAttribute("Min_Interval", String.valueOf(DS_intervalSize.getLowValue()));
                 XMLRet.addAttribute("Max_Interval", String.valueOf(DS_intervalSize.getHighValue()));
                 XMLRet.addAttribute("Min_Size", String.valueOf(DS_imageSize.getLowValue()));

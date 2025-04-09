@@ -4,9 +4,11 @@
  */
 package AppInterface.Interfaces;
 
+import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceContainer;
 import Exeptions.ResourcesFileErrorException;
 import AppInterface.InterfaceNode;
+import AppInterface.LayersContainer;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
@@ -64,8 +66,8 @@ public class InterfaceCustomImage extends InterfaceNode {
 
         @Override
         public XmlChild DRYsaveDesign() {
-                String imageName = "Image_" + this.getUpperIN(InterfaceContainer.class).ComputeUniqueID() + ".png";
-                XmlChild XmlTextBuilder = new XmlChild("Image");
+                String imageName = "Image_" + this.getUpperIN(LayersContainer.class).ComputeUniqueID() + ".png";
+                XmlChild XmlTextBuilder = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
 
                 if (loaderInterface.getImage_out() != null) {
                         XmlTextBuilder.addAttribute("image_name", imageName);
@@ -87,7 +89,7 @@ public class InterfaceCustomImage extends InterfaceNode {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
+        protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
                 //                Element nodeimageName = (Element) dataOfTheLayer.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name");
 //                      if(nodeimageName!=null){
 //                             

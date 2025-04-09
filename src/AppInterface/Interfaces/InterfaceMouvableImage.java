@@ -4,6 +4,7 @@
  */
 package AppInterface.Interfaces;
 
+import AppInterface.DesignInterfaceLinker;
 import Exeptions.ResourcesFileErrorException;
 import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
@@ -162,14 +163,14 @@ public class InterfaceMouvableImage extends InterfaceNode {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
+        protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 
         @Override
         public XmlChild DRYsaveDesign() {
                 
-                XmlChild Xmloffset = new XmlChild("OffSet");
+                XmlChild Xmloffset = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
                 Xmloffset.addAttribute("X_Offset", String.valueOf(slider_X.getValue()));
                 Xmloffset.addAttribute("Y_Offset", String.valueOf(slider_Y.getValue()));
 

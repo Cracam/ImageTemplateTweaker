@@ -161,7 +161,7 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
         }
 
         @Override
-        protected Element DRYLoadDesign(Element element) throws XMLErrorInModelException {
+        protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
                 //nothing to load
         }
 
