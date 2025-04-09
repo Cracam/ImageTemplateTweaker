@@ -8,17 +8,22 @@ import AppInterface.DesignInterfaceLinker;
 import Exeptions.ResourcesFileErrorException;
 import GradientCreatorInterface.GradientCreatorInterface;
 import AppInterface.InterfaceNode;
+import ImageProcessor.ImageGenerators.GeneratorFixedImage;
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
+import static ResourcesManager.XmlManager.extractSingleElement;
+import static ResourcesManager.XmlManager.getStringAttribute;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javax.imageio.ImageIO;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import staticFunctions.StaticImageEditing;
@@ -81,17 +86,18 @@ public class InterfaceCustomColor extends InterfaceNode {
 
         @Override
         protected void DRYLoadDesign(Element dataOfTheLayer) {
-//                String gradientName = dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Gradient_Name").getNodeValue();
-//
-//                Color color1 = StaticImageEditing.hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_1").getNodeValue());
-//                Color color2 = StaticImageEditing.hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_2").getNodeValue());
-//
-//                double colorIntensity = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("ColorIntensity").getNodeValue());
-//                double param1 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_1").getNodeValue());
-//                double param2 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_2").getNodeValue());
-//
-//                System.out.println(" gradient  " + gradientName + "  " + color1 + "  " + color2 + "  " + colorIntensity + "  " + param1 + "  " + param2);
-//                gradientPicker.setInterfaceState(gradientName, color1, color2, colorIntensity, param1, param2);
+                
+                String gradientName =  getStringAttribute(dataOfTheLayer, "Gradient_Name", "Pas de Texte définit"); 
+                
+                Color color1 = StaticImageEditing.hexToColor(getStringAttribute(dataOfTheLayer, "Color_1", "#FFFFFF")); 
+                Color color2 = StaticImageEditing.hexToColor(getStringAttribute(dataOfTheLayer, "Color_2", "#FFFFFF")); 
+
+                double colorIntensity =XmlManager.getDoubleAttribute(dataOfTheLayer, "ColorIntensity", 0.0);
+                double param1 = XmlManager.getDoubleAttribute(dataOfTheLayer, "Param_1", 0.0); 
+                double param2 = XmlManager.getDoubleAttribute(dataOfTheLayer, "Param_2", 0.0); 
+                
+              //  System.out.println(" gradient  " + gradientName + "  " + color1 + "  " + color2 + "  " + colorIntensity + "  " + param1 + "  " + param2);
+                gradientPicker.setInterfaceState(gradientName, color1, color2, colorIntensity, param1, param2);
         }
 
         public BufferedImage getImageOut(int[][] opacityMap) {
