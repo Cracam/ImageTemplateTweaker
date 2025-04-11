@@ -6,6 +6,8 @@ import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerators.GeneratorFixedTextCustomStyle;
 import ResourcesManager.XmlChild;
+import ResourcesManager.XmlManager;
+import static ResourcesManager.XmlManager.getStringAttribute;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import org.w3c.dom.Element;
@@ -140,8 +142,15 @@ public class InterfaceFixedTextCustomStyle extends InterfaceCustomText {
                 return XmlTextBuilder;
         }
         
-              @Override
+        @Override
         protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                 String fontName =   getStringAttribute(element,"Font_name","");
+                if (!("".equals(fontName))) {
+                        this.getTextGenerator().loadNewFont(this.getDesignRessources().get(fontName));
+                }
+
+                double textSize =XmlManager.getDoubleAttribute(element, "Text_Size", 5);
+                double textheight = XmlManager.getDoubleAttribute(element, "Text_Height", 0); 
+                this.getTextGenerator().loadValues("", textSize, textheight);
         }
 }

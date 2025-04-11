@@ -9,6 +9,7 @@ import Exeptions.ResourcesFileErrorException;
 import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ResourcesManager.XmlChild;
+import ResourcesManager.XmlManager;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -45,7 +46,7 @@ public class InterfaceMouvableImage extends InterfaceNode {
 
         public InterfaceMouvableImage(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
-               upperInterface.placeInterface(this);
+                upperInterface.placeInterface(this);
 
         }
 
@@ -164,12 +165,13 @@ public class InterfaceMouvableImage extends InterfaceNode {
 
         @Override
         protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                slider_X.setValue(XmlManager.getDoubleAttribute(element, "X_Offset", 0));
+                slider_Y.setValue(XmlManager.getDoubleAttribute(element, "Y_Offset", 0));
         }
 
         @Override
         public XmlChild DRYsaveDesign() {
-                
+
                 XmlChild Xmloffset = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
                 Xmloffset.addAttribute("X_Offset", String.valueOf(slider_X.getValue()));
                 Xmloffset.addAttribute("Y_Offset", String.valueOf(slider_Y.getValue()));

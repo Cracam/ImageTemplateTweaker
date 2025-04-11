@@ -87,7 +87,7 @@ public class InterfaceCustomColor extends InterfaceNode {
         @Override
         protected void DRYLoadDesign(Element dataOfTheLayer) {
                 
-                String gradientName =  getStringAttribute(dataOfTheLayer, "Gradient_Name", "Pas de Texte définit"); 
+                String gradientName =  getStringAttribute(dataOfTheLayer, "Gradient_Name", "Mono-Color"); 
                 
                 Color color1 = StaticImageEditing.hexToColor(getStringAttribute(dataOfTheLayer, "Color_1", "#FFFFFF")); 
                 Color color2 = StaticImageEditing.hexToColor(getStringAttribute(dataOfTheLayer, "Color_2", "#FFFFFF")); 

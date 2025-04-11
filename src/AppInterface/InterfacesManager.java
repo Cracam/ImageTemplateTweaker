@@ -47,14 +47,13 @@ public class InterfacesManager {
                 }
 
                 for (LayersContainer myInterface : this.interfaces) {
-                       // System.out.println("DDDDdd______"+myInterface.ComputeUniqueID());
                         if (targetName.equals(myInterface.ComputeUniqueID())) {
                                 return myInterface;
                         }
                 }
-
                 return null; // Retourne null si aucune interface correspondante n'est trouvée
         }
+        
 
 //        public void saveInterfaces(Element interfacesElement, Document document) {
 //

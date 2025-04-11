@@ -1,10 +1,11 @@
 package AppInterface.Interfaces;
 
-import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import Exeptions.ResourcesFileErrorException;
 import ResourcesManager.XmlChild;
+import ResourcesManager.XmlManager;
+import static ResourcesManager.XmlManager.getStringAttribute;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,7 +16,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import org.w3c.dom.Element;
-import staticFunctions.StaticImageEditing;
 import textinimagegenerator.TextInImageGenerator;
 
 /**
@@ -91,62 +91,6 @@ public class InterfaceCustomText extends InterfaceNode {
                 }
         }
 
-//        @Override
-//        public Node saveInterfaceData(Document doc) {
-//
-//                XmlManager xmlManager = new XmlManager(doc);
-//
-//                XmlChild XmlGradient = new XmlChild("Gradient");
-//                XmlGradient.addAttribute("Gradient_Name", gradientPicker.getSelectedGradientName());
-//                XmlGradient.addAttribute("Color_1", StaticImageEditing.colorToHex(gradientPicker.getColor1()));
-//                XmlGradient.addAttribute("Color_2", StaticImageEditing.colorToHex(gradientPicker.getColor2()));
-//                XmlGradient.addAttribute("ColorIntensity", String.valueOf(gradientPicker.getColorIntensity()));
-//                XmlGradient.addAttribute("Param_1", String.valueOf(gradientPicker.getParam1()));
-//                XmlGradient.addAttribute("Param_2", String.valueOf(gradientPicker.getParam2()));
-//
-//                XmlChild XmlTextBuilder = new XmlChild("TextBuilder");
-//                XmlTextBuilder.addAttribute("Text", this.getTextGenerator().getTextValue());
-//                XmlTextBuilder.addAttribute("Text_Size", String.valueOf(this.getTextGenerator().getTextSizeValue()));
-//                XmlTextBuilder.addAttribute("Text_Height", String.valueOf(this.getTextGenerator().getTextHeigthValue()));
-//
-//                File fontToSave = TextGenerator.getFontFile();
-//                if (fontToSave != null) {
-//                        String fontName = fontToSave.getName();
-//                        this.designBuilder.getDesignResources().set(fontName, fontToSave);
-//                        XmlTextBuilder.addAttribute("Font_name", fontName);
-//                }
-//
-//                xmlManager.addChild(XmlGradient);
-//                xmlManager.addChild(XmlTextBuilder);
-//
-//                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
-//        }
-//        @Override
-//        public void loadInterfaceData(Element dataOfTheLayer) {
-//
-//                String gradientName = dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Gradient_Name").getNodeValue();
-//
-//                Color color1 = StaticImageEditing.hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_1").getNodeValue());
-//                Color color2 = StaticImageEditing.hexToColor(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Color_2").getNodeValue());
-//
-//                double colorIntensity = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("ColorIntensity").getNodeValue());
-//                double param1 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_1").getNodeValue());
-//                double param2 = Double.parseDouble(dataOfTheLayer.getElementsByTagName("Gradient").item(0).getAttributes().getNamedItem("Param_2").getNodeValue());
-//                gradientPicker.setInterfaceState(gradientName, color1, color2, colorIntensity, param1, param2);
-//
-//                //String textBuilderName = dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text_Name").getNodeValue();
-//                Node fontNameNode =  dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Font_name");
-//                if (fontNameNode != null) {
-//                        String fontName = fontNameNode.getNodeValue();
-//                        this.TextGenerator.loadNewFont(this.designBuilder.getDesignResources().get(fontName));
-//                }
-//
-//                String text = dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text").getNodeValue();
-//                double textSize = Double.parseDouble(dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text_Size").getNodeValue());
-//                double textheight = Double.parseDouble(dataOfTheLayer.getElementsByTagName("TextBuilder").item(0).getAttributes().getNamedItem("Text_Height").getNodeValue());
-//
-//                TextGenerator.loadValues(text, textSize, textheight);
-//        }
         /**
          * Return the out of this interface with the good size
          *
@@ -212,13 +156,24 @@ public class InterfaceCustomText extends InterfaceNode {
 
         @Override
         protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+                String fontName =   getStringAttribute(element,"Font_name","");
+                if ("".equals(fontName)) {
+                        this.TextGenerator.loadNewFont(this.getDesignRessources().get(fontName));
+                }
+
+                String text = getStringAttribute(element, "Text","PAS DE TEXTE");
+                double textSize =XmlManager.getDoubleAttribute(element, "Text_Size", 5);
+                double textheight = XmlManager.getDoubleAttribute(element, "Text_Height", 0); 
+                TextGenerator.loadValues(text, textSize, textheight);
         }
 
+        
+        
         @Override
         public XmlChild DRYsaveDesign() {
 
-                XmlChild XmlTextBuilder = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
+                XmlChild XmlTextBuilder = new XmlChild("TextBuilder");
                 XmlTextBuilder.addAttribute("Text", this.getTextGenerator().getTextValue());
                 XmlTextBuilder.addAttribute("Text_Size", String.valueOf(this.getTextGenerator().getTextSizeValue()));
                 XmlTextBuilder.addAttribute("Text_Height", String.valueOf(this.getTextGenerator().getTextHeigthValue()));

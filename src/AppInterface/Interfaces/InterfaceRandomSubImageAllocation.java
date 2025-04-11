@@ -8,6 +8,7 @@ import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerators.GeneratorRandomImageAllocation;
 import ResourcesManager.XmlChild;
+import ResourcesManager.XmlManager;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -17,7 +18,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.VBox;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -51,8 +51,6 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 
                         fxmlLoader.load();
 
-
-                        
                         SpinnerValueFactory<Integer> valueFactory = ((GeneratorRandomImageAllocation) this.getUpperIN(InterfaceRandomImageAllocation.class).getLinkedDesignNodes().get(0)).getSpinnerFactory();
                         NumberSelector.setValueFactory(valueFactory);
 
@@ -101,8 +99,6 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 //                prev.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-style: solid;");
 //                //System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 //        }
-
-        
 //        @Override
 //        public void loadInterfaceData(Element dataOfTheLayer) {
 //                DS_intervalSize.setLowValue(Double.parseDouble(dataOfTheLayer.getElementsByTagName("Interval").item(0).getAttributes().getNamedItem("Min_Interval").getNodeValue()));
@@ -112,31 +108,29 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 //                DS_imageSize.setHighValue(Double.parseDouble(dataOfTheLayer.getElementsByTagName("Size").item(0).getAttributes().getNamedItem("Max_Size").getNodeValue()));
 //
 //        }
-        
-        
         @FXML
         private void deleteThis() {
-                for(DesignNode DN : linkedDesignNodes){
-                        this.NumberSelector.setValueFactory( new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1));
+                for (DesignNode DN : linkedDesignNodes) {
+                        this.NumberSelector.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1));
                         this.NumberSelector.getValueFactory().setValue(0);
-                        System.out.println("FACTVAL : "+this.NumberSelector.getValueFactory().getValue());
-                       DN.update();
+                        System.out.println("FACTVAL : " + this.NumberSelector.getValueFactory().getValue());
+                        DN.update();
                         DN.destroyItSelf();
                 }
                 this.destroyItSelf();
-                if(  this.getLinkedDesignNodes().isEmpty()){
-                    this.getLinkedDesignNodes().get(0).getUpperDN(GeneratorRandomImageAllocation.class).updateLower();
+                if (this.getLinkedDesignNodes().isEmpty()) {
+                        this.getLinkedDesignNodes().get(0).getUpperDN(GeneratorRandomImageAllocation.class).updateLower();
                 }
         }
 
         @Override
         protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                this.NumberSelector.getValueFactory().setValue(XmlManager.getIntAttribute(element, "MaxNumberOfAllocation", 2));
         }
 
-      @Override
+        @Override
         public XmlChild DRYsaveDesign() {
-         
+
                 XmlChild XMLAllocator = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
                 XMLAllocator.addAttribute("MaxNumberOfAllocation", String.valueOf(NumberSelector.getValue()));
 
@@ -147,5 +141,4 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
                 return NumberSelector.getValue();
         }
 
-        
 }

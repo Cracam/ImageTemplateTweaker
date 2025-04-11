@@ -12,6 +12,7 @@ import AppInterface.LayersContainer;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
+import static ResourcesManager.XmlManager.getStringAttribute;
 import imageloaderinterface.ImageLoaderInterface;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -33,9 +34,9 @@ public class InterfaceCustomImage extends InterfaceNode {
         @FXML
         private ImageLoaderInterface loaderInterface;
 
-        public InterfaceCustomImage(InterfaceNode upperIN,String name) {
-                super(upperIN,name);
-                 upperInterface.placeInterface(this);
+        public InterfaceCustomImage(InterfaceNode upperIN, String name) {
+                super(upperIN, name);
+                upperInterface.placeInterface(this);
         }
 
         @Override
@@ -64,19 +65,6 @@ public class InterfaceCustomImage extends InterfaceNode {
                 }
         }
 
-        @Override
-        public XmlChild DRYsaveDesign() {
-                String imageName = "Image_" + this.getUpperIN(LayersContainer.class).ComputeUniqueID() + ".png";
-                XmlChild XmlTextBuilder = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
-
-                if (loaderInterface.getImage_out() != null) {
-                        XmlTextBuilder.addAttribute("image_name", imageName);
-                        //save the image into the Design zip
-                     getDesignRessources().setBufferedImage(imageName, loaderInterface.getImage_out());
-                }
-                return XmlTextBuilder;
-        }
-
         /**
          * Return the out of this interface with the good size
          *
@@ -89,14 +77,26 @@ public class InterfaceCustomImage extends InterfaceNode {
         }
 
         @Override
+        public XmlChild DRYsaveDesign() {
+                String imageName = "Image_" + this.getUpperIN(LayersContainer.class).ComputeUniqueID() + ".png";
+                XmlChild XmlTextBuilder = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
+
+                if (loaderInterface.getImage_out() != null) {
+                        XmlTextBuilder.addAttribute("image_name", imageName);
+                        //save the image into the Design zip
+                        getDesignRessources().setBufferedImage(imageName, loaderInterface.getImage_out());
+                }
+                return XmlTextBuilder;
+        }
+
+        @Override
         protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
-                //                Element nodeimageName = (Element) dataOfTheLayer.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name");
-//                      if(nodeimageName!=null){
-//                             
-//                              LoaderInterface.loadImage(this.designBuilder.getDesignResources().get(nodeimageName.getNodeValue()));
-//
-//                      }
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                String nodeimageName = getStringAttribute(element, "image_name","PAS DE TEXTE");
+                if (!("PAS DE TEXTE".equals(nodeimageName))) {
+
+                        loaderInterface.loadImage(this.getDesignRessources().get(nodeimageName));
+
+                }
         }
 
 }
