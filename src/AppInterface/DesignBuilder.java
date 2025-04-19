@@ -67,7 +67,7 @@ public class DesignBuilder extends Application {
 
         private Scene scene;
 
-        private int DPI = 150;
+        private int DPI = 300;
 
         private Random random;
 

@@ -12,27 +12,25 @@ import org.w3c.dom.Element;
  *
  * @author Camille LECOURT
  */
-public class VoidInterface extends InterfaceNode {
+public abstract class VoidInterface extends InterfaceNode {
 
-        public VoidInterface(InterfaceNode upperIN,String name) {
-                super(upperIN,name);
-           //      upperInterface.placeInterface(this);
+        public VoidInterface(InterfaceNode upperIN, String name) {
+                super(upperIN, name);
+                //      upperInterface.placeInterface(this);
         }
-
-
 
         @Override
         protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {//no interface
         }
-        
+
         @Override
-           public int loadDesign(Element element,int index) throws XMLErrorInModelException {
+        public int loadDesign(Element element, int index) throws XMLErrorInModelException {
 //                this.DRYLoadDesign((Element) element.getChildNodes().item(index));
-//                index=index+1;
+               index=index+1;
 
                 try {
                         for (InterfaceNode lInter : this.getLowerInterfaces()) {
-                               index = lInter.loadDesign(element,index);
+                                index = lInter.loadDesign(element, index);
                         }
                 } catch (XMLErrorInModelException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
@@ -40,14 +38,11 @@ public class VoidInterface extends InterfaceNode {
                 return index;
         }
 
-        @Override
-        public XmlChild DRYsaveDesign() {
-            return null;
-            //return  new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
-        }
-
+             public abstract XmlChild DRYsaveDesign();
+                
+       
         @Override
         protected void initialiseInterface() {//no interface
         }
-        
+
 }

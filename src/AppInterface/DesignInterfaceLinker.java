@@ -12,7 +12,7 @@ import AppInterface.Interfaces.InterfaceMouvableImage;
 import AppInterface.Interfaces.InterfaceRandomImageAllocation;
 import AppInterface.Interfaces.InterfaceRandomImageDispersion;
 import AppInterface.Interfaces.InterfaceRandomSubImageAllocation;
-import AppInterface.Interfaces.VoidInterface;
+import AppInterface.Interfaces.InterfaceVoidImage;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerators.GeneratorCustomImage;
 import ImageProcessor.ImageGenerators.GeneratorCustomText;
@@ -45,22 +45,20 @@ public class DesignInterfaceLinker {
                 linkMap.put("G_Custom_Image", new DesignInterfacePair(GeneratorCustomImage.class, InterfaceCustomImage.class));
                 linkMap.put("G_Custom_Text", new DesignInterfacePair(GeneratorCustomText.class, InterfaceCustomText.class));
                 linkMap.put("G_Fixed_Text_Custom_Style", new DesignInterfacePair(GeneratorFixedTextCustomStyle.class, InterfaceFixedTextCustomStyle.class));
-                  linkMap.put("G_Random_Image_Dispersion", new DesignInterfacePair(GeneratorRandomImageDispersion.class, InterfaceRandomImageDispersion.class));
-                  linkMap.put("G_Random_Sub_Image_Allocation", new DesignInterfacePair(GeneratorRandomSubImageAllocation.class, InterfaceRandomSubImageAllocation.class));
-                  linkMap.put("G_Random_Image_Allocation", new DesignInterfacePair(GeneratorRandomImageAllocation.class, InterfaceRandomImageAllocation.class));
-                  
-                  
+                linkMap.put("G_Random_Image_Dispersion", new DesignInterfacePair(GeneratorRandomImageDispersion.class, InterfaceRandomImageDispersion.class));
+                linkMap.put("G_Random_Sub_Image_Allocation", new DesignInterfacePair(GeneratorRandomSubImageAllocation.class, InterfaceRandomSubImageAllocation.class));
+                linkMap.put("G_Random_Image_Allocation", new DesignInterfacePair(GeneratorRandomImageAllocation.class, InterfaceRandomImageAllocation.class));
 
-                  linkMap.put("T_Inert", new DesignInterfacePair(TransformerInert.class, InterfaceInert.class));
-                  linkMap.put("T_Custom_Color", new DesignInterfacePair(TransformerCustomColor.class, InterfaceCustomColor.class));
-                 linkMap.put("T_Mouvable_Image", new DesignInterfacePair(TransformerMovableImage.class, InterfaceMouvableImage.class));
-                 linkMap.put("T_Fixed_Color", new DesignInterfacePair(TransformerFixedColor.class, InterfaceFixedColor.class));
+                linkMap.put("T_Inert", new DesignInterfacePair(TransformerInert.class, InterfaceInert.class));
+                linkMap.put("T_Custom_Color", new DesignInterfacePair(TransformerCustomColor.class, InterfaceCustomColor.class));
+                linkMap.put("T_Mouvable_Image", new DesignInterfacePair(TransformerMovableImage.class, InterfaceMouvableImage.class));
+                linkMap.put("T_Fixed_Color", new DesignInterfacePair(TransformerFixedColor.class, InterfaceFixedColor.class));
 
-               linkMap.put("T_Mask", new DesignInterfacePair(TransformerMask.class, InterfaceMask.class));
-                 
-                 linkMap.put("Void_Image", new DesignInterfacePair(VoidImage.class, VoidInterface.class));
+                linkMap.put("T_Mask", new DesignInterfacePair(TransformerMask.class, InterfaceMask.class));
 
-                 linkMap.put("Layer", new DesignInterfacePair(Layer.class, LayersContainer.class));
+                linkMap.put("Void_Image", new DesignInterfacePair(VoidImage.class, InterfaceVoidImage.class));
+
+                linkMap.put("Layer", new DesignInterfacePair(Layer.class, LayersContainer.class));
         }
 
         public static Class<? extends InterfaceNode> getLinkedInterface(Class<? extends DesignNode> designNodeClass) {
