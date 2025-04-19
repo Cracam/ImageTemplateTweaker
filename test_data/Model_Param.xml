@@ -93,9 +93,9 @@
 					<pos pos_x="44" pos_y="25.75"/>
 					<size size_x="68" size_y="18"/>
 					<Generator>
-						<G_Fixed_Text_Custom_Color_Custom_Style>
+						<G_Fixed_Text_Custom_Style>
 							<Text TextHeightFactor="1.0" TextSizeMin="2" TextSizeMax="4" Text="Nom"/>
-						</G_Fixed_Text_Custom_Color_Custom_Style>
+						</G_Fixed_Text_Custom_Style>
 					</Generator>
 					<Transformers>
 						<T_Custom_Color>
@@ -107,9 +107,9 @@
 					<pos pos_x="44" pos_y="40.5"/>
 					<size size_x="68" size_y="18"/>
 					<Generator>
-						<G_Fixed_Text_Custom_Color_Custom_Style>
+						<G_Fixed_Text_Custom_Style>
 							<Text TextHeightFactor="1.0" TextSizeMin="2" TextSizeMax="4" Text="Prenom"/>
-						</G_Fixed_Text_Custom_Color_Custom_Style>
+						</G_Fixed_Text_Custom_Style>
 					</Generator>
 					<Transformers>
 						<T_Custom_Color>
@@ -171,9 +171,9 @@
 					<pos pos_x="44" pos_y="8.2"/>
 					<size size_x="68" size_y="18"/>
 					<Generator>
-						<G_Fixed_Text_Custom_Color_Custom_Style>
+						<G_Fixed_Text_Custom_Style>
 							<Text TextHeightFactor="2.0" TextSizeMin="6" TextSizeMax="11" Text="Carte Foyer"/>
-						</G_Fixed_Text_Custom_Color_Custom_Style>
+						</G_Fixed_Text_Custom_Style>
 					</Generator>
 					<Transformers>
 						<T_Custom_Color>
@@ -706,9 +706,9 @@
 					<pos pos_x="44" pos_y="4"/>
 					<size size_x="68" size_y="18"/>
 					<Generator>
-						<G_Fixed_Text_Custom_Color_Custom_Style>
+						<G_Fixed_Text_Custom_Style>
 							<Text TextHeightFactor="1.5" TextSizeMin="3" TextSizeMax="4.5" Text="2 Consos Vertes  ou  1 Conso gratuite"/>
-						</G_Fixed_Text_Custom_Color_Custom_Style>
+						</G_Fixed_Text_Custom_Style>
 					</Generator>
 					<Transformers>
 						<T_Custom_Color>

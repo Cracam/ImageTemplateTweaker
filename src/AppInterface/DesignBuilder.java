@@ -201,6 +201,7 @@ public class DesignBuilder extends Application {
          */
         private void loadNewDesign(String filepath) {
                 try {
+                        designPath=filepath;
                         this.designResources = new ResourcesManager(filepath);
                         //gérer xml opening
                         // Create a DocumentBuilderFactory

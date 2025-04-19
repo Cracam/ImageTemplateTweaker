@@ -47,7 +47,9 @@ public class InterfacesManager {
                 }
 
                 for (LayersContainer myInterface : this.interfaces) {
+                        System.out.println("target Name : "+targetName+"  ID tested : "+myInterface.ComputeUniqueID());
                         if (targetName.equals(myInterface.ComputeUniqueID())) {
+                                System.out.println("VALID --- target Name : "+targetName+"  ID tested : "+myInterface.ComputeUniqueID());
                                 return myInterface;
                         }
                 }
@@ -158,7 +160,7 @@ public class InterfacesManager {
 
                         if (tempInterface != null) {
                                 try {
-                                        tempInterface.loadDesign(interfaceElt, 0);
+                                        tempInterface.loadDesign(interfaceElt, -1);
                                 } catch (XMLErrorInModelException ex) {
                                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                         tempInterface = null;
