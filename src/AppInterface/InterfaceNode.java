@@ -63,7 +63,7 @@ public abstract class InterfaceNode extends VBox {
         public int loadDesign(Element element,int index) throws XMLErrorInModelException {
                 this.DRYLoadDesign((Element) element.getChildNodes().item(index));
                 index=index+1;
-
+                System.out.println(this.getClass().getName()+"   index : "+index);
                 try {
                         for (InterfaceNode lInter : lowerInterfaces) {
                                index = lInter.loadDesign(element,index);

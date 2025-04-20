@@ -109,7 +109,7 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 //
 //        }
         @FXML
-        private void deleteThis() {
+         void deleteThis() {
                 for (DesignNode DN : linkedDesignNodes) {
                         this.NumberSelector.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1));
                         this.NumberSelector.getValueFactory().setValue(0);
@@ -130,7 +130,6 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 
         @Override
         public XmlChild DRYsaveDesign() {
-
                 XmlChild XMLAllocator = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
                 XMLAllocator.addAttribute("MaxNumberOfAllocation", String.valueOf(NumberSelector.getValue()));
 

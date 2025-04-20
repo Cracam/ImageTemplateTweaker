@@ -1,5 +1,6 @@
 package AppInterface.Interfaces;
 
+import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceContainer;
 import Exeptions.ResourcesFileErrorException;
 import AppInterface.InterfaceNode;
@@ -18,8 +19,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -32,7 +33,7 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
 
         @FXML
         private VBox SubInterfaceContainer;
-        
+
         @FXML
         private VBox CommonContainer;
 
@@ -134,8 +135,8 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
                 DesignNode DN = linkedDesignNodes.get(0);
                 GeneratorRandomImageAllocation imgAll = (GeneratorRandomImageAllocation) DN;
                 GeneratorRandomSubImageAllocation subDN = imgAll.createSubImageAllocationBuilder();
-                
-                InterfaceRandomSubImageAllocation newInter = (InterfaceRandomSubImageAllocation) subDN.createInterfaceTreeFromNodeTree(this,TransformerInert.class);
+
+                InterfaceRandomSubImageAllocation newInter = (InterfaceRandomSubImageAllocation) subDN.createInterfaceTreeFromNodeTree(this, TransformerInert.class);
 
                 for (int i = 1; i < linkedDesignNodes.size(); i++) {
                         try {
@@ -151,23 +152,46 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
                 DN.updateLower();
                 uptadeInterface();
         }
-        
-        
-        public void createCommomInterface(DesignNode commonInterface){
+
+        public void createCommomInterface(DesignNode commonInterface) {
                 this.setContainerVBox(CommonContainer);
                 InterfaceNode interNode = commonInterface.createInterfaceTreeFromNodeTree(this);
-               this.setContainerVBox(SubInterfaceContainer);  
-               // CommonContainer.getChildren().add(interNode);
+                this.setContainerVBox(SubInterfaceContainer);
+                // CommonContainer.getChildren().add(interNode);
         }
 
         @Override
         protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
-                //nothing to load
+                
+                //we ,ot load anything but we count to add or delete the right number of subRandom interface
+                int numberOfSubAllocator = countElementsByName(element,DesignInterfaceLinker.getIdentifier(InterfaceRandomSubImageAllocation.class));
+                
+                if(this.getLowerInterfaces().size()>numberOfSubAllocator){
+                     int numberToDelete  =numberOfSubAllocator - this.getLowerInterfaces().size();
+                     
+                        for(int i=0; i<numberToDelete;i++){
+                                ((InterfaceRandomSubImageAllocation) this.getLowerInterfaces().getLast()).deleteThis();
+                        }
+                }
+                
+                if(this.getLowerInterfaces().size()<numberOfSubAllocator){
+                        int numberToCreate  = this.getLowerInterfaces().size() - numberOfSubAllocator;
+                     
+                        for(int i=0; i<numberToCreate;i++){
+                             this.createNewSubImgBuilder();
+                        }
+                }
+        }
+
+        public static int countElementsByName(Element parentElement, String elementName) {
+                NodeList childNodeList = parentElement.getElementsByTagName(elementName);
+                return childNodeList.getLength();
         }
 
         @Override
         public XmlChild DRYsaveDesign() {
-                return null;
+                XmlChild Xmloffset = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
+                return Xmloffset;
         }
 
 }
