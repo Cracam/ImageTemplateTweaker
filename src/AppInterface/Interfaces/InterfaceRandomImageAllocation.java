@@ -11,6 +11,7 @@ import ImageProcessor.ImageGenerators.GeneratorRandomImageAllocation;
 import ImageProcessor.ImageGenerators.GeneratorRandomSubImageAllocation;
 import ImageProcessor.ImagesTransformers.TransformerInert;
 import ResourcesManager.XmlChild;
+import ResourcesManager.XmlManager;
 import imageloaderinterface.ImageLoaderInterface;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -110,34 +111,47 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
         protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
 
                 //we ,ot load anything but we count to add or delete the right number of subRandom interface
-                int numberOfSubAllocator = countElementsByName(element, DesignInterfaceLinker.getIdentifier(InterfaceRandomSubImageAllocation.class));
-
+                int numberOfSubAllocator =  XmlManager.getIntAttribute(element, "SubAllocator", 1); 
+               
+                
+                
+                if (commonInterface != null) {
+                        numberOfSubAllocator =numberOfSubAllocator+1;
+                } 
+                 System.out.println("XXXXXXXXX We detected :  "+numberOfSubAllocator+"  SubAllocatorelements : for size :   "+ this.getLowerInterfaces().size());
+                
                 if (this.getLowerInterfaces().size() > numberOfSubAllocator) {
-                        int numberToDelete = numberOfSubAllocator - this.getLowerInterfaces().size();
+                        int numberToDelete = - numberOfSubAllocator + this.getLowerInterfaces().size();
 
                         for (int i = 0; i < numberToDelete; i++) {
                                 ((InterfaceRandomSubImageAllocation) this.getLowerInterfaces().getLast()).deleteThis();
+                                 System.out.println("XXXXXXXXX We deleted : ");
                         }
                 }
 
                 if (this.getLowerInterfaces().size() < numberOfSubAllocator) {
-                        int numberToCreate = this.getLowerInterfaces().size() - numberOfSubAllocator;
+                        int numberToCreate = - this.getLowerInterfaces().size() + numberOfSubAllocator;
 
                         for (int i = 0; i < numberToCreate; i++) {
                                 this.createNewSubImgBuilder();
+                                System.out.println("XXXXXXXXX We created : ");
                         }
                 }
         }
 
-        public static int countElementsByName(Element parentElement, String elementName) {
-                NodeList childNodeList = parentElement.getElementsByTagName(elementName);
-                return childNodeList.getLength();
-        }
+
 
         @Override
         public XmlChild DRYsaveDesign() {
-                XmlChild Xmloffset = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
-                return Xmloffset;
+                XmlChild XMLAllocator = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
+                  int nbSubAllocator;
+                  nbSubAllocator = this.getLowerInterfaces().size();
+                 if (commonInterface != null) {
+                        nbSubAllocator =nbSubAllocator-1;
+                } 
+                  XMLAllocator.addAttribute("SubAllocator", String.valueOf(nbSubAllocator));
+
+                return XMLAllocator;
         }
 
         /**
@@ -149,7 +163,7 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
         public String ComputeUniqueID() {
                 String ret = this.DRYComputeUniqueID();
                 int nbInterToID;
-                if (commonInterface != null) {
+                if (commonInterface != null & !this.getLowerInterfaces().isEmpty()) {
                         nbInterToID = 2;
                 } else {
                         nbInterToID = 1;
@@ -165,6 +179,12 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
                 return ret;
         }
         
+        
+        /**
+         * use to extract only the fis Suballocator ID
+         * @param rootElement
+         * @return 
+         */
         @Override
         public  String DRYConcatenateSubElementNames(Element rootElement) {
                 NodeList childNodes = rootElement.getChildNodes();
