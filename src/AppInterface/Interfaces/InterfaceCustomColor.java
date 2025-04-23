@@ -39,7 +39,9 @@ public class InterfaceCustomColor extends InterfaceNode {
 
         public InterfaceCustomColor(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
-                upperInterface.placeInterface(this);
+                if(upperIN!=null){
+                          upperInterface.placeInterface(this);
+                }
         }
 
         @Override

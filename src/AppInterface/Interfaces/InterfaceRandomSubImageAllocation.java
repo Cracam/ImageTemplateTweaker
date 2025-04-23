@@ -36,7 +36,9 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
                 super(upperIN, name);
 
                 setContainerVBox(SubInterfaceContainer);
-                upperInterface.placeInterface(this);
+                 if(upperIN!=null){
+                          upperInterface.placeInterface(this);
+                }
         }
 
         @Override

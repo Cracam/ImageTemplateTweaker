@@ -1,6 +1,5 @@
 package AppInterface;
 
-import AppInterface.Interfaces.InterfaceRandomImageAllocation;
 import Exceptions.InvalidLinkbetweenNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
@@ -17,7 +16,6 @@ import java.util.logging.Logger;
 import javafx.scene.control.TabPane;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import taboftiltedpane.TabOfTiltedPane;
 
@@ -48,9 +46,9 @@ public class InterfacesManager {
                 }
 
                 for (LayersContainer myInterface : this.interfaces) {
-                        System.out.println("target Name : "+targetName+"  ID tested : "+myInterface.ComputeUniqueID());
+                   //     System.out.println("target Name : "+targetName+"  ID tested : "+myInterface.ComputeUniqueID());
                         if (targetName.equals(myInterface.ComputeUniqueID())) {
-                                System.out.println("VALID --- target Name : "+targetName+"  ID tested : "+myInterface.ComputeUniqueID());
+                            //    System.out.println("VALID --- target Name : "+targetName+"  ID tested : "+myInterface.ComputeUniqueID());
                                 return myInterface;
                         }
                 }
@@ -58,15 +56,7 @@ public class InterfacesManager {
         }
         
 
-//        public void saveInterfaces(Element interfacesElement, Document document) {
-//
-//                for (InterfaceContainer myInterface : this.interfaces) {
-//                        Node interfaceElement = myInterface.saveInterfaceData(document);
-//                        if (interfaceElement != null) {
-//                                interfacesElement.appendChild(interfaceElement);
-//                        }
-//                }
-//        }
+
         public void createInterfaceFromImageBuilderList(ArrayList<ImageBuilder> imageBuilders) {
                 //We want to rassemble all the layer into only one lis aviding the duplicates
                 ArrayList<DesignNode> layersList = new ArrayList<>();
@@ -158,8 +148,16 @@ public class InterfacesManager {
                 for (int i = 0; i < interfacesNodes.getLength(); i++) {//we begin by one to avoid the description node
                         Element interfaceElt = (Element) interfacesNodes.item(i);
                        
-                        
-                        tempInterface = findInterfaceByUniqueID(DesignInterfaceLinker.getIdentifier(LayersContainer.class) +interfaceElt.getAttribute("ID")+concatenateSubElementNames(interfaceElt));
+                      String name =  interfaceElt.getFirstChild().getNodeName();
+                      String XMLID="";
+                        try {
+                                XMLID = InterfaceNode.concatenateSubElementNames(DesignInterfaceLinker.getInterface(name),interfaceElt);
+                                 tempInterface = findInterfaceByUniqueID(DesignInterfaceLinker.getIdentifier(LayersContainer.class) +interfaceElt.getAttribute("ID")+XMLID);
+                        } catch (NoSuchMethodException ex) {
+                                Logger.getLogger(InterfacesManager.class.getName()).log(Level.SEVERE, null, ex);
+                                tempInterface=null;
+                        }
+                       
  
                         
                         if (tempInterface != null) {
@@ -173,68 +171,16 @@ public class InterfacesManager {
                                 //     System.out.println("InterfacesNodes: " + interfaceElt.getAttribute("InterfaceName"));
 
                         } else {
-                                System.out.println("Interface Loading failed " + "   ____  "+DesignInterfaceLinker.getIdentifier(LayersContainer.class) +interfaceElt.getAttribute("ID")+concatenateSubElementNames(interfaceElt));
+                                System.out.println("Interface Loading failed " + "   ____  "+DesignInterfaceLinker.getIdentifier(LayersContainer.class) +XMLID);
                         }
                 }
         }
         
         
-        public static String concatenateSubElementNames(Element rootElement) {
-                String allocatorText = detectAndProcessAllocationElement(rootElement);
-                if(allocatorText==null){
-                        // Concaténer les noms des sous-éléments
-                        StringBuilder concatenatedNames = new StringBuilder();
-                        NodeList childNodes = rootElement.getChildNodes();
-                        for (int i = 0; i < childNodes.getLength(); i++) {
-                                Node childNode = childNodes.item(i);
-                                if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                                        concatenatedNames.append(childNode.getNodeName());
-                                }
-                        }
-                         return concatenatedNames.toString();
-                }
-                return allocatorText;
-        }
+    
         
         
-        public static String detectAndProcessAllocationElement(Element rootElement) {
-                NodeList childNodes = rootElement.getChildNodes();
-                boolean foundFirst = false;
-                StringBuilder concatenatedNames = new StringBuilder();
 
-                // Vérifie si le premier élément est "G_Random_Image_Allocation"
-                for (int i = 0; i < childNodes.getLength(); i++) {
-                        Node childNode = childNodes.item(i);
-                        if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                                if ("G_Random_Image_Allocation".equals(childNode.getNodeName())) {
-                                        foundFirst = true;
-                                        break;
-                                }
-                        }
-                }
-
-                // Si le premier élément n'est pas "G_Random_Image_Allocation", retourne null
-                if (!foundFirst) {
-                        return null;
-                }
-
-                // Concatène les noms des nœuds jusqu'au deuxième "G_Random_Sub_Image_Allocation"
-                int subImageAllocationCount = 0;
-                for (int i = 0; i < childNodes.getLength(); i++) {
-                        Node childNode = childNodes.item(i);
-                        if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                                if ("G_Random_Sub_Image_Allocation".equals(childNode.getNodeName())) {
-                                        subImageAllocationCount++;
-                                        if (subImageAllocationCount == 2) {
-                                                break;
-                                        }
-                                }
-                                concatenatedNames.append(childNode.getNodeName());
-                        }
-                }
-
-                return concatenatedNames.toString();
-        }
 
         public Element saveInterfaces(Element eltIn, Document doc) {
                 XmlManager manager = new XmlManager(doc);

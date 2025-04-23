@@ -20,6 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
@@ -43,7 +44,9 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
                 super(upperIN, name);
 
                 setContainerVBox(SubInterfaceContainer);
-                upperInterface.placeInterface(this);
+                 if(upperIN!=null){
+                          upperInterface.placeInterface(this);
+                }
         }
 
         @Override
@@ -136,11 +139,12 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
                 XmlChild Xmloffset = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
                 return Xmloffset;
         }
-        
-        
+
         /**
-         * those modifation are needed to have a unique identifier not depending on the number of subinterface
-         * @return 
+         * those modifation are needed to have a unique identifier not depending
+         * on the number of subinterface
+         *
+         * @return
          */
         public String ComputeUniqueID() {
                 String ret = this.DRYComputeUniqueID();
@@ -160,5 +164,44 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
 
                 return ret;
         }
+        
+        @Override
+        public  String DRYConcatenateSubElementNames(Element rootElement) {
+                NodeList childNodes = rootElement.getChildNodes();
+                boolean foundFirst = false;
+                StringBuilder concatenatedNames = new StringBuilder();
 
+                // Vérifie si le premier élément est "G_Random_Image_Allocation"
+                for (int i = 0; i < childNodes.getLength(); i++) {
+                        Node childNode = childNodes.item(i);
+                        if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                                if ("G_Random_Image_Allocation".equals(childNode.getNodeName())) {
+                                        foundFirst = true;
+                                        break;
+                                }
+                        }
+                }
+
+                // Si le premier élément n'est pas "G_Random_Image_Allocation", retourne null
+                if (!foundFirst) {
+                        return "";
+                }
+
+                // Concatène les noms des nœuds jusqu'au deuxième "G_Random_Sub_Image_Allocation"
+                int subImageAllocationCount = 0;
+                for (int i = 0; i < childNodes.getLength(); i++) {
+                        Node childNode = childNodes.item(i);
+                        if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                                if ("G_Random_Sub_Image_Allocation".equals(childNode.getNodeName())) {
+                                        subImageAllocationCount++;
+                                        if (subImageAllocationCount == 2) {
+                                                break;
+                                        }
+                                }
+                                concatenatedNames.append(childNode.getNodeName());
+                        }
+                }
+
+                return concatenatedNames.toString();
+        }
 }

@@ -46,7 +46,9 @@ public class InterfaceMouvableImage extends InterfaceNode {
 
         public InterfaceMouvableImage(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
-                upperInterface.placeInterface(this);
+                if(upperIN!=null){
+                          upperInterface.placeInterface(this);
+                }
 
         }
 

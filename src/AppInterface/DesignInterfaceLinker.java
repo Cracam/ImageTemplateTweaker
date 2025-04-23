@@ -69,6 +69,11 @@ public class DesignInterfaceLinker {
                 }
                 return null; // ou lancer une exception si l'élément n'est pas trouvé
         }
+        
+         public static Class<? extends InterfaceNode> getInterface(String identifier) {
+                   DesignInterfacePair pair = linkMap.get(identifier);
+                return pair != null ? pair.interfaceNodeClass : null; // ou lancer une exception si l'élément n'est pas trouvé
+        }
 
         public static Class<? extends DesignNode> getDesignNode(String identifier) {
                 DesignInterfacePair pair = linkMap.get(identifier);

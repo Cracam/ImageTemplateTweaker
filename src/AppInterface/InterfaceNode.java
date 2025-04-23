@@ -11,12 +11,15 @@ import ImageProcessor.ImageBuilder;
 import ResourcesManager.ResourcesManager;
 import ResourcesManager.XmlChild;
 import ResourcesManager.XmlManager;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.layout.VBox;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -60,13 +63,13 @@ public abstract class InterfaceNode extends VBox {
 
         protected abstract void DRYLoadDesign(Element element) throws XMLErrorInModelException;
 
-        public int loadDesign(Element element,int index) throws XMLErrorInModelException {
+        public int loadDesign(Element element, int index) throws XMLErrorInModelException {
                 this.DRYLoadDesign((Element) element.getChildNodes().item(index));
-                index=index+1;
-                System.out.println(this.getClass().getName()+"   index : "+index);
+                index = index + 1;
+                System.out.println(this.getClass().getName() + "   index : " + index);
                 try {
                         for (InterfaceNode lInter : lowerInterfaces) {
-                               index = lInter.loadDesign(element,index);
+                                index = lInter.loadDesign(element, index);
                         }
                 } catch (XMLErrorInModelException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
@@ -90,10 +93,11 @@ public abstract class InterfaceNode extends VBox {
         }
 
         /**
-         *this program save the design info of the current interface
-         * and order to do it on the subinterface
-         * 
-         * the fisrt will be launch in the Interface manager for each layersContainer
+         * this program save the design info of the current interface and order
+         * to do it on the subinterface
+         *
+         * the fisrt will be launch in the Interface manager for each
+         * layersContainer
          *
          * @param managerIn
          * @return
@@ -111,10 +115,6 @@ public abstract class InterfaceNode extends VBox {
         }
 
         public abstract XmlChild DRYsaveDesign();
-        
-        
-        
-        
 
         protected abstract void initialiseInterface();
 
@@ -198,12 +198,12 @@ public abstract class InterfaceNode extends VBox {
         }
 
         public String DRYComputeUniqueID() {
-                 String ret;
-                if(linkedDesignNodes.size()>0){
+                String ret;
+                if (linkedDesignNodes.size() > 0) {
                         ret = DesignInterfaceLinker.getIdentifier(linkedDesignNodes.get(0).getClass()); //better to use the linked DN 
-                }else{
+                } else {
                         ret = DesignInterfaceLinker.getIdentifier(this.getClass()); //in case of node
-                        System.out.println("Error no linked DN"+DesignInterfaceLinker.getIdentifier(this.getClass()));
+                        System.out.println("Error no linked DN" + DesignInterfaceLinker.getIdentifier(this.getClass()));
                 }
                 if (ret == null) {
                         return "";
@@ -211,4 +211,39 @@ public abstract class InterfaceNode extends VBox {
                 return ret;
         }
 
+
+
+        
+        /**
+         * This static function is intermediate to lauch the simili static function of "DRYConcatenateSubElementNames" that is intancied and ovverridable
+         *  (use in Random Allocator
+         * @param interClass
+         * @param rootElement
+         * @return
+         * @throws NoSuchMethodException 
+         */
+        public static String concatenateSubElementNames(Class<? extends InterfaceNode> interClass,Element rootElement) throws NoSuchMethodException{
+                try {
+                        Constructor<?> constructor = interClass.getConstructor(InterfaceNode.class, String.class);
+                        // Créez une nouvelle instance en utilisant ce constructeur
+                        return ((InterfaceNode)constructor.newInstance(null,"")).DRYConcatenateSubElementNames(rootElement);
+                } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                        Logger.getLogger(InterfaceNode.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                return null;
+        }
+        
+        
+                public String DRYConcatenateSubElementNames(Element rootElement) {
+                // Concaténer les noms des sous-éléments
+                StringBuilder concatenatedNames = new StringBuilder();
+                NodeList childNodes = rootElement.getChildNodes();
+                for (int i = 0; i < childNodes.getLength(); i++) {
+                        Node childNode = childNodes.item(i);
+                        if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                                concatenatedNames.append(childNode.getNodeName());
+                        }
+                }
+                return concatenatedNames.toString();
+        }
 }
