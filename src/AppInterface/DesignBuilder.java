@@ -82,6 +82,8 @@ public class DesignBuilder extends Application {
 
         @FXML
         private Slider sliderScale;
+        
+        private  int totalUniqueNumber=0;
 
         /**
          * @param args the command line arguments
@@ -442,6 +444,18 @@ public class DesignBuilder extends Application {
                 preview.setImageView(imgBuilder.DRYComputeUniqueID(), staticFunctions.StaticImageEditing.createImageView(imgBuilder.getImageOut()));
                 //System.out.println("#######"+imgBuilder.getId());
         }
+        
+        /**
+         * this will return a unique number (use to save image correctly in case of random iamge allocator)
+         * @return 
+         */
+        public int getUniqueNumber(){
+                this.totalUniqueNumber++;
+                return totalUniqueNumber;
+        }
+        
+        
+        
 
         public Random getRandom() {
                 return random;

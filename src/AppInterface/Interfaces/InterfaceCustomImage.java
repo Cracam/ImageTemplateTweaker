@@ -80,7 +80,7 @@ public class InterfaceCustomImage extends InterfaceNode {
 
         @Override
         public XmlChild DRYsaveDesign() {
-                String imageName = "Image_" + this.getUpperIN(LayersContainer.class).ComputeUniqueID() + ".png";
+                String imageName = "Image_" + this.getUpperIN(LayersContainer.class).ComputeUniqueID() + this.getDesignBuilder().getUniqueNumber() +".png";
                 XmlChild XmlTextBuilder = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
 
                 if (loaderInterface.getImage_out() != null) {

@@ -139,14 +139,7 @@ public abstract class InterfaceNode extends VBox {
                 return null;
         }
 
-        public ResourcesManager getDesignRessources() {
-                if (!linkedDesignNodes.isEmpty()) {
-                        return ((ImageBuilder) linkedDesignNodes.get(0).getUpperDN(ImageBuilder.class)).getDesignBuilder().getDesignResources();
-                } else {
-                        return this.getUpperIN().getDesignRessources();
-                }
-
-        }
+       
 
         public ArrayList<DesignNode> getLinkedDesignNodes() {
                 return linkedDesignNodes;
@@ -245,5 +238,22 @@ public abstract class InterfaceNode extends VBox {
                         }
                 }
                 return concatenatedNames.toString();
+        }
+                
+        protected DesignBuilder getDesignBuilder(){
+                if (!linkedDesignNodes.isEmpty()) {
+                        return ((ImageBuilder) linkedDesignNodes.get(0).getUpperDN(ImageBuilder.class)).getDesignBuilder();
+                } else {
+                        return this.getUpperIN().getDesignBuilder();
+                }
+        }
+        
+         public ResourcesManager getDesignRessources() {
+                if (!linkedDesignNodes.isEmpty()) {
+                        return getDesignBuilder().getDesignResources();
+                } else {
+                        return this.getUpperIN().getDesignRessources();
+                }
+
         }
 }

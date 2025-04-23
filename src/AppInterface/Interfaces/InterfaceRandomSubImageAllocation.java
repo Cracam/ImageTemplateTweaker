@@ -31,10 +31,13 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
 
         @FXML
         private Spinner<Integer> NumberSelector;
+        
 
+        
         public InterfaceRandomSubImageAllocation(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
-
+       
+                
                 setContainerVBox(SubInterfaceContainer);
                  if(upperIN!=null){
                           upperInterface.placeInterface(this);
@@ -134,7 +137,6 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
         public XmlChild DRYsaveDesign() {
                 XmlChild XMLAllocator = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
                 XMLAllocator.addAttribute("MaxNumberOfAllocation", String.valueOf(NumberSelector.getValue()));
-
                 return XMLAllocator;
         }
 
@@ -142,4 +144,7 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
                 return NumberSelector.getValue();
         }
 
+      
+
+        
 }

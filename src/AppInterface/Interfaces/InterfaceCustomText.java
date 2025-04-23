@@ -182,7 +182,7 @@ public class InterfaceCustomText extends InterfaceNode {
 
                 File fontToSave = TextGenerator.getFontFile();
                 if (fontToSave != null) {
-                        String fontName = fontToSave.getName();
+                        String fontName = fontToSave.getName()+  this.getDesignBuilder().getUniqueNumber() ;
                         this.getDesignRessources().set(fontName, fontToSave);
                         XmlTextBuilder.addAttribute("Font_name", fontName);
                 }
