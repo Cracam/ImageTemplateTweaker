@@ -37,6 +37,8 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
         @FXML
         private VBox CommonContainer;
 
+        private InterfaceNode commonInterface;
+
         public InterfaceRandomImageAllocation(InterfaceNode upperIN, String name) {
                 super(upperIN, name);
 
@@ -61,75 +63,16 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
                 }
         }
 
-//        public void setLowerImageBuilder(SubImageBuilder lowerImageBuilder) {
-//
-//                this.lowerImageBuilder = lowerImageBuilder;
-//
-//                //intall trigger
-//                lowerImageBuilder.isChanged().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-//                        if (newValue) {
-//                                //    System.out.println("trigered");
-//                                lowerImageBuilder.setChanged(false);
-//                                //       System.out.println("(1) CHANGGE DEECTED");
-//                                refreshSubInterface();
-//                                this.refreshLayers();
-//                                this.refreshImageBuilders();
-//                        }
-//                });
-//                //    lowerImageBuilder.setChanged(true);
-//                lowerImageBuilder.refreshAll();
-//                refreshSubInterface();
-//               vboxInterface.getChildren().add( this.lowerImageBuilder.getSubInterface());
-////                ArrayList<Interface> interfaces = lowerImageBuilder.getInterfaces();
-////                for (Interface iface : interfaces) {
-////                        vboxInterface.getChildren().add(iface);
-////                }
-//
-//        }
-//        public void linkInterface(Interface inter) {
-//                vboxInterface.getChildren().add(inter);
-//                inter.refreshLayers();
-//                inter.refreshImageBuilders();
-//        }
         @FXML
         public void uptadeInterface() {
                 this.updateLinkedDesignNodes();
         }
 
-//        public void refreshSubInterface() {
-//                this.prev.setImage(convertToFXImage(this.lowerImageBuilder.getImageOut()));
-//                prev.setStyle("-fx-border-color: blue; -fx-border-width: 2px; -fx-border-style: solid;");
-//                //System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-//        }
-//        public Node saveInterfaceData(Document doc) {
-//                XmlManager xmlManager = new XmlManager(doc);
-//
-//                XmlChild Xmlinterval = new XmlChild("Interval");
-//                Xmlinterval.addAttribute("Min_Interval", String.valueOf(DS_intervalSize.getLowValue()));
-//                Xmlinterval.addAttribute("Max_Interval", String.valueOf(DS_intervalSize.getHighValue()));
-//                xmlManager.addChild(Xmlinterval);
-//
-//                XmlChild XmlSize = new XmlChild("Size");
-//                XmlSize.addAttribute("Min_Size", String.valueOf(DS_imageSize.getLowValue()));
-//                XmlSize.addAttribute("Max_Size", String.valueOf(DS_imageSize.getHighValue()));
-//                xmlManager.addChild(XmlSize);
-//
-//                return xmlManager.createDesignParamElement("DesignParam", "InterfaceName", interfaceName);
-//        }
-//        @Override
-//        public void loadInterfaceData(Element dataOfTheLayer) {
-//                DS_intervalSize.setLowValue(Double.parseDouble(dataOfTheLayer.getElementsByTagName("Interval").item(0).getAttributes().getNamedItem("Min_Interval").getNodeValue()));
-//                DS_intervalSize.setHighValue(Double.parseDouble(dataOfTheLayer.getElementsByTagName("Interval").item(0).getAttributes().getNamedItem("Max_Interval").getNodeValue()));
-//
-//                DS_imageSize.setLowValue(Double.parseDouble(dataOfTheLayer.getElementsByTagName("Size").item(0).getAttributes().getNamedItem("Min_Size").getNodeValue()));
-//                DS_imageSize.setHighValue(Double.parseDouble(dataOfTheLayer.getElementsByTagName("Size").item(0).getAttributes().getNamedItem("Max_Size").getNodeValue()));
-//
-//        }
         /**
          * this function create a new subimageBuilder
          */
         @FXML
-        private void createNewSubImgBuilder() {
+        public void createNewSubImgBuilder() {
 
                 // Exécuter le code sur le premier élément
                 DesignNode DN = linkedDesignNodes.get(0);
@@ -153,32 +96,32 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
                 uptadeInterface();
         }
 
-        public void createCommomInterface(DesignNode commonInterface) {
+        public void createCommomInterface(DesignNode DN) {
                 this.setContainerVBox(CommonContainer);
-                InterfaceNode interNode = commonInterface.createInterfaceTreeFromNodeTree(this);
+                commonInterface = DN.createInterfaceTreeFromNodeTree(this);
                 this.setContainerVBox(SubInterfaceContainer);
                 // CommonContainer.getChildren().add(interNode);
         }
 
         @Override
         protected void DRYLoadDesign(Element element) throws XMLErrorInModelException {
-                
+
                 //we ,ot load anything but we count to add or delete the right number of subRandom interface
-                int numberOfSubAllocator = countElementsByName(element,DesignInterfaceLinker.getIdentifier(InterfaceRandomSubImageAllocation.class));
-                
-                if(this.getLowerInterfaces().size()>numberOfSubAllocator){
-                     int numberToDelete  =numberOfSubAllocator - this.getLowerInterfaces().size();
-                     
-                        for(int i=0; i<numberToDelete;i++){
+                int numberOfSubAllocator = countElementsByName(element, DesignInterfaceLinker.getIdentifier(InterfaceRandomSubImageAllocation.class));
+
+                if (this.getLowerInterfaces().size() > numberOfSubAllocator) {
+                        int numberToDelete = numberOfSubAllocator - this.getLowerInterfaces().size();
+
+                        for (int i = 0; i < numberToDelete; i++) {
                                 ((InterfaceRandomSubImageAllocation) this.getLowerInterfaces().getLast()).deleteThis();
                         }
                 }
-                
-                if(this.getLowerInterfaces().size()<numberOfSubAllocator){
-                        int numberToCreate  = this.getLowerInterfaces().size() - numberOfSubAllocator;
-                     
-                        for(int i=0; i<numberToCreate;i++){
-                             this.createNewSubImgBuilder();
+
+                if (this.getLowerInterfaces().size() < numberOfSubAllocator) {
+                        int numberToCreate = this.getLowerInterfaces().size() - numberOfSubAllocator;
+
+                        for (int i = 0; i < numberToCreate; i++) {
+                                this.createNewSubImgBuilder();
                         }
                 }
         }
@@ -192,6 +135,30 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
         public XmlChild DRYsaveDesign() {
                 XmlChild Xmloffset = new XmlChild(DesignInterfaceLinker.getIdentifier(this.getClass()));
                 return Xmloffset;
+        }
+        
+        
+        /**
+         * those modifation are needed to have a unique identifier not depending on the number of subinterface
+         * @return 
+         */
+        public String ComputeUniqueID() {
+                String ret = this.DRYComputeUniqueID();
+                int nbInterToID;
+                if (commonInterface != null) {
+                        nbInterToID = 2;
+                } else {
+                        nbInterToID = 1;
+                }
+
+                for (int i = 0; i < nbInterToID; i++) {
+                        InterfaceNode lInter = this.getLowerInterfaces().get(i);
+                        if (lInter != null) {
+                                ret = ret + lInter.ComputeUniqueID();
+                        }
+                }
+
+                return ret;
         }
 
 }
