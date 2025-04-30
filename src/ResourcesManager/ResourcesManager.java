@@ -5,10 +5,10 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.apache.commons.compress.parallel.InputStreamSupplier;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.model.enums.AesKeyStrength;
+import net.lingala.zip4j.model.enums.EncryptionMethod;
 
 public class ResourcesManager {
 
@@ -32,67 +32,51 @@ public class ResourcesManager {
                 loadZipFile();
         }
 
-        public ResourcesManager(String password) {
-                this.password = password;
-                this.usePassword = true;
-                this.fileMap = new HashMap<>();
-        }
-
         public ResourcesManager() {
                 this.usePassword = false;
                 this.fileMap = new HashMap<>();
         }
 
+        public void setPassword(String password) {
+                this.password = password;
+                this.usePassword = true;
+        }
+
+        public void removePassword() {
+                this.password = "";
+                this.usePassword = false;
+        }
+
         private void loadZipFile() {
-                try (FileInputStream fis = new FileInputStream(zipFilePath); InputStream inputStream = usePassword ? new InputStreamSupplier(fis, password.toCharArray()) : fis; ZipArchiveInputStream zis = new ZipArchiveInputStream(inputStream)) {
-
-                        ZipArchiveEntry zipEntry = zis.getNextZipEntry();
-                        while (zipEntry != null) {
-                                String fileName = zipEntry.getName();
-                                File tempFile = File.createTempFile(fileName, null);
-                                tempFile.deleteOnExit();
-
-                                try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-                                        byte[] buffer = new byte[1024];
-                                        int length;
-                                        while ((length = zis.read(buffer)) > 0) {
-                                                fos.write(buffer, 0, length);
-                                        }
-                                }
-
-                                fileMap.put(fileName, tempFile);
-                                zis.closeEntry();
-                                zipEntry = zis.getNextZipEntry();
+                try {
+                        ZipFile zipFile = new ZipFile(zipFilePath);
+                        if (usePassword) {
+                                zipFile.setPassword(password.toCharArray());
                         }
-                } catch (IOException e) {
+                        zipFile.extractAll(System.getProperty("java.io.tmpdir"));
+
+                        for (File file : new File(System.getProperty("java.io.tmpdir")).listFiles()) {
+                                fileMap.put(file.getName(), file);
+                        }
+                } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
 
         public void save() {
-                try (FileOutputStream fos = new FileOutputStream(zipFilePath); ZipArchiveOutputStream zos = new ZipArchiveOutputStream(fos)) {
-
+                try {
+                        ZipFile zipFile = new ZipFile(zipFilePath);
+                        ZipParameters parameters = new ZipParameters();
+                        parameters.setEncryptFiles(usePassword);
                         if (usePassword) {
-                                zos.setPassword(password.toCharArray());
+                                parameters.setEncryptionMethod(EncryptionMethod.AES);
+                                parameters.setAesKeyStrength(AesKeyStrength.KEY_STRENGTH_256);
                         }
 
                         for (Map.Entry<String, File> entry : fileMap.entrySet()) {
-                                String fileName = entry.getKey();
-                                File file = entry.getValue();
-                                try (FileInputStream fis = new FileInputStream(file)) {
-                                        ZipArchiveEntry zipEntry = new ZipArchiveEntry(fileName);
-                                        zos.putArchiveEntry(zipEntry);
-
-                                        byte[] buffer = new byte[1024];
-                                        int length;
-                                        while ((length = fis.read(buffer)) >= 0) {
-                                                zos.write(buffer, 0, length);
-                                        }
-
-                                        zos.closeArchiveEntry();
-                                }
+                                zipFile.addFile(entry.getValue(), parameters);
                         }
-                } catch (IOException e) {
+                } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
@@ -125,9 +109,18 @@ public class ResourcesManager {
                 this.password = password;
                 this.usePassword = true;
                 this.fileMap.clear(); // Clear the existing file map
-                try (FileOutputStream fos = new FileOutputStream(filepath); ZipArchiveOutputStream zos = new ZipArchiveOutputStream(fos)) {
-                        zos.setPassword(password.toCharArray());
-                } catch (IOException e) {
+                try {
+                        ZipFile zipFile = new ZipFile(filepath);
+                        ZipParameters parameters = new ZipParameters();
+                        parameters.setEncryptFiles(true);
+                        parameters.setEncryptionMethod(EncryptionMethod.AES);
+                        parameters.setAesKeyStrength(AesKeyStrength.KEY_STRENGTH_256);
+
+                        // Add files to the zip
+                        for (Map.Entry<String, File> entry : fileMap.entrySet()) {
+                                zipFile.addFile(entry.getValue(), parameters);
+                        }
+                } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
@@ -136,9 +129,16 @@ public class ResourcesManager {
                 this.zipFilePath = filepath;
                 this.usePassword = false;
                 this.fileMap.clear(); // Clear the existing file map
-                try (FileOutputStream fos = new FileOutputStream(filepath); ZipArchiveOutputStream zos = new ZipArchiveOutputStream(fos)) {
-                        // No password set
-                } catch (IOException e) {
+                try {
+                        ZipFile zipFile = new ZipFile(filepath);
+                        ZipParameters parameters = new ZipParameters();
+                        parameters.setEncryptFiles(false);
+
+                        // Add files to the zip
+                        for (Map.Entry<String, File> entry : fileMap.entrySet()) {
+                                zipFile.addFile(entry.getValue(), parameters);
+                        }
+                } catch (Exception e) {
                         e.printStackTrace();
                 }
         }
