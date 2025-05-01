@@ -1,13 +1,17 @@
 package AppInterface;
 
 import Exceptions.ResourcesFileErrorException;
+import Exceptions.ThisInterfaceDoesNotExistException;
+import Exceptions.ThisZIPFileIsNotADesignException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.ImageBuilder;
 import ResourcesManager.ResourcesManager;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
@@ -19,7 +23,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Slider;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.transform.Scale;
@@ -80,8 +85,12 @@ public class DesignBuilder extends Application {
         @FXML
         private SplitPane core;
 
-        @FXML
-        private Slider sliderScale;
+
+        
+        @FXML 
+        private Menu NewModel;
+        
+       private   ArrayList<String> modelFileNames;
         
         private  int totalUniqueNumber=0;
 
@@ -91,6 +100,7 @@ public class DesignBuilder extends Application {
         public static void main(String[] args) {
 
                 launch(args);
+               
         }
 
         /**
@@ -154,6 +164,88 @@ public class DesignBuilder extends Application {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
+        
+        
+        public String getRootPath(){
+                return Paths.get(".").toAbsolutePath().normalize().toString();
+        }
+
+        /**
+         * Load the model into the menu item
+         */
+    private void initNewDesign() {
+        // Obtenez le chemin du dossier ModelData
+        String modelDataPath = getRootPath() + "/ModelsData";
+
+        // Créez un objet File pour le dossier
+        File modelDataFolder = new File(modelDataPath);
+
+        // Vérifiez si le dossier existe et est un dossier
+        if (modelDataFolder.exists() && modelDataFolder.isDirectory()) {
+            // Filtre pour ne sélectionner que les fichiers .zip
+            FilenameFilter zipFilter = (dir, name) -> name.toLowerCase().endsWith(".zip");
+
+            // Liste pour stocker les noms des fichiers .zip
+           modelFileNames = new ArrayList<>();
+
+            // Lister les fichiers .zip dans le dossier
+            String[] zipFiles = modelDataFolder.list(zipFilter);
+            if (zipFiles != null) {
+                for (String fileName : zipFiles) {
+                    modelFileNames.add(fileName);
+                }
+            }
+
+            // Ajouter des MenuItem au menu NewModel pour chaque fichier .zip
+            for (String zipFileName : modelFileNames) {
+                // Enlever l'extension .zip
+                String nameWithoutExtension = removeZipExtension(zipFileName);
+
+                MenuItem menuItem = new MenuItem(nameWithoutExtension);
+                NewModel.getItems().add(menuItem);
+
+                // Ajouter un gestionnaire d'événements si nécessaire
+                menuItem.setOnAction(event -> {
+                    System.out.println("Selected: " + nameWithoutExtension);
+                    // Ajoutez ici le code à exécuter lorsque l'élément de menu est sélectionné
+                    this.modelName=nameWithoutExtension;
+                     loadNewModel(this.getRootPath()+"/ModelsData/"+nameWithoutExtension+".zip");
+                     
+                });
+            }
+        } else {
+            System.out.println("Le dossier ModelData n'existe pas ou n'est pas un dossier.");
+        }
+    }
+
+    /**
+     * Méthode pour enlever l'extension .zip d'un nom de fichier.
+     *
+     * @param fileName Le nom du fichier avec l'extension .zip.
+     * @return Le nom du fichier sans l'extension .zip.
+     */
+    private String removeZipExtension(String fileName) {
+        if (fileName.toLowerCase().endsWith(".zip")) {
+            return fileName.substring(0, fileName.length() - 4);
+        }
+        return fileName;
+    }
+
+   
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
 // Méthode statique pour combiner deux ArrayList en évitant les doublons
         public static <T> ArrayList<T> combineArrayLists(ArrayList<T> list1, ArrayList<T> list2) {
@@ -183,6 +275,8 @@ public class DesignBuilder extends Application {
                         // Affichez le chemin du fichier sélectionné
                         String filePath = selectedFile.getAbsolutePath();
                         System.out.println("Chemin du fichier ZIP sélectionné : " + filePath);
+                        
+                      
                         loadNewDesign(filePath);
 
                         // Vous pouvez également passer ce chemin à une autre méthode si nécessaire
@@ -211,11 +305,26 @@ public class DesignBuilder extends Application {
                         // Create a DocumentBuilder
                         DocumentBuilder builder = factory.newDocumentBuilder();
                         // Parse the XML file and return a DOM Document object
-                        Document document = builder.parse(this.designResources.get("DesignData.xml"));
+                        Document document;
+                        try {
+                                document = builder.parse(this.designResources.get("DesignData.xml"));
+                        } catch (SAXException | IOException ex) {
+                                  AlertUtil.showErrorAlert("The selected file is not a DESIGN file (no 'DesignData.xml' file inside or corrupted");
+                              throw new   ThisZIPFileIsNotADesignException();
+                        }
                         // Get the root element
                         Element rootElement = document.getDocumentElement();
-
-                        // if(!rootElement.getAttribute("modelName")==this.modelName ){
+                        
+                        String modelNameForThisDesign = rootElement.getAttribute("Model_name");
+                        if(!modelNameForThisDesign.equals(this.modelName) ){
+                                  if( modelFileNames.contains(modelNameForThisDesign+".zip")){
+                                           this.modelName=modelNameForThisDesign;
+                                           loadNewModel(this.getRootPath()+"/ModelsData/"+modelName+".zip");
+                                  }else{
+                                           AlertUtil.showErrorAlert("The MODEL ( "+modelNameForThisDesign+" ) necessary for the selected DESIGN does not exist on the inside the 'ModelsData' folder (in the root of this software)");
+                                          throw new ThisInterfaceDoesNotExistException();
+                                  }
+                        }
                         this.designName = rootElement.getAttribute("Design_name");
                         this.author = rootElement.getAttribute("Author_name");
 
@@ -228,11 +337,12 @@ public class DesignBuilder extends Application {
 
                         refreshEverything();
 
-                } catch (ParserConfigurationException | SAXException | IOException ex) {
+                } catch (ThisInterfaceDoesNotExistException | ThisZIPFileIsNotADesignException | ParserConfigurationException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
 
+        
         /**
          * This method saves the current design to an XML file.
          *
@@ -257,6 +367,9 @@ public class DesignBuilder extends Application {
                         // Set attributes for the root element
                         rootElement.setAttribute("Design_name", this.designName);
                         rootElement.setAttribute("Author_name", this.author);
+                        rootElement.setAttribute("Model_name", this.modelName);
+
+
 
                         // Save interfaces
                         Element interfacesElement = document.createElement("Interfaces");
@@ -314,7 +427,9 @@ public class DesignBuilder extends Application {
 
                         interfacesManager = new InterfacesManager(tabPane);
 
-                        loadNewModel("C:\\BACKUP\\ENSE3\\Foyer\\Programme_Java\\Batcher_Foyer\\test_data\\modelTest.zip");
+                         initNewDesign();
+                        
+                   
 
                         primarystage.setTitle("Batcher FOYER");
                         scene = new Scene(root);
