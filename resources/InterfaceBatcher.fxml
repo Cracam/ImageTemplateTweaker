@@ -57,9 +57,9 @@
             <MenuItem mnemonicParsing="false" onAction="#loadDesign" text="Open…" />
             <Menu disable="true" mnemonicParsing="false" text="Open Recent" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" onAction="#saveDesing" text="Save" />
-            <MenuItem mnemonicParsing="false" onAction="#saveAsDesign" text="Save As…" />
+            <MenuItem fx:id="Mclose" disable="true" mnemonicParsing="false" onAction="#closeConfirm" text="Close" />
+            <MenuItem fx:id="Msave" disable="true" mnemonicParsing="false" onAction="#saveDesing" text="Save" />
+            <MenuItem fx:id="MsaveAs" disable="true" mnemonicParsing="false" onAction="#saveAsDesign" text="Save As…" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem disable="true" mnemonicParsing="false" text="Preferences…" />
             <SeparatorMenuItem mnemonicParsing="false" />

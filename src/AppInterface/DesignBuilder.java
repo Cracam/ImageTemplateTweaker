@@ -1,5 +1,6 @@
 package AppInterface;
 
+import static AppInterface.ConfirmPopup.showConfirmationDialog;
 import Exceptions.ResourcesFileErrorException;
 import Exceptions.ThisInterfaceDoesNotExistException;
 import Exceptions.ThisZIPFileIsNotADesignException;
@@ -90,6 +91,16 @@ public class DesignBuilder extends Application {
         @FXML 
         private Menu NewModel;
         
+          @FXML 
+        private MenuItem Msave;
+          
+          @FXML 
+        private MenuItem MsaveAs;
+          
+          @FXML 
+        private MenuItem Mclose;
+          
+        
        private   ArrayList<String> modelFileNames;
         
         private  int totalUniqueNumber=0;
@@ -159,11 +170,36 @@ public class DesignBuilder extends Application {
                         interfacesManager.createInterfaceFromImageBuilderList(this.imageBuilders);
 
                         refreshEverything();
+                        
+                        Msave.setDisable(false);
+                        MsaveAs.setDisable(false);
+                        Mclose.setDisable(false);
 
                 } catch (ParserConfigurationException | SAXException | IOException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
+        
+        @FXML
+        private void closeConfirm(){
+                 Runnable ifYes = this::close;
+                showConfirmationDialog("Avez vous bien sauvgardé ce que vous souhaitez ?",ifYes,null);
+        }
+        
+        private void close() {
+                //clean interface
+            tabPane.getTabs().clear();
+                interfacesManager = new InterfacesManager(tabPane);
+                preview.clearAllImagesViews();
+                
+                //closing layers
+                imageBuilders.clear();
+                
+                Msave.setDisable(true);
+                MsaveAs.setDisable(true);
+                Mclose.setDisable(true);
+        }
+        
         
         
         public String getRootPath(){
@@ -471,6 +507,7 @@ public class DesignBuilder extends Application {
          */
         @FXML
         private void saveAsDesign() {
+
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Choisisser où sauvgader le modèle de carte");
                 fileChooser.getExtensionFilters().addAll(

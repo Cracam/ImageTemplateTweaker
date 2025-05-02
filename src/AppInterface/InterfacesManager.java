@@ -46,16 +46,14 @@ public class InterfacesManager {
                 }
 
                 for (LayersContainer myInterface : this.interfaces) {
-                   //     System.out.println("target Name : "+targetName+"  ID tested : "+myInterface.ComputeUniqueID());
+                        //     System.out.println("target Name : "+targetName+"  ID tested : "+myInterface.ComputeUniqueID());
                         if (targetName.equals(myInterface.ComputeUniqueID())) {
-                            //    System.out.println("VALID --- target Name : "+targetName+"  ID tested : "+myInterface.ComputeUniqueID());
+                                //    System.out.println("VALID --- target Name : "+targetName+"  ID tested : "+myInterface.ComputeUniqueID());
                                 return myInterface;
                         }
                 }
                 return null; // Retourne null si aucune interface correspondante n'est trouvée
         }
-        
-
 
         public void createInterfaceFromImageBuilderList(ArrayList<ImageBuilder> imageBuilders) {
                 //We want to rassemble all the layer into only one lis aviding the duplicates
@@ -147,19 +145,17 @@ public class InterfacesManager {
                 // Print the names of all "Output" nodes
                 for (int i = 0; i < interfacesNodes.getLength(); i++) {//we begin by one to avoid the description node
                         Element interfaceElt = (Element) interfacesNodes.item(i);
-                       
-                      String name =  interfaceElt.getFirstChild().getNodeName();
-                      String XMLID="";
+
+                        String name = interfaceElt.getFirstChild().getNodeName();
+                        String XMLID = "";
                         try {
-                                XMLID = InterfaceNode.concatenateSubElementNames(DesignInterfaceLinker.getInterface(name),interfaceElt);
-                                 tempInterface = findInterfaceByUniqueID(DesignInterfaceLinker.getIdentifier(LayersContainer.class) +interfaceElt.getAttribute("ID")+XMLID);
+                                XMLID = InterfaceNode.concatenateSubElementNames(DesignInterfaceLinker.getInterface(name), interfaceElt);
+                                tempInterface = findInterfaceByUniqueID(DesignInterfaceLinker.getIdentifier(LayersContainer.class) + interfaceElt.getAttribute("ID") + XMLID);
                         } catch (NoSuchMethodException ex) {
                                 Logger.getLogger(InterfacesManager.class.getName()).log(Level.SEVERE, null, ex);
-                                tempInterface=null;
+                                tempInterface = null;
                         }
-                       
- 
-                        
+
                         if (tempInterface != null) {
                                 try {
                                         tempInterface.loadDesign(interfaceElt, -1);
@@ -167,28 +163,35 @@ public class InterfacesManager {
                                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                         tempInterface = null;
                                 }
-                                
-                                //     System.out.println("InterfacesNodes: " + interfaceElt.getAttribute("InterfaceName"));
 
+                                //     System.out.println("InterfacesNodes: " + interfaceElt.getAttribute("InterfaceName"));
                         } else {
-                                System.out.println("Interface Loading failed " + "   ____  "+DesignInterfaceLinker.getIdentifier(LayersContainer.class) +XMLID);
+                                System.out.println("Interface Loading failed " + "   ____  " + DesignInterfaceLinker.getIdentifier(LayersContainer.class) + XMLID);
                         }
                 }
         }
-        
-        
-    
-        
-        
 
+        public void closeAllInterfaces() {
+                for (LayersContainer myInterface : this.interfaces) {
+
+                        myInterface.destroyItSelf();
+                }
+        }
 
         public Element saveInterfaces(Element eltIn, Document doc) {
                 XmlManager manager = new XmlManager(doc);
                 for (LayersContainer interfaceRoot : interfaces) {
                         interfaceRoot.saveDesign(manager);
-                        eltIn.appendChild(manager.createDesignParamElement("Interfaces", "ID", interfaceRoot.getName()+interfaceRoot.getTabName()));//mettre id A NOM + TAB
+                        eltIn.appendChild(manager.createDesignParamElement("Interfaces", "ID", interfaceRoot.getName() + interfaceRoot.getTabName()));//mettre id A NOM + TAB
                 }
                 return eltIn;
 
         }
+
+        public ArrayList<LayersContainer> getInterfaces() {
+                return interfaces;
+        }
+        
+        
+        
 }
