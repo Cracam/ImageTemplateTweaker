@@ -54,7 +54,7 @@
         <Menu mnemonicParsing="false" text="File">
           <items>
                   <Menu fx:id="NewModel" mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" onAction="#loadDesign" text="Open…" />
+            <MenuItem mnemonicParsing="false" onAction="#loadDesignConfirm" text="Open…" />
             <Menu disable="true" mnemonicParsing="false" text="Open Recent" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem fx:id="Mclose" disable="true" mnemonicParsing="false" onAction="#closeConfirm" text="Close" />

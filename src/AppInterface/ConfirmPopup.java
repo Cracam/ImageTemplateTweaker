@@ -40,9 +40,14 @@ public class ConfirmPopup {
                 stage.setAlwaysOnTop(true); // Pour s'assurer que la boîte de dialogue est toujours au premier plan
                 alert.showAndWait().ifPresent(response -> {
                         if (response == buttonTypeYes) {
-                                onYes.run();
+                                if (onYes != null) {
+                                        onYes.run();
+                                }
                         } else {
-                                onNo.run();
+                                if (onNo != null) {
+                                        onNo.run();
+                                }
+
                         }
                         stage.close(); // Fermer la boîte de dialogue après la réponse
                 });

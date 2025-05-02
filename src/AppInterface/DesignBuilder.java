@@ -113,7 +113,10 @@ public class DesignBuilder extends Application {
                 launch(args);
                
         }
-
+        
+        
+        
+        
         /**
          * This program will be used to create a new model it will set a
          * resource Manager element, (it will not save the design until the
@@ -125,7 +128,8 @@ public class DesignBuilder extends Application {
          */
         private void loadNewModel(String filepath) {
                 try {
-                        this.imageBuilders.clear();
+
+                        this.close();
                         this.modelResources = new ResourcesManager(filepath);
                         //gérer xml opening
                         // Create a DocumentBuilderFactory
@@ -195,6 +199,8 @@ public class DesignBuilder extends Application {
                 //closing layers
                 imageBuilders.clear();
                 
+                this.modelName=null;
+                
                 Msave.setDisable(true);
                 MsaveAs.setDisable(true);
                 Mclose.setDisable(true);
@@ -244,13 +250,30 @@ public class DesignBuilder extends Application {
                 menuItem.setOnAction(event -> {
                     System.out.println("Selected: " + nameWithoutExtension);
                     // Ajoutez ici le code à exécuter lorsque l'élément de menu est sélectionné
-                    this.modelName=nameWithoutExtension;
-                     loadNewModel(this.getRootPath()+"/ModelsData/"+nameWithoutExtension+".zip");
+                    
+                     initNewDesignConfirm(nameWithoutExtension);
                      
                 });
             }
         } else {
             System.out.println("Le dossier ModelData n'existe pas ou n'est pas un dossier.");
+        }
+    }
+    
+    private void initNewDesignConfirm(String nameWithoutExtension) {
+        if (this.modelName==null) {
+            loadNewModel(this.getRootPath()+"/ModelsData/"+nameWithoutExtension+".zip");
+            this.modelName=nameWithoutExtension;
+        } else {
+                DesignBuilder DB=this;
+            Runnable ifYes = new Runnable() {
+                @Override
+                public void run() {
+                        DB.modelName=nameWithoutExtension;
+                         DB.loadNewModel(DB.getRootPath()+"/ModelsData/"+nameWithoutExtension+".zip");
+                }
+            };
+            showConfirmationDialog("Avez-vous bien sauvegardé ce que vous souhaitez ?", ifYes, null);
         }
     }
 
@@ -298,8 +321,21 @@ public class DesignBuilder extends Application {
                 }
         }
 
+        
         @FXML
-        private void loadDesign() throws IOException, TransformerException {
+        private void  loadDesignConfirm(){
+                if(this.modelName==null){
+                        loadDesign();
+                }else{
+                          Runnable ifYes = this::loadDesign;
+                           showConfirmationDialog("Avez vous bien sauvgardé ce que vous souhaitez ?",ifYes,null);
+                }
+               
+        }
+        
+        
+        
+        private void loadDesign() {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Choisir un modèle de carte à charger");
                 fileChooser.getExtensionFilters().addAll(
