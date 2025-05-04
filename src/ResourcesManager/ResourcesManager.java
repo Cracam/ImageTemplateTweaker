@@ -16,6 +16,7 @@ public class ResourcesManager {
         private String zipFilePath;
         private String password;
         private boolean usePassword;
+        private ZipFile zipFile;
 
         public ResourcesManager(String zipFilePath, String password) {
                 this.zipFilePath = zipFilePath;
@@ -28,6 +29,15 @@ public class ResourcesManager {
         public ResourcesManager(String zipFilePath) {
                 this.zipFilePath = zipFilePath;
                 this.usePassword = false;
+                this.fileMap = new HashMap<>();
+                loadZipFile();
+        }
+
+        public ResourcesManager(ZipFile zipFile) {
+                this.zipFile = zipFile;
+                this.zipFilePath = zipFile.getFile().getPath();
+                this.usePassword = false; //because if it use passworld it will be already used
+
                 this.fileMap = new HashMap<>();
                 loadZipFile();
         }
@@ -49,7 +59,9 @@ public class ResourcesManager {
 
         private void loadZipFile() {
                 try {
-                        ZipFile zipFile = new ZipFile(zipFilePath);
+                        if (zipFile == null) {
+                                zipFile = new ZipFile(zipFilePath);
+                        }
                         if (usePassword) {
                                 zipFile.setPassword(password.toCharArray());
                         }
@@ -65,7 +77,9 @@ public class ResourcesManager {
 
         public void save() {
                 try {
-                        ZipFile zipFile = new ZipFile(zipFilePath);
+                        if (zipFile == null) {
+                                zipFile = new ZipFile(zipFilePath);
+                        }
                         ZipParameters parameters = new ZipParameters();
                         parameters.setEncryptFiles(usePassword);
                         if (usePassword) {
@@ -110,7 +124,7 @@ public class ResourcesManager {
                 this.usePassword = true;
                 this.fileMap.clear(); // Clear the existing file map
                 try {
-                        ZipFile zipFile = new ZipFile(filepath);
+                        zipFile = new ZipFile(filepath);
                         ZipParameters parameters = new ZipParameters();
                         parameters.setEncryptFiles(true);
                         parameters.setEncryptionMethod(EncryptionMethod.AES);
@@ -130,7 +144,7 @@ public class ResourcesManager {
                 this.usePassword = false;
                 this.fileMap.clear(); // Clear the existing file map
                 try {
-                        ZipFile zipFile = new ZipFile(filepath);
+                        zipFile = new ZipFile(filepath);
                         ZipParameters parameters = new ZipParameters();
                         parameters.setEncryptFiles(false);
 

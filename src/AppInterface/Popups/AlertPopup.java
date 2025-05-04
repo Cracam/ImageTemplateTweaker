@@ -1,4 +1,4 @@
-package AppInterface;
+package AppInterface.Popups;
 
 
 
@@ -9,7 +9,7 @@ package AppInterface;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
-public class AlertUtil {
+public class AlertPopup {
 
         /**
          * Affiche une alerte d'erreur avec un message spécifié.

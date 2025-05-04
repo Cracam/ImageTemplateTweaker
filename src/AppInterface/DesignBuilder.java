@@ -1,16 +1,20 @@
 package AppInterface;
 
-import static AppInterface.ConfirmPopup.showConfirmationDialog;
+import AppInterface.Popups.AlertPopup;
+import static AppInterface.Popups.ConfirmPopup.showConfirmationDialog;
+import static AppInterface.Popups.PasswordPopup.showPasswordDialog;
 import Exceptions.ResourcesFileErrorException;
 import Exceptions.ThisInterfaceDoesNotExistException;
 import Exceptions.ThisZIPFileIsNotADesignException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.ImageBuilder;
+import ResourcesManager.PasswordManager;
 import ResourcesManager.ResourcesManager;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -19,6 +23,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipException;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,6 +45,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.model.FileHeader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -58,6 +65,7 @@ public class DesignBuilder extends Application {
 
         private ResourcesManager modelResources;
         private ResourcesManager designResources;
+        private PasswordManager passwordManager;
 
         //Information on the model
         private String modelName; // the model Name
@@ -73,7 +81,7 @@ public class DesignBuilder extends Application {
 
         private Scene scene;
 
-        private int DPI = 300;
+        private int DPI = 600;
 
         private Random random;
 
@@ -86,24 +94,21 @@ public class DesignBuilder extends Application {
         @FXML
         private SplitPane core;
 
-
-        
-        @FXML 
+        @FXML
         private Menu NewModel;
-        
-          @FXML 
+
+        @FXML
         private MenuItem Msave;
-          
-          @FXML 
+
+        @FXML
         private MenuItem MsaveAs;
-          
-          @FXML 
+
+        @FXML
         private MenuItem Mclose;
-          
-        
-       private   ArrayList<String> modelFileNames;
-        
-        private  int totalUniqueNumber=0;
+
+        private ArrayList<String> modelFileNames;
+
+        private int totalUniqueNumber = 0;
 
         /**
          * @param args the command line arguments
@@ -111,36 +116,74 @@ public class DesignBuilder extends Application {
         public static void main(String[] args) {
 
                 launch(args);
-               
+
+        }
+        
+        
+        
+        private void  loadNewModel(String filePath) {//récusivité ave MDP en entré
+                
+                 // Open the ZIP file
+                        boolean passwordGood=false;
+                        ZipFile zipFile = new ZipFile(filepath);
+                        if (zipFile.isEncrypted()) {
+                                 String password ;
+                                if(passwordManager.getPasswordByFolderName(modelName)!=null){
+                                        password = passwordManager.getPasswordByFolderName(modelName); // Implement this method to get the password from the user
+                                       
+                                    
+                                                if(isPasswordCorrect(zipFile,password)){
+                                                        zipFile.setPassword(password.toCharArray());
+                                                        loadNewModel(zipFile);
+                                                }
+                                    
+                                }
+                                
+                                
+                                
+                                if(!passwordGood){
+                                        while(!isPasswordCorrect(zipFile,password)){
+                                                showPasswordDialog("Veuillez entrer le mot de passe du modele : "+modelName,null,null);
+                                        }
+                                         showPasswordDialog("Veuillez entrer le mot de passe du modele : "+modelName,null,null);
+                                        
+                                        String password = getPasswordFromUser(); // Implement this method to get the password from the user
+                                        zipFile.setPassword(password.toCharArray());
+                                }
+                                
+                                
+                                
+                                 zipFile.setPassword(password.toCharArray());
+                        }
         }
         
         
         
         
-        /**
-         * This program will be used to create a new model it will set a
-         * resource Manager element, (it will not save the design until the
-         * first save)
-         *
-         * It will pen an xml file in order to
-         *
-         * @param filepath
-         */
-        private void loadNewModel(String filepath) {
-                try {
+        
+        
 
+        private void loadNewModel(ZipFile unlockedZipFile) {
+                try {
                         this.close();
-                        this.modelResources = new ResourcesManager(filepath);
-                        //gérer xml opening
-                        // Create a DocumentBuilderFactory
+                        this.modelResources = new ResourcesManager(unlockedZipFile);
+
+                       
+
+                        // Extract the Model_Param.xml file
+                        FileHeader fileHeader = unlockedZipFile.getFileHeader("Model_Param.xml");
+                        if (fileHeader == null) {
+                                throw new IOException("Model_Param.xml not found in the ZIP file.");
+                        }
+                        InputStream inputStream = unlockedZipFile.getInputStream(fileHeader);
+
+                        // Parse the XML file
                         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                        // Create a DocumentBuilder
                         DocumentBuilder builder = factory.newDocumentBuilder();
-                        // Parse the XML file and return a DOM Document object
-                        Document document = builder.parse(this.modelResources.get("Model_Param.xml"));
+                        Document document = builder.parse(inputStream);
+
                         // Get the root element
                         Element rootElement = document.getDocumentElement();
-
                         this.modelName = rootElement.getAttribute("name");
 
                         Element informationsNode = (Element) rootElement.getElementsByTagName("Informations").item(0);
@@ -166,7 +209,6 @@ public class DesignBuilder extends Application {
                                 } catch (XMLErrorInModelException ex) {
                                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                                //                System.out.println(this.toString());
                         }
 
                         designPath = null; //reset the design path to null to force a new document
@@ -174,137 +216,167 @@ public class DesignBuilder extends Application {
                         interfacesManager.createInterfaceFromImageBuilderList(this.imageBuilders);
 
                         refreshEverything();
-                        
+
                         Msave.setDisable(false);
                         MsaveAs.setDisable(false);
                         Mclose.setDisable(false);
 
-                } catch (ParserConfigurationException | SAXException | IOException ex) {
+                } catch (ParserConfigurationException | SAXException | IOException  ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
         
-        @FXML
-        private void closeConfirm(){
-                 Runnable ifYes = this::close;
-                showConfirmationDialog("Avez vous bien sauvgardé ce que vous souhaitez ?",ifYes,null);
-        }
         
+        
+            /**
+     * Vérifie si le mot de passe fourni est correct pour le fichier ZIP.
+     *
+     * @param zipFile L'objet ZipFile à vérifier.
+     * @param password Le mot de passe à tester.
+     * @return true si le mot de passe est correct, false sinon.
+         */
+        public static boolean isPasswordCorrect(ZipFile zipFile, String password) {
+                try {
+                        // Définir le mot de passe pour le fichier ZIP
+                        zipFile.setPassword(password.toCharArray());
+
+                        // Essayer de lire l'en-tête du premier fichier dans le ZIP
+                        // Si le mot de passe est incorrect, une exception sera levée
+                        FileHeader fileHeader = zipFile.getFileHeaders().get(0);
+                        zipFile.getInputStream(fileHeader);
+
+                        // Si aucune exception n'est levée, le mot de passe est correct
+                        return true;
+                } catch (ZipException e) {
+                        // Mot de passe incorrect
+                        return false;
+                } catch (net.lingala.zip4j.exception.ZipException ex) {
+                        System.out.println("Different CATCH : ZipException __ for password test");
+                        return false;
+                } catch (IOException ex) {
+                        System.out.println("Different CATCH : IOException __ for password test");
+                        return false;
+                }
+
+        }
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+        @FXML
+        private void closeConfirm() {
+                Runnable ifYes = this::close;
+                showConfirmationDialog("Avez vous bien sauvgardé ce que vous souhaitez ?", ifYes, null);
+        }
+
         private void close() {
                 //clean interface
-            tabPane.getTabs().clear();
+                tabPane.getTabs().clear();
                 interfacesManager = new InterfacesManager(tabPane);
                 preview.clearAllImagesViews();
-                
+
                 //closing layers
                 imageBuilders.clear();
-                
-                this.modelName=null;
-                
+
+                this.modelName = null;
+
                 Msave.setDisable(true);
                 MsaveAs.setDisable(true);
                 Mclose.setDisable(true);
         }
-        
-        
-        
-        public String getRootPath(){
+
+        public String getRootPath() {
                 return Paths.get(".").toAbsolutePath().normalize().toString();
         }
 
         /**
          * Load the model into the menu item
          */
-    private void initNewDesign() {
-        // Obtenez le chemin du dossier ModelData
-        String modelDataPath = getRootPath() + "/ModelsData";
+        private void initNewDesign() {
+                // Obtenez le chemin du dossier ModelData
+                String modelDataPath = getRootPath() + "/ModelsData";
 
-        // Créez un objet File pour le dossier
-        File modelDataFolder = new File(modelDataPath);
+                // Créez un objet File pour le dossier
+                File modelDataFolder = new File(modelDataPath);
 
-        // Vérifiez si le dossier existe et est un dossier
-        if (modelDataFolder.exists() && modelDataFolder.isDirectory()) {
-            // Filtre pour ne sélectionner que les fichiers .zip
-            FilenameFilter zipFilter = (dir, name) -> name.toLowerCase().endsWith(".zip");
+                // Vérifiez si le dossier existe et est un dossier
+                if (modelDataFolder.exists() && modelDataFolder.isDirectory()) {
+                        // Filtre pour ne sélectionner que les fichiers .zip
+                        FilenameFilter zipFilter = (dir, name) -> name.toLowerCase().endsWith(".zip");
 
-            // Liste pour stocker les noms des fichiers .zip
-           modelFileNames = new ArrayList<>();
+                        // Liste pour stocker les noms des fichiers .zip
+                        modelFileNames = new ArrayList<>();
 
-            // Lister les fichiers .zip dans le dossier
-            String[] zipFiles = modelDataFolder.list(zipFilter);
-            if (zipFiles != null) {
-                for (String fileName : zipFiles) {
-                    modelFileNames.add(fileName);
+                        // Lister les fichiers .zip dans le dossier
+                        String[] zipFiles = modelDataFolder.list(zipFilter);
+                        if (zipFiles != null) {
+                                for (String fileName : zipFiles) {
+                                        modelFileNames.add(fileName);
+                                }
+                        }
+
+                        // Ajouter des MenuItem au menu NewModel pour chaque fichier .zip
+                        for (String zipFileName : modelFileNames) {
+                                // Enlever l'extension .zip
+                                String nameWithoutExtension = removeZipExtension(zipFileName);
+
+                                MenuItem menuItem = new MenuItem(nameWithoutExtension);
+                                NewModel.getItems().add(menuItem);
+
+                                // Ajouter un gestionnaire d'événements si nécessaire
+                                menuItem.setOnAction(event -> {
+                                        System.out.println("Selected: " + nameWithoutExtension);
+                                        // Ajoutez ici le code à exécuter lorsque l'élément de menu est sélectionné
+
+                                        initNewDesignConfirm(nameWithoutExtension);
+
+                                });
+                        }
+                } else {
+                        System.out.println("Le dossier ModelData n'existe pas ou n'est pas un dossier.");
                 }
-            }
-
-            // Ajouter des MenuItem au menu NewModel pour chaque fichier .zip
-            for (String zipFileName : modelFileNames) {
-                // Enlever l'extension .zip
-                String nameWithoutExtension = removeZipExtension(zipFileName);
-
-                MenuItem menuItem = new MenuItem(nameWithoutExtension);
-                NewModel.getItems().add(menuItem);
-
-                // Ajouter un gestionnaire d'événements si nécessaire
-                menuItem.setOnAction(event -> {
-                    System.out.println("Selected: " + nameWithoutExtension);
-                    // Ajoutez ici le code à exécuter lorsque l'élément de menu est sélectionné
-                    
-                     initNewDesignConfirm(nameWithoutExtension);
-                     
-                });
-            }
-        } else {
-            System.out.println("Le dossier ModelData n'existe pas ou n'est pas un dossier.");
         }
-    }
-    
-    private void initNewDesignConfirm(String nameWithoutExtension) {
-        if (this.modelName==null) {
-            loadNewModel(this.getRootPath()+"/ModelsData/"+nameWithoutExtension+".zip");
-            this.modelName=nameWithoutExtension;
-        } else {
-                DesignBuilder DB=this;
-            Runnable ifYes = new Runnable() {
-                @Override
-                public void run() {
-                        DB.modelName=nameWithoutExtension;
-                         DB.loadNewModel(DB.getRootPath()+"/ModelsData/"+nameWithoutExtension+".zip");
+
+        private void initNewDesignConfirm(String nameWithoutExtension) {
+                if (this.modelName == null) {
+                        loadNewModel(this.getRootPath() + "/ModelsData/" + nameWithoutExtension + ".zip");
+                        this.modelName = nameWithoutExtension;
+                } else {
+                        DesignBuilder DB = this;
+                        Runnable ifYes = new Runnable() {
+                                @Override
+                                public void run() {
+                                        DB.modelName = nameWithoutExtension;
+                                        DB.loadNewModel(DB.getRootPath() + "/ModelsData/" + nameWithoutExtension + ".zip");
+                                }
+                        };
+                        showConfirmationDialog("Avez-vous bien sauvegardé ce que vous souhaitez ?", ifYes, null);
                 }
-            };
-            showConfirmationDialog("Avez-vous bien sauvegardé ce que vous souhaitez ?", ifYes, null);
         }
-    }
 
-    /**
-     * Méthode pour enlever l'extension .zip d'un nom de fichier.
-     *
-     * @param fileName Le nom du fichier avec l'extension .zip.
-     * @return Le nom du fichier sans l'extension .zip.
-     */
-    private String removeZipExtension(String fileName) {
-        if (fileName.toLowerCase().endsWith(".zip")) {
-            return fileName.substring(0, fileName.length() - 4);
+        /**
+         * Méthode pour enlever l'extension .zip d'un nom de fichier.
+         *
+         * @param fileName Le nom du fichier avec l'extension .zip.
+         * @return Le nom du fichier sans l'extension .zip.
+         */
+        private String removeZipExtension(String fileName) {
+                if (fileName.toLowerCase().endsWith(".zip")) {
+                        return fileName.substring(0, fileName.length() - 4);
+                }
+                return fileName;
         }
-        return fileName;
-    }
-
-   
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
 
 // Méthode statique pour combiner deux ArrayList en évitant les doublons
         public static <T> ArrayList<T> combineArrayLists(ArrayList<T> list1, ArrayList<T> list2) {
@@ -321,20 +393,17 @@ public class DesignBuilder extends Application {
                 }
         }
 
-        
         @FXML
-        private void  loadDesignConfirm(){
-                if(this.modelName==null){
+        private void loadDesignConfirm() {
+                if (this.modelName == null) {
                         loadDesign();
-                }else{
-                          Runnable ifYes = this::loadDesign;
-                           showConfirmationDialog("Avez vous bien sauvgardé ce que vous souhaitez ?",ifYes,null);
+                } else {
+                        Runnable ifYes = this::loadDesign;
+                        showConfirmationDialog("Avez vous bien sauvgardé ce que vous souhaitez ?", ifYes, null);
                 }
-               
+
         }
-        
-        
-        
+
         private void loadDesign() {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Choisir un modèle de carte à charger");
@@ -347,8 +416,7 @@ public class DesignBuilder extends Application {
                         // Affichez le chemin du fichier sélectionné
                         String filePath = selectedFile.getAbsolutePath();
                         System.out.println("Chemin du fichier ZIP sélectionné : " + filePath);
-                        
-                      
+
                         loadNewDesign(filePath);
 
                         // Vous pouvez également passer ce chemin à une autre méthode si nécessaire
@@ -369,7 +437,7 @@ public class DesignBuilder extends Application {
          */
         private void loadNewDesign(String filepath) {
                 try {
-                        designPath=filepath;
+                        designPath = filepath;
                         this.designResources = new ResourcesManager(filepath);
                         //gérer xml opening
                         // Create a DocumentBuilderFactory
@@ -381,21 +449,21 @@ public class DesignBuilder extends Application {
                         try {
                                 document = builder.parse(this.designResources.get("DesignData.xml"));
                         } catch (SAXException | IOException ex) {
-                                  AlertUtil.showErrorAlert("The selected file is not a DESIGN file (no 'DesignData.xml' file inside or corrupted");
-                              throw new   ThisZIPFileIsNotADesignException();
+                                AlertPopup.showErrorAlert("The selected file is not a DESIGN file (no 'DesignData.xml' file inside or corrupted");
+                                throw new ThisZIPFileIsNotADesignException();
                         }
                         // Get the root element
                         Element rootElement = document.getDocumentElement();
-                        
+
                         String modelNameForThisDesign = rootElement.getAttribute("Model_name");
-                        if(!modelNameForThisDesign.equals(this.modelName) ){
-                                  if( modelFileNames.contains(modelNameForThisDesign+".zip")){
-                                           this.modelName=modelNameForThisDesign;
-                                           loadNewModel(this.getRootPath()+"/ModelsData/"+modelName+".zip");
-                                  }else{
-                                           AlertUtil.showErrorAlert("The MODEL ( "+modelNameForThisDesign+" ) necessary for the selected DESIGN does not exist on the inside the 'ModelsData' folder (in the root of this software)");
-                                          throw new ThisInterfaceDoesNotExistException();
-                                  }
+                        if (!modelNameForThisDesign.equals(this.modelName)) {
+                                if (modelFileNames.contains(modelNameForThisDesign + ".zip")) {
+                                        this.modelName = modelNameForThisDesign;
+                                        loadNewModel(this.getRootPath() + "/ModelsData/" + modelName + ".zip");
+                                } else {
+                                        AlertPopup.showErrorAlert("The MODEL ( " + modelNameForThisDesign + " ) necessary for the selected DESIGN does not exist on the inside the 'ModelsData' folder (in the root of this software)");
+                                        throw new ThisInterfaceDoesNotExistException();
+                                }
                         }
                         this.designName = rootElement.getAttribute("Design_name");
                         this.author = rootElement.getAttribute("Author_name");
@@ -414,7 +482,6 @@ public class DesignBuilder extends Application {
                 }
         }
 
-        
         /**
          * This method saves the current design to an XML file.
          *
@@ -441,12 +508,10 @@ public class DesignBuilder extends Application {
                         rootElement.setAttribute("Author_name", this.author);
                         rootElement.setAttribute("Model_name", this.modelName);
 
-
-
                         // Save interfaces
                         Element interfacesElement = document.createElement("Interfaces");
 
-                        interfacesElement= interfacesManager.saveInterfaces(interfacesElement,document);
+                        interfacesElement = interfacesManager.saveInterfaces(interfacesElement, document);
                         rootElement.appendChild(interfacesElement);
                         // Write the content into XML file
                         TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -499,9 +564,7 @@ public class DesignBuilder extends Application {
 
                         interfacesManager = new InterfacesManager(tabPane);
 
-                         initNewDesign();
-                        
-                   
+                        initNewDesign();
 
                         primarystage.setTitle("Batcher FOYER");
                         scene = new Scene(root);
@@ -632,18 +695,17 @@ public class DesignBuilder extends Application {
                 preview.setImageView(imgBuilder.DRYComputeUniqueID(), staticFunctions.StaticImageEditing.createImageView(imgBuilder.getImageOut()));
                 //System.out.println("#######"+imgBuilder.getId());
         }
-        
+
         /**
-         * this will return a unique number (use to save image correctly in case of random iamge allocator)
-         * @return 
+         * this will return a unique number (use to save image correctly in case
+         * of random iamge allocator)
+         *
+         * @return
          */
-        public int getUniqueNumber(){
+        public int getUniqueNumber() {
                 this.totalUniqueNumber++;
                 return totalUniqueNumber;
         }
-        
-        
-        
 
         public Random getRandom() {
                 return random;
