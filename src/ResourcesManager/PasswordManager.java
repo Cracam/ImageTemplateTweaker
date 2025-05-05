@@ -1,5 +1,6 @@
 package ResourcesManager;
 
+import static ResourcesManager.PasswordEntry.RandomKeyGenerator.generateRandomKey;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
@@ -9,14 +10,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PasswordManager {
 
         private static final String MASTER_KEY = "votreClregegefsse123"; // Master key of 16 characters for AES-128
         private static final String ALGORITHM = "AES";
-        private final SecretKeySpec secretKey;
-        private final ArrayList<PasswordEntry> passwordEntries;
-        private final String filePath;
+        private  SecretKeySpec secretKey;
+        private  ArrayList<PasswordEntry> passwordEntries;
+        private  String filePath;
 
         /**
          * Constructor that reads the encrypted main key from a text file and
@@ -25,30 +29,40 @@ public class PasswordManager {
          *
          * @param encryptedKeyFilePath The path to the file containing the
          * encrypted main key and password entries.
-         * @throws Exception In case of an error reading or decrypting the file.
          */
-        public PasswordManager(String encryptedKeyFilePath) throws Exception {
-                this.filePath = encryptedKeyFilePath;
-                this.passwordEntries = new ArrayList<>();
+        public PasswordManager(String encryptedKeyFilePath)  {
+                try {
+                        this.filePath = encryptedKeyFilePath;
+                        this.passwordEntries = new ArrayList<>();
+                          String mainKey;
+                        try{
+                                 String encryptedMainKey = readEncryptedKeyFromFile(encryptedKeyFilePath);
+                                  mainKey = decryptKey(encryptedMainKey, padKey(MASTER_KEY));
 
-                String encryptedMainKey = readEncryptedKeyFromFile(encryptedKeyFilePath);
-                String mainKey = decryptKey(encryptedMainKey, padKey(MASTER_KEY));
-                System.out.println("Decrypted key : " + mainKey);
-                mainKey = padKey(mainKey); // Ensure the key is padded to the correct length
-                this.secretKey = new SecretKeySpec(mainKey.getBytes(StandardCharsets.UTF_8), ALGORITHM);
-
-                // Read and store the encrypted password entries from the file
-                try (BufferedReader reader = new BufferedReader(new FileReader(encryptedKeyFilePath))) {
-                        reader.readLine(); // Skip the first line (encrypted main key)
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                                String[] parts = line.split("::");
-                                if (parts.length == 2) {
-                                        String encryptedFolderName = parts[0];
-                                        String encryptedPassword = parts[1];
-                                        passwordEntries.add(new PasswordEntry(encryptedFolderName, encryptedPassword));
+                        }catch(IOException ex){
+                                mainKey=generateRandomKey(32);
+                        }
+                        
+                        System.out.println("Decrypted key : " + mainKey);
+                        mainKey = padKey(mainKey); // Ensure the key is padded to the correct length
+                        this.secretKey = new SecretKeySpec(mainKey.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+                        // Read and store the encrypted password entries from the file
+                        try (BufferedReader reader = new BufferedReader(new FileReader(encryptedKeyFilePath))) {
+                                reader.readLine(); // Skip the first line (encrypted main key)
+                                String line;
+                                while ((line = reader.readLine()) != null) {
+                                        String[] parts = line.split("::");
+                                        if (parts.length == 2) {
+                                                String encryptedFolderName = parts[0];
+                                                String encryptedPassword = parts[1];
+                                                passwordEntries.add(new PasswordEntry(encryptedFolderName, encryptedPassword));
+                                        }
                                 }
                         }
+                } catch (Exception ex) {
+                  //      secretKey = null;
+                       // passwordEntries = null;
+              //          Logger.getLogger(PasswordManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
 
@@ -312,4 +326,20 @@ class PasswordEntry {
         public String getPassword() {
                 return encryptedPassword;
         }
+        
+
+
+        public class RandomKeyGenerator {
+
+                
+
+                public static String generateRandomKey(int length) {
+                        SecureRandom secureRandom = new SecureRandom();
+                        byte[] randomBytes = new byte[length];
+                        secureRandom.nextBytes(randomBytes);
+                        return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+                }
+        }
+
+
 }

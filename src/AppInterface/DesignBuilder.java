@@ -1,5 +1,6 @@
 package AppInterface;
 
+import static AppInterface.DesignBuilder.PasswordChecker.isPasswordCorrect;
 import AppInterface.Popups.AlertPopup;
 import static AppInterface.Popups.ConfirmPopup.showConfirmationDialog;
 import static AppInterface.Popups.PasswordPopup.showPasswordDialog;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipException;
@@ -65,7 +67,7 @@ public class DesignBuilder extends Application {
 
         private ResourcesManager modelResources;
         private ResourcesManager designResources;
-        private PasswordManager passwordManager;
+        private final PasswordManager passwordManager=new PasswordManager(getRootPath() + "/ModelsData");
 
         //Information on the model
         private String modelName; // the model Name
@@ -121,43 +123,54 @@ public class DesignBuilder extends Application {
         
         
         
-        private void  loadNewModel(String filePath) {//récusivité ave MDP en entré
-                
-                 // Open the ZIP file
-                        boolean passwordGood=false;
-                        ZipFile zipFile = new ZipFile(filepath);
+        private void loadNewModel(String filePath) {//récusivité ave MDP en entré
+                // Open the ZIP file
+                ZipFile zipFile = new ZipFile(filePath);
+                try {
                         if (zipFile.isEncrypted()) {
-                                 String password ;
-                                if(passwordManager.getPasswordByFolderName(modelName)!=null){
+                                String password = "";
+
+                                if (passwordManager.getPasswordByFolderName(modelName) != null) {
                                         password = passwordManager.getPasswordByFolderName(modelName); // Implement this method to get the password from the user
-                                       
-                                    
-                                                if(isPasswordCorrect(zipFile,password)){
-                                                        zipFile.setPassword(password.toCharArray());
-                                                        loadNewModel(zipFile);
-                                                }
-                                    
-                                }
-                                
-                                
-                                
-                                if(!passwordGood){
-                                        while(!isPasswordCorrect(zipFile,password)){
-                                                showPasswordDialog("Veuillez entrer le mot de passe du modele : "+modelName,null,null);
+
+                                        if (isPasswordCorrect(zipFile, password)) {
+                                                zipFile.setPassword(password.toCharArray());
+                                                loadNewModel(zipFile);
+                                                return;
                                         }
-                                         showPasswordDialog("Veuillez entrer le mot de passe du modele : "+modelName,null,null);
-                                        
-                                        String password = getPasswordFromUser(); // Implement this method to get the password from the user
-                                        zipFile.setPassword(password.toCharArray());
                                 }
-                                
-                                
-                                
-                                 zipFile.setPassword(password.toCharArray());
+
+                                //in case were not able to open the file we ask the use for a passqord
+                                loadNewModelAskingPassword(zipFile, password);
+
+                        } else {
+                                loadNewModel(zipFile);
                         }
+                } catch (net.lingala.zip4j.exception.ZipException ex) {
+                        System.out.println("Error lors de l'ouverture du fichier .ZIP");
+                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                }
         }
-        
-        
+
+        private void loadNewModelAskingPassword(ZipFile zipFile, String password) {
+                // Use a lambda expression to capture the parameters
+                Runnable ifYes = () -> YESloadNewModelAskingPassword(zipFile, password);
+                System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG          "+!isPasswordCorrect(zipFile, password)+"__"+password);
+                
+                if (!isPasswordCorrect(zipFile, password)) {
+                        showPasswordDialog("Veuillez entrer le mot de passe du modele : " + modelName, (Consumer<String>) ifYes, null);
+                } else {
+                        zipFile.setPassword(password.toCharArray());
+                        loadNewModel(zipFile);
+                }
+        }
+
+private void YESloadNewModelAskingPassword(ZipFile zipFile, String password) {
+    loadNewModelAskingPassword(zipFile, password);
+}
+
         
         
         
@@ -228,36 +241,34 @@ public class DesignBuilder extends Application {
         
         
         
-            /**
-     * Vérifie si le mot de passe fourni est correct pour le fichier ZIP.
-     *
-     * @param zipFile L'objet ZipFile à vérifier.
-     * @param password Le mot de passe à tester.
-     * @return true si le mot de passe est correct, false sinon.
+        /**
+         * Vérifie si le mot de passe fourni est correct pour le fichier ZIP.
+         *
+         * @param zipFile L'objet ZipFile à vérifier.
+         * @param password Le mot de passe à tester.
+         * @return true si le mot de passe est correct, false sinon.
          */
-        public static boolean isPasswordCorrect(ZipFile zipFile, String password) {
-                try {
-                        // Définir le mot de passe pour le fichier ZIP
-                        zipFile.setPassword(password.toCharArray());
+        public class PasswordChecker {
 
-                        // Essayer de lire l'en-tête du premier fichier dans le ZIP
-                        // Si le mot de passe est incorrect, une exception sera levée
-                        FileHeader fileHeader = zipFile.getFileHeaders().get(0);
-                        zipFile.getInputStream(fileHeader);
+                public static boolean isPasswordCorrect(ZipFile zipFile, String password) {
+                        try {
+                                // Set the password for the zip file
+                                zipFile.setPassword(password.toCharArray());
 
-                        // Si aucune exception n'est levée, le mot de passe est correct
-                        return true;
-                } catch (ZipException e) {
-                        // Mot de passe incorrect
-                        return false;
-                } catch (net.lingala.zip4j.exception.ZipException ex) {
-                        System.out.println("Different CATCH : ZipException __ for password test");
-                        return false;
-                } catch (IOException ex) {
-                        System.out.println("Different CATCH : IOException __ for password test");
-                        return false;
+                                // Try to get the list of file headers to check if the password is correct
+                                //  zipFile.getFileHeaders();
+                                zipFile.extractAll(System.getProperty("java.io.tmpdir"));
+
+                                // If no exception is thrown, the password is correct
+                                return true;
+                        } catch (net.lingala.zip4j.exception.ZipException e) {
+                                // Check if the exception indicates a wrong password
+
+                                return false;
+
+                                // If it's a different exception, rethrow it
+                        }
                 }
-
         }
 
         
