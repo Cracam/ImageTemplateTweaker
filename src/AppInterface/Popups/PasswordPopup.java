@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import net.lingala.zip4j.ZipFile;
 
 public class PasswordPopup {
 

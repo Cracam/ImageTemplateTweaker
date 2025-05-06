@@ -1,6 +1,5 @@
 package AppInterface;
 
-import static AppInterface.DesignBuilder.PasswordChecker.isPasswordCorrect;
 import AppInterface.Popups.AlertPopup;
 import static AppInterface.Popups.ConfirmPopup.showConfirmationDialog;
 import static AppInterface.Popups.PasswordPopup.showPasswordDialog;
@@ -83,7 +82,7 @@ public class DesignBuilder extends Application {
 
         private Scene scene;
 
-        private int DPI = 600;
+        private int DPI = 300;
 
         private Random random;
 
@@ -156,38 +155,42 @@ public class DesignBuilder extends Application {
 
         private void loadNewModelAskingPassword(ZipFile zipFile, String password) {
                 // Use a lambda expression to capture the parameters
-                Runnable ifYes = () -> YESloadNewModelAskingPassword(zipFile, password);
-                System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG          "+!isPasswordCorrect(zipFile, password)+"__"+password);
-                
+                Consumer<String> ifYes = pwd -> YESloadNewModelAskingPassword(zipFile, pwd);
+                System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG          " + !isPasswordCorrect(zipFile, password) + "__" + password);
+
                 if (!isPasswordCorrect(zipFile, password)) {
-                        showPasswordDialog("Veuillez entrer le mot de passe du modele : " + modelName, (Consumer<String>) ifYes, null);
+                        showPasswordDialog("Veuillez entrer le mot de passe du modele : " + modelName, ifYes, null);
                 } else {
                         zipFile.setPassword(password.toCharArray());
                         loadNewModel(zipFile);
                 }
         }
 
-private void YESloadNewModelAskingPassword(ZipFile zipFile, String password) {
-    loadNewModelAskingPassword(zipFile, password);
-}
+        private void YESloadNewModelAskingPassword(ZipFile zipFile, String password) {
+                loadNewModelAskingPassword(zipFile, password);
+        }
 
-        
+
         
         
         
 
         private void loadNewModel(ZipFile unlockedZipFile) {
                 try {
+                        String tempModelName=modelName;
                         this.close();
                         this.modelResources = new ResourcesManager(unlockedZipFile);
-
-                       
+                       this.modelName=tempModelName;
 
                         // Extract the Model_Param.xml file
                         FileHeader fileHeader = unlockedZipFile.getFileHeader("Model_Param.xml");
                         if (fileHeader == null) {
-                                throw new IOException("Model_Param.xml not found in the ZIP file.");
+                                fileHeader = unlockedZipFile.getFileHeader(this.modelName + "/Model_Param.xml");
+                                if (fileHeader == null) {
+                                        throw new IOException("Model_Param.xml not found in the ZIP file.\n" + this.modelName + "/Model_Param.xml" + "\nmodelTestProtected/Model_Param.xml");
+                                }
                         }
+                        
                         InputStream inputStream = unlockedZipFile.getInputStream(fileHeader);
 
                         // Parse the XML file
@@ -197,7 +200,7 @@ private void YESloadNewModelAskingPassword(ZipFile zipFile, String password) {
 
                         // Get the root element
                         Element rootElement = document.getDocumentElement();
-                        this.modelName = rootElement.getAttribute("name");
+                 //       this.modelName = rootElement.getAttribute("name");
 
                         Element informationsNode = (Element) rootElement.getElementsByTagName("Informations").item(0);
                         this.description = informationsNode.getElementsByTagName("DefaultDesign").item(0).getAttributes().getNamedItem("name").getNodeValue();
@@ -248,8 +251,6 @@ private void YESloadNewModelAskingPassword(ZipFile zipFile, String password) {
          * @param password Le mot de passe à tester.
          * @return true si le mot de passe est correct, false sinon.
          */
-        public class PasswordChecker {
-
                 public static boolean isPasswordCorrect(ZipFile zipFile, String password) {
                         try {
                                 // Set the password for the zip file
@@ -269,7 +270,7 @@ private void YESloadNewModelAskingPassword(ZipFile zipFile, String password) {
                                 // If it's a different exception, rethrow it
                         }
                 }
-        }
+        
 
         
         
@@ -361,14 +362,15 @@ private void YESloadNewModelAskingPassword(ZipFile zipFile, String password) {
 
         private void initNewDesignConfirm(String nameWithoutExtension) {
                 if (this.modelName == null) {
-                        loadNewModel(this.getRootPath() + "/ModelsData/" + nameWithoutExtension + ".zip");
                         this.modelName = nameWithoutExtension;
+                        loadNewModel(this.getRootPath() + "/ModelsData/" + nameWithoutExtension + ".zip");
                 } else {
                         DesignBuilder DB = this;
                         Runnable ifYes = new Runnable() {
                                 @Override
                                 public void run() {
                                         DB.modelName = nameWithoutExtension;
+                                       DB.modelName=nameWithoutExtension;
                                         DB.loadNewModel(DB.getRootPath() + "/ModelsData/" + nameWithoutExtension + ".zip");
                                 }
                         };
@@ -485,7 +487,7 @@ private void YESloadNewModelAskingPassword(ZipFile zipFile, String password) {
                         NodeList InterfacesNodes = allInterfaces.item(0).getChildNodes();
                         //  System.out.println("#####"+InterfacesNodes.getLength());
                         this.interfacesManager.loadInterfaces(InterfacesNodes);
-
+                         designPath = filepath;
                         refreshEverything();
 
                 } catch (ThisInterfaceDoesNotExistException | ThisZIPFileIsNotADesignException | ParserConfigurationException ex) {
@@ -500,7 +502,7 @@ private void YESloadNewModelAskingPassword(ZipFile zipFile, String password) {
          */
         private void saveDesign(String filepath) {
                 try {
-
+                        tabPane.setDisable(true);
                         this.designResources.createNewZip(filepath);
 
                         // Créez un ByteArrayOutputStream pour capturer le contenu XML
@@ -544,10 +546,13 @@ private void YESloadNewModelAskingPassword(ZipFile zipFile, String password) {
 
                         this.designResources.set("DesignData.xml", xmlFile);
                         this.designResources.save();
+                          tabPane.setDisable(false);
 
                 } catch (TransformerConfigurationException ex) {
+                          tabPane.setDisable(false);
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (TransformerException | IOException | ParserConfigurationException ex) {
+                          tabPane.setDisable(false);
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
