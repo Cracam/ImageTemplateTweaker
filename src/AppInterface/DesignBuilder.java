@@ -16,6 +16,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,7 +26,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipException;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -66,7 +67,7 @@ public class DesignBuilder extends Application {
 
         private ResourcesManager modelResources;
         private ResourcesManager designResources;
-        private final PasswordManager passwordManager=new PasswordManager(getRootPath() + "/ModelsData");
+        private  PasswordManager passwordManager=new PasswordManager(getRootPath() + "/ModelsData");
 
         //Information on the model
         private String modelName; // the model Name
@@ -129,14 +130,29 @@ public class DesignBuilder extends Application {
                         if (zipFile.isEncrypted()) {
                                 String password = "";
 
-                                if (passwordManager.getPasswordByFolderName(modelName) != null) {
-                                        password = passwordManager.getPasswordByFolderName(modelName); // Implement this method to get the password from the user
+                                try {
+                                        if (passwordManager.getPasswordByFolderName(modelName) != null) {
+                                                password = passwordManager.getPasswordByFolderName(modelName); // Implement this method to get the password from the user
 
-                                        if (isPasswordCorrect(zipFile, password)) {
-                                                zipFile.setPassword(password.toCharArray());
-                                                loadNewModel(zipFile);
-                                                return;
+                                                if (isPasswordCorrect(zipFile, password)) {
+                                                        zipFile.setPassword(password.toCharArray());
+                                                        loadNewModel(zipFile);
+                                                        return;
+                                                }
                                         }
+                                } catch (Exception ex) {//in case the file is corrupted
+                                        System.out.println("Fichier de mot de passes corompu destruction de ces fichier");
+                                        
+                                        Path path = Paths.get(getRootPath() + "/ModelsData/encrypted_passwords.txt");
+
+                                        try {
+                                                Files.delete(path);
+                                                System.out.println("Le fichier a été supprimé avec succès.");
+                                        } catch (IOException e) {
+                                                System.err.println("Erreur lors de la suppression du fichier : " + e.getMessage());
+                                        }
+        
+                                       passwordManager=new PasswordManager(getRootPath() + "/ModelsData");
                                 }
 
                                 //in case were not able to open the file we ask the use for a passqord
@@ -147,8 +163,6 @@ public class DesignBuilder extends Application {
                         }
                 } catch (net.lingala.zip4j.exception.ZipException ex) {
                         System.out.println("Error lors de l'ouverture du fichier .ZIP");
-                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (Exception ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
@@ -161,6 +175,12 @@ public class DesignBuilder extends Application {
                 if (!isPasswordCorrect(zipFile, password)) {
                         showPasswordDialog("Veuillez entrer le mot de passe du modele : " + modelName, ifYes, null);
                 } else {
+                        try {
+                                passwordManager.addPasswordEntry(modelName, password);
+                                passwordManager.saveAllPasswords();
+                        } catch (Exception ex) {
+                                Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         zipFile.setPassword(password.toCharArray());
                         loadNewModel(zipFile);
                 }
@@ -270,21 +290,7 @@ public class DesignBuilder extends Application {
                                 // If it's a different exception, rethrow it
                         }
                 }
-        
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
 
         @FXML
         private void closeConfirm() {

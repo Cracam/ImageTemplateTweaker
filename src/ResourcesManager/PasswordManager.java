@@ -1,18 +1,20 @@
 package ResourcesManager;
 
+import AppInterface.DesignBuilder;
 import static ResourcesManager.PasswordEntry.RandomKeyGenerator.generateRandomKey;
+import com.sun.javafx.logging.PlatformLogger.Level;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class PasswordManager {
 
@@ -32,22 +34,24 @@ public class PasswordManager {
          */
         public PasswordManager(String encryptedKeyFilePath)  {
                 try {
-                        this.filePath = encryptedKeyFilePath;
+                        this.filePath = encryptedKeyFilePath+"/encrypted_passwords.txt";
                         this.passwordEntries = new ArrayList<>();
                           String mainKey;
                         try{
-                                 String encryptedMainKey = readEncryptedKeyFromFile(encryptedKeyFilePath);
+                                 String encryptedMainKey = readEncryptedKeyFromFile(filePath);
                                   mainKey = decryptKey(encryptedMainKey, padKey(MASTER_KEY));
 
                         }catch(IOException ex){
-                                mainKey=generateRandomKey(32);
+                                mainKey=generateRandomKey(24);
+                                //java.util.logging.Logger.getLogger(DesignBuilder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                                
                         }
                         
                         System.out.println("Decrypted key : " + mainKey);
                         mainKey = padKey(mainKey); // Ensure the key is padded to the correct length
                         this.secretKey = new SecretKeySpec(mainKey.getBytes(StandardCharsets.UTF_8), ALGORITHM);
                         // Read and store the encrypted password entries from the file
-                        try (BufferedReader reader = new BufferedReader(new FileReader(encryptedKeyFilePath))) {
+                        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
                                 reader.readLine(); // Skip the first line (encrypted main key)
                                 String line;
                                 while ((line = reader.readLine()) != null) {
@@ -146,7 +150,8 @@ public class PasswordManager {
         }
 
         /**
-         * Adds a new password entry to the list and encrypts it.
+         * Adds a new password entry to the list and encrypts it. If a folder
+         * with the same name already exists, updates the password.
          *
          * @param folderName The folder name to associate with the password.
          * @param password The password to add.
@@ -155,8 +160,20 @@ public class PasswordManager {
         public void addPasswordEntry(String folderName, String password) throws Exception {
                 String encryptedFolderName = encrypt(folderName);
                 String encryptedPassword = encrypt(password);
+
+                // Check if the folder name already exists
+                for (PasswordEntry entry : passwordEntries) {
+                        if (entry.getFolderName().equals(encryptedFolderName)) {
+                                // Update the password if the folder name exists
+                                entry.setPassword(encryptedPassword);
+                                return;
+                        }
+                }
+
+                // Add a new entry if the folder name does not exist
                 passwordEntries.add(new PasswordEntry(encryptedFolderName, encryptedPassword));
         }
+
 
         /**
          * Saves all password entries to the file.
@@ -250,61 +267,12 @@ public class PasswordManager {
                 }
                 return null; // Return null if the folder name is not found
         }
-
-        public static void main(String[] args) {
-                try {
-                        // Step 1: Encrypt the main key and password entries, then store them in a file
-                        String mainKey = "votreClePrincipale123"; // Main key to encrypt
-                        PasswordEntry[] entries = {
-                                new PasswordEntry("folder1", "password1"),
-                                new PasswordEntry("folder2", "password2"),
-                                new PasswordEntry("folder3", "password3")
-                        };
-                        String encryptedKeyFilePath = "encrypted_key_and_passwords.txt"; // Path to the file where the encrypted key and password entries will be stored
-                        encryptAndStoreMainKeyAndPasswords(mainKey, entries, encryptedKeyFilePath);
-
-                        // Step 2: Use the encrypted main key to decrypt the password entries
-                        PasswordManager manager = new PasswordManager(encryptedKeyFilePath);
-
-                        // Add a new password entry
-                        manager.addPasswordEntry("newfolder", "newpassword");
-
-                        // Save all password entries to the file
-                        manager.saveAllPasswords();
-
-                        // Read and decrypt the password entries from the file
-                        try (BufferedReader reader = new BufferedReader(new FileReader(encryptedKeyFilePath))) {
-                                reader.readLine(); // Skip the first line (encrypted main key)
-                                String line;
-                                while ((line = reader.readLine()) != null) {
-                                        String[] parts = line.split("::");
-                                        if (parts.length == 2) {
-                                                String decryptedFolderName = manager.decrypt(parts[0]);
-                                                String decryptedPassword = manager.decrypt(parts[1]);
-                                                System.out.println("Decrypted folder name: " + decryptedFolderName);
-                                                System.out.println("Decrypted password: " + decryptedPassword);
-                                        }
-                                }
-                        }
-
-                        // Test the new function to get password by folder name
-                        String folderNameToSearch = "folder2";
-                        String password = manager.getPasswordByFolderName(folderNameToSearch);
-                        if (password != null) {
-                                System.out.println("Password for folder '" + folderNameToSearch + "': " + password);
-                        } else {
-                                System.out.println("Folder '" + folderNameToSearch + "' not found.");
-                        }
-                } catch (Exception e) {
-                        e.printStackTrace();
-                }
-        }
 }
 
 class PasswordEntry {
 
         private final String encryptedFolderName;
-        private final String encryptedPassword;
+        private String encryptedPassword;
 
         public PasswordEntry(String encryptedFolderName, String encryptedPassword) {
                 this.encryptedFolderName = encryptedFolderName;
@@ -327,7 +295,9 @@ class PasswordEntry {
                 return encryptedPassword;
         }
         
-
+        public void setPassword(String password) {
+                encryptedPassword = password;
+        }
 
         public class RandomKeyGenerator {
 
