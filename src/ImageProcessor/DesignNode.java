@@ -73,26 +73,45 @@ public abstract class DesignNode extends VBox {
          * Thes update program consserning the element
          */
         public abstract void DRYRefreshDPI();
-
+        
+        /**
+         * This update all the lower elements
+         */
+        public void  RefreshDPI() {
+                DRYRefreshDPI();
+                DRYUpdate();
+                for (DesignNode upper : upperDN) {
+                        upper.RefreshDPI();
+                }
+        }
+        
+        
         /**
          * This update the size of all the element and after refresh everything
+         * 
+         * refresh from the botom
          */
-        public void RefreshDPI() {
-                DRYRefreshDPI();
-                for (DesignNode lower : lowersDN) {
-                        lower.RefreshDPI();
+        public void refreshDPIFromDown() {
+                if (lowersDN.isEmpty()) {
+                        RefreshDPI();
+                } else {
+                        for (DesignNode lower : lowersDN) {
+                                lower.refreshDPIFromDown();
+                        }
                 }
-                update();
         }
-
-        public void updateLower() {
+        
+        /**
+         * Update from down
+         */
+        public void updateFromDown() {
                 if (lowersDN.isEmpty()) {
                         //        System.out.println("TTTTTTTTTTT : "+this.getClass());
                         update();
 
                 } else {
                         for (DesignNode lower : lowersDN) {
-                                lower.updateLower();
+                                lower.updateFromDown();
                         }
                 }
         }

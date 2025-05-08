@@ -1,15 +1,12 @@
 package ResourcesManager;
 
-import AppInterface.DesignBuilder;
 import static ResourcesManager.PasswordEntry.RandomKeyGenerator.generateRandomKey;
-import com.sun.javafx.logging.PlatformLogger.Level;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.nio.charset.StandardCharsets;
@@ -47,7 +44,7 @@ public class PasswordManager {
                                 
                         }
                         
-                        System.out.println("Decrypted key : " + mainKey);
+                //        System.out.println("Decrypted key : " + mainKey);
                         mainKey = padKey(mainKey); // Ensure the key is padded to the correct length
                         this.secretKey = new SecretKeySpec(mainKey.getBytes(StandardCharsets.UTF_8), ALGORITHM);
                         // Read and store the encrypted password entries from the file

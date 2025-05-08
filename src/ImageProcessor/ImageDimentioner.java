@@ -46,7 +46,7 @@ public abstract class ImageDimentioner extends DesignNode {
 
             @Override
         public void DRYRefreshDPI() {
-               float factor =( (ImageBuilder )getUpperOrHimselfDN(ImageBuilder.class)).getDesignBuilder().getPixelMmFactor();
+               float factor =( (ImageBuilder ) getUpperOrHimselfDN(ImageBuilder.class)).getDesignBuilder().getPixelMmFactor();
             //    System.out.println("taille du facteur"+factor);
                 this.x_p_size = (int) (this.x_size * factor);
                 this.y_p_size = (int) (this.y_size * factor);

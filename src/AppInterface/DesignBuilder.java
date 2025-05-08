@@ -33,6 +33,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.transform.Scale;
@@ -107,6 +108,10 @@ public class DesignBuilder extends Application {
 
         @FXML
         private MenuItem Mclose;
+        
+        @FXML
+        private Slider sliderScale;
+        
 
         private ArrayList<String> modelFileNames;
 
@@ -406,7 +411,15 @@ public class DesignBuilder extends Application {
 
         private void refreshEverything() {
                 for (int i = 0; i < imageBuilders.size(); i++) {
-                        this.imageBuilders.get(i).updateLower();
+                        this.imageBuilders.get(i).updateFromDown();
+                        refreshPreviewImageBox(this.imageBuilders.get(i));
+
+                }
+        }
+        
+          private void refreshEverythingWithDPIChange() {
+                for (int i = 0; i < imageBuilders.size(); i++) {
+                        this.imageBuilders.get(i).refreshDPIFromDown();
                         refreshPreviewImageBox(this.imageBuilders.get(i));
 
                 }
@@ -710,7 +723,8 @@ public class DesignBuilder extends Application {
 
         @FXML
         private void updateScale() {
-
+                this.DPI=(int) this.sliderScale.getValue();
+                refreshEverythingWithDPIChange();
         }
 
         public void refreshPreviewImageBox(ImageBuilder imgBuilder) {

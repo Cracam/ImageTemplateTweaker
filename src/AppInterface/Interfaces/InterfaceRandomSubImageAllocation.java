@@ -124,7 +124,7 @@ public class InterfaceRandomSubImageAllocation extends InterfaceContainer {
                 }
                 this.destroyItSelf();
                 if (this.getLinkedDesignNodes().isEmpty()) {
-                        this.getLinkedDesignNodes().get(0).getUpperDN(GeneratorRandomImageAllocation.class).updateLower();
+                        this.getLinkedDesignNodes().get(0).getUpperDN(GeneratorRandomImageAllocation.class).updateFromDown();
                 }
         }
 

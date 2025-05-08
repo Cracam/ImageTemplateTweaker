@@ -30,6 +30,6 @@ public class GeneratorCustomImage extends ImageGenerator {
         protected void generateFromElement() throws XMLErrorInModelException {
         }
 
-      
+        
 
 }

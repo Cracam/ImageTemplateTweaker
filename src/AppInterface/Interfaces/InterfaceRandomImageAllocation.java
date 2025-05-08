@@ -96,7 +96,7 @@ public class InterfaceRandomImageAllocation extends InterfaceContainer {
                         }
                 }
                 //  this.updateLinkedDesignNodes();
-                DN.updateLower();
+                DN.updateFromDown();
                 uptadeInterface();
         }
 

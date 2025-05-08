@@ -141,6 +141,7 @@ public class Layer extends DesignNode {
                 //  System.out.println(this.getUpperDN(ImageBuilder.class));
                 DesignBuilder designBuilder = ((ImageBuilder) this.getUpperDN(ImageBuilder.class)).getDesignBuilder();
                 pixelPosSize.computePixelPosSize(posSize, designBuilder.getPixelMmFactor());
+                
         }
 
         /**
