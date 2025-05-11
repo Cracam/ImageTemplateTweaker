@@ -1,6 +1,7 @@
 package AppInterface;
 
 import AppInterface.Popups.AlertPopup;
+import AppInterface.Popups.ComboBoxPopup;
 import static AppInterface.Popups.ConfirmPopup.showConfirmationDialog;
 import static AppInterface.Popups.PasswordPopup.showPasswordDialog;
 import Exceptions.ResourcesFileErrorException;
@@ -21,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -175,7 +177,7 @@ public class DesignBuilder extends Application {
         private void loadNewModelAskingPassword(ZipFile zipFile, String password) {
                 // Use a lambda expression to capture the parameters
                 Consumer<String> ifYes = pwd -> YESloadNewModelAskingPassword(zipFile, pwd);
-                System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG          " + !isPasswordCorrect(zipFile, password) + "__" + password);
+               // System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG          " + !isPasswordCorrect(zipFile, password) + "__" + password);
 
                 if (!isPasswordCorrect(zipFile, password)) {
                         showPasswordDialog("Veuillez entrer le mot de passe du modele : " + modelName, ifYes, null);
@@ -267,6 +269,9 @@ public class DesignBuilder extends Application {
                 }
         }
         
+        
+        
+ 
         
         
         /**
@@ -375,6 +380,7 @@ public class DesignBuilder extends Application {
                 if (this.modelName == null) {
                         this.modelName = nameWithoutExtension;
                         loadNewModel(this.getRootPath() + "/ModelsData/" + nameWithoutExtension + ".zip");
+                          loadADefaultDesign();
                 } else {
                         DesignBuilder DB = this;
                         Runnable ifYes = new Runnable() {
@@ -383,11 +389,43 @@ public class DesignBuilder extends Application {
                                         DB.modelName = nameWithoutExtension;
                                        DB.modelName=nameWithoutExtension;
                                         DB.loadNewModel(DB.getRootPath() + "/ModelsData/" + nameWithoutExtension + ".zip");
+                                        loadADefaultDesign();
                                 }
                         };
                         showConfirmationDialog("Avez-vous bien sauvegardé ce que vous souhaitez ?", ifYes, null);
                 }
         }
+        
+        
+        /**
+         * this method will look fo the zip inside the model (to get the design and onpen it or propose the user to chose wich one he want to oppen)
+         */
+        private void loadADefaultDesign() {
+                List<String> defaultDesign = this.modelResources.getNestedZipFilesWithDesignData();
+
+                if (!defaultDesign.isEmpty()) {
+                        Consumer<String> onOK = selectedOption -> {
+                                loadNewDesign(modelResources.get(selectedOption).getAbsolutePath());
+
+                                System.out.println("Option Selected: " + selectedOption);
+                        };
+
+                        ComboBoxPopup.showComboBoxDialog("Choisissez le désign par défaut que vous souhaiter ouvrir", (ArrayList<String>) defaultDesign, onOK, null);
+                        
+                        return;
+                } 
+                
+                if(defaultDesign.size()==1){
+                        loadNewDesign(modelResources.get(defaultDesign.get(0)).getAbsolutePath());
+                         System.out.println(" Option Selected: 0");
+                         return;
+                }
+                
+                        System.out.println("No default Design");
+        }
+        
+
+        
 
         /**
          * Méthode pour enlever l'extension .zip d'un nom de fichier.

@@ -25,36 +25,21 @@ public class GeneratorFixedImage extends ImageGenerator {
         private String imageName;
         private BufferedImage imageRaw;
 
-       public GeneratorFixedImage(DesignNode upperDE,Element elt ) throws XMLErrorInModelException {
-                super(upperDE,elt);
+        public GeneratorFixedImage(DesignNode upperDE, Element elt) throws XMLErrorInModelException {
+                super(upperDE, elt);
         }
-
-     
 
         @Override
         public void DRYUpdate() {
-                this.imageOut= StaticImageEditing.ResizeImage(imageRaw, this.x_p_size, this.y_p_size);
+                this.imageOut = StaticImageEditing.ResizeImage(imageRaw, this.x_p_size, this.y_p_size);
         }
 
         @Override
         protected void generateFromElement() throws XMLErrorInModelException {
-            //  this.imageName = elt.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
-               Element subElt = extractSingleElement(elt.getElementsByTagName("Image"));
-                 this.imageName = getStringAttribute(subElt, "image_name", "ERROR");
-                 
-                  try {
-                        File imageFile = getModelRessources().get(this.imageName);
-
-                        if (imageFile == null) {
-                                throw new ResourcesFileErrorException("This file dont exist : " + this.imageName);
-                        }
-                        imageRaw=ImageIO.read(imageFile);
-                 
-                } catch (IOException | ResourcesFileErrorException ex) {
-                        Logger.getLogger(GeneratorFixedImage.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                //  this.imageName = elt.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
+                Element subElt = extractSingleElement(elt.getElementsByTagName("Image"));
+                this.imageName = getStringAttribute(subElt, "image_name", "ERROR");
+                imageRaw = getModelRessources().getBufferedImage(imageName);
         }
 
-   
-     
 }

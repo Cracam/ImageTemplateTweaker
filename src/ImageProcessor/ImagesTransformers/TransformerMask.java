@@ -44,20 +44,10 @@ public class TransformerMask extends ImageTransformer {
                 //  this.imageName = elt.getElementsByTagName("Image").item(0).getAttributes().getNamedItem("image_name").getNodeValue();
                 Element subElt = extractSingleElement(elt.getElementsByTagName("Image"));
                 this.imageName = getStringAttribute(subElt, "image_name", "ERROR");
-                
-                this.invert=(1==getIntAttribute(subElt, "invert", 0));
 
-                try {
-                        File imageFile = getModelRessources().get(this.imageName);
+                this.invert = (1 == getIntAttribute(subElt, "invert", 0));
 
-                        if (imageFile == null) {
-                                throw new ResourcesFileErrorException("This file dont exist : " + this.imageName);
-                        }
-                        imageRaw = ImageIO.read(imageFile);
-
-                } catch (IOException | ResourcesFileErrorException ex) {
-                        Logger.getLogger(GeneratorFixedImage.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                imageRaw = getModelRessources().getBufferedImage(this.imageName);
         }
 
         @Override
