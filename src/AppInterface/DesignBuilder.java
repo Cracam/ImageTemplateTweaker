@@ -4,6 +4,7 @@ import AppInterface.Popups.AlertPopup;
 import AppInterface.Popups.ComboBoxPopup;
 import static AppInterface.Popups.ConfirmPopup.showConfirmationDialog;
 import static AppInterface.Popups.PasswordPopup.showPasswordDialog;
+import AppInterface.Popups.SpinnerPopup;
 import Exceptions.ResourcesFileErrorException;
 import Exceptions.ThisInterfaceDoesNotExistException;
 import Exceptions.ThisZIPFileIsNotADesignException;
@@ -11,6 +12,10 @@ import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.ImageBuilder;
 import ResourcesManager.PasswordManager;
 import ResourcesManager.ResourcesManager;
+import static ResourcesManager.XmlManager.extractSingleElement;
+import static ResourcesManager.XmlManager.getIntAttribute;
+import static ResourcesManager.XmlManager.getStringAttribute;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -29,6 +34,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,8 +45,10 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.transform.Scale;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -87,6 +95,7 @@ public class DesignBuilder extends Application {
         private Scene scene;
 
         private int DPI = 300;
+        private int maxDPI=300;
 
         private Random random;
 
@@ -173,6 +182,8 @@ public class DesignBuilder extends Application {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
+        
+        
 
         private void loadNewModelAskingPassword(ZipFile zipFile, String password) {
                 // Use a lambda expression to capture the parameters
@@ -229,10 +240,19 @@ public class DesignBuilder extends Application {
                         Element rootElement = document.getDocumentElement();
                  //       this.modelName = rootElement.getAttribute("name");
 
-                        Element informationsNode = (Element) rootElement.getElementsByTagName("Informations").item(0);
-                        this.description = informationsNode.getElementsByTagName("DefaultDesign").item(0).getAttributes().getNamedItem("name").getNodeValue();
-                        this.defaultDesignName = informationsNode.getElementsByTagName("Description").item(0).getAttributes().getNamedItem("Description").getNodeValue();
-
+                        Element informationsNode =  extractSingleElement(rootElement.getElementsByTagName("Informations"));
+                        
+                        Element subElt = extractSingleElement(informationsNode.getElementsByTagName("DefaultDesign"));
+                        this.description =  getStringAttribute(subElt,"name","") ;
+                        
+                         subElt = extractSingleElement(informationsNode.getElementsByTagName("Description"));
+                        this.defaultDesignName = getStringAttribute(subElt,"Description","") ;
+                        
+                          subElt = extractSingleElement(informationsNode.getElementsByTagName("Export"));
+                        this.maxDPI=getIntAttribute(subElt,"PWD",maxDPI);
+                        this.sliderScale.setMax(maxDPI);
+                                
+                                informationsNode.getElementsByTagName("Export").item(0).getAttributes().getNamedItem("PWD").getNodeValue();
                         // Get all "Output" nodes
                         NodeList outputNodes = rootElement.getElementsByTagName("Output");
 
@@ -764,6 +784,80 @@ public class DesignBuilder extends Application {
                 this.DPI=(int) this.sliderScale.getValue();
                 refreshEverythingWithDPIChange();
         }
+        
+@FXML
+    private void exportCard() {
+        // Open the spinner dialog to select the number of images to export
+        SpinnerPopup.showSpinnerDialog(
+            "Sélectionnez le nombre d'images à exporter",
+            1, // Minimum value
+            100, // Maximum value
+            1, // Initial value
+            numImages -> {
+                // If the user clicks "Yes", proceed to save the images
+                saveImagesToDirectory(numImages);
+            },
+            () -> {
+                // If the user clicks "Cancel", do nothing or handle cancellation
+                System.out.println("Export cancelled");
+            }
+        );
+    }
+
+    private void saveImagesToDirectory(int numImages) {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Select a Directory");
+
+        File selectedDirectory = directoryChooser.showDialog(null);
+
+        if (selectedDirectory != null) {
+            String batchDirectoryName = getNextBatchDirectoryName(selectedDirectory);
+            Path batchDirectoryPath = Paths.get(selectedDirectory.getAbsolutePath(), batchDirectoryName);
+
+            try {
+                Files.createDirectories(batchDirectoryPath);
+                System.out.println("Directory created: " + batchDirectoryPath.toString());
+
+                // Loop to save the specified number of images
+                int oldDPI=DPI;
+                this.DPI=600;
+                refreshEverythingWithDPIChange();
+                for (int i = 0; i < numImages; i++) {
+                        for(ImageBuilder imgBuilder : this.imageBuilders){
+                                saveImageToDirectory(imgBuilder.getImageOut(), batchDirectoryPath.toString(),imgBuilder.getName()  + i + ".png");
+                                this.refreshEverything();
+                        }
+                }
+                 this.DPI=oldDPI;
+                 refreshEverythingWithDPIChange();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String getNextBatchDirectoryName(File parentDirectory) {
+        int i = 0;
+        String batchDirectoryName;
+        do {
+            batchDirectoryName = "Batch_" + i;
+            i++;
+        } while (new File(parentDirectory, batchDirectoryName).exists());
+        return batchDirectoryName;
+    }
+
+    public static void saveImageToDirectory(BufferedImage image, String directoryPath, String fileName) {
+        try {
+            File outputFile = new File(directoryPath, fileName);
+            ImageIO.write(image, "png", outputFile);
+            System.out.println("Image saved: " + outputFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
 
         public void refreshPreviewImageBox(ImageBuilder imgBuilder) {
                 preview.setImageView(imgBuilder.DRYComputeUniqueID(), staticFunctions.StaticImageEditing.createImageView(imgBuilder.getImageOut()));

@@ -423,4 +423,8 @@ public abstract class DesignNode extends VBox {
                 return getLowestDN(DNs);
         }
 
+        public String getName() {
+                return name;
+        }
+
 }

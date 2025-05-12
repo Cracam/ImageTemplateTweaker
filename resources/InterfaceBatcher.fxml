@@ -81,6 +81,11 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
           </items>
         </Menu>
+            <Menu mnemonicParsing="false" text="Export">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#exportCard" text="Export (PNG 600 DPI) " />
+              </items>
+            </Menu>
       </menus>
     </MenuBar>
    </top>
