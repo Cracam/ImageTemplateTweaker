@@ -1,4 +1,5 @@
 package ResourcesManager;
+
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
@@ -17,7 +18,7 @@ import net.lingala.zip4j.model.enums.EncryptionMethod;
 
 public class ResourcesManager {
 
-    private final Map<String, File> fileMap;
+    private final Map<String, byte[]> fileMap;
     private final Map<String, BufferedImage> imageMap;
     private final Map<String, ZipFile> zipFileMap;
     private String zipFilePath;
@@ -55,6 +56,14 @@ public class ResourcesManager {
         loadZipFile();
     }
 
+    public ResourcesManager(byte[] zipContent) {
+        this.usePassword = false;
+        this.fileMap = new HashMap<>();
+        this.imageMap = new HashMap<>();
+        this.zipFileMap = new HashMap<>();
+        loadZipFromBytes(zipContent);
+    }
+
     public ResourcesManager() {
         this.usePassword = false;
         this.fileMap = new HashMap<>();
@@ -84,7 +93,6 @@ public class ResourcesManager {
             // Create a custom temporary directory specific to this instance of ResourcesManager
             String tempDirPath = Paths.get(".").toAbsolutePath().normalize().toString() + "/temp/temp_" + System.currentTimeMillis();
             tempDir = Paths.get(tempDirPath);
-        //    System.out.println("__________________############################################# ________"+tempDirPath);
             if (!Files.exists(tempDir)) {
                 Files.createDirectories(tempDir);
             }
@@ -97,6 +105,42 @@ public class ResourcesManager {
 
             // Delete the temporary directory after processing all files
             deleteDirectory(tempDir);
+
+            System.out.println("------------------------------"+toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadZipFromBytes(byte[] zipContent) {
+        try {
+            // Create a temporary file to hold the zip content
+            File tempFile = File.createTempFile("temp_zip", ".zip");
+            Files.write(tempFile.toPath(), zipContent);
+
+            // Create a ZipFile from the temporary file
+            zipFile = new ZipFile(tempFile);
+
+            // Create a custom temporary directory specific to this instance of ResourcesManager
+            String tempDirPath = Paths.get(".").toAbsolutePath().normalize().toString() + "/temp/temp_" + System.currentTimeMillis();
+            tempDir = Paths.get(tempDirPath);
+            if (!Files.exists(tempDir)) {
+                Files.createDirectories(tempDir);
+            }
+
+            // Extract all files to the temporary directory
+            zipFile.extractAll(tempDir.toString());
+
+            // Process each file in the temporary directory
+            processDirectory(tempDir);
+
+            // Delete the temporary directory after processing all files
+            deleteDirectory(tempDir);
+
+            // Delete the temporary file
+            tempFile.delete();
+
+            System.out.println("------------------------------"+toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,35 +153,42 @@ public class ResourcesManager {
                     String fileName = path.getFileName().toString(); // Use only the file name without the path
                     File file = path.toFile();
 
-                    if (fileName.toLowerCase().endsWith(".zip")) {
-                        // Handle ZIP files
-                        try {
-                            ZipFile nestedZipFile = new ZipFile(file);
-                            if (usePassword) {
-                                nestedZipFile.setPassword(password.toCharArray());
+                    try {
+                        byte[] fileContent = Files.readAllBytes(path);
+
+                        if (fileName.toLowerCase().endsWith(".zip")) {
+                            // Handle ZIP files
+                            try {
+                                ZipFile nestedZipFile = new ZipFile(file);
+                                if (usePassword) {
+                                    nestedZipFile.setPassword(password.toCharArray());
+                                }
+                                zipFileMap.put(fileName, nestedZipFile);
+                                System.out.println("ZIP file detected and added: " + fileName); // Debugging line
+                            } catch (Exception e) {
+                                System.err.println("Error processing ZIP file: " + fileName);
+                                e.printStackTrace();
                             }
-                            zipFileMap.put(fileName, nestedZipFile);
-                            System.out.println("ZIP file detected and added: " + fileName); // Debugging line
-                        } catch (Exception e) {
-                            System.err.println("Error processing ZIP file: " + fileName);
-                            e.printStackTrace();
-                        }
-                    } else if (isImageFile(fileName)) {
-                        // Handle image files
-                        try {
-                            BufferedImage image = ImageIO.read(file);
-                            if (image != null) {
-                                imageMap.put(fileName, image);
-                            } else {
-                                fileMap.put(fileName, file);
+                        } else if (isImageFile(fileName)) {
+                            // Handle image files
+                            try {
+                                BufferedImage image = ImageIO.read(file);
+                                if (image != null) {
+                                    imageMap.put(fileName, image);
+                                } else {
+                                    fileMap.put(fileName, fileContent);
+                                }
+                            } catch (Exception e) {
+                                System.err.println("Error processing image file: " + fileName);
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            System.err.println("Error processing image file: " + fileName);
-                            e.printStackTrace();
+                        } else {
+                            // Handle other files
+                            fileMap.put(fileName, fileContent);
                         }
-                    } else {
-                        // Handle other files
-                        fileMap.put(fileName, file);
+                    } catch (IOException e) {
+                        System.err.println("Error reading file: " + fileName);
+                        e.printStackTrace();
                     }
 
                     // Delete the file after processing
@@ -173,41 +224,61 @@ public class ResourcesManager {
     }
 
     public void save() {
-        try {
-            if (zipFile == null) {
-                zipFile = new ZipFile(zipFilePath);
-            }
-            ZipParameters parameters = new ZipParameters();
-            parameters.setEncryptFiles(usePassword);
-            if (usePassword) {
-                parameters.setEncryptionMethod(EncryptionMethod.AES);
-                parameters.setAesKeyStrength(AesKeyStrength.KEY_STRENGTH_256);
-            }
-
-            // Save BufferedImages to temporary files and add to zip
-            for (Map.Entry<String, BufferedImage> entry : imageMap.entrySet()) {
-                File tempFile = File.createTempFile("zip_save", "_" + entry.getKey());
-                ImageIO.write(entry.getValue(), getFileExtension(entry.getKey()), tempFile);
-                zipFile.addFile(tempFile, parameters);
-                tempFile.delete(); // Clean up temporary file
-            }
-
-            // Save nested ZipFiles to temporary files and add to zip
-            for (Map.Entry<String, ZipFile> entry : zipFileMap.entrySet()) {
-                File tempFile = File.createTempFile("zip_save", "_" + entry.getKey());
-                entry.getValue().extractAll(tempFile.getParent());
-                zipFile.addFile(tempFile, parameters);
-                tempFile.delete(); // Clean up temporary file
-            }
-
-            // Add other files
-            for (Map.Entry<String, File> entry : fileMap.entrySet()) {
-                zipFile.addFile(entry.getValue(), parameters);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    try {
+        if (zipFile == null) {
+            zipFile = new ZipFile(zipFilePath);
         }
+        ZipParameters parameters = new ZipParameters();
+        parameters.setEncryptFiles(usePassword);
+        if (usePassword) {
+            parameters.setEncryptionMethod(EncryptionMethod.AES);
+            parameters.setAesKeyStrength(AesKeyStrength.KEY_STRENGTH_256);
+        }
+
+        // Save BufferedImages to temporary files and add to zip
+        for (Map.Entry<String, BufferedImage> entry : imageMap.entrySet()) {
+            File tempFile = File.createTempFile("zip_save", "_" + entry.getKey());
+            ImageIO.write(entry.getValue(), getFileExtension(entry.getKey()), tempFile);
+
+            // Rename the temporary file to the original file name
+            File renamedFile = new File(tempFile.getParent(), entry.getKey());
+            tempFile.renameTo(renamedFile);
+
+            zipFile.addFile(renamedFile, parameters);
+            renamedFile.delete(); // Clean up temporary file
+        }
+
+        // Save nested ZipFiles to temporary files and add to zip
+        for (Map.Entry<String, ZipFile> entry : zipFileMap.entrySet()) {
+            File tempFile = File.createTempFile("zip_save", "_" + entry.getKey());
+
+            // Extract the nested zip file to a temporary location
+            entry.getValue().extractAll(tempFile.getParent());
+
+            // Rename the temporary file to the original file name
+            File renamedFile = new File(tempFile.getParent(), entry.getKey());
+            tempFile.renameTo(renamedFile);
+
+            zipFile.addFile(renamedFile, parameters);
+            renamedFile.delete(); // Clean up temporary file
+        }
+
+        // Add other files
+        for (Map.Entry<String, byte[]> entry : fileMap.entrySet()) {
+            File tempFile = File.createTempFile("zip_save", "_" + entry.getKey());
+            Files.write(tempFile.toPath(), entry.getValue());
+
+            // Rename the temporary file to the original file name
+            File renamedFile = new File(tempFile.getParent(), entry.getKey());
+            tempFile.renameTo(renamedFile);
+
+            zipFile.addFile(renamedFile, parameters);
+            renamedFile.delete(); // Clean up temporary file
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
 
     private String getFileExtension(String fileName) {
         int lastDotIndex = fileName.lastIndexOf('.');
@@ -217,7 +288,7 @@ public class ResourcesManager {
         return "png"; // default extension
     }
 
-    public File get(String key) {
+    public byte[] get(String key) {
         return fileMap.get(key);
     }
 
@@ -229,8 +300,18 @@ public class ResourcesManager {
         return zipFileMap.get(key);
     }
 
+    public void set(String key, byte[] fileContent) {
+        fileMap.put(key, fileContent);
+    }
+
     public void set(String key, File file) {
-        fileMap.put(key, file);
+        try {
+            byte[] fileContent = Files.readAllBytes(file.toPath());
+            fileMap.put(key, fileContent);
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + file.getName());
+            e.printStackTrace();
+        }
     }
 
     public void setBufferedImage(String imageName, BufferedImage image) {
@@ -258,8 +339,11 @@ public class ResourcesManager {
             parameters.setEncryptFiles(false);
 
             // Add files to the zip
-            for (Map.Entry<String, File> entry : fileMap.entrySet()) {
-                zipFile.addFile(entry.getValue(), parameters);
+            for (Map.Entry<String, byte[]> entry : fileMap.entrySet()) {
+                File tempFile = File.createTempFile("zip_save", "_" + entry.getKey());
+                Files.write(tempFile.toPath(), entry.getValue());
+                zipFile.addFile(tempFile, parameters);
+                tempFile.delete(); // Clean up temporary file
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -305,7 +389,7 @@ public class ResourcesManager {
         sb.append("  zipFilePath='").append(zipFilePath).append("'\n");
         sb.append("  usePassword=").append(usePassword).append("\n");
         sb.append("  fileMap=\n");
-        for (Map.Entry<String, File> entry : fileMap.entrySet()) {
+        for (Map.Entry<String, byte[]> entry : fileMap.entrySet()) {
             sb.append("    ").append(entry.getKey()).append("\n");
         }
         sb.append("  imageMap=\n");

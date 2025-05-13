@@ -16,6 +16,7 @@ import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getIntAttribute;
 import static ResourcesManager.XmlManager.getStringAttribute;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -34,7 +35,6 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -252,7 +252,6 @@ public class DesignBuilder extends Application {
                         this.maxDPI=getIntAttribute(subElt,"PWD",maxDPI);
                         this.sliderScale.setMax(maxDPI);
                                 
-                                informationsNode.getElementsByTagName("Export").item(0).getAttributes().getNamedItem("PWD").getNodeValue();
                         // Get all "Output" nodes
                         NodeList outputNodes = rootElement.getElementsByTagName("Output");
 
@@ -425,7 +424,7 @@ public class DesignBuilder extends Application {
 
                 if (!defaultDesign.isEmpty()) {
                         Consumer<String> onOK = selectedOption -> {
-                                loadNewDesign(modelResources.get(selectedOption).getAbsolutePath());
+                                loadNewDesign(modelResources.get(selectedOption));
 
                                 System.out.println("Option Selected: " + selectedOption);
                         };
@@ -436,7 +435,7 @@ public class DesignBuilder extends Application {
                 } 
                 
                 if(defaultDesign.size()==1){
-                        loadNewDesign(modelResources.get(defaultDesign.get(0)).getAbsolutePath());
+                        loadNewDesign(modelResources.get(defaultDesign.get(0)));
                          System.out.println(" Option Selected: 0");
                          return;
                 }
@@ -516,6 +515,29 @@ public class DesignBuilder extends Application {
                 System.out.println("loadDesign");
         }
 
+        
+        
+         private void loadNewDesign(byte[] file) {
+                try {
+                        designPath = "";
+                        this.designResources = new ResourcesManager(file);
+                          DRYLoadNewDesign();
+                          
+                 } catch (ThisInterfaceDoesNotExistException | ThisZIPFileIsNotADesignException | ParserConfigurationException ex) {
+                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                }
+         }
+         
+          private void loadNewDesign(String filepath) {
+                try {
+                        designPath = filepath;
+                        this.designResources = new ResourcesManager(filepath);
+                        DRYLoadNewDesign();
+                 } catch (ThisInterfaceDoesNotExistException | ThisZIPFileIsNotADesignException | ParserConfigurationException ex) {
+                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                }
+         }
+                        
         /**
          * This program will be used to create a new model it will set a
          * resource Manager element, (it will not save the design until the
@@ -525,11 +547,9 @@ public class DesignBuilder extends Application {
          *
          * @param filepath
          */
-        private void loadNewDesign(String filepath) {
-                try {
-                        designPath = filepath;
-                        this.designResources = new ResourcesManager(filepath);
-                        //gérer xml opening
+        private void DRYLoadNewDesign() throws ParserConfigurationException, ThisZIPFileIsNotADesignException, ThisInterfaceDoesNotExistException {
+             
+                       
                         // Create a DocumentBuilderFactory
                         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                         // Create a DocumentBuilder
@@ -537,8 +557,9 @@ public class DesignBuilder extends Application {
                         // Parse the XML file and return a DOM Document object
                         Document document;
                         try {
-                                document = builder.parse(this.designResources.get("DesignData.xml"));
+                                document = builder.parse(new ByteArrayInputStream(this.designResources.get("DesignData.xml")));
                         } catch (SAXException | IOException ex) {
+                                Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                                 AlertPopup.showErrorAlert("The selected file is not a DESIGN file (no 'DesignData.xml' file inside or corrupted");
                                 throw new ThisZIPFileIsNotADesignException();
                         }
@@ -564,12 +585,10 @@ public class DesignBuilder extends Application {
                         NodeList InterfacesNodes = allInterfaces.item(0).getChildNodes();
                         //  System.out.println("#####"+InterfacesNodes.getLength());
                         this.interfacesManager.loadInterfaces(InterfacesNodes);
-                         designPath = filepath;
+                    
                         refreshEverything();
 
-                } catch (ThisInterfaceDoesNotExistException | ThisZIPFileIsNotADesignException | ParserConfigurationException ex) {
-                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                
         }
 
         /**
@@ -783,6 +802,11 @@ public class DesignBuilder extends Application {
         private void updateScale() {
                 this.DPI=(int) this.sliderScale.getValue();
                 refreshEverythingWithDPIChange();
+        }
+        
+        @FXML
+        private void unlockAdminMode(){
+                
         }
         
 @FXML

@@ -84,6 +84,7 @@
             <Menu mnemonicParsing="false" text="Export">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#exportCard" text="Export (PNG 600 DPI) " />
+                  <MenuItem mnemonicParsing="false" onAction="#unlockAdminMode" text="Mode Administrateur" />
               </items>
             </Menu>
       </menus>
@@ -123,7 +124,10 @@
                      <cursor>
                         <Cursor fx:constant="H_RESIZE" />
                      </cursor></Slider>
-                  <Button mnemonicParsing="false" onAction="#updateScale" text="Valider" />
+                  <Button mnemonicParsing="false" onAction="#updateScale" text="Valider">
+                     <HBox.margin>
+                        <Insets top="3.0" />
+                     </HBox.margin></Button>
                </children>
             </HBox>
          </children></AnchorPane>

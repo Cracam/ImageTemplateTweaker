@@ -96,7 +96,7 @@ public class InterfaceCustomImage extends InterfaceNode {
                 String nodeimageName = getStringAttribute(element, "image_name","PAS DE TEXTE");
                 if (!("PAS DE TEXTE".equals(nodeimageName))) {
 
-                        loaderInterface.loadImage(this.getDesignRessources().get(nodeimageName));
+                        loaderInterface.loadImage(this.getDesignRessources().getBufferedImage(nodeimageName));
 
                 }
         }
