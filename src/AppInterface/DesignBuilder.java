@@ -108,21 +108,27 @@ public class DesignBuilder extends Application {
         @FXML
         private SplitPane core;
 
+        
         @FXML
         private Menu NewModel;
-
         @FXML
         private MenuItem Msave;
-
         @FXML
         private MenuItem MsaveAs;
-
         @FXML
         private MenuItem Mclose;
-        
+
         @FXML
-        private Slider sliderScale;
+        private MenuItem menuExport;
+        @FXML
+        private MenuItem menuAdminMode;
+        private boolean adminModeUnlocked=false;
+        private String passwordExport="########";
         
+         @FXML
+        private Slider sliderScale;
+         
+         
 
         private ArrayList<String> modelFileNames;
 
@@ -247,10 +253,13 @@ public class DesignBuilder extends Application {
                         
                          subElt = extractSingleElement(informationsNode.getElementsByTagName("Description"));
                         this.defaultDesignName = getStringAttribute(subElt,"Description","") ;
+
                         
                           subElt = extractSingleElement(informationsNode.getElementsByTagName("Export"));
-                        this.maxDPI=getIntAttribute(subElt,"PWD",maxDPI);
+                        this.maxDPI=getIntAttribute(subElt,"maxDPI",maxDPI);
                         this.sliderScale.setMax(maxDPI);
+                        passwordExport="#######################[[[[[[[[";
+                        this.passwordExport=getStringAttribute(subElt, "PassWord", passwordExport);
                                 
                         // Get all "Output" nodes
                         NodeList outputNodes = rootElement.getElementsByTagName("Output");
@@ -282,6 +291,7 @@ public class DesignBuilder extends Application {
                         Msave.setDisable(false);
                         MsaveAs.setDisable(false);
                         Mclose.setDisable(false);
+                        menuAdminMode.setDisable(false);
 
                 } catch (ParserConfigurationException | SAXException | IOException  ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
@@ -341,6 +351,9 @@ public class DesignBuilder extends Application {
                 Msave.setDisable(true);
                 MsaveAs.setDisable(true);
                 Mclose.setDisable(true);
+                 menuAdminMode.setDisable(true);
+                  menuExport.setDisable(true);
+                  
         }
 
         public String getRootPath() {
@@ -806,27 +819,52 @@ public class DesignBuilder extends Application {
         
         @FXML
         private void unlockAdminMode(){
+               testUnlockAdminMode("");
                 
         }
+                
+          private void testUnlockAdminMode(String pswd){
+                 
+
+                if (pswd.equals(this.passwordExport)) {
+                        adminModeUnlocked = true;
+                        this.menuAdminMode.setDisable(true);
+                        this.menuExport.setDisable(false);
+                        this.maxDPI=600;
+                } else {
+                        adminModeUnlocked = false;
+                        this.menuAdminMode.setDisable(false);
+                        this.menuExport.setDisable(true);
+                        System.out.println("Tested password : "+pswd+ " real one : "+passwordExport);
+                        Consumer<String> ifYes = pwd -> {
+                                testUnlockAdminMode(pwd);
+                        };
+                        showPasswordDialog("Veuillez entrer le mot de passe pour valider le mode administrateur  : " + modelName, ifYes, null);
+                }
+
+        }
+ 
         
-@FXML
-    private void exportCard() {
-        // Open the spinner dialog to select the number of images to export
-        SpinnerPopup.showSpinnerDialog(
-            "Sélectionnez le nombre d'images à exporter",
-            1, // Minimum value
-            100, // Maximum value
-            1, // Initial value
-            numImages -> {
-                // If the user clicks "Yes", proceed to save the images
-                saveImagesToDirectory(numImages);
-            },
-            () -> {
-                // If the user clicks "Cancel", do nothing or handle cancellation
-                System.out.println("Export cancelled");
-            }
-        );
-    }
+        @FXML
+        private void exportCard() {
+                if (adminModeUnlocked) {
+                        // Open the spinner dialog to select the number of images to export
+                        SpinnerPopup.showSpinnerDialog(
+                                "Sélectionnez le nombre d'images à exporter",
+                                1, // Minimum value
+                                100, // Maximum value
+                                1, // Initial value
+                                numImages -> {
+                                        // If the user clicks "Yes", proceed to save the images
+                                        saveImagesToDirectory(numImages);
+                                },
+                                () -> {
+                                        // If the user clicks "Cancel", do nothing or handle cancellation
+                                        System.out.println("Export cancelled");
+                                }
+                        );
+                }
+        }
 
     private void saveImagesToDirectory(int numImages) {
         DirectoryChooser directoryChooser = new DirectoryChooser();

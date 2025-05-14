@@ -12,6 +12,7 @@ import AppInterface.Interfaces.InterfaceMouvableImage;
 import AppInterface.Interfaces.InterfaceRandomImageAllocation;
 import AppInterface.Interfaces.InterfaceRandomImageDispersion;
 import AppInterface.Interfaces.InterfaceRandomSubImageAllocation;
+import AppInterface.Interfaces.InterfaceResizableImage;
 import AppInterface.Interfaces.InterfaceVoidImage;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageGenerators.GeneratorCustomImage;
@@ -26,6 +27,7 @@ import ImageProcessor.ImagesTransformers.TransformerFixedColor;
 import ImageProcessor.ImagesTransformers.TransformerInert;
 import ImageProcessor.ImagesTransformers.TransformerMask;
 import ImageProcessor.ImagesTransformers.TransformerMovableImage;
+import ImageProcessor.ImagesTransformers.TransformerResizableImage;
 import ImageProcessor.Layer;
 import ImageProcessor.VoidImage;
 import java.util.HashMap;
@@ -52,6 +54,7 @@ public class DesignInterfaceLinker {
                 linkMap.put("T_Inert", new DesignInterfacePair(TransformerInert.class, InterfaceInert.class));
                 linkMap.put("T_Custom_Color", new DesignInterfacePair(TransformerCustomColor.class, InterfaceCustomColor.class));
                 linkMap.put("T_Mouvable_Image", new DesignInterfacePair(TransformerMovableImage.class, InterfaceMouvableImage.class));
+                 linkMap.put("T_Scalable_Image", new DesignInterfacePair(TransformerResizableImage.class, InterfaceResizableImage.class));
                 linkMap.put("T_Fixed_Color", new DesignInterfacePair(TransformerFixedColor.class, InterfaceFixedColor.class));
 
                 linkMap.put("T_Mask", new DesignInterfacePair(TransformerMask.class, InterfaceMask.class));

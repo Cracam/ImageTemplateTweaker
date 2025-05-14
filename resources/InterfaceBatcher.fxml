@@ -83,8 +83,8 @@
         </Menu>
             <Menu mnemonicParsing="false" text="Export">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#exportCard" text="Export (PNG 600 DPI) " />
-                  <MenuItem mnemonicParsing="false" onAction="#unlockAdminMode" text="Mode Administrateur" />
+                <MenuItem fx:id="menuExport" disable="true" mnemonicParsing="false" onAction="#exportCard" text="Export (PNG 600 DPI) " />
+                  <MenuItem fx:id="menuAdminMode" disable="true" mnemonicParsing="false" onAction="#unlockAdminMode" text="Mode Administrateur" />
               </items>
             </Menu>
       </menus>

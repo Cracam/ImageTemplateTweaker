@@ -9,7 +9,7 @@
 		<Informations>
 			<DefaultDesign name='Carte_Classique'/>
 			<Description Description="Ce modèle de carte est le modèle 19 conso + 2 consos vertes de l'association FOYER ENSE3"/>
-			<Export PWD="foyer au top"/>
+			<Export maxDPI="600" PassWord="foyer au top"/>
 		</Informations>
 
 
@@ -57,6 +57,9 @@
 					<Transformers>
 						<T_Custom_Color>
 						</T_Custom_Color>
+						<T_Scalable_Image>
+							<Scale MaxScale="1.3" MinScale="0.7"/>
+					  </T_Scalable_Image>
 					</Transformers>
 				</Layer>
 				

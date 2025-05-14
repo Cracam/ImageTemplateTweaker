@@ -120,7 +120,7 @@ static public Integer getIntAttribute(Element element, String attributeName, int
     try {
         return Integer.valueOf(getAttributeValue(element, attributeName));
     } catch (NumberFormatException | XMLErrorInModelException e) {
-        System.out.println("Invalid value or XML loading error for attribute " + attributeName + "--- replacing by default value");
+        System.out.println("Invalid value or XML loading error for attribute " + attributeName + "--- replacing by default value ___ element : "+element);
         return ret;
     }
 }
@@ -143,11 +143,11 @@ static public Integer getIntAttribute(Element element, String attributeName, int
                         if (attributeValue != null && !attributeValue.isEmpty()) {
                                 return attributeValue;
                         } else {
-                                System.out.println("Invalid value for attribute " + attributeName + "--- remplacing by default value");
+                                System.out.println("Invalid value for attribute " + attributeName + "--- remplacing by default value___ element : "+element);
                                 return ret;
                         }
                 } catch (XMLErrorInModelException ex) {
-                        System.out.println("XML loading error  for attribute " + attributeName + "--- remplacing by default value");
+                        System.out.println("XML loading error  for attribute " + attributeName + "--- remplacing by default value ___ element : "+element);
                                 return ret;
                 }
         }

@@ -9,7 +9,7 @@
 		<Informations>
 			<DefaultDesign name='Carte_Classique'/>
 			<Description Description="Ce modèle de carte est le modèle 19 conso + 2 consos vertes de l'association FOYER ENSE3"/>
-			<Export PWD="foyer au top"/>
+			<Export maxDPI="600" PassWord="foyer au top"/>
 		</Informations>
 
 
