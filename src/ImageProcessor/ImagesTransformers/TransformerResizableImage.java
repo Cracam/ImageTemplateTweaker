@@ -51,7 +51,7 @@ public void DRY_DRYUpdate(BufferedImage img_in) {
     
     int newWidth = (int) (newMMWidth * pixeMlilimeterFactor);
     int newHeight = (int) (newMMHeight * pixeMlilimeterFactor);
-    System.out.println("gggggg : "+newWidth+"       "+newHeight);
+   // System.out.println("gggggg : "+newWidth+"       "+newHeight);
 
     // Create a new BufferedImage for the resized image
     BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
@@ -76,6 +76,7 @@ public void DRY_DRYUpdate(BufferedImage img_in) {
     @Override
     public void DRYRefreshDPI() {
         Layer layer = this.getUpperDN(Layer.class);
+        layer.DRYRefreshDPI();
         posRefX = layer.getPosSize().getPos_x();
         posRefY = layer.getPosSize().getPos_y();
         originalWidth = layer.getPosSize().getSize_x();
