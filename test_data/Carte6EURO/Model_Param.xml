@@ -9,7 +9,7 @@
 		<Informations>
 			<DefaultDesign name='Carte_Classique'/>
 			<Description Description="Ce modèle de carte est le modèle 19 conso + 2 consos vertes de l'association FOYER ENSE3"/>
-			<Export maxDPI="600" PassWord="foyer au top"/>
+			<Export maxDPI="300" PassWord="foyer au top"/>
 		</Informations>
 
 
@@ -57,6 +57,7 @@
 					<Transformers>
 						<T_Custom_Color>
 						</T_Custom_Color>
+						
 					</Transformers>
 				</Layer>
 				
@@ -609,6 +610,7 @@
 									<T_Mouvable_Image>
 							<OffSet X_MaxOffset="3.0" X_MinOffset="-3.0" Y_MaxOffset="3.0" Y_MinOffset="-3.0"/>
 						</T_Mouvable_Image>
+						
 								</Transformers>
 							</SubLayer>
 
@@ -631,6 +633,9 @@
 						<T_Fixed_Color>
 							<Gradient gradient_Name="Mono-Color" color_1="#D8E6C1" color_2="#FFFFFF" colorIntensity="0.0" param_1="0.0" param_2="0.0" />
 						</T_Fixed_Color>
+						<T_Scalable_Image>
+							<Scale MaxScale="1.2" MinScale="0.8"/>
+					  </T_Scalable_Image>
 					</Transformers>
 				</Layer>
 
@@ -648,6 +653,9 @@
 						<T_Fixed_Color>
 							<Gradient gradient_Name="Mono-Color" color_1="#D8E6C1" color_2="#FFFFFF" colorIntensity="0.0" param_1="0.0" param_2="0.0" />
 						</T_Fixed_Color>
+						<T_Scalable_Image>
+							<Scale MaxScale="1.2" MinScale="0.8"/>
+					  </T_Scalable_Image>
 					</Transformers>
 				</Layer>
 
@@ -664,7 +672,7 @@
 
 
 				<Layer name="Feuille Verte" tab_name="Verso">
-					<pos pos_x="10.86" pos_y="11.86"/>
+					<pos pos_x="11.86" pos_y="11.86"/>
 					<size size_x="9.761" size_y="9.761"/>
 					<Generator>
 						<G_Fixed_Image>
@@ -675,11 +683,14 @@
 						<T_Mouvable_Image>
 							<OffSet X_MaxOffset="3.0" X_MinOffset="-3.0" Y_MaxOffset="3.0" Y_MinOffset="-3.0"/>
 						</T_Mouvable_Image>
+						<T_Scalable_Image>
+							<Scale MaxScale="1.2" MinScale="0.8"/>
+					  </T_Scalable_Image>
 					</Transformers>
 				</Layer>
 
 				<Layer name="Feuille Verte" tab_name="Verso">
-					<pos pos_x="66.51" pos_y="10.85"/>
+					<pos pos_x="67.51" pos_y="10.85"/>
 					<size size_x="9.761" size_y="9.761"/>
 					<Generator>
 						<G_Fixed_Image>
@@ -690,6 +701,9 @@
 						<T_Mouvable_Image>
 							<OffSet X_MaxOffset="3.0" X_MinOffset="-3.0" Y_MaxOffset="3.0" Y_MinOffset="-3.0"/>
 						</T_Mouvable_Image>
+						<T_Scalable_Image>
+							<Scale MaxScale="1.2" MinScale="0.8"/>
+					  </T_Scalable_Image>
 					</Transformers>
 				</Layer>
 

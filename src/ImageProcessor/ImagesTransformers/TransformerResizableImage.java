@@ -8,6 +8,7 @@ import ImageProcessor.DesignNode;
 import ImageProcessor.ImageBuilder;
 import ImageProcessor.ImageTransformer;
 import ImageProcessor.Layer;
+import ImageProcessor.SubClasses.PosFloat;
 import ImageProcessor.SubClasses.QuadrupletFloat;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getFloatAttribute;
@@ -51,7 +52,7 @@ public void DRY_DRYUpdate(BufferedImage img_in) {
     
     int newWidth = (int) (newMMWidth * pixeMlilimeterFactor);
     int newHeight = (int) (newMMHeight * pixeMlilimeterFactor);
-   // System.out.println("gggggg : "+newWidth+"       "+newHeight);
+  
 
     // Create a new BufferedImage for the resized image
     BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
@@ -65,18 +66,21 @@ public void DRY_DRYUpdate(BufferedImage img_in) {
 
     float offsetX = (originalWidth - newMMWidth) / 2;
     float offsetY = (originalHeight - newMMHeight) / 2;
+     System.out.println("gggggg : "+offsetX+"       "+offsetY);
 
-    QuadrupletFloat posSize = new QuadrupletFloat(posRefX + offsetX, posRefY + offsetY, originalWidth, originalHeight);
-    layer.setPosSize(posSize);
-    layer.DRYRefreshDPI();
-    layer.update();
+   // QuadrupletFloat posSize = new QuadrupletFloat(posRefX + offsetX, posRefY + offsetY, originalWidth, originalHeight);
+    PosFloat pos = new PosFloat( offsetX, offsetY);
+    layer.setAnOffset("ResizableTransformer",pos);
+  //  layer.setPosSize(posSize);
+ //   layer.DRYRefreshDPI();
+  //  layer.update();
 }
 
 
     @Override
     public void DRYRefreshDPI() {
         Layer layer = this.getUpperDN(Layer.class);
-        layer.DRYRefreshDPI();
+        //layer.DRYRefreshDPI();
         posRefX = layer.getPosSize().getPos_x();
         posRefY = layer.getPosSize().getPos_y();
         originalWidth = layer.getPosSize().getSize_x();

@@ -5,6 +5,7 @@ import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;
 import ImageProcessor.ImageTransformer;
 import ImageProcessor.Layer;
+import ImageProcessor.SubClasses.PosFloat;
 import ImageProcessor.SubClasses.QuadrupletFloat;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getFloatAttribute;
@@ -66,10 +67,15 @@ public class TransformerMovableImage extends ImageTransformer {
                         offsetY = -this.Y_MinOffset * rawOffestY;
                 }
                 
-                QuadrupletFloat posSize = new QuadrupletFloat(posRefX + offsetX, posRefY + offsetY, layer.getPosSize().getSize_x(), layer.getPosSize().getSize_y());
-                layer.setPosSize(posSize);
-                layer.DRYRefreshDPI();
-                layer.update();
+          //      QuadrupletFloat posSize = new QuadrupletFloat(posRefX + offsetX, posRefY + offsetY, layer.getPosSize().getSize_x(), layer.getPosSize().getSize_y());
+//                layer.setPosSize(posSize);
+//                layer.DRYRefreshDPI();
+                     System.out.println("gggggg : "+offsetX+"       "+offsetY);
+
+                PosFloat pos = new PosFloat(offsetX, offsetY);
+    layer.setAnOffset("MouvableTransformer",pos);
+           //     layer.update();
+                
         }
         
          @Override
