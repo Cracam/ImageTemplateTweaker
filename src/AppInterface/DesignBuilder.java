@@ -12,6 +12,7 @@ import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.ImageBuilder;
 import ResourcesManager.PasswordManager;
 import ResourcesManager.ResourcesManager;
+import static ResourcesManager.ResourcesManager.isPasswordCorrect;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getIntAttribute;
 import static ResourcesManager.XmlManager.getStringAttribute;
@@ -303,32 +304,7 @@ public class DesignBuilder extends Application {
  
         
         
-        /**
-         * Vérifie si le mot de passe fourni est correct pour le fichier ZIP.
-         *
-         * @param zipFile L'objet ZipFile à vérifier.
-         * @param password Le mot de passe à tester.
-         * @return true si le mot de passe est correct, false sinon.
-         */
-                public static boolean isPasswordCorrect(ZipFile zipFile, String password) {
-                        try {
-                                // Set the password for the zip file
-                                zipFile.setPassword(password.toCharArray());
-
-                                // Try to get the list of file headers to check if the password is correct
-                                //  zipFile.getFileHeaders();
-                                zipFile.extractAll(System.getProperty("java.io.tmpdir"));
-
-                                // If no exception is thrown, the password is correct
-                                return true;
-                        } catch (net.lingala.zip4j.exception.ZipException e) {
-                                // Check if the exception indicates a wrong password
-
-                                return false;
-
-                                // If it's a different exception, rethrow it
-                        }
-                }
+    
 
 
         @FXML
@@ -957,6 +933,9 @@ public class DesignBuilder extends Application {
         }
 
 }
+//####################
+///######### CLEAN AND BUILD
+//####################
 
 //CMD to  package in .exe
 //jpackage --input C:\BACKUP\ENSE3\Foyer\Programme_Java\Batcher_Foyer\dist --name TestBatcher --main-jar Batcher_Foyer.jar --main-class designBuilder.DesignBuilder --type exe --java-options "--module-path 'C:\softs\java\javafx-sdk-23.0.1\lib' --add-modules javafx.controls,javafx.fxml" --app-version 1.11 --icon C:\BACKUP\ENSE3\Foyer\Programme_Java\icon.ico --dest C:\BACKUP\ENSE3\Foyer\Programme_Java\Export_APP
