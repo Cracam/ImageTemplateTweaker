@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import imageloaderinterface.ImageLoaderInterface?>
+<?import javafx.scene.layout.VBox?>
+
+
+<fx:root fx:id="MainVBox" type="VBox" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageLoaderInterface fx:id="loaderInterface" />
+   </children>
+</fx:root>

@@ -1,0 +1,852 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Document   : Carte Model V3
+    V1 and V2 doen't exist on the soft
+    Recto pour la partie avec les consos
+    verso pour la partie avec les cases nom/prenom
+-->
+<Model name="Carte Foyer V3">
+		<Informations>
+			<DefaultDesign name='Carte_Classique'/>
+			<Description Description="Ce modèle de carte est le modèle 19 conso + 2 consos vertes de l'association FOYER ENSE3"/>
+			<Export maxDPI="300" PassWord="foyer au top"/>
+		</Informations>
+
+
+		<Output name="Recto" size_x="88" size_y="58" ><!-- Verso de la carte (côte nom prenom) -->
+				
+
+				<Layer name="Fond" tab_name="Commun">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="RECTO_fond.png"/>
+						</G_Fixed_Image>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+
+				<Layer name="Dessin Fond" tab_name="Recto">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Custom_Image>
+						</G_Custom_Image>
+					</Generator>
+					<Transformers>
+						<T_Mouvable_Image>
+							<OffSet X_MaxOffset="3.0" X_MinOffset="-3.0" Y_MaxOffset="3.0" Y_MinOffset="-3.0"/>
+						</T_Mouvable_Image>
+					</Transformers>
+				</Layer>
+
+
+				<Layer name="Zone de Texte" tab_name="Recto">
+					<pos pos_x="18.66" pos_y="22.94"/>
+					<size size_x="50.67" size_y="11.57"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="RECTO_ZoneTexte.png"/>
+						</G_Fixed_Image>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+						
+					</Transformers>
+				</Layer>
+				
+				<Layer name="Zone de Texte" tab_name="Recto">
+					<pos pos_x="18.66" pos_y="38"/>
+					<size size_x="50.67" size_y="11.57"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="RECTO_ZoneTexte.png"/>
+						</G_Fixed_Image>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+
+				<Layer name="Dessin Devant" tab_name="Recto">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Custom_Image>
+						</G_Custom_Image>
+					</Generator>
+					<Transformers>
+						<T_Mouvable_Image>
+							<OffSet X_MaxOffset="3.0" X_MinOffset="-3.0" Y_MaxOffset="3.0" Y_MinOffset="-3.0"/>
+						</T_Mouvable_Image>
+					</Transformers>
+				</Layer>
+
+
+				<Layer name="Texte : Nom/Prénom" tab_name="Recto">
+					<pos pos_x="44" pos_y="25.75"/>
+					<size size_x="68" size_y="18"/>
+					<Generator>
+						<G_Fixed_Text_Custom_Style>
+							<Text TextHeightFactor="1.0" TextSizeMin="2" TextSizeMax="4" Text="Nom"/>
+						</G_Fixed_Text_Custom_Style>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+				<Layer name="Texte : Nom/Prénom" tab_name="Recto">
+					<pos pos_x="44" pos_y="40.5"/>
+					<size size_x="68" size_y="18"/>
+					<Generator>
+						<G_Fixed_Text_Custom_Style>
+							<Text TextHeightFactor="1.0" TextSizeMin="2" TextSizeMax="4" Text="Prenom"/>
+						</G_Fixed_Text_Custom_Style>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+
+				<Layer name="Cadre" tab_name="Recto">
+					<pos pos_x="18.07" pos_y="22.6"/>
+					<size size_x="51.86" size_y="12.73"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="RECTO_CadreTexte.png"/>
+						</G_Fixed_Image>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+				
+				<Layer name="Cadre" tab_name="Recto">
+					<pos pos_x="18.07" pos_y="37.38"/>
+					<size size_x="51.86" size_y="12.73"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="RECTO_CadreTexte.png"/>
+						</G_Fixed_Image>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+
+
+
+			<Layer name="Tasses" tab_name="Recto">
+					<pos pos_x="9.95" pos_y="1"/>
+					<size size_x="68" size_y="30.75"/>
+					<Generator>
+						<G_Custom_Image>
+						</G_Custom_Image>
+					</Generator>
+					<Transformers>
+						<T_Mouvable_Image>
+							<OffSet X_MaxOffset="0.0" X_MinOffset="0.0" Y_MaxOffset="1.0" Y_MinOffset="-1.0"/>
+						</T_Mouvable_Image>
+					</Transformers>
+				</Layer>
+
+
+
+
+
+				<Layer name="Texte : Carte Foyer" tab_name="Recto">
+					<pos pos_x="44" pos_y="8.2"/>
+					<size size_x="68" size_y="18"/>
+					<Generator>
+						<G_Fixed_Text_Custom_Style>
+							<Text TextHeightFactor="2.0" TextSizeMin="6" TextSizeMax="11" Text="Carte Foyer"/>
+						</G_Fixed_Text_Custom_Style>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+
+				<Layer name="Texte : Sous Titre" tab_name="Recto">
+					<pos pos_x="44" pos_y="13"/>
+					<size size_x="68" size_y="18"/>
+					<Generator>
+						<G_Custom_Text>
+							<Text TextHeightFactor="3.0" TextSizeMin="3.5" TextSizeMax="6"/>
+						</G_Custom_Text>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+
+
+
+
+				<Layer name="Côtés" tab_name="Commun">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="RECTO_arrierePlan.png"/>
+						</G_Fixed_Image>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+<Layer name="Dispertion des Graines" tab_name="Commun">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="23.42" size_y="58"/>
+					<Generator>
+						<G_Random_Image_Dispersion>
+							<Size maxXSize="3.0" minXSize="2.0" maxYSize="3.0" minYSize="1.0"/>
+							<Interval maxInterval="10.0" minInterval="5.0"/>
+							<SubLayer>
+								<Generator>
+								<G_Fixed_Image>
+									<Image image_name="graine.png"/>
+								</G_Fixed_Image>
+								</Generator>
+								<Transformers>
+									<T_Custom_Color>
+									</T_Custom_Color>
+								</Transformers>
+							</SubLayer>
+						</G_Random_Image_Dispersion>
+					</Generator>
+					<Transformers>
+						<T_Mask>
+							<Image image_name="RECTO_MaskLeft.png" invert="0"/>
+						</T_Mask>
+					</Transformers>
+				</Layer>
+
+
+<Layer name="Dispertion des Graines" tab_name="Commun">
+					<pos pos_x="64.58" pos_y="0"/>
+					<size size_x="23.42" size_y="58"/>
+					<Generator>
+						<G_Random_Image_Dispersion>
+							<Size maxXSize="3.0" minXSize="2.0" maxYSize="3.0" minYSize="1.0"/>
+							<Interval maxInterval="10.0" minInterval="5.0"/>
+							<SubLayer>
+								<Generator>
+								<G_Fixed_Image>
+									<Image image_name="graine.png"/>
+								</G_Fixed_Image>
+								</Generator>
+								<Transformers>
+									<T_Custom_Color>
+									</T_Custom_Color>
+								</Transformers>
+							</SubLayer>
+						</G_Random_Image_Dispersion>
+					</Generator>
+					<Transformers>
+						<T_Mask>
+							<Image image_name="RECTO_MaskRight.png" invert="0"/>
+						</T_Mask>
+					</Transformers>
+				</Layer>
+
+
+
+
+
+
+
+
+				<Layer name="Cadre princal" tab_name="Commun">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="RECTO_Bordure.png"/>
+						</G_Fixed_Image>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+
+
+
+
+
+
+
+<!--
+
+				<Layer name="test" tab_name="Commun">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Custom_Image>
+						</G_Custom_Image>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+				<Layer name="test___2" tab_name="Commun">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Custom_Image>
+						</G_Custom_Image>
+					</Generator>
+					<Transformers>
+						<T_Mouvable_Image>
+							<OffSet X_MaxOffset="30.0" X_MinOffset="-3.0" Y_MaxOffset="30.0" Y_MinOffset="-14.5"/>
+						</T_Mouvable_Image>
+					</Transformers>
+				</Layer>
+
+
+				<Layer name="test FIXED Image" tab_name="Commun">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="40"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="RECTO_arrierePlan.png"/>
+						</G_Fixed_Image>
+					</Generator>
+					<Transformers>
+					</Transformers>
+				</Layer>
+				
+
+				<Layer name="test Custom TEXT" tab_name="Commun">
+					<pos pos_x="40" pos_y="15"/>
+					<size size_x="68" size_y="18"/>
+					<Generator>
+						<G_Custom_Text>
+							<Text TextHeightFactor="3.0" TextSizeMin="2.5" TextSizeMax="15"/>
+						</G_Custom_Text>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>	
+
+				
+				<Layer name="test Custom TEXT" tab_name="Commun">
+					<pos pos_x="40" pos_y="15"/>
+					<size size_x="68" size_y="18"/>
+					<Generator>
+						<G_Fixed_Text_Custom_Color_Custom_Style>
+							<Text TextHeightFactor="3.0" TextSizeMin="2.5" TextSizeMax="15" Text="Bla __ Blaé"/>
+						</G_Fixed_Text_Custom_Color_Custom_Style>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+
+				<Layer name="test rdn disp" tab_name="disp">
+					<pos pos_x="40" pos_y="15"/>
+					<size size_x="68" size_y="14"/>
+					<Generator>
+						<G_Random_Image_Dispersion>
+							<Size maxXSize="5.0" minXSize="2.0" maxYSize="3.0" minYSize="1.0"/>
+							<Interval maxInterval="10.0" minInterval="4.0"/>
+							<SubLayer>
+								<Generator>
+								<G_Fixed_Image>
+									<Image image_name="graine.png"/>
+								</G_Fixed_Image>
+								</Generator>
+								<Transformers>
+									<T_Custom_Color>
+									</T_Custom_Color>
+								</Transformers>
+							</SubLayer>
+						</G_Random_Image_Dispersion>
+					</Generator>
+					<Transformers>
+						<T_Mouvable_Image>
+							<OffSet X_MaxOffset="30.0" X_MinOffset="-3.0" Y_MaxOffset="30.0" Y_MinOffset="-14.5"/>
+						</T_Mouvable_Image>
+					</Transformers>
+				</Layer>
+
+
+
+				<Layer name="test rdn allocV2" tab_name="dispAl">
+					<pos pos_x="0" pos_y="5"/>
+					<size size_x="88" size_y="54"/>
+					<Generator>
+						<G_Random_Image_Allocation>
+							<Param minNumber="1" maxNumber="10" defaultNumber="5"/>
+							
+							<PosSizes>
+								<PosSize pos_x="10" pos_y="15" size_x="18.5" size_y="18.5"/>
+								<PosSize pos_x="30" pos_y="20" size_x="14.5" size_y="14.5"/>
+								<PosSize pos_x="10" pos_y="35" size_x="14.5" size_y="14.5"/>
+								<PosSize pos_x="30" pos_y="40" size_x="10.5" size_y="10.5"/>
+							</PosSizes>
+
+							<Common_Componments>
+									<Generator>
+										<G_Custom_Image>
+										</G_Custom_Image>
+									</Generator>
+									<Transformers>
+									</Transformers>
+							</Common_Componments>
+
+							<SubLayer name="Consos">
+								<Transformers>
+									<T_Custom_Color>
+									</T_Custom_Color>
+								</Transformers>
+							</SubLayer>
+
+						</G_Random_Image_Allocation>
+					</Generator>
+					<Transformers>
+						<T_Mouvable_Image>
+							<OffSet X_MaxOffset="30.0" X_MinOffset="-3.0" Y_MaxOffset="30.0" Y_MinOffset="-14.5"/>
+						</T_Mouvable_Image>
+					</Transformers>
+				</Layer>
+				
+
+
+				<Layer name="test rdn alloc" tab_name="dispAl">
+					<pos pos_x="0" pos_y="5"/>
+					<size size_x="88" size_y="54"/>
+					<Generator>
+						<G_Random_Image_Allocation>
+							<Param minNumber="1" maxNumber="10" defaultNumber="5"/>
+							
+							<PosSizes>
+								<PosSize pos_x="10" pos_y="15" size_x="18.5" size_y="18.5"/>
+								<PosSize pos_x="30" pos_y="20" size_x="14.5" size_y="14.5"/>
+								<PosSize pos_x="10" pos_y="35" size_x="14.5" size_y="14.5"/>
+								<PosSize pos_x="30" pos_y="40" size_x="10.5" size_y="10.5"/>
+							</PosSizes>
+
+
+								
+
+							<SubLayer name="Consos_img">
+								
+								<Generator>
+									<G_Fixed_Image>
+										<Image image_name="graine.png"/>
+									</G_Fixed_Image>
+								</Generator>
+								<Transformers>
+									<T_Custom_Color>
+									</T_Custom_Color>
+								</Transformers>
+							</SubLayer>
+
+						</G_Random_Image_Allocation>
+					</Generator>
+					<Transformers>
+						<T_Mouvable_Image>
+							<OffSet X_MaxOffset="30.0" X_MinOffset="-3.0" Y_MaxOffset="30.0" Y_MinOffset="-14.5"/>
+						</T_Mouvable_Image>
+					</Transformers>
+				</Layer>
+				-->
+
+		</Output>	
+
+		<Output name="Verso" size_x="88" size_y="58" ><!-- Verso de la carte (côte nom prenom) -->
+
+				
+				<Layer name="Fond" tab_name="Commun">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="VERSO_fond.png"/>
+						</G_Fixed_Image>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+
+				<Layer name="Dessin Fond" tab_name="Verso">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Custom_Image>
+						</G_Custom_Image>
+					</Generator>
+					<Transformers>
+						<T_Mouvable_Image>
+							<OffSet X_MaxOffset="3.0" X_MinOffset="-3.0" Y_MaxOffset="3.0" Y_MinOffset="-3.0"/>
+						</T_Mouvable_Image>
+					</Transformers>
+				</Layer>
+
+
+
+			<Layer name="Répartirion des Consos" tab_name="Verso">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Random_Image_Allocation>
+							<Param minNumber="1" maxNumber="19" defaultNumber="10"/>
+							
+							<PosSizes>
+							    <PosSize pos_x="21.5" pos_y="14" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="32" pos_y="17.3" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="10" pos_y="22.5" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="20" pos_y="26" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="11.5" pos_y="34.5" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="31" pos_y="28.5" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="23.5" pos_y="36.5" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="38.35" pos_y="36.5" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="15.5" pos_y="45" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="31" pos_y="45" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="55.15" pos_y="14" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="44.65" pos_y="17.3" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="66.55" pos_y="22.5" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="56.65" pos_y="26" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="65.15" pos_y="34.5" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="45.65" pos_y="28.5" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="53.15" pos_y="36.5" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="61.15" pos_y="45" size_x="11.35" size_y="11.35"/>
+							    <PosSize pos_x="45.65" pos_y="45" size_x="11.35" size_y="11.35"/>
+							</PosSizes>
+
+
+							<Common_Componments>
+									<Generator>
+										<G_Custom_Image>
+										</G_Custom_Image>
+									</Generator>
+									<Transformers>
+									</Transformers>
+							</Common_Componments>
+
+							<SubLayer name="Consos">
+								<Transformers>
+									<T_Custom_Color>
+									</T_Custom_Color>
+								</Transformers>
+							</SubLayer>
+
+						</G_Random_Image_Allocation>
+					</Generator>
+					<Transformers>
+					</Transformers>
+				</Layer>
+
+
+<Layer name="Items Consos" tab_name="Verso">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Random_Image_Allocation>
+							<Param minNumber="1" maxNumber="19" defaultNumber="2"/>
+							
+							<PosSizes>
+							    <PosSize pos_x="22.275" pos_y="14.77" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="32.77" pos_y="18.085" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="10.77" pos_y="23.285" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="20.77" pos_y="26.78" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="12.275" pos_y="35.285" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="31.77" pos_y="29.285" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="24.275" pos_y="37.285" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="39.125" pos_y="37.285" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="16.275" pos_y="45.77" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="31.77" pos_y="45.77" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="55.925" pos_y="14.77" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="45.425" pos_y="18.085" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="67.325" pos_y="23.285" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="57.425" pos_y="26.78" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="65.925" pos_y="35.285" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="46.425" pos_y="29.285" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="53.925" pos_y="37.285" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="61.925" pos_y="45.77" size_x="9.761" size_y="9.761"/>
+							    <PosSize pos_x="46.425" pos_y="45.77" size_x="9.761" size_y="9.761"/>
+							</PosSizes>
+
+
+							<SubLayer name="Item">
+								<Generator>
+										<G_Custom_Image>
+										</G_Custom_Image>
+								</Generator>
+								<Transformers>
+									<T_Mouvable_Image>
+							<OffSet X_MaxOffset="3.0" X_MinOffset="-3.0" Y_MaxOffset="3.0" Y_MinOffset="-3.0"/>
+						</T_Mouvable_Image>
+						
+								</Transformers>
+							</SubLayer>
+
+						</G_Random_Image_Allocation>
+					</Generator>
+					<Transformers>
+					</Transformers>
+				</Layer>
+
+
+				<Layer name="Forme Consos Vertes" tab_name="Verso">
+					<pos pos_x="10.86" pos_y="11.86"/>
+					<size size_x="11.5" size_y="11.5"/>
+
+					<Generator>
+						<G_Custom_Image>
+						</G_Custom_Image>
+					</Generator>
+					<Transformers>
+						<T_Fixed_Color>
+							<Gradient gradient_Name="Mono-Color" color_1="#D8E6C1" color_2="#FFFFFF" colorIntensity="0.0" param_1="0.0" param_2="0.0" />
+						</T_Fixed_Color>
+						<T_Scalable_Image>
+							<Scale MaxScale="1.2" MinScale="0.8"/>
+					  </T_Scalable_Image>
+					</Transformers>
+				</Layer>
+
+				 
+
+				<Layer name="Forme Consos Vertes" tab_name="Verso">
+					<pos pos_x="66.51" pos_y="10.85"/>
+					<size size_x="11.5" size_y="11.5"/>
+
+					<Generator>
+						<G_Custom_Image>
+						</G_Custom_Image>
+					</Generator>
+					<Transformers>
+						<T_Fixed_Color>
+							<Gradient gradient_Name="Mono-Color" color_1="#D8E6C1" color_2="#FFFFFF" colorIntensity="0.0" param_1="0.0" param_2="0.0" />
+						</T_Fixed_Color>
+						<T_Scalable_Image>
+							<Scale MaxScale="1.2" MinScale="0.8"/>
+					  </T_Scalable_Image>
+					</Transformers>
+				</Layer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+				<Layer name="Feuille Verte" tab_name="Verso">
+					<pos pos_x="11.86" pos_y="11.86"/>
+					<size size_x="9.761" size_y="9.761"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="Verte.png"/>
+						</G_Fixed_Image>
+					</Generator>
+					<Transformers>
+						<T_Mouvable_Image>
+							<OffSet X_MaxOffset="3.0" X_MinOffset="-3.0" Y_MaxOffset="3.0" Y_MinOffset="-3.0"/>
+						</T_Mouvable_Image>
+						<T_Scalable_Image>
+							<Scale MaxScale="1.2" MinScale="0.8"/>
+					  </T_Scalable_Image>
+					</Transformers>
+				</Layer>
+
+				<Layer name="Feuille Verte" tab_name="Verso">
+					<pos pos_x="67.51" pos_y="10.85"/>
+					<size size_x="9.761" size_y="9.761"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="Verte.png"/>
+						</G_Fixed_Image>
+					</Generator>
+					<Transformers>
+						<T_Mouvable_Image>
+							<OffSet X_MaxOffset="3.0" X_MinOffset="-3.0" Y_MaxOffset="3.0" Y_MinOffset="-3.0"/>
+						</T_Mouvable_Image>
+						<T_Scalable_Image>
+							<Scale MaxScale="1.2" MinScale="0.8"/>
+					  </T_Scalable_Image>
+					</Transformers>
+				</Layer>
+
+
+
+
+
+
+
+
+
+
+
+				<Layer name="Texte : Consos" tab_name="Verso">
+					<pos pos_x="44" pos_y="4"/>
+					<size size_x="68" size_y="18"/>
+					<Generator>
+						<G_Fixed_Text_Custom_Style>
+							<Text TextHeightFactor="1.5" TextSizeMin="3" TextSizeMax="4.5" Text="2 Consos Vertes  ou  1 Conso gratuite"/>
+						</G_Fixed_Text_Custom_Style>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+
+
+				<Layer name="Côtés" tab_name="Commun">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="VERSO_arrierePlan.png"/>
+						</G_Fixed_Image>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+
+
+
+
+
+
+<Layer name="Dispertion des Graines" tab_name="Commun">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="13.12" size_y="58"/>
+					<Generator>
+						<G_Random_Image_Dispersion>
+							<Size maxXSize="3.0" minXSize="2.0" maxYSize="3.0" minYSize="1.0"/>
+							<Interval maxInterval="10.0" minInterval="5.0"/>
+							<SubLayer>
+								<Generator>
+								<G_Fixed_Image>
+									<Image image_name="graine.png"/>
+								</G_Fixed_Image>
+								</Generator>
+								<Transformers>
+									<T_Custom_Color>
+									</T_Custom_Color>
+								</Transformers>
+							</SubLayer>
+						</G_Random_Image_Dispersion>
+					</Generator>
+					<Transformers>
+						<T_Mask>
+							<Image image_name="VERSO_MaskLeft.png" invert="0"/>
+						</T_Mask>
+					</Transformers>
+				</Layer>
+
+
+<Layer name="Dispertion des Graines" tab_name="Commun">
+					<pos pos_x="74.88" pos_y="0"/>
+					<size size_x="13.12" size_y="58"/>
+					<Generator>
+						<G_Random_Image_Dispersion>
+							<Size maxXSize="3.0" minXSize="2.0" maxYSize="3.0" minYSize="1.0"/>
+							<Interval maxInterval="10.0" minInterval="5.0"/>
+							<SubLayer>
+								<Generator>
+								<G_Fixed_Image>
+									<Image image_name="graine.png"/>
+								</G_Fixed_Image>
+								</Generator>
+								<Transformers>
+									<T_Custom_Color>
+									</T_Custom_Color>
+								</Transformers>
+							</SubLayer>
+						</G_Random_Image_Dispersion>
+					</Generator>
+					<Transformers>
+						<T_Mask>
+							<Image image_name="VERSO_MaskRight.png" invert="0"/>
+						</T_Mask>
+					</Transformers>
+				</Layer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				<Layer name="Cadre princal" tab_name="Commun">
+					<pos pos_x="0" pos_y="0"/>
+					<size size_x="88" size_y="58"/>
+					<Generator>
+						<G_Fixed_Image>
+							<Image image_name="VERSO_Bordure.png"/>
+						</G_Fixed_Image>
+					</Generator>
+					<Transformers>
+						<T_Custom_Color>
+						</T_Custom_Color>
+					</Transformers>
+				</Layer>
+
+
+
+				
+		
+
+		</Output>	
+
+</Model>
+	

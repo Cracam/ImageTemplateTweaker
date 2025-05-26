@@ -5,59 +5,101 @@
     Recto pour la partie avec les consos
     verso pour la partie avec les cases nom/prenom
 -->
-<Card_model name="Carte Foyer V3" size_x="88" size_y="58" >
-		<Verso><!-- Verso de la carte (côte nom prenom) --> 
-				<img_fixe name="Fond" png_name="fond test.png">
+<Model name="Carte Foyer V3">
+		<Informations>
+			<DefaultDesign name='Carte_Classique'/>
+			<Description Description="Ce modèle de carte est le modèle 19 conso + 2 consos vertes de l'association FOYER ENSE3"/>
+		</Informations>
+
+
+		<Output name="Recto" size_x="88" size_y="58" ><!-- Verso de la carte (côte nom prenom) -->
+
+				<img_fixe name="Fond">
 					<pos pos_x="0" pos_y="0" />
 					<size size_x="88" size_y="58" />
+					<Param>
+						<Image  image_name="fond test.png"/>
+					</Param>
 				</img_fixe>
 
-				<img_color name="Bordure" png_name="Verso_Bordure.png">
+
+				<img_color name="Bordure">
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>
-					<Color ID="1"/>
+					<Param>
+						<Image image_name="Verso_Bordure.png"/>
+						<Color ID="1"/>
+					<Param/>
 				</img_color>
+
 
 				<img_custom name="Tasses">
 					<pos pos_x="15" pos_y="5"/>
 					<size size_x="40" size_y="20"/>
+					<Param>
+					</Param>
 				</img_custom>
+
 
 				<img_custom_shape name="consos Verte"> <!-- pas utilisé dans le modèle V3 --> 
 					<pos pos_x="25" pos_y="5"/>
 					<size size_x="10" size_y="10"/>
-					<Color color="#23EF34"/>
+					<Param>
+						<Color color="#23EF34"/>
+					</Param>
 				</img_custom_shape>
 
 
-				<img_custom name="Tasses">
+				<img_custom name="Tasses_2">
 					<pos pos_x="15" pos_y="5"/>
 					<size size_x="40" size_y="20"/>
+					<Param>
+					</Param>
 				</img_custom>
-		</Verso>
+
+		</Output>
 
 
-		<Recto><!-- Recto de la carte (côté consos)--> 
-				<img_fixe name="Fond" png_name="test.png">
+
+
+
+
+
+
+		<Output name="Verso" size_x="88" size_y="58" ><!-- Recto de la carte (côté consos)--> 
+				<img_fixe name="Fond">
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>
+					<Param>
+						<Image image_name="test.png"/>
+					</Param>
 				</img_fixe>
 
-				<img_color name="Bordure" png_name="Verso_Bordure.png">
+
+				<img_color name="Bordure">
 					<pos pos_x="0" pos_y="0"/>
 					<size size_x="88" size_y="58"/>
-					<Color ID="1"/>
+					<Param>
+						<Image image_name="Verso_Bordure.png"/>
+						<Color ID="1"/>
+					<Param/>
 				</img_color>
+
 
 				<img_custom name="Tasses">
 					<pos pos_x="15" pos_y="5"/>
 					<size size_x="40" size_y="20"/>
+					<Parma>
+					<Param/>
 				</img_custom>
+
 
 				<img_custom_shape name="consos Verte"> <!-- pas utilisé dans le modèle V3 --> 
 					<pos pos_x="25" pos_y="5"/>
 					<size size_x="10" size_y="10"/>
-					<Color color="#23EF34"/>
+					<Parma>
+						<Color color="#23EF34"/>
+					</Parma>
 				</img_custom_shape>
 
 
@@ -65,17 +107,22 @@
 					<size size_x="14.5" size_y="14.5"/>
 				</img_Consos>
 
+
 				<img_Items>
-				<size size_x="14.5" size_y="14.5"/>
+					<size size_x="14.5" size_y="14.5"/>
 				</img_Items>
+
 
 				<img_custom name="Tasses">
 					<pos pos_x="15" pos_y="5"/>
 					<size size_x="40" size_y="20"/>
+					<Param>
+					</Param>
 				</img_custom>
-		</Recto>
+
+		</Output>
 
 
 
-</Card_model>
+</Model>
 	

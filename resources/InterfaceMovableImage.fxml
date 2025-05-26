@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<fx:root type="VBox" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label text="Ajustement de Position">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets bottom="10.0" left="50.0" right="20.0" top="10.0" />
+         </VBox.margin>
+      </Label>
+      <HBox maxHeight="183.0">
+         <children>
+            <Slider fx:id="slider_Y" onKeyPressed="#refreshImagesBuilders" onMouseDragged="#refreshImagesBuilders" orientation="VERTICAL">
+               <padding>
+                  <Insets top="24.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Slider>
+            <VBox>
+               <children>
+                  <Slider fx:id="slider_X" onKeyPressed="#refreshImagesBuilders" onMouseDragged="#refreshImagesBuilders">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </Slider>
+                  <ImageView fx:id="PreviewBox" fitHeight="140.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</fx:root>

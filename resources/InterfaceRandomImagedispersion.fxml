@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.RangeSlider?>
+
+<fx:root type="VBox" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox>
+         <children>
+            <Label text="Tailles des images" />
+            <RangeSlider fx:id="DS_imageSize" onKeyPressed="#uptadeInterface" onMouseDragged="#uptadeInterface">
+               <VBox.margin>
+                  <Insets left="5.0" top="5.0" />
+               </VBox.margin>
+            </RangeSlider>
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets bottom="7.0" top="7.0" />
+               </VBox.margin>
+            </Separator>
+            <Label text="Tailles des intervalles">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Label>
+            <RangeSlider fx:id="DS_intervalSize" onKeyPressed="#uptadeInterface" onMouseDragged="#uptadeInterface">
+               <VBox.margin>
+                  <Insets left="5.0" top="5.0" />
+               </VBox.margin>
+            </RangeSlider>
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets bottom="7.0" top="7.0" />
+               </VBox.margin>
+            </Separator>
+            <ImageView fx:id="prev" pickOnBounds="true" preserveRatio="true">
+               <VBox.margin>
+                  <Insets left="50.0" right="50.0" />
+               </VBox.margin>
+            </ImageView>
+         </children>
+      </VBox>
+      <TitledPane>
+         <VBox.margin>
+            <Insets left="5.0" right="5.0" top="15.0" />
+         </VBox.margin>
+         <content>
+            <VBox fx:id="vboxContainer" />
+         </content>
+      </TitledPane>
+   </children>
+</fx:root>
