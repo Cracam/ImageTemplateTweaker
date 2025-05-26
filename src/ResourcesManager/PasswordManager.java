@@ -19,14 +19,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.lingala.zip4j.ZipFile;
 
-
 public class PasswordManager {
 
         private static final String MASTER_KEY = "votreClregegefsse123"; // Master key of 16 characters for AES-128
         private static final String ALGORITHM = "AES";
-        private  SecretKeySpec secretKey;
-        private  ArrayList<PasswordEntry> passwordEntries;
-        private  String filePath;
+        private SecretKeySpec secretKey;
+        private ArrayList<PasswordEntry> passwordEntries;
+        private String filePath;
 
         /**
          * Constructor that reads the encrypted main key from a text file and
@@ -36,22 +35,22 @@ public class PasswordManager {
          * @param encryptedKeyFilePath The path to the file containing the
          * encrypted main key and password entries.
          */
-        public PasswordManager(String encryptedKeyFilePath)  {
+        public PasswordManager(String encryptedKeyFilePath) {
                 try {
-                        this.filePath = encryptedKeyFilePath+"/encrypted_passwords.txt";
+                        this.filePath = encryptedKeyFilePath + "/encrypted_passwords.txt";
                         this.passwordEntries = new ArrayList<>();
-                          String mainKey;
-                        try{
-                                 String encryptedMainKey = readEncryptedKeyFromFile(filePath);
-                                  mainKey = decryptKey(encryptedMainKey, padKey(MASTER_KEY));
+                        String mainKey;
+                        try {
+                                String encryptedMainKey = readEncryptedKeyFromFile(filePath);
+                                mainKey = decryptKey(encryptedMainKey, padKey(MASTER_KEY));
 
-                        }catch(IOException ex){
-                                mainKey=generateRandomKey(24);
+                        } catch (IOException ex) {
+                                mainKey = generateRandomKey(24);
                                 //java.util.logging.Logger.getLogger(DesignBuilder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                                
+
                         }
-                        
-                //        System.out.println("Decrypted key : " + mainKey);
+
+                        //        System.out.println("Decrypted key : " + mainKey);
                         mainKey = padKey(mainKey); // Ensure the key is padded to the correct length
                         this.secretKey = new SecretKeySpec(mainKey.getBytes(StandardCharsets.UTF_8), ALGORITHM);
                         // Read and store the encrypted password entries from the file
@@ -68,9 +67,9 @@ public class PasswordManager {
                                 }
                         }
                 } catch (Exception ex) {
-                  //      secretKey = null;
-                       // passwordEntries = null;
-              //          Logger.getLogger(PasswordManager.class.getName()).log(Level.SEVERE, null, ex);
+                        //      secretKey = null;
+                        // passwordEntries = null;
+                        //          Logger.getLogger(PasswordManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
 
@@ -178,7 +177,6 @@ public class PasswordManager {
                 passwordEntries.add(new PasswordEntry(encryptedFolderName, encryptedPassword));
         }
 
-
         /**
          * Saves all password entries to the file.
          *
@@ -271,51 +269,8 @@ public class PasswordManager {
                 }
                 return null; // Return null if the folder name is not found
         }
-}
 
-class PasswordEntry {
-
-        private final String encryptedFolderName;
-        private String encryptedPassword;
-
-        public PasswordEntry(String encryptedFolderName, String encryptedPassword) {
-                this.encryptedFolderName = encryptedFolderName;
-                this.encryptedPassword = encryptedPassword;
-        }
-
-        public String getEncryptedFolderName() {
-                return encryptedFolderName;
-        }
-
-        public String getEncryptedPassword() {
-                return encryptedPassword;
-        }
-
-        public String getFolderName() {
-                return encryptedFolderName;
-        }
-
-        public String getPassword() {
-                return encryptedPassword;
-        }
-        
-        public void setPassword(String password) {
-                encryptedPassword = password;
-        }
-
-        public class RandomKeyGenerator {
-
-                
-
-                public static String generateRandomKey(int length) {
-                        SecureRandom secureRandom = new SecureRandom();
-                        byte[] randomBytes = new byte[length];
-                        secureRandom.nextBytes(randomBytes);
-                        return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
-                }
-        }
-
-/**
+        /**
          * Vérifie si le mot de passe fourni est correct pour le fichier ZIP.
          *
          * @param zipFile L'objet ZipFile à vérifier.
@@ -361,4 +316,46 @@ class PasswordEntry {
                         return false;
                 }
         }
+}
+
+class PasswordEntry {
+
+        private final String encryptedFolderName;
+        private String encryptedPassword;
+
+        public PasswordEntry(String encryptedFolderName, String encryptedPassword) {
+                this.encryptedFolderName = encryptedFolderName;
+                this.encryptedPassword = encryptedPassword;
+        }
+
+        public String getEncryptedFolderName() {
+                return encryptedFolderName;
+        }
+
+        public String getEncryptedPassword() {
+                return encryptedPassword;
+        }
+
+        public String getFolderName() {
+                return encryptedFolderName;
+        }
+
+        public String getPassword() {
+                return encryptedPassword;
+        }
+
+        public void setPassword(String password) {
+                encryptedPassword = password;
+        }
+
+        public class RandomKeyGenerator {
+
+                public static String generateRandomKey(int length) {
+                        SecureRandom secureRandom = new SecureRandom();
+                        byte[] randomBytes = new byte[length];
+                        secureRandom.nextBytes(randomBytes);
+                        return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+                }
+        }
+
 }
