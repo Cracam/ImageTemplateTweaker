@@ -1,6 +1,7 @@
 package ResourcesManager;
 
 import static ResourcesManager.PasswordEntry.RandomKeyGenerator.generateRandomKey;
+import static ResourcesManager.ResourcesManager.deleteDirectory;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
@@ -10,7 +11,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.lingala.zip4j.ZipFile;
 
 
 public class PasswordManager {
@@ -308,5 +315,50 @@ class PasswordEntry {
                 }
         }
 
+/**
+         * Vérifie si le mot de passe fourni est correct pour le fichier ZIP.
+         *
+         * @param zipFile L'objet ZipFile à vérifier.
+         * @param password Le mot de passe à tester.
+         * @return true si le mot de passe est correct, false sinon.
+         */
+        public static boolean isPasswordCorrect(ZipFile zipFile, String password) {
+                Path tempDir = null;
+                try {
+                        // Set the password for the zip file
+                        zipFile.setPassword(password.toCharArray());
 
+                        // Try to get the list of file headers to check if the password is correct
+                        //  zipFile.getFileHeaders();
+                        //        zipFile.extractAll(System.getProperty("java.io.tmpdir"));
+                        tempDir = Paths.get(System.getProperty("java.io.tmpdir"), "temp_" + System.currentTimeMillis());
+                        if (!Files.exists(tempDir)) {
+                                Files.createDirectories(tempDir);
+                        }
+
+                        // Extraire tous les fichiers dans le répertoire temporaire
+                        zipFile.extractAll(tempDir.toString());
+
+                        // If no exception is thrown, the password is correct
+                        deleteDirectory(tempDir);
+                        return true;
+                } catch (net.lingala.zip4j.exception.ZipException e) {
+                        try {
+                                // Check if the exception indicates a wrong password
+                                if (tempDir != null) {
+                                        deleteDirectory(tempDir);
+                                }
+
+                                return false;
+
+                                // If it's a different exception, rethrow it
+                        } catch (IOException ex) {
+                                Logger.getLogger(ResourcesManager.class.getName()).log(Level.SEVERE, null, ex);
+                                return false;
+                        }
+                } catch (IOException ex) {
+                        Logger.getLogger(ResourcesManager.class.getName()).log(Level.SEVERE, null, ex);
+                        return false;
+                }
+        }
 }
