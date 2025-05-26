@@ -9,7 +9,6 @@ import ImageProcessor.ImageBuilder;
 import ImageProcessor.ImageTransformer;
 import ImageProcessor.Layer;
 import ImageProcessor.SubClasses.PosFloat;
-import ImageProcessor.SubClasses.QuadrupletFloat;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getFloatAttribute;
 import java.awt.Graphics2D;

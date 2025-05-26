@@ -5,6 +5,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +82,7 @@ public class ResourcesManager {
         this.usePassword = false;
     }
 
-    private void loadZipFile() {
+       private void loadZipFile() {
         try {
             if (zipFile == null) {
                 zipFile = new ZipFile(zipFilePath);
@@ -90,20 +91,19 @@ public class ResourcesManager {
                 zipFile.setPassword(password.toCharArray());
             }
 
-            // Create a custom temporary directory specific to this instance of ResourcesManager
-            String tempDirPath = Paths.get(".").toAbsolutePath().normalize().toString() + "/temp/temp_" + System.currentTimeMillis();
-            tempDir = Paths.get(tempDirPath);
+            // Utiliser le répertoire temporaire système
+            Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"), "temp_" + System.currentTimeMillis());
             if (!Files.exists(tempDir)) {
                 Files.createDirectories(tempDir);
             }
 
-            // Extract all files to the temporary directory
+            // Extraire tous les fichiers dans le répertoire temporaire
             zipFile.extractAll(tempDir.toString());
 
-            // Process each file in the temporary directory
+            // Traiter chaque fichier dans le répertoire temporaire
             processDirectory(tempDir);
 
-            // Delete the temporary directory after processing all files
+            // Supprimer le répertoire temporaire après avoir traité tous les fichiers
             deleteDirectory(tempDir);
 
             System.out.println("------------------------------"+toString());
@@ -114,31 +114,30 @@ public class ResourcesManager {
 
     private void loadZipFromBytes(byte[] zipContent) {
         try {
-            // Create a temporary file to hold the zip content
-            File tempFile = File.createTempFile("temp_zip", ".zip");
-            Files.write(tempFile.toPath(), zipContent);
+            // Créer un fichier temporaire pour contenir le contenu du zip
+            Path tempFile = Files.createTempFile("temp_zip", ".zip");
+            Files.write(tempFile, zipContent);
 
-            // Create a ZipFile from the temporary file
-            zipFile = new ZipFile(tempFile);
+            // Créer un ZipFile à partir du fichier temporaire
+            zipFile = new ZipFile(tempFile.toFile());
 
-            // Create a custom temporary directory specific to this instance of ResourcesManager
-            String tempDirPath = Paths.get(".").toAbsolutePath().normalize().toString() + "/temp/temp_" + System.currentTimeMillis();
-            tempDir = Paths.get(tempDirPath);
+            // Utiliser le répertoire temporaire système
+            Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"), "temp_" + System.currentTimeMillis());
             if (!Files.exists(tempDir)) {
                 Files.createDirectories(tempDir);
             }
 
-            // Extract all files to the temporary directory
+            // Extraire tous les fichiers dans le répertoire temporaire
             zipFile.extractAll(tempDir.toString());
 
-            // Process each file in the temporary directory
+            // Traiter chaque fichier dans le répertoire temporaire
             processDirectory(tempDir);
 
-            // Delete the temporary directory after processing all files
+            // Supprimer le répertoire temporaire après avoir traité tous les fichiers
             deleteDirectory(tempDir);
 
-            // Delete the temporary file
-            tempFile.delete();
+            // Supprimer le fichier temporaire
+            Files.delete(tempFile);
 
             System.out.println("------------------------------"+toString());
         } catch (Exception e) {
@@ -200,19 +199,7 @@ public class ResourcesManager {
         }
     }
 
-    private void deleteDirectory(Path directory) throws IOException {
-        if (Files.exists(directory)) {
-            Files.walk(directory)
-                .sorted((a, b) -> -a.compareTo(b)) // Reverse order to delete files before directories
-                .forEach(path -> {
-                    try {
-                        Files.delete(path);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-        }
-    }
+
 
     private boolean isImageFile(String fileName) {
         String lowerCaseFileName = fileName.toLowerCase();
@@ -223,7 +210,7 @@ public class ResourcesManager {
                 || lowerCaseFileName.endsWith(".bmp");
     }
 
-    public void save() {
+  public void save() {
     try {
         if (zipFile == null) {
             zipFile = new ZipFile(zipFilePath);
@@ -235,48 +222,71 @@ public class ResourcesManager {
             parameters.setAesKeyStrength(AesKeyStrength.KEY_STRENGTH_256);
         }
 
+        // Utiliser le répertoire temporaire système
+        Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"), "temp_" + System.currentTimeMillis());
+        if (!Files.exists(tempDir)) {
+            Files.createDirectories(tempDir);
+        }
+
         // Save BufferedImages to temporary files and add to zip
         for (Map.Entry<String, BufferedImage> entry : imageMap.entrySet()) {
-            File tempFile = File.createTempFile("zip_save", "_" + entry.getKey());
-            ImageIO.write(entry.getValue(), getFileExtension(entry.getKey()), tempFile);
+            Path tempFile = Files.createTempFile(tempDir, "zip_save", "_" + entry.getKey());
+            ImageIO.write(entry.getValue(), getFileExtension(entry.getKey()), tempFile.toFile());
 
             // Rename the temporary file to the original file name
-            File renamedFile = new File(tempFile.getParent(), entry.getKey());
-            tempFile.renameTo(renamedFile);
+            Path renamedFile = tempDir.resolve(entry.getKey());
+            Files.move(tempFile, renamedFile, StandardCopyOption.REPLACE_EXISTING);
 
-            zipFile.addFile(renamedFile, parameters);
-            renamedFile.delete(); // Clean up temporary file
+            zipFile.addFile(renamedFile.toFile(), parameters);
+            Files.delete(renamedFile); // Clean up temporary file
         }
 
         // Save nested ZipFiles to temporary files and add to zip
         for (Map.Entry<String, ZipFile> entry : zipFileMap.entrySet()) {
-            File tempFile = File.createTempFile("zip_save", "_" + entry.getKey());
+            Path tempFile = Files.createTempFile(tempDir, "zip_save", "_" + entry.getKey());
 
             // Extract the nested zip file to a temporary location
-            entry.getValue().extractAll(tempFile.getParent());
+            entry.getValue().extractAll(tempFile.getParent().toString());
 
             // Rename the temporary file to the original file name
-            File renamedFile = new File(tempFile.getParent(), entry.getKey());
-            tempFile.renameTo(renamedFile);
+            Path renamedFile = tempDir.resolve(entry.getKey());
+            Files.move(tempFile, renamedFile, StandardCopyOption.REPLACE_EXISTING);
 
-            zipFile.addFile(renamedFile, parameters);
-            renamedFile.delete(); // Clean up temporary file
+            zipFile.addFile(renamedFile.toFile(), parameters);
+            Files.delete(renamedFile); // Clean up temporary file
         }
 
         // Add other files
         for (Map.Entry<String, byte[]> entry : fileMap.entrySet()) {
-            File tempFile = File.createTempFile("zip_save", "_" + entry.getKey());
-            Files.write(tempFile.toPath(), entry.getValue());
+            Path tempFile = Files.createTempFile(tempDir, "zip_save", "_" + entry.getKey());
+            Files.write(tempFile, entry.getValue());
 
             // Rename the temporary file to the original file name
-            File renamedFile = new File(tempFile.getParent(), entry.getKey());
-            tempFile.renameTo(renamedFile);
+            Path renamedFile = tempDir.resolve(entry.getKey());
+            Files.move(tempFile, renamedFile, StandardCopyOption.REPLACE_EXISTING);
 
-            zipFile.addFile(renamedFile, parameters);
-            renamedFile.delete(); // Clean up temporary file
+            zipFile.addFile(renamedFile.toFile(), parameters);
+            Files.delete(renamedFile); // Clean up temporary file
         }
+
+        // Supprimer le répertoire temporaire après avoir traité tous les fichiers
+        deleteDirectory(tempDir);
     } catch (Exception e) {
         e.printStackTrace();
+    }
+}
+
+private void deleteDirectory(Path directory) throws IOException {
+    if (Files.exists(directory)) {
+        Files.walk(directory)
+            .sorted((a, b) -> -a.compareTo(b)) // Reverse order to delete files before directories
+            .forEach(path -> {
+                try {
+                    Files.delete(path);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
     }
 }
 
@@ -404,4 +414,7 @@ public class ResourcesManager {
         sb.append("}");
         return sb.toString();
     }
+    
+    
+    
 }

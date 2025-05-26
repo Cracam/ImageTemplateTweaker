@@ -835,7 +835,7 @@ public class DesignBuilder extends Application {
                         adminModeUnlocked = false;
                         this.menuAdminMode.setDisable(false);
                         this.menuExport.setDisable(true);
-                        System.out.println("Tested password : "+pswd+ " real one : "+passwordExport);
+                  //      System.out.println("Tested password : "+pswd+ " real one : "+passwordExport);
                         Consumer<String> ifYes = pwd -> {
                                 testUnlockAdminMode(pwd);
                         };
@@ -960,3 +960,8 @@ public class DesignBuilder extends Application {
 
 //CMD to  package in .exe
 //jpackage --input C:\BACKUP\ENSE3\Foyer\Programme_Java\Batcher_Foyer\dist --name TestBatcher --main-jar Batcher_Foyer.jar --main-class designBuilder.DesignBuilder --type exe --java-options "--module-path 'C:\softs\java\javafx-sdk-23.0.1\lib' --add-modules javafx.controls,javafx.fxml" --app-version 1.11 --icon C:\BACKUP\ENSE3\Foyer\Programme_Java\icon.ico --dest C:\BACKUP\ENSE3\Foyer\Programme_Java\Export_APP
+//jpackage --input C:\BACKUP\ENSE3\Foyer\Programme_Java\Batcher_Foyer\dist --name CarteFoyerCreator --main-jar Batcher_Foyer.jar --main-class AppInterface.DesignBuilder --type exe --java-options "--module-path 'C:\softs\java\javafx-sdk-23.0.1\lib' --add-modules javafx.controls,javafx.fxml" --app-version 1.XX --icon C:\BACKUP\ENSE3\Foyer\Programme_Java\icon.ico --dest C:\BACKUP\ENSE3\Foyer\Programme_Java\Export_APP
+//attention si changement de localisation de main class$
+
+//avant cd  C:\softs\java\jdk-23\bin  \\pour avoir les logs 
+//"C:\BACKUP\ENSE3\Foyer\Programme_Java\Export_APP\console_log.txt" 2>&1
