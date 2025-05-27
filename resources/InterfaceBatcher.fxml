@@ -43,6 +43,7 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -62,10 +63,10 @@
             <MenuItem fx:id="Msave" disable="true" mnemonicParsing="false" onAction="#saveDesing" text="Save" />
             <MenuItem fx:id="MsaveAs" disable="true" mnemonicParsing="false" onAction="#saveAsDesign" text="Save As…" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem disable="true" mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#copyZipFiles" text="Add New models" />
                   <MenuItem mnemonicParsing="false" onAction="#addModelPassword" text="Load Password" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem disable="true" mnemonicParsing="false" text="Preferences…" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
@@ -119,18 +120,60 @@
    <bottom>
       <AnchorPane prefHeight="30.0" prefWidth="640.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER_LEFT" AnchorPane.leftAnchor="0.0">
+            <HBox AnchorPane.leftAnchor="0.0">
                <children>
-                  <Label text="Changer l'échelle de l'interface : " />
-                  <Slider fx:id="sliderScale" blockIncrement="150.0" max="600.0" min="150.0" value="300.0">
-                     <cursor>
-                        <Cursor fx:constant="H_RESIZE" />
-                     </cursor></Slider>
-                  <Button mnemonicParsing="false" onAction="#updateScale" text="Valider">
-                     <HBox.margin>
-                        <Insets top="3.0" />
-                     </HBox.margin></Button>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Label text="Changer l'échelle de l'interface : " />
+                        <Slider fx:id="sliderScale" blockIncrement="150.0" max="600.0" min="150.0" value="300.0">
+                           <cursor>
+                              <Cursor fx:constant="H_RESIZE" />
+                           </cursor>
+                        </Slider>
+                        <Button mnemonicParsing="false" onAction="#updateScale" text="Valider">
+                           <HBox.margin>
+                              <Insets top="3.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
+               <padding>
+                  <Insets bottom="5.0" left="15.0" top="5.0" />
+               </padding>
+            </HBox>
+            <HBox AnchorPane.rightAnchor="0.0">
+               <children>
+                  <HBox alignment="CENTER">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <children>
+                        <Label text="Auteur" />
+                        <TextField fx:id="autorTextField" maxWidth="100.0" onAction="#updateAutorTextField" onKeyTyped="#updateAutorTextField">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </TextField>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER">
+                     <children>
+                        <Label text="Nom du Design" />
+                        <TextField fx:id="designTextField" maxWidth="100.0" onAction="#updateDesignTextField">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </TextField>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="30.0" />
+                     </HBox.margin>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" right="15.0" top="5.0" />
+               </padding>
             </HBox>
          </children></AnchorPane>
    </bottom>

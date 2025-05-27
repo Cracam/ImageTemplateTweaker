@@ -17,9 +17,12 @@ import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getIntAttribute;
 import static ResourcesManager.XmlManager.getStringAttribute;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +49,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.transform.Scale;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -126,11 +130,22 @@ public class DesignBuilder extends Application {
         private MenuItem menuExport;
         @FXML
         private MenuItem menuAdminMode;
+        
+        
+        
+        
+        
         private boolean adminModeUnlocked = false;
         private String passwordExport = "########";
 
         @FXML
         private Slider sliderScale;
+        
+        @FXML
+       private TextField  autorTextField;
+
+         @FXML
+         private TextField designTextField;
 
         private ArrayList<String> modelFileNames;
 
@@ -723,6 +738,7 @@ public class DesignBuilder extends Application {
                         newSeed();
                         localFiles = new LocalFilesManagement();
                         passwordManager = new PasswordManager(this.localFiles.getModelsDataDir());
+                       
 
                         this.id = DesignBuilder.index;
                         DesignBuilder.index++;
@@ -758,7 +774,8 @@ public class DesignBuilder extends Application {
                         scale.setPivotY(0); // Point de pivot pour la transformation (coin supérieur gauche)
                         scene.getRoot().getTransforms().add(scale);
 
-                        refreshEverything();
+                         initializeTextField();
+                        //refreshEverything();
 
                 } catch (ResourcesFileErrorException e) {
 
@@ -875,6 +892,38 @@ public class DesignBuilder extends Application {
                 testUnlockAdminMode("");
 
         }
+
+        private void initializeTextField() {
+                String filePath = this.localFiles.getLocalDataDir() + "/UserData.txt";
+                try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                        String line = reader.readLine();
+                        if (line != null) {
+                                this.autorTextField.setText(line);
+                        }
+                } catch (IOException e) {
+                        // Handle the exception, e.g., log it or show an error message
+                        e.printStackTrace();
+                }
+        }
+
+        @FXML
+        private void updateAutorTextField() {
+                this.author = this.autorTextField.getText();
+            //    System.out.println("#### Autor text update");
+                String filePath = this.localFiles.getLocalDataDir() + "/UserData.txt";
+                try (FileWriter writer = new FileWriter(filePath)) {
+                        writer.write(this.author);
+                } catch (IOException e) {
+                        // Handle the exception, e.g., log it or show an error message
+                        e.printStackTrace();
+                }
+        }
+        
+         @FXML
+        private void updateDesignTextField() {
+                this.designName=this.designTextField.getText();
+        }
+
 
         private void testUnlockAdminMode(String pswd) {
 
