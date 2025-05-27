@@ -64,6 +64,7 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem disable="true" mnemonicParsing="false" text="Preferences…" />
             <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#copyZipFiles" text=" Add New models" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
