@@ -1,6 +1,7 @@
 package ResourcesManager;
 
 import static ResourcesManager.PasswordEntry.RandomKeyGenerator.generateRandomKey;
+import static ResourcesManager.ResourcesManager.deleteDirectory;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
@@ -10,16 +11,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.lingala.zip4j.ZipFile;
 
 public class PasswordManager {
 
         private static final String MASTER_KEY = "votreClregegefsse123"; // Master key of 16 characters for AES-128
         private static final String ALGORITHM = "AES";
-        private  SecretKeySpec secretKey;
-        private  ArrayList<PasswordEntry> passwordEntries;
-        private  String filePath;
+        private SecretKeySpec secretKey;
+        ArrayList<PasswordEntry> passwordEntries;
+        String filePath;
 
         /**
          * Constructor that reads the encrypted main key from a text file and
@@ -29,22 +35,27 @@ public class PasswordManager {
          * @param encryptedKeyFilePath The path to the file containing the
          * encrypted main key and password entries.
          */
-        public PasswordManager(String encryptedKeyFilePath)  {
+        public PasswordManager(String encryptedKeyFilePath) {
                 try {
-                        this.filePath = encryptedKeyFilePath+"/encrypted_passwords.txt";
-                        this.passwordEntries = new ArrayList<>();
-                          String mainKey;
-                        try{
-                                 String encryptedMainKey = readEncryptedKeyFromFile(filePath);
-                                  mainKey = decryptKey(encryptedMainKey, padKey(MASTER_KEY));
-
-                        }catch(IOException ex){
-                                mainKey=generateRandomKey(24);
-                                //java.util.logging.Logger.getLogger(DesignBuilder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-                                
+                        if (encryptedKeyFilePath.endsWith(".txt")) {
+                                this.filePath = encryptedKeyFilePath;
+                        } else {
+                                this.filePath = encryptedKeyFilePath + "/encrypted_passwords.txt";
                         }
-                        
-                //        System.out.println("Decrypted key : " + mainKey);
+
+                        this.passwordEntries = new ArrayList<>();
+                        String mainKey;
+                        try {
+                                String encryptedMainKey = readEncryptedKeyFromFile(filePath);
+                                mainKey = decryptKey(encryptedMainKey, padKey(MASTER_KEY));
+
+                        } catch (IOException ex) {
+                                mainKey = generateRandomKey(24);
+                                //java.util.logging.Logger.getLogger(DesignBuilder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+                        }
+
+                        //        System.out.println("Decrypted key : " + mainKey);
                         mainKey = padKey(mainKey); // Ensure the key is padded to the correct length
                         this.secretKey = new SecretKeySpec(mainKey.getBytes(StandardCharsets.UTF_8), ALGORITHM);
                         // Read and store the encrypted password entries from the file
@@ -61,9 +72,9 @@ public class PasswordManager {
                                 }
                         }
                 } catch (Exception ex) {
-                  //      secretKey = null;
-                       // passwordEntries = null;
-              //          Logger.getLogger(PasswordManager.class.getName()).log(Level.SEVERE, null, ex);
+                        //      secretKey = null;
+                        // passwordEntries = null;
+                        //          Logger.getLogger(PasswordManager.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
 
@@ -171,7 +182,6 @@ public class PasswordManager {
                 passwordEntries.add(new PasswordEntry(encryptedFolderName, encryptedPassword));
         }
 
-
         /**
          * Saves all password entries to the file.
          *
@@ -264,6 +274,123 @@ public class PasswordManager {
                 }
                 return null; // Return null if the folder name is not found
         }
+
+        /**
+         * Vérifie si le mot de passe fourni est correct pour le fichier ZIP.
+         *
+         * @param zipFile L'objet ZipFile à vérifier.
+         * @param password Le mot de passe à tester.
+         * @return true si le mot de passe est correct, false sinon.
+         */
+        public static boolean isPasswordCorrect(ZipFile zipFile, String password) {
+                Path tempDir = null;
+                try {
+                        // Set the password for the zip file
+                        zipFile.setPassword(password.toCharArray());
+
+                        // Try to get the list of file headers to check if the password is correct
+                        //  zipFile.getFileHeaders();
+                        //        zipFile.extractAll(System.getProperty("java.io.tmpdir"));
+                        tempDir = Paths.get(System.getProperty("java.io.tmpdir"), "temp_" + System.currentTimeMillis());
+                        if (!Files.exists(tempDir)) {
+                                Files.createDirectories(tempDir);
+                        }
+
+                        // Extraire tous les fichiers dans le répertoire temporaire
+                        zipFile.extractAll(tempDir.toString());
+
+                        // If no exception is thrown, the password is correct
+                        deleteDirectory(tempDir);
+                        return true;
+                } catch (net.lingala.zip4j.exception.ZipException e) {
+                        try {
+                                // Check if the exception indicates a wrong password
+                                if (tempDir != null) {
+                                        deleteDirectory(tempDir);
+                                }
+
+                                return false;
+
+                                // If it's a different exception, rethrow it
+                        } catch (IOException ex) {
+                                Logger.getLogger(ResourcesManager.class.getName()).log(Level.SEVERE, null, ex);
+                                return false;
+                        }
+                } catch (IOException ex) {
+                        Logger.getLogger(ResourcesManager.class.getName()).log(Level.SEVERE, null, ex);
+                        return false;
+                }
+        }
+
+        /**
+         * Merges two instances of PasswordManager into one. Keeps the address
+         * of pm1.
+         *
+         * @param pm1 The first instance of PasswordManager.
+         * @param pm2 The second instance of PasswordManager.
+         * @return A new instance of PasswordManager containing the merged
+         * passwords.
+         * @throws Exception In case of an error during the merge.
+         */
+        public static PasswordManager mergePasswordManagers(PasswordManager pm1, PasswordManager pm2) throws Exception {
+                // Create a new instance of PasswordManager with the same file path as pm1
+                PasswordManager mergedPM = new PasswordManager(pm1.filePath);
+
+                // Merge the password lists
+                ArrayList<PasswordEntry> mergedEntries = new ArrayList<>(pm1.passwordEntries);
+
+                for (PasswordEntry entry2 : pm2.passwordEntries) {
+                        String decryptedFolderName2 = pm2.decrypt(entry2.getEncryptedFolderName());
+                        String decryptedPassword2 = pm2.decrypt(entry2.getEncryptedPassword());
+
+                        boolean found = false;
+                        for (PasswordEntry entry1 : pm1.passwordEntries) {
+                                String decryptedFolderName1 = pm1.decrypt(entry1.getEncryptedFolderName());
+                                String decryptedPassword1 = pm1.decrypt(entry1.getEncryptedPassword());
+
+                                if (decryptedFolderName1.equals(decryptedFolderName2) && decryptedPassword1.equals(decryptedPassword2)) {
+                                        found = true;
+                                        break;
+                                }
+                        }
+
+                        if (!found) {
+                                // Encrypt the folder name and password with the secretKey of pm1 before adding to mergedEntries
+                                String encryptedFolderName = pm1.encrypt(decryptedFolderName2);
+                                String encryptedPassword = pm1.encrypt(decryptedPassword2);
+                                mergedEntries.add(new PasswordEntry(encryptedFolderName, encryptedPassword));
+                        }
+                }
+
+                // Update the password list of the new instance
+                mergedPM.passwordEntries = mergedEntries;
+
+                return mergedPM;
+        }
+
+        /**
+         * Returns a string representation of all the folder names and encrypted
+         * passwords.
+         *
+         * @return A string representation of all the folder names and encrypted
+         * passwords.
+         */
+        @Override
+        public String toString() {
+                StringBuilder sb = new StringBuilder();
+                sb.append("PasswordManager{\n");
+                sb.append("  filePath='").append(filePath).append("'\n");
+                sb.append("  passwordEntries=[\n");
+                for (PasswordEntry entry : passwordEntries) {
+                        sb.append("    {\n");
+                        sb.append("      encryptedFolderName='").append(entry.getEncryptedFolderName()).append("'\n");
+                        sb.append("      encryptedPassword='").append(entry.getEncryptedPassword()).append("'\n");
+                        sb.append("    }\n");
+                }
+                sb.append("  ]\n");
+                sb.append("}");
+                return sb.append("}").toString();
+        }
 }
 
 class PasswordEntry {
@@ -291,14 +418,12 @@ class PasswordEntry {
         public String getPassword() {
                 return encryptedPassword;
         }
-        
+
         public void setPassword(String password) {
                 encryptedPassword = password;
         }
 
         public class RandomKeyGenerator {
-
-                
 
                 public static String generateRandomKey(int length) {
                         SecureRandom secureRandom = new SecureRandom();
@@ -307,6 +432,5 @@ class PasswordEntry {
                         return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
                 }
         }
-
 
 }

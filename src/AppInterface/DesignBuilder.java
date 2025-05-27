@@ -11,8 +11,8 @@ import Exceptions.ThisZIPFileIsNotADesignException;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.ImageBuilder;
 import ResourcesManager.PasswordManager;
+import static ResourcesManager.PasswordManager.isPasswordCorrect;
 import ResourcesManager.ResourcesManager;
-import static ResourcesManager.ResourcesManager.isPasswordCorrect;
 import static ResourcesManager.XmlManager.extractSingleElement;
 import static ResourcesManager.XmlManager.getIntAttribute;
 import static ResourcesManager.XmlManager.getStringAttribute;
@@ -27,6 +27,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -50,6 +51,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -79,7 +81,9 @@ public class DesignBuilder extends Application {
 
         private ResourcesManager modelResources;
         private ResourcesManager designResources;
-        private  PasswordManager passwordManager=new PasswordManager(getRootPath() + "/ModelsData");
+        private PasswordManager passwordManager;
+
+        private LocalFilesManagement localFiles;
 
         //Information on the model
         private String modelName; // the model Name
@@ -96,7 +100,7 @@ public class DesignBuilder extends Application {
         private Scene scene;
 
         private int DPI = 300;
-        private int maxDPI=300;
+        private int maxDPI = 300;
 
         private Random random;
 
@@ -109,7 +113,6 @@ public class DesignBuilder extends Application {
         @FXML
         private SplitPane core;
 
-        
         @FXML
         private Menu NewModel;
         @FXML
@@ -123,13 +126,11 @@ public class DesignBuilder extends Application {
         private MenuItem menuExport;
         @FXML
         private MenuItem menuAdminMode;
-        private boolean adminModeUnlocked=false;
-        private String passwordExport="########";
-        
-         @FXML
+        private boolean adminModeUnlocked = false;
+        private String passwordExport = "########";
+
+        @FXML
         private Slider sliderScale;
-         
-         
 
         private ArrayList<String> modelFileNames;
 
@@ -143,9 +144,7 @@ public class DesignBuilder extends Application {
                 launch(args);
 
         }
-        
-        
-        
+
         private void loadNewModel(String filePath) {//récusivité ave MDP en entré
                 // Open the ZIP file
                 ZipFile zipFile = new ZipFile(filePath);
@@ -165,8 +164,8 @@ public class DesignBuilder extends Application {
                                         }
                                 } catch (Exception ex) {//in case the file is corrupted
                                         System.out.println("Fichier de mot de passes corompu destruction de ces fichier");
-                                        
-                                        Path path = Paths.get(getRootPath() + "/ModelsData/encrypted_passwords.txt");
+
+                                        Path path = Paths.get(this.localFiles.getModelsDataDir() + "/encrypted_passwords.txt");
 
                                         try {
                                                 Files.delete(path);
@@ -174,8 +173,8 @@ public class DesignBuilder extends Application {
                                         } catch (IOException e) {
                                                 System.err.println("Erreur lors de la suppression du fichier : " + e.getMessage());
                                         }
-        
-                                       passwordManager=new PasswordManager(getRootPath() + "/ModelsData");
+
+                                        passwordManager = new PasswordManager(this.localFiles.getModelsDataDir());
                                 }
 
                                 //in case were not able to open the file we ask the use for a passqord
@@ -189,13 +188,11 @@ public class DesignBuilder extends Application {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
-        
-        
 
         private void loadNewModelAskingPassword(ZipFile zipFile, String password) {
                 // Use a lambda expression to capture the parameters
                 Consumer<String> ifYes = pwd -> YESloadNewModelAskingPassword(zipFile, pwd);
-               // System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG          " + !isPasswordCorrect(zipFile, password) + "__" + password);
+                // System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG          " + !isPasswordCorrect(zipFile, password) + "__" + password);
 
                 if (!isPasswordCorrect(zipFile, password)) {
                         showPasswordDialog("Veuillez entrer le mot de passe du modele : " + modelName, ifYes, null);
@@ -215,17 +212,12 @@ public class DesignBuilder extends Application {
                 loadNewModelAskingPassword(zipFile, password);
         }
 
-
-        
-        
-        
-
         private void loadNewModel(ZipFile unlockedZipFile) {
                 try {
-                        String tempModelName=modelName;
+                        String tempModelName = modelName;
                         this.close();
                         this.modelResources = new ResourcesManager(unlockedZipFile);
-                       this.modelName=tempModelName;
+                        this.modelName = tempModelName;
 
                         // Extract the Model_Param.xml file
                         FileHeader fileHeader = unlockedZipFile.getFileHeader("Model_Param.xml");
@@ -235,7 +227,7 @@ public class DesignBuilder extends Application {
                                         throw new IOException("Model_Param.xml not found in the ZIP file.\n" + this.modelName + "/Model_Param.xml" + "\nmodelTestProtected/Model_Param.xml");
                                 }
                         }
-                        
+
                         InputStream inputStream = unlockedZipFile.getInputStream(fileHeader);
 
                         // Parse the XML file
@@ -245,23 +237,22 @@ public class DesignBuilder extends Application {
 
                         // Get the root element
                         Element rootElement = document.getDocumentElement();
-                 //       this.modelName = rootElement.getAttribute("name");
+                        //       this.modelName = rootElement.getAttribute("name");
 
-                        Element informationsNode =  extractSingleElement(rootElement.getElementsByTagName("Informations"));
-                        
+                        Element informationsNode = extractSingleElement(rootElement.getElementsByTagName("Informations"));
+
                         Element subElt = extractSingleElement(informationsNode.getElementsByTagName("DefaultDesign"));
-                        this.description =  getStringAttribute(subElt,"name","") ;
-                        
-                         subElt = extractSingleElement(informationsNode.getElementsByTagName("Description"));
-                        this.defaultDesignName = getStringAttribute(subElt,"Description","") ;
+                        this.description = getStringAttribute(subElt, "name", "");
 
-                        
-                          subElt = extractSingleElement(informationsNode.getElementsByTagName("Export"));
-                        this.maxDPI=getIntAttribute(subElt,"maxDPI",maxDPI);
+                        subElt = extractSingleElement(informationsNode.getElementsByTagName("Description"));
+                        this.defaultDesignName = getStringAttribute(subElt, "Description", "");
+
+                        subElt = extractSingleElement(informationsNode.getElementsByTagName("Export"));
+                        this.maxDPI = getIntAttribute(subElt, "maxDPI", maxDPI);
                         this.sliderScale.setMax(maxDPI);
-                        passwordExport="#######################[[[[[[[[";
-                        this.passwordExport=getStringAttribute(subElt, "PassWord", passwordExport);
-                                
+                        passwordExport = "#######################[[[[[[[[";
+                        this.passwordExport = getStringAttribute(subElt, "PassWord", passwordExport);
+
                         // Get all "Output" nodes
                         NodeList outputNodes = rootElement.getElementsByTagName("Output");
 
@@ -294,24 +285,111 @@ public class DesignBuilder extends Application {
                         Mclose.setDisable(false);
                         menuAdminMode.setDisable(false);
 
-                } catch (ParserConfigurationException | SAXException | IOException  ex) {
+                } catch (ParserConfigurationException | SAXException | IOException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }
+
+        /**
+         * This method is used for the user to load new models inside the App
+         * model bank if will ask the user if need to overwrite model
+         */
+        @FXML
+        private void copyZipFiles() {
+                String destinationDirectory = this.localFiles.getModelsDataDir();
+
+                // Créer un FileChooser pour sélectionner les fichiers
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Sélectionnez un ou plusieurs fichiers .zip");
+                fileChooser.getExtensionFilters().addAll(
+                        new FileChooser.ExtensionFilter("ZIP Files", "*.zip")
+                );
+
+                // Afficher la boîte de dialogue de sélection de fichiers
+                java.util.List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
+
+                if (selectedFiles != null && !selectedFiles.isEmpty()) {
+                        // Copier chaque fichier sélectionné dans le dossier de destination
+                        for (File file : selectedFiles) {
+                                try {
+                                        Path sourcePath = file.toPath();
+                                        Path destinationPath = new File(destinationDirectory + "/" + file.getName()).toPath();
+
+                                        // Vérifier si le fichier existe déjà
+                                        if (Files.exists(destinationPath)) {
+                                                // Demander confirmation à l'utilisateur
+                                                int response = JOptionPane.showConfirmDialog(null,
+                                                        "Le fichier " + file.getName() + " existe déjà. Voulez-vous le remplacer ?",
+                                                        "Confirmation",
+                                                        JOptionPane.YES_NO_OPTION,
+                                                        JOptionPane.QUESTION_MESSAGE);
+
+                                                if (response == JOptionPane.YES_OPTION) {
+                                                        Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                                                        System.out.println("Fichier copié : " + file.getName());
+                                                }
+                                        } else {
+                                                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                                                System.out.println("Fichier copié : " + file.getName());
+                                        }
+                                } catch (IOException e) {
+                                        System.err.println("Erreur lors de la copie du fichier : " + file.getName());
+                                        e.printStackTrace();
+                                }
+                        }
+                        initNewDesign();
+                }
+        }
+
+        
+             /**
+         * This method is used for the user to load new password files and the
+         * password to the password manager
+         */
+        @FXML
+        private void addModelPassword() {
+                String destinationDirectory = this.localFiles.getModelsDataDir();
+
+                // Créer un FileChooser pour sélectionner les fichiers texte
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Sélectionnez un ou plusieurs fichiers texte de mots de passe");
+                fileChooser.getExtensionFilters().addAll(
+                        new FileChooser.ExtensionFilter("Text Files", "*.txt")
+                );
+
+                // Afficher la boîte de dialogue de sélection de fichiers
+                java.util.List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
+
+                if (selectedFiles != null && !selectedFiles.isEmpty()) {
+                        // Traiter chaque fichier texte sélectionné
+                        for (File file : selectedFiles) {
+                                // Exécuter le code spécifié pour chaque fichier texte
+                                PasswordManager temporaryPasswordManager = new PasswordManager(file.getAbsolutePath());
+                                try {
+                                        this.passwordManager = PasswordManager.mergePasswordManagers(this.passwordManager, temporaryPasswordManager);
+                                } catch (Exception ex) {
+                                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                        }
+                        initNewDesign();
+                        try {
+                                passwordManager.saveAllPasswords();
+                        } catch (Exception ex) {
+                                Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                 }
         }
         
         
         
- 
-        
-        
-    
-
-
         @FXML
         private void closeConfirm() {
                 Runnable ifYes = this::close;
                 showConfirmationDialog("Avez vous bien sauvgardé ce que vous souhaitez ?", ifYes, null);
         }
+        
+        
+        
 
         private void close() {
                 //clean interface
@@ -327,9 +405,9 @@ public class DesignBuilder extends Application {
                 Msave.setDisable(true);
                 MsaveAs.setDisable(true);
                 Mclose.setDisable(true);
-                 menuAdminMode.setDisable(true);
-                  menuExport.setDisable(true);
-                  
+                menuAdminMode.setDisable(true);
+                menuExport.setDisable(true);
+
         }
 
         public String getRootPath() {
@@ -341,7 +419,7 @@ public class DesignBuilder extends Application {
          */
         private void initNewDesign() {
                 // Obtenez le chemin du dossier ModelData
-                String modelDataPath = getRootPath() + "/ModelsData";
+                String modelDataPath = this.localFiles.getModelsDataDir();
 
                 // Créez un objet File pour le dossier
                 File modelDataFolder = new File(modelDataPath);
@@ -361,7 +439,7 @@ public class DesignBuilder extends Application {
                                         modelFileNames.add(fileName);
                                 }
                         }
-
+                        NewModel.getItems().clear();
                         // Ajouter des MenuItem au menu NewModel pour chaque fichier .zip
                         for (String zipFileName : modelFileNames) {
                                 // Enlever l'extension .zip
@@ -385,28 +463,32 @@ public class DesignBuilder extends Application {
         }
 
         private void initNewDesignConfirm(String nameWithoutExtension) {
+                String modelAddress = this.localFiles.getModelsDataDir() + "/" + nameWithoutExtension + ".zip";
                 if (this.modelName == null) {
                         this.modelName = nameWithoutExtension;
-                        loadNewModel(this.getRootPath() + "/ModelsData/" + nameWithoutExtension + ".zip");
-                          loadADefaultDesign();
+                        loadNewModel(modelAddress);
+                        if(this.modelResources!=null) {
+                                loadADefaultDesign();
+                        }
+                        
                 } else {
                         DesignBuilder DB = this;
+
                         Runnable ifYes = new Runnable() {
                                 @Override
                                 public void run() {
                                         DB.modelName = nameWithoutExtension;
-                                       DB.modelName=nameWithoutExtension;
-                                        DB.loadNewModel(DB.getRootPath() + "/ModelsData/" + nameWithoutExtension + ".zip");
+                                        DB.loadNewModel(modelAddress);
                                         loadADefaultDesign();
                                 }
                         };
                         showConfirmationDialog("Avez-vous bien sauvegardé ce que vous souhaitez ?", ifYes, null);
                 }
         }
-        
-        
+
         /**
-         * this method will look fo the zip inside the model (to get the design and onpen it or propose the user to chose wich one he want to oppen)
+         * this method will look fo the zip inside the model (to get the design
+         * and onpen it or propose the user to chose wich one he want to oppen)
          */
         private void loadADefaultDesign() {
                 List<String> defaultDesign = this.modelResources.getNestedZipFilesWithDesignData();
@@ -419,21 +501,18 @@ public class DesignBuilder extends Application {
                         };
 
                         ComboBoxPopup.showComboBoxDialog("Choisissez le désign par défaut que vous souhaiter ouvrir", (ArrayList<String>) defaultDesign, onOK, null);
-                        
-                        return;
-                } 
-                
-                if(defaultDesign.size()==1){
-                        loadNewDesign(modelResources.get(defaultDesign.get(0)));
-                         System.out.println(" Option Selected: 0");
-                         return;
-                }
-                
-                        System.out.println("No default Design");
-        }
-        
 
-        
+                        return;
+                }
+
+                if (defaultDesign.size() == 1) {
+                        loadNewDesign(modelResources.get(defaultDesign.get(0)));
+                        System.out.println(" Option Selected: 0");
+                        return;
+                }
+
+                System.out.println("No default Design");
+        }
 
         /**
          * Méthode pour enlever l'extension .zip d'un nom de fichier.
@@ -462,8 +541,8 @@ public class DesignBuilder extends Application {
 
                 }
         }
-        
-          private void refreshEverythingWithDPIChange() {
+
+        private void refreshEverythingWithDPIChange() {
                 for (int i = 0; i < imageBuilders.size(); i++) {
                         this.imageBuilders.get(i).refreshDPIFromDown();
                         refreshPreviewImageBox(this.imageBuilders.get(i));
@@ -504,29 +583,27 @@ public class DesignBuilder extends Application {
                 System.out.println("loadDesign");
         }
 
-        
-        
-         private void loadNewDesign(byte[] file) {
+        private void loadNewDesign(byte[] file) {
                 try {
                         designPath = "";
                         this.designResources = new ResourcesManager(file);
-                          DRYLoadNewDesign();
-                          
-                 } catch (ThisInterfaceDoesNotExistException | ThisZIPFileIsNotADesignException | ParserConfigurationException ex) {
+                        DRYLoadNewDesign();
+
+                } catch (ThisInterfaceDoesNotExistException | ThisZIPFileIsNotADesignException | ParserConfigurationException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
-         }
-         
-          private void loadNewDesign(String filepath) {
+        }
+
+        private void loadNewDesign(String filepath) {
                 try {
                         designPath = filepath;
                         this.designResources = new ResourcesManager(filepath);
                         DRYLoadNewDesign();
-                 } catch (ThisInterfaceDoesNotExistException | ThisZIPFileIsNotADesignException | ParserConfigurationException ex) {
+                } catch (ThisInterfaceDoesNotExistException | ThisZIPFileIsNotADesignException | ParserConfigurationException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
-         }
-                        
+        }
+
         /**
          * This program will be used to create a new model it will set a
          * resource Manager element, (it will not save the design until the
@@ -537,47 +614,45 @@ public class DesignBuilder extends Application {
          * @param filepath
          */
         private void DRYLoadNewDesign() throws ParserConfigurationException, ThisZIPFileIsNotADesignException, ThisInterfaceDoesNotExistException {
-             
-                       
-                        // Create a DocumentBuilderFactory
-                        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                        // Create a DocumentBuilder
-                        DocumentBuilder builder = factory.newDocumentBuilder();
-                        // Parse the XML file and return a DOM Document object
-                        Document document;
-                        try {
-                                document = builder.parse(new ByteArrayInputStream(this.designResources.get("DesignData.xml")));
-                        } catch (SAXException | IOException ex) {
-                                Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
-                                AlertPopup.showErrorAlert("The selected file is not a DESIGN file (no 'DesignData.xml' file inside or corrupted");
-                                throw new ThisZIPFileIsNotADesignException();
+
+                // Create a DocumentBuilderFactory
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                // Create a DocumentBuilder
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                // Parse the XML file and return a DOM Document object
+                Document document;
+                try {
+                        document = builder.parse(new ByteArrayInputStream(this.designResources.get("DesignData.xml")));
+                } catch (SAXException | IOException ex) {
+                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                        AlertPopup.showErrorAlert("The selected file is not a DESIGN file (no 'DesignData.xml' file inside or corrupted");
+                        throw new ThisZIPFileIsNotADesignException();
+                }
+                // Get the root element
+                Element rootElement = document.getDocumentElement();
+
+                String modelNameForThisDesign = rootElement.getAttribute("Model_name");
+                if (!modelNameForThisDesign.equals(this.modelName)) {
+                        if (modelFileNames.contains(modelNameForThisDesign + ".zip")) {
+                                this.modelName = modelNameForThisDesign;
+                                loadNewModel(this.localFiles.getModelsDataDir() + "/" + modelName + ".zip");
+                        } else {
+                                AlertPopup.showErrorAlert("The MODEL ( " + modelNameForThisDesign + " ) necessary for the selected DESIGN does not exist on the inside the 'ModelsData' folder (in the root of this software)");
+                                throw new ThisInterfaceDoesNotExistException();
                         }
-                        // Get the root element
-                        Element rootElement = document.getDocumentElement();
+                }
+                this.designName = rootElement.getAttribute("Design_name");
+                this.author = rootElement.getAttribute("Author_name");
 
-                        String modelNameForThisDesign = rootElement.getAttribute("Model_name");
-                        if (!modelNameForThisDesign.equals(this.modelName)) {
-                                if (modelFileNames.contains(modelNameForThisDesign + ".zip")) {
-                                        this.modelName = modelNameForThisDesign;
-                                        loadNewModel(this.getRootPath() + "/ModelsData/" + modelName + ".zip");
-                                } else {
-                                        AlertPopup.showErrorAlert("The MODEL ( " + modelNameForThisDesign + " ) necessary for the selected DESIGN does not exist on the inside the 'ModelsData' folder (in the root of this software)");
-                                        throw new ThisInterfaceDoesNotExistException();
-                                }
-                        }
-                        this.designName = rootElement.getAttribute("Design_name");
-                        this.author = rootElement.getAttribute("Author_name");
+                // Get all "Output" nodes
+                NodeList allInterfaces = rootElement.getElementsByTagName("Interfaces");
 
-                        // Get all "Output" nodes
-                        NodeList allInterfaces = rootElement.getElementsByTagName("Interfaces");
+                NodeList InterfacesNodes = allInterfaces.item(0).getChildNodes();
+                //  System.out.println("#####"+InterfacesNodes.getLength());
+                this.interfacesManager.loadInterfaces(InterfacesNodes);
 
-                        NodeList InterfacesNodes = allInterfaces.item(0).getChildNodes();
-                        //  System.out.println("#####"+InterfacesNodes.getLength());
-                        this.interfacesManager.loadInterfaces(InterfacesNodes);
-                    
-                        refreshEverything();
+                refreshEverything();
 
-                
         }
 
         /**
@@ -631,13 +706,13 @@ public class DesignBuilder extends Application {
 
                         this.designResources.set("DesignData.xml", xmlFile);
                         this.designResources.save();
-                          tabPane.setDisable(false);
+                        tabPane.setDisable(false);
 
                 } catch (TransformerConfigurationException ex) {
-                          tabPane.setDisable(false);
+                        tabPane.setDisable(false);
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (TransformerException | IOException | ParserConfigurationException ex) {
-                          tabPane.setDisable(false);
+                        tabPane.setDisable(false);
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
@@ -646,6 +721,8 @@ public class DesignBuilder extends Application {
         public void start(Stage primarystage) throws Exception {
                 try {
                         newSeed();
+                        localFiles = new LocalFilesManagement();
+                        passwordManager = new PasswordManager(this.localFiles.getModelsDataDir());
 
                         this.id = DesignBuilder.index;
                         DesignBuilder.index++;
@@ -789,29 +866,28 @@ public class DesignBuilder extends Application {
 
         @FXML
         private void updateScale() {
-                this.DPI=(int) this.sliderScale.getValue();
+                this.DPI = (int) this.sliderScale.getValue();
                 refreshEverythingWithDPIChange();
         }
-        
+
         @FXML
-        private void unlockAdminMode(){
-               testUnlockAdminMode("");
-                
+        private void unlockAdminMode() {
+                testUnlockAdminMode("");
+
         }
-                
-          private void testUnlockAdminMode(String pswd){
-                 
+
+        private void testUnlockAdminMode(String pswd) {
 
                 if (pswd.equals(this.passwordExport)) {
                         adminModeUnlocked = true;
                         this.menuAdminMode.setDisable(true);
                         this.menuExport.setDisable(false);
-                        this.maxDPI=600;
+                        this.maxDPI = 600;
                 } else {
                         adminModeUnlocked = false;
                         this.menuAdminMode.setDisable(false);
                         this.menuExport.setDisable(true);
-                  //      System.out.println("Tested password : "+pswd+ " real one : "+passwordExport);
+                        //      System.out.println("Tested password : "+pswd+ " real one : "+passwordExport);
                         Consumer<String> ifYes = pwd -> {
                                 testUnlockAdminMode(pwd);
                         };
@@ -819,8 +895,7 @@ public class DesignBuilder extends Application {
                 }
 
         }
- 
-        
+
         @FXML
         private void exportCard() {
                 if (adminModeUnlocked) {
@@ -842,60 +917,62 @@ public class DesignBuilder extends Application {
                 }
         }
 
-    private void saveImagesToDirectory(int numImages) {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Select a Directory");
+        /**
+         * Save the different image of the Design for export
+         *
+         * @param numImages
+         */
+        private void saveImagesToDirectory(int numImages) {
+                DirectoryChooser directoryChooser = new DirectoryChooser();
+                directoryChooser.setTitle("Select a Directory");
 
-        File selectedDirectory = directoryChooser.showDialog(null);
+                File selectedDirectory = directoryChooser.showDialog(null);
 
-        if (selectedDirectory != null) {
-            String batchDirectoryName = getNextBatchDirectoryName(selectedDirectory);
-            Path batchDirectoryPath = Paths.get(selectedDirectory.getAbsolutePath(), batchDirectoryName);
+                if (selectedDirectory != null) {
+                        String batchDirectoryName = getNextBatchDirectoryName(selectedDirectory);
+                        Path batchDirectoryPath = Paths.get(selectedDirectory.getAbsolutePath(), batchDirectoryName);
 
-            try {
-                Files.createDirectories(batchDirectoryPath);
-                System.out.println("Directory created: " + batchDirectoryPath.toString());
+                        try {
+                                Files.createDirectories(batchDirectoryPath);
+                                System.out.println("Directory created: " + batchDirectoryPath.toString());
 
-                // Loop to save the specified number of images
-                int oldDPI=DPI;
-                this.DPI=600;
-                refreshEverythingWithDPIChange();
-                for (int i = 0; i < numImages; i++) {
-                        for(ImageBuilder imgBuilder : this.imageBuilders){
-                                saveImageToDirectory(imgBuilder.getImageOut(), batchDirectoryPath.toString(),imgBuilder.getName()  + i + ".png");
-                                this.refreshEverything();
+                                // Loop to save the specified number of images
+                                int oldDPI = DPI;
+                                this.DPI = 600;
+                                refreshEverythingWithDPIChange();
+                                for (int i = 0; i < numImages; i++) {
+                                        for (ImageBuilder imgBuilder : this.imageBuilders) {
+                                                saveImageToDirectory(imgBuilder.getImageOut(), batchDirectoryPath.toString(), imgBuilder.getName() + i + ".png");
+                                                this.refreshEverything();
+                                        }
+                                }
+                                this.DPI = oldDPI;
+                                refreshEverythingWithDPIChange();
+                        } catch (IOException e) {
+                                e.printStackTrace();
                         }
                 }
-                 this.DPI=oldDPI;
-                 refreshEverythingWithDPIChange();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
-    }
 
-    private String getNextBatchDirectoryName(File parentDirectory) {
-        int i = 0;
-        String batchDirectoryName;
-        do {
-            batchDirectoryName = "Batch_" + i;
-            i++;
-        } while (new File(parentDirectory, batchDirectoryName).exists());
-        return batchDirectoryName;
-    }
-
-    public static void saveImageToDirectory(BufferedImage image, String directoryPath, String fileName) {
-        try {
-            File outputFile = new File(directoryPath, fileName);
-            ImageIO.write(image, "png", outputFile);
-            System.out.println("Image saved: " + outputFile.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
+        private String getNextBatchDirectoryName(File parentDirectory) {
+                int i = 0;
+                String batchDirectoryName;
+                do {
+                        batchDirectoryName = "Batch_" + i;
+                        i++;
+                } while (new File(parentDirectory, batchDirectoryName).exists());
+                return batchDirectoryName;
         }
-    }
-    
-    
-    
+
+        public static void saveImageToDirectory(BufferedImage image, String directoryPath, String fileName) {
+                try {
+                        File outputFile = new File(directoryPath, fileName);
+                        ImageIO.write(image, "png", outputFile);
+                        System.out.println("Image saved: " + outputFile.getAbsolutePath());
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
+        }
 
         public void refreshPreviewImageBox(ImageBuilder imgBuilder) {
                 preview.setImageView(imgBuilder.DRYComputeUniqueID(), staticFunctions.StaticImageEditing.createImageView(imgBuilder.getImageOut()));
@@ -941,6 +1018,5 @@ public class DesignBuilder extends Application {
 //jpackage --input C:\BACKUP\ENSE3\Foyer\Programme_Java\Batcher_Foyer\dist --name TestBatcher --main-jar Batcher_Foyer.jar --main-class designBuilder.DesignBuilder --type exe --java-options "--module-path 'C:\softs\java\javafx-sdk-23.0.1\lib' --add-modules javafx.controls,javafx.fxml" --app-version 1.11 --icon C:\BACKUP\ENSE3\Foyer\Programme_Java\icon.ico --dest C:\BACKUP\ENSE3\Foyer\Programme_Java\Export_APP
 //jpackage --input C:\BACKUP\ENSE3\Foyer\Programme_Java\Batcher_Foyer\dist --name CarteFoyerCreator --main-jar Batcher_Foyer.jar --main-class AppInterface.DesignBuilder --type exe --java-options "--module-path 'C:\softs\java\javafx-sdk-23.0.1\lib' --add-modules javafx.controls,javafx.fxml" --app-version 1.XX --icon C:\BACKUP\ENSE3\Foyer\Programme_Java\icon.ico --dest C:\BACKUP\ENSE3\Foyer\Programme_Java\Export_APP
 //attention si changement de localisation de main class$
-
 //avant cd  C:\softs\java\jdk-23\bin  \\pour avoir les logs 
 //"C:\BACKUP\ENSE3\Foyer\Programme_Java\Export_APP\console_log.txt" 2>&1
