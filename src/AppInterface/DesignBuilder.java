@@ -774,7 +774,7 @@ public class DesignBuilder extends Application {
                         scale.setPivotY(0); // Point de pivot pour la transformation (coin supérieur gauche)
                         scene.getRoot().getTransforms().add(scale);
 
-                         initializeTextField();
+                         initializeAutorTextField();
                         //refreshEverything();
 
                 } catch (ResourcesFileErrorException e) {
@@ -893,12 +893,13 @@ public class DesignBuilder extends Application {
 
         }
 
-        private void initializeTextField() {
+        private void initializeAutorTextField() {
                 String filePath = this.localFiles.getLocalDataDir() + "/UserData.txt";
                 try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
                         String line = reader.readLine();
                         if (line != null) {
-                                this.autorTextField.setText(line);
+                                this.autorTextField.setText(line); 
+                                this.author =line;
                         }
                 } catch (IOException e) {
                         // Handle the exception, e.g., log it or show an error message
@@ -922,6 +923,9 @@ public class DesignBuilder extends Application {
          @FXML
         private void updateDesignTextField() {
                 this.designName=this.designTextField.getText();
+                if(!"".equals(this.designPath)){
+                        this.saveDesing();
+                }
         }
 
 

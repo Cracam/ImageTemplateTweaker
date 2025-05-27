@@ -160,7 +160,7 @@
                   <HBox alignment="CENTER">
                      <children>
                         <Label text="Nom du Design" />
-                        <TextField fx:id="designTextField" maxWidth="100.0" onAction="#updateDesignTextField">
+                        <TextField fx:id="designTextField" maxWidth="100.0" onAction="#updateDesignTextField" onKeyTyped="#updateDesignTextField">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
