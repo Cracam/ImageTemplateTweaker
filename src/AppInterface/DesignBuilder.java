@@ -51,8 +51,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -293,26 +292,23 @@ public class DesignBuilder extends Application {
 
         /**
          * This method is used for the user to load new models inside the App
-         * model bank
-         *
-         * if will ask the user if need to overwrite model
+         * model bank if will ask the user if need to overwrite model
          */
         @FXML
         private void copyZipFiles() {
                 String destinationDirectory = this.localFiles.getModelsDataDir();
-                // Créer un sélecteur de fichiers
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Sélectionnez un ou plusieurs fichiers .zip");
-                fileChooser.setMultiSelectionEnabled(true);
-                fileChooser.setFileFilter(new FileNameExtensionFilter("Fichiers .zip", "zip"));
+
+                // Créer un FileChooser pour sélectionner les fichiers
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Sélectionnez un ou plusieurs fichiers .zip");
+                fileChooser.getExtensionFilters().addAll(
+                        new FileChooser.ExtensionFilter("ZIP Files", "*.zip")
+                );
 
                 // Afficher la boîte de dialogue de sélection de fichiers
-                int userSelection = fileChooser.showOpenDialog(null);
+                java.util.List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
 
-                if (userSelection == JFileChooser.APPROVE_OPTION) {
-                        // Récupérer les fichiers sélectionnés
-                        File[] selectedFiles = fileChooser.getSelectedFiles();
-
+                if (selectedFiles != null && !selectedFiles.isEmpty()) {
                         // Copier chaque fichier sélectionné dans le dossier de destination
                         for (File file : selectedFiles) {
                                 try {
@@ -322,15 +318,16 @@ public class DesignBuilder extends Application {
                                         // Vérifier si le fichier existe déjà
                                         if (Files.exists(destinationPath)) {
                                                 // Demander confirmation à l'utilisateur
-                                                showConfirmationDialog("Le fichier " + file.getName() + " existe déjà. Voulez-vous le remplacer ?", () -> {
-                                                        try {
-                                                                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-                                                                System.out.println("Fichier copié : " + file.getName());
-                                                        } catch (IOException e) {
-                                                                System.err.println("Erreur lors de la copie du fichier : " + file.getName());
-                                                                e.printStackTrace();
-                                                        }
-                                                }, null);
+                                                int response = JOptionPane.showConfirmDialog(null,
+                                                        "Le fichier " + file.getName() + " existe déjà. Voulez-vous le remplacer ?",
+                                                        "Confirmation",
+                                                        JOptionPane.YES_NO_OPTION,
+                                                        JOptionPane.QUESTION_MESSAGE);
+
+                                                if (response == JOptionPane.YES_OPTION) {
+                                                        Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                                                        System.out.println("Fichier copié : " + file.getName());
+                                                }
                                         } else {
                                                 Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
                                                 System.out.println("Fichier copié : " + file.getName());
@@ -344,11 +341,55 @@ public class DesignBuilder extends Application {
                 }
         }
 
+        
+             /**
+         * This method is used for the user to load new password files and the
+         * password to the password manager
+         */
+        @FXML
+        private void addModelPassword() {
+                String destinationDirectory = this.localFiles.getModelsDataDir();
+
+                // Créer un FileChooser pour sélectionner les fichiers texte
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Sélectionnez un ou plusieurs fichiers texte de mots de passe");
+                fileChooser.getExtensionFilters().addAll(
+                        new FileChooser.ExtensionFilter("Text Files", "*.txt")
+                );
+
+                // Afficher la boîte de dialogue de sélection de fichiers
+                java.util.List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
+
+                if (selectedFiles != null && !selectedFiles.isEmpty()) {
+                        // Traiter chaque fichier texte sélectionné
+                        for (File file : selectedFiles) {
+                                // Exécuter le code spécifié pour chaque fichier texte
+                                PasswordManager temporaryPasswordManager = new PasswordManager(file.getAbsolutePath());
+                                try {
+                                        this.passwordManager = PasswordManager.mergePasswordManagers(this.passwordManager, temporaryPasswordManager);
+                                } catch (Exception ex) {
+                                        Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                        }
+                        initNewDesign();
+                        try {
+                                passwordManager.saveAllPasswords();
+                        } catch (Exception ex) {
+                                Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                }
+        }
+        
+        
+        
         @FXML
         private void closeConfirm() {
                 Runnable ifYes = this::close;
                 showConfirmationDialog("Avez vous bien sauvgardé ce que vous souhaitez ?", ifYes, null);
         }
+        
+        
+        
 
         private void close() {
                 //clean interface
@@ -426,7 +467,10 @@ public class DesignBuilder extends Application {
                 if (this.modelName == null) {
                         this.modelName = nameWithoutExtension;
                         loadNewModel(modelAddress);
-                        loadADefaultDesign();
+                        if(this.modelResources!=null) {
+                                loadADefaultDesign();
+                        }
+                        
                 } else {
                         DesignBuilder DB = this;
 

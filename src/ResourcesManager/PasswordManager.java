@@ -24,8 +24,8 @@ public class PasswordManager {
         private static final String MASTER_KEY = "votreClregegefsse123"; // Master key of 16 characters for AES-128
         private static final String ALGORITHM = "AES";
         private SecretKeySpec secretKey;
-        private ArrayList<PasswordEntry> passwordEntries;
-        private String filePath;
+        ArrayList<PasswordEntry> passwordEntries;
+        String filePath;
 
         /**
          * Constructor that reads the encrypted main key from a text file and
@@ -37,7 +37,12 @@ public class PasswordManager {
          */
         public PasswordManager(String encryptedKeyFilePath) {
                 try {
-                        this.filePath = encryptedKeyFilePath + "/encrypted_passwords.txt";
+                        if (encryptedKeyFilePath.endsWith(".txt")) {
+                                this.filePath = encryptedKeyFilePath;
+                        } else {
+                                this.filePath = encryptedKeyFilePath + "/encrypted_passwords.txt";
+                        }
+
                         this.passwordEntries = new ArrayList<>();
                         String mainKey;
                         try {
@@ -315,6 +320,76 @@ public class PasswordManager {
                         Logger.getLogger(ResourcesManager.class.getName()).log(Level.SEVERE, null, ex);
                         return false;
                 }
+        }
+
+        /**
+         * Merges two instances of PasswordManager into one. Keeps the address
+         * of pm1.
+         *
+         * @param pm1 The first instance of PasswordManager.
+         * @param pm2 The second instance of PasswordManager.
+         * @return A new instance of PasswordManager containing the merged
+         * passwords.
+         * @throws Exception In case of an error during the merge.
+         */
+        public static PasswordManager mergePasswordManagers(PasswordManager pm1, PasswordManager pm2) throws Exception {
+                // Create a new instance of PasswordManager with the same file path as pm1
+                PasswordManager mergedPM = new PasswordManager(pm1.filePath);
+
+                // Merge the password lists
+                ArrayList<PasswordEntry> mergedEntries = new ArrayList<>(pm1.passwordEntries);
+
+                for (PasswordEntry entry2 : pm2.passwordEntries) {
+                        String decryptedFolderName2 = pm2.decrypt(entry2.getEncryptedFolderName());
+                        String decryptedPassword2 = pm2.decrypt(entry2.getEncryptedPassword());
+
+                        boolean found = false;
+                        for (PasswordEntry entry1 : pm1.passwordEntries) {
+                                String decryptedFolderName1 = pm1.decrypt(entry1.getEncryptedFolderName());
+                                String decryptedPassword1 = pm1.decrypt(entry1.getEncryptedPassword());
+
+                                if (decryptedFolderName1.equals(decryptedFolderName2) && decryptedPassword1.equals(decryptedPassword2)) {
+                                        found = true;
+                                        break;
+                                }
+                        }
+
+                        if (!found) {
+                                // Encrypt the folder name and password with the secretKey of pm1 before adding to mergedEntries
+                                String encryptedFolderName = pm1.encrypt(decryptedFolderName2);
+                                String encryptedPassword = pm1.encrypt(decryptedPassword2);
+                                mergedEntries.add(new PasswordEntry(encryptedFolderName, encryptedPassword));
+                        }
+                }
+
+                // Update the password list of the new instance
+                mergedPM.passwordEntries = mergedEntries;
+
+                return mergedPM;
+        }
+
+        /**
+         * Returns a string representation of all the folder names and encrypted
+         * passwords.
+         *
+         * @return A string representation of all the folder names and encrypted
+         * passwords.
+         */
+        @Override
+        public String toString() {
+                StringBuilder sb = new StringBuilder();
+                sb.append("PasswordManager{\n");
+                sb.append("  filePath='").append(filePath).append("'\n");
+                sb.append("  passwordEntries=[\n");
+                for (PasswordEntry entry : passwordEntries) {
+                        sb.append("    {\n");
+                        sb.append("      encryptedFolderName='").append(entry.getEncryptedFolderName()).append("'\n");
+                        sb.append("      encryptedPassword='").append(entry.getEncryptedPassword()).append("'\n");
+                        sb.append("    }\n");
+                }
+                sb.append("  ]\n");
+                sb.append("}");
+                return sb.append("}").toString();
         }
 }
 
