@@ -657,7 +657,9 @@ public class DesignBuilder extends Application {
                         }
                 }
                 this.designName = rootElement.getAttribute("Design_name");
+                this.designTextField.setText(this.designName);
                 this.author = rootElement.getAttribute("Author_name");
+                this.autorTextField.setText(this.author);
 
                 // Get all "Output" nodes
                 NodeList allInterfaces = rootElement.getElementsByTagName("Interfaces");
