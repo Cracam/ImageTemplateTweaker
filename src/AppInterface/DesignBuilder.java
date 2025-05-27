@@ -79,7 +79,9 @@ public class DesignBuilder extends Application {
 
         private ResourcesManager modelResources;
         private ResourcesManager designResources;
-        private  PasswordManager passwordManager=new PasswordManager(getRootPath() + "/ModelsData");
+        private  PasswordManager passwordManager;
+        
+        private  LocalFilesManagement localFiles;
 
         //Information on the model
         private String modelName; // the model Name
@@ -166,7 +168,7 @@ public class DesignBuilder extends Application {
                                 } catch (Exception ex) {//in case the file is corrupted
                                         System.out.println("Fichier de mot de passes corompu destruction de ces fichier");
                                         
-                                        Path path = Paths.get(getRootPath() + "/ModelsData/encrypted_passwords.txt");
+                                        Path path = Paths.get(this.localFiles.getModelsDataDir()+"/encrypted_passwords.txt");
 
                                         try {
                                                 Files.delete(path);
@@ -175,7 +177,7 @@ public class DesignBuilder extends Application {
                                                 System.err.println("Erreur lors de la suppression du fichier : " + e.getMessage());
                                         }
         
-                                       passwordManager=new PasswordManager(getRootPath() + "/ModelsData");
+                                       passwordManager=new PasswordManager(this.localFiles.getModelsDataDir());
                                 }
 
                                 //in case were not able to open the file we ask the use for a passqord
@@ -341,7 +343,7 @@ public class DesignBuilder extends Application {
          */
         private void initNewDesign() {
                 // Obtenez le chemin du dossier ModelData
-                String modelDataPath = getRootPath() + "/ModelsData";
+                String modelDataPath = this.localFiles.getModelsDataDir();
 
                 // Créez un objet File pour le dossier
                 File modelDataFolder = new File(modelDataPath);
@@ -385,18 +387,19 @@ public class DesignBuilder extends Application {
         }
 
         private void initNewDesignConfirm(String nameWithoutExtension) {
+                String modelAddress = this.localFiles.getModelsDataDir()+"/" + nameWithoutExtension + ".zip";
                 if (this.modelName == null) {
                         this.modelName = nameWithoutExtension;
-                        loadNewModel(this.getRootPath() + "/ModelsData/" + nameWithoutExtension + ".zip");
+                        loadNewModel(modelAddress);
                           loadADefaultDesign();
                 } else {
                         DesignBuilder DB = this;
+                        
                         Runnable ifYes = new Runnable() {
                                 @Override
                                 public void run() {
                                         DB.modelName = nameWithoutExtension;
-                                       DB.modelName=nameWithoutExtension;
-                                        DB.loadNewModel(DB.getRootPath() + "/ModelsData/" + nameWithoutExtension + ".zip");
+                                        DB.loadNewModel(modelAddress);
                                         loadADefaultDesign();
                                 }
                         };
@@ -559,7 +562,7 @@ public class DesignBuilder extends Application {
                         if (!modelNameForThisDesign.equals(this.modelName)) {
                                 if (modelFileNames.contains(modelNameForThisDesign + ".zip")) {
                                         this.modelName = modelNameForThisDesign;
-                                        loadNewModel(this.getRootPath() + "/ModelsData/" + modelName + ".zip");
+                                        loadNewModel(this.localFiles.getModelsDataDir()+"/" + modelName + ".zip");
                                 } else {
                                         AlertPopup.showErrorAlert("The MODEL ( " + modelNameForThisDesign + " ) necessary for the selected DESIGN does not exist on the inside the 'ModelsData' folder (in the root of this software)");
                                         throw new ThisInterfaceDoesNotExistException();
@@ -646,6 +649,8 @@ public class DesignBuilder extends Application {
         public void start(Stage primarystage) throws Exception {
                 try {
                         newSeed();
+                       localFiles =new LocalFilesManagement();
+                       passwordManager=new PasswordManager(this.localFiles.getModelsDataDir());
 
                         this.id = DesignBuilder.index;
                         DesignBuilder.index++;
@@ -842,6 +847,10 @@ public class DesignBuilder extends Application {
                 }
         }
 
+        /**
+         * Save the different image of the Design for export
+         * @param numImages 
+         */
     private void saveImagesToDirectory(int numImages) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Select a Directory");
@@ -931,6 +940,8 @@ public class DesignBuilder extends Application {
                 this.random = new Random(newSeed);
                 System.out.println("Nouvelle graine générée : " + newSeed);
         }
+        
+   
 
 }
 //####################
