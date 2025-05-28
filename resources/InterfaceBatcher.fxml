@@ -150,7 +150,7 @@
                      </HBox.margin>
                      <children>
                         <Label text="Auteur" />
-                        <TextField fx:id="autorTextField" maxWidth="100.0" onAction="#updateAutorTextField" onKeyTyped="#updateAutorTextField">
+                        <TextField fx:id="autorTextField" maxWidth="150.0" onAction="#updateAutorTextField" onKeyTyped="#updateAutorTextField">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -160,7 +160,7 @@
                   <HBox alignment="CENTER">
                      <children>
                         <Label text="Nom du Design" />
-                        <TextField fx:id="designTextField" maxWidth="100.0" onAction="#updateDesignTextField" onKeyTyped="#updateDesignTextField">
+                        <TextField fx:id="designTextField" maxWidth="150.0" onAction="#updateDesignTextField" onKeyTyped="#updateDesignTextField">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>

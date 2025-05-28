@@ -133,28 +133,24 @@ public class DesignBuilder extends Application {
         private MenuItem menuExport;
         @FXML
         private MenuItem menuAdminMode;
-        
-        
-        
-        
-        
+
         private boolean adminModeUnlocked = false;
         private String passwordExport = "########";
 
         @FXML
         private Slider sliderScale;
-        
-        @FXML
-       private TextField  autorTextField;
 
-         @FXML
-         private TextField designTextField;
+        @FXML
+        private TextField autorTextField;
+
+        @FXML
+        private TextField designTextField;
 
         private ArrayList<String> modelFileNames;
 
         private int totalUniqueNumber = 0;
-        
-        private ScheduledAutoSave scheduledAutoSave;
+
+        private ScheduledAutoSave scheduledAutoSave = new ScheduledAutoSave(this);
 
         /**
          * @param args the command line arguments
@@ -164,15 +160,13 @@ public class DesignBuilder extends Application {
                 launch(args);
 
         }
-        
-        
-          @Override
+
+        @Override
         public void start(Stage primarystage) throws Exception {
                 try {
                         newSeed();
                         localFiles = new LocalFilesManagement();
                         passwordManager = new PasswordManager(this.localFiles.getModelsDataDir());
-                       
 
                         this.id = DesignBuilder.index;
                         DesignBuilder.index++;
@@ -208,8 +202,8 @@ public class DesignBuilder extends Application {
                         scale.setPivotY(0); // Point de pivot pour la transformation (coin supérieur gauche)
                         scene.getRoot().getTransforms().add(scale);
 
-                        
-                        ScheduledAutoSave scheduledAutoSaveTemp=this.scheduledAutoSave;
+                        scheduledAutoSave.pause();
+                        ScheduledAutoSave scheduledAutoSaveTemp = this.scheduledAutoSave;
                         // Ajouter un gestionnaire d'événements pour l'événement WINDOW_CLOSE_REQUEST
                         primarystage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                                 @Override
@@ -220,8 +214,8 @@ public class DesignBuilder extends Application {
                                         // Vous pouvez ajouter ici le code pour exécuter une action spécifique
                                 }
                         });
-        
-                         initializeAutorTextField();
+
+                        initializeAutorTextField();
                         //refreshEverything();
 
                 } catch (ResourcesFileErrorException e) {
@@ -237,8 +231,16 @@ public class DesignBuilder extends Application {
                 return zipDesingName;
         }
 
-
-        
+        /**
+         * Extracts the last part of a file path.
+         *
+         * @param filePath The file path to process.
+         * @return The last part of the file path.
+         */
+        public static String extractLastPart(String filePath) {
+                Path path = Paths.get(filePath);
+                return path.getFileName().toString();
+        }
 
         private void loadNewModel(String filePath) {//récusivité ave MDP en entré
                 // Open the ZIP file
@@ -436,8 +438,7 @@ public class DesignBuilder extends Application {
                 }
         }
 
-        
-             /**
+        /**
          * This method is used for the user to load new password files and the
          * password to the password manager
          */
@@ -474,17 +475,12 @@ public class DesignBuilder extends Application {
                         }
                 }
         }
-        
-        
-        
+
         @FXML
         private void closeConfirm() {
                 Runnable ifYes = this::close;
                 showConfirmationDialog("Avez vous bien sauvgardé ce que vous souhaitez ?", ifYes, null);
         }
-        
-        
-        
 
         private void close() {
                 //clean interface
@@ -496,10 +492,8 @@ public class DesignBuilder extends Application {
                 imageBuilders.clear();
 
                 this.modelName = null;
-                if(scheduledAutoSave!=null){
-                        scheduledAutoSave.shutdown();
-                }
-                
+                scheduledAutoSave.pause();
+
                 Msave.setDisable(true);
                 MsaveAs.setDisable(true);
                 Mclose.setDisable(true);
@@ -565,10 +559,10 @@ public class DesignBuilder extends Application {
                 if (this.modelName == null) {
                         this.modelName = nameWithoutExtension;
                         loadNewModel(modelAddress);
-                        if(this.modelResources!=null) {
+                        if (this.modelResources != null) {
                                 loadADefaultDesign();
                         }
-                        
+
                 } else {
                         DesignBuilder DB = this;
 
@@ -578,6 +572,7 @@ public class DesignBuilder extends Application {
                                         DB.modelName = nameWithoutExtension;
                                         DB.loadNewModel(modelAddress);
                                         loadADefaultDesign();
+
                                 }
                         };
                         showConfirmationDialog("Avez-vous bien sauvegardé ce que vous souhaitez ?", ifYes, null);
@@ -594,8 +589,11 @@ public class DesignBuilder extends Application {
                 if (!defaultDesign.isEmpty()) {
                         Consumer<String> onOK = selectedOption -> {
                                 loadNewDesign(modelResources.get(selectedOption));
+                                zipDesingName = "UNNAMED DESIGN" + System.currentTimeMillis();
+                                scheduledAutoSave.resume();
 
                                 System.out.println("Option Selected: " + selectedOption);
+
                         };
 
                         ComboBoxPopup.showComboBoxDialog("Choisissez le désign par défaut que vous souhaiter ouvrir", (ArrayList<String>) defaultDesign, onOK, null);
@@ -605,10 +603,14 @@ public class DesignBuilder extends Application {
 
                 if (defaultDesign.size() == 1) {
                         loadNewDesign(modelResources.get(defaultDesign.get(0)));
+                        zipDesingName = "UNNAMED DESIGN" + System.currentTimeMillis();
+                        scheduledAutoSave.resume();
                         System.out.println(" Option Selected: 0");
                         return;
                 }
-
+                zipDesingName = "UNNAMED DESIGN" + System.currentTimeMillis();
+                scheduledAutoSave.resume();
+               
                 System.out.println("No default Design");
         }
 
@@ -684,10 +686,10 @@ public class DesignBuilder extends Application {
         private void loadNewDesign(byte[] file) {
                 try {
                         designPath = "";
-                        zipDesingName="UNNAMED DESIGN"+System.currentTimeMillis();
+                        zipDesingName = "UNNAMED DESIGN" + System.currentTimeMillis();
                         this.designResources = new ResourcesManager(file);
                         DRYLoadNewDesign();
-                         scheduledAutoSave= new ScheduledAutoSave(this);
+                        scheduledAutoSave.resume();
 
                 } catch (ThisInterfaceDoesNotExistException | ThisZIPFileIsNotADesignException | ParserConfigurationException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
@@ -697,17 +699,14 @@ public class DesignBuilder extends Application {
         private void loadNewDesign(String filepath) {
                 try {
                         designPath = filepath;
-                        zipDesingName=removeZipExtension(filepath);
+                        zipDesingName = extractLastPart(removeZipExtension(filepath));
                         this.designResources = new ResourcesManager(filepath);
                         DRYLoadNewDesign();
-                           scheduledAutoSave= new ScheduledAutoSave(this);
+                        scheduledAutoSave.resume();
                 } catch (ThisInterfaceDoesNotExistException | ThisZIPFileIsNotADesignException | ParserConfigurationException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
-        
-    
-
 
         /**
          * This program will be used to create a new model it will set a
@@ -761,9 +760,8 @@ public class DesignBuilder extends Application {
                 refreshEverything();
 
         }
-        
-        
-        public String getDesignSavesPath(){
+
+        public String getDesignSavesPath() {
                 return this.localFiles.getDesignsDir();
         }
 
@@ -828,8 +826,6 @@ public class DesignBuilder extends Application {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
-
-      
 
 //         
         @FXML
@@ -947,8 +943,8 @@ public class DesignBuilder extends Application {
                 try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
                         String line = reader.readLine();
                         if (line != null) {
-                                this.autorTextField.setText(line); 
-                                this.author =line;
+                                this.autorTextField.setText(line);
+                                this.author = line;
                         }
                 } catch (IOException e) {
                         // Handle the exception, e.g., log it or show an error message
@@ -959,7 +955,7 @@ public class DesignBuilder extends Application {
         @FXML
         private void updateAutorTextField() {
                 this.author = this.autorTextField.getText();
-            //    System.out.println("#### Autor text update");
+                //    System.out.println("#### Autor text update");
                 String filePath = this.localFiles.getLocalDataDir() + "/UserData.txt";
                 try (FileWriter writer = new FileWriter(filePath)) {
                         writer.write(this.author);
@@ -968,15 +964,14 @@ public class DesignBuilder extends Application {
                         e.printStackTrace();
                 }
         }
-        
-         @FXML
+
+        @FXML
         private void updateDesignTextField() {
-                this.designName=this.designTextField.getText();
-                if(!"".equals(this.designPath) && designPath!=null){
+                this.designName = this.designTextField.getText();
+                if (!"".equals(this.designPath) && designPath != null) {
                         this.saveDesing();
                 }
         }
-
 
         private void testUnlockAdminMode(String pswd) {
 
