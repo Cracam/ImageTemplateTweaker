@@ -40,6 +40,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -54,6 +55,7 @@ import javafx.scene.transform.Scale;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
@@ -95,6 +97,7 @@ public class DesignBuilder extends Application {
         private String description; // The description of themodel
         private String defaultDesignName; // the default design name (inside the zip of the model) it's the file we will copy if the user use a model a reference for it's new Design.
         private String author;
+        private String zipDesingName;
         private String designPath = null; // the path of the desing currently opened ==null if nothing save yet (use to save function)
 
         private final ArrayList<ImageBuilder> imageBuilders = new ArrayList<>();
@@ -150,6 +153,8 @@ public class DesignBuilder extends Application {
         private ArrayList<String> modelFileNames;
 
         private int totalUniqueNumber = 0;
+        
+        private ScheduledAutoSave scheduledAutoSave;
 
         /**
          * @param args the command line arguments
@@ -159,6 +164,81 @@ public class DesignBuilder extends Application {
                 launch(args);
 
         }
+        
+        
+          @Override
+        public void start(Stage primarystage) throws Exception {
+                try {
+                        newSeed();
+                        localFiles = new LocalFilesManagement();
+                        passwordManager = new PasswordManager(this.localFiles.getModelsDataDir());
+                       
+
+                        this.id = DesignBuilder.index;
+                        DesignBuilder.index++;
+
+                        URL[] urlList = new URL[1];
+                        URL inter_principalle = getClass().getClassLoader().getResource("InterfaceBatcher.fxml");
+                        urlList[0] = inter_principalle;
+//                           System.out.println(inter_principalle);
+
+                        if (CheckArrayHaveNull(urlList)) {
+                                throw new ResourcesFileErrorException("One or more files are missing in the ressources files");
+                        }
+
+                        FXMLLoader loader = new FXMLLoader(inter_principalle);
+                        loader.setController(this);
+                        Parent root = loader.load();
+
+                        interfacesManager = new InterfacesManager(tabPane);
+
+                        initNewDesign();
+
+                        primarystage.setTitle("Batcher FOYER");
+                        scene = new Scene(root);
+                        primarystage.setScene(scene);
+                        primarystage.show();
+
+                        designResources = new ResourcesManager();
+
+                        Scale scale = new Scale();
+                        scale.setX(1); // Échelle horizontale
+                        scale.setY(1); // Échelle verticale
+                        scale.setPivotX(0); // Point de pivot pour la transformation (coin supérieur gauche)
+                        scale.setPivotY(0); // Point de pivot pour la transformation (coin supérieur gauche)
+                        scene.getRoot().getTransforms().add(scale);
+
+                        
+                        ScheduledAutoSave scheduledAutoSaveTemp=this.scheduledAutoSave;
+                        // Ajouter un gestionnaire d'événements pour l'événement WINDOW_CLOSE_REQUEST
+                        primarystage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                                @Override
+                                public void handle(WindowEvent event) {
+                                        // Action à exécuter lorsque l'utilisateur ferme l'application
+                                        System.out.println("L'application est en train de se fermer...");
+                                        scheduledAutoSaveTemp.shutdown();
+                                        // Vous pouvez ajouter ici le code pour exécuter une action spécifique
+                                }
+                        });
+        
+                         initializeAutorTextField();
+                        //refreshEverything();
+
+                } catch (ResourcesFileErrorException e) {
+
+                }
+        }
+
+        public String getModelName() {
+                return modelName;
+        }
+
+        public String getZipDesingName() {
+                return zipDesingName;
+        }
+
+
+        
 
         private void loadNewModel(String filePath) {//récusivité ave MDP en entré
                 // Open the ZIP file
@@ -416,7 +496,10 @@ public class DesignBuilder extends Application {
                 imageBuilders.clear();
 
                 this.modelName = null;
-
+                if(scheduledAutoSave!=null){
+                        scheduledAutoSave.shutdown();
+                }
+                
                 Msave.setDisable(true);
                 MsaveAs.setDisable(true);
                 Mclose.setDisable(true);
@@ -601,8 +684,10 @@ public class DesignBuilder extends Application {
         private void loadNewDesign(byte[] file) {
                 try {
                         designPath = "";
+                        zipDesingName="UNNAMED DESIGN"+System.currentTimeMillis();
                         this.designResources = new ResourcesManager(file);
                         DRYLoadNewDesign();
+                         scheduledAutoSave= new ScheduledAutoSave(this);
 
                 } catch (ThisInterfaceDoesNotExistException | ThisZIPFileIsNotADesignException | ParserConfigurationException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
@@ -612,12 +697,17 @@ public class DesignBuilder extends Application {
         private void loadNewDesign(String filepath) {
                 try {
                         designPath = filepath;
+                        zipDesingName=removeZipExtension(filepath);
                         this.designResources = new ResourcesManager(filepath);
                         DRYLoadNewDesign();
+                           scheduledAutoSave= new ScheduledAutoSave(this);
                 } catch (ThisInterfaceDoesNotExistException | ThisZIPFileIsNotADesignException | ParserConfigurationException ex) {
                         Logger.getLogger(DesignBuilder.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
+        
+    
+
 
         /**
          * This program will be used to create a new model it will set a
@@ -671,13 +761,18 @@ public class DesignBuilder extends Application {
                 refreshEverything();
 
         }
+        
+        
+        public String getDesignSavesPath(){
+                return this.localFiles.getDesignsDir();
+        }
 
         /**
          * This method saves the current design to an XML file.
          *
          * @param filepath
          */
-        private void saveDesign(String filepath) {
+        public void saveDesign(String filepath) {
                 try {
                         tabPane.setDisable(true);
                         this.designResources.createNewZip(filepath);
@@ -734,55 +829,7 @@ public class DesignBuilder extends Application {
                 }
         }
 
-        @Override
-        public void start(Stage primarystage) throws Exception {
-                try {
-                        newSeed();
-                        localFiles = new LocalFilesManagement();
-                        passwordManager = new PasswordManager(this.localFiles.getModelsDataDir());
-                       
-
-                        this.id = DesignBuilder.index;
-                        DesignBuilder.index++;
-
-                        URL[] urlList = new URL[1];
-                        URL inter_principalle = getClass().getClassLoader().getResource("InterfaceBatcher.fxml");
-                        urlList[0] = inter_principalle;
-//                           System.out.println(inter_principalle);
-
-                        if (CheckArrayHaveNull(urlList)) {
-                                throw new ResourcesFileErrorException("One or more files are missing in the ressources files");
-                        }
-
-                        FXMLLoader loader = new FXMLLoader(inter_principalle);
-                        loader.setController(this);
-                        Parent root = loader.load();
-
-                        interfacesManager = new InterfacesManager(tabPane);
-
-                        initNewDesign();
-
-                        primarystage.setTitle("Batcher FOYER");
-                        scene = new Scene(root);
-                        primarystage.setScene(scene);
-                        primarystage.show();
-
-                        designResources = new ResourcesManager();
-
-                        Scale scale = new Scale();
-                        scale.setX(1); // Échelle horizontale
-                        scale.setY(1); // Échelle verticale
-                        scale.setPivotX(0); // Point de pivot pour la transformation (coin supérieur gauche)
-                        scale.setPivotY(0); // Point de pivot pour la transformation (coin supérieur gauche)
-                        scene.getRoot().getTransforms().add(scale);
-
-                         initializeAutorTextField();
-                        //refreshEverything();
-
-                } catch (ResourcesFileErrorException e) {
-
-                }
-        }
+      
 
 //         
         @FXML
@@ -925,7 +972,7 @@ public class DesignBuilder extends Application {
          @FXML
         private void updateDesignTextField() {
                 this.designName=this.designTextField.getText();
-                if(!"".equals(this.designPath)){
+                if(!"".equals(this.designPath) && designPath!=null){
                         this.saveDesing();
                 }
         }
@@ -1061,7 +1108,7 @@ public class DesignBuilder extends Application {
 
                 // Créer un nouvel objet Random avec la nouvelle graine
                 this.random = new Random(newSeed);
-                System.out.println("Nouvelle graine générée : " + newSeed);
+                //System.out.println("Nouvelle graine générée : " + newSeed);
         }
 
 }

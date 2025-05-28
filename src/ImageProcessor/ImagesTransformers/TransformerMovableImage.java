@@ -70,7 +70,7 @@ public class TransformerMovableImage extends ImageTransformer {
           //      QuadrupletFloat posSize = new QuadrupletFloat(posRefX + offsetX, posRefY + offsetY, layer.getPosSize().getSize_x(), layer.getPosSize().getSize_y());
 //                layer.setPosSize(posSize);
 //                layer.DRYRefreshDPI();
-                     System.out.println("gggggg : "+offsetX+"       "+offsetY);
+                     //System.out.println("gggggg : "+offsetX+"       "+offsetY);
 
                 PosFloat pos = new PosFloat(offsetX, offsetY);
     layer.setAnOffset("MouvableTransformer",pos);

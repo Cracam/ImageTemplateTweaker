@@ -65,7 +65,7 @@ public void DRY_DRYUpdate(BufferedImage img_in) {
 
     float offsetX = (originalWidth - newMMWidth) / 2;
     float offsetY = (originalHeight - newMMHeight) / 2;
-     System.out.println("gggggg : "+offsetX+"       "+offsetY);
+   //  System.out.println("gggggg : "+offsetX+"       "+offsetY);
 
    // QuadrupletFloat posSize = new QuadrupletFloat(posRefX + offsetX, posRefY + offsetY, originalWidth, originalHeight);
     PosFloat pos = new PosFloat( offsetX, offsetY);
