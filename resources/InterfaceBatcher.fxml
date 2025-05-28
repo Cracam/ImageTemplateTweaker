@@ -58,6 +58,7 @@
                   <Menu fx:id="NewModel" mnemonicParsing="false" text="New" />
             <MenuItem mnemonicParsing="false" onAction="#loadDesignConfirm" text="Open…" />
             <Menu disable="true" mnemonicParsing="false" text="Open Recent" />
+                  <Menu fx:id="MenuRestoreAutoSave" mnemonicParsing="false" text="Restore AutoSave" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem fx:id="Mclose" disable="true" mnemonicParsing="false" onAction="#closeConfirm" text="Close" />
             <MenuItem fx:id="Msave" disable="true" mnemonicParsing="false" onAction="#saveDesing" text="Save" />
@@ -69,7 +70,7 @@
             <MenuItem disable="true" mnemonicParsing="false" text="Preferences…" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Help">
+        <Menu disable="true" mnemonicParsing="false" text="Help" visible="false">
           <items>
             <MenuItem mnemonicParsing="false" text="Présentation générale du Logiciel" />
                   <SeparatorMenuItem mnemonicParsing="false" />

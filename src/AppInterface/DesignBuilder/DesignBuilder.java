@@ -1,5 +1,6 @@
-package AppInterface;
+package AppInterface.DesignBuilder;
 
+import AppInterface.InterfacesManager;
 import AppInterface.Popups.AlertPopup;
 import AppInterface.Popups.ComboBoxPopup;
 import static AppInterface.Popups.ConfirmPopup.showConfirmationDialog;
@@ -31,7 +32,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -92,7 +95,7 @@ public class DesignBuilder extends Application {
         private LocalFilesManagement localFiles;
 
         //Information on the model
-        private String modelName; // the model Name
+        String modelName; // the model Name
         private String designName;
         private String description; // The description of themodel
         private String defaultDesignName; // the default design name (inside the zip of the model) it's the file we will copy if the user use a model a reference for it's new Design.
@@ -150,7 +153,7 @@ public class DesignBuilder extends Application {
 
         private int totalUniqueNumber = 0;
 
-        private ScheduledAutoSave scheduledAutoSave = new ScheduledAutoSave(this);
+        private final ScheduledAutoSave scheduledAutoSave = new ScheduledAutoSave(this);
 
         /**
          * @param args the command line arguments
@@ -589,7 +592,7 @@ public class DesignBuilder extends Application {
                 if (!defaultDesign.isEmpty()) {
                         Consumer<String> onOK = selectedOption -> {
                                 loadNewDesign(modelResources.get(selectedOption));
-                                zipDesingName = "UNNAMED DESIGN" + System.currentTimeMillis();
+                                zipDesingName =scheduledAutoSave.getFormattedModelName(this);
                                 scheduledAutoSave.resume();
 
                                 System.out.println("Option Selected: " + selectedOption);
@@ -603,17 +606,18 @@ public class DesignBuilder extends Application {
 
                 if (defaultDesign.size() == 1) {
                         loadNewDesign(modelResources.get(defaultDesign.get(0)));
-                        zipDesingName = "UNNAMED DESIGN" + System.currentTimeMillis();
+                        zipDesingName =scheduledAutoSave.getFormattedModelName(this);
                         scheduledAutoSave.resume();
                         System.out.println(" Option Selected: 0");
                         return;
                 }
-                zipDesingName = "UNNAMED DESIGN" + System.currentTimeMillis();
+                zipDesingName =scheduledAutoSave.getFormattedModelName(this);
                 scheduledAutoSave.resume();
                
                 System.out.println("No default Design");
         }
 
+            
         /**
          * Méthode pour enlever l'extension .zip d'un nom de fichier.
          *
@@ -686,7 +690,7 @@ public class DesignBuilder extends Application {
         private void loadNewDesign(byte[] file) {
                 try {
                         designPath = "";
-                        zipDesingName = "UNNAMED DESIGN" + System.currentTimeMillis();
+                        zipDesingName = scheduledAutoSave.getFormattedModelName(this);
                         this.designResources = new ResourcesManager(file);
                         DRYLoadNewDesign();
                         scheduledAutoSave.resume();

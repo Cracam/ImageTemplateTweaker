@@ -1,4 +1,4 @@
-package AppInterface;
+package AppInterface.DesignBuilder;
 
 import java.io.File;
 

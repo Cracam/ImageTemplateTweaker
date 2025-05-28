@@ -1,4 +1,4 @@
-package AppInterface;
+package AppInterface.DesignBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,6 +65,10 @@ public final class ScheduledAutoSave {
                 scheduler.shutdown();
         }
 
+        
+        /**
+         * This metod find the autosave 
+         */
         private void autoSave() {
                 String rootPath = DB.getDesignSavesPath();
                 System.out.println("AutoSave:RUNN " + rootPath + "    " + DB.getModelName());
@@ -129,4 +133,21 @@ public final class ScheduledAutoSave {
                         scheduleTask();
                 }
         }
+
+        /**
+         * This method give the defaut design name
+         * here i chose one autosave per unamed model
+         * @return
+         */
+        public String getFormattedModelName(DesignBuilder designBuilder) {
+                // Create a SimpleDateFormat object with the desired pattern
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_HH_mm");
+                // Get the current date and time
+                String currentDateTime = dateFormat.format(new Date());
+                // Concatenate the modelName with the formatted date and time
+                //return this.modelName + "_UNNAMED_DESIGN_" + currentDateTime;
+                return this.DB.modelName + "_UNNAMED_DESIGN";
+        }
+        
+        
 }
