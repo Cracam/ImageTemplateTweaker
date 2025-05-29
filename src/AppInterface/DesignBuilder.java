@@ -1,5 +1,8 @@
-package AppInterface.DesignBuilder;
+package AppInterface;
 
+import AppInterface.DesignBuilderMainElements.LocalFilesManagement;
+import AppInterface.DesignBuilderMainElements.ScheduledAutoSave;
+import AppInterface.DesignBuilderSubElement.AutoSaveMenu;
 import AppInterface.InterfacesManager;
 import AppInterface.Popups.AlertPopup;
 import AppInterface.Popups.ComboBoxPopup;
@@ -95,7 +98,7 @@ public class DesignBuilder extends Application {
         private LocalFilesManagement localFiles;
 
         //Information on the model
-        String modelName; // the model Name
+        public String modelName; // the model Name
         private String designName;
         private String description; // The description of themodel
         private String defaultDesignName; // the default design name (inside the zip of the model) it's the file we will copy if the user use a model a reference for it's new Design.
@@ -154,7 +157,7 @@ public class DesignBuilder extends Application {
         private int totalUniqueNumber = 0;
 
         private final ScheduledAutoSave scheduledAutoSave = new ScheduledAutoSave(this);
-
+        private final AutoSaveMenu autoSaveMenu=new AutoSaveMenu(this);
         /**
          * @param args the command line arguments
          */
@@ -205,6 +208,13 @@ public class DesignBuilder extends Application {
                         scale.setPivotY(0); // Point de pivot pour la transformation (coin supérieur gauche)
                         scene.getRoot().getTransforms().add(scale);
 
+                        
+                        autoSaveMenu.updateAutoSaveList();
+                        //add the code to make the autosave menu inside the menu bar
+                        
+                        
+                        
+                        
                         scheduledAutoSave.pause();
                         ScheduledAutoSave scheduledAutoSaveTemp = this.scheduledAutoSave;
                         // Ajouter un gestionnaire d'événements pour l'événement WINDOW_CLOSE_REQUEST
@@ -233,6 +243,12 @@ public class DesignBuilder extends Application {
         public String getZipDesingName() {
                 return zipDesingName;
         }
+
+        public LocalFilesManagement getLocalFiles() {
+                return localFiles;
+        }
+        
+        
 
         /**
          * Extracts the last part of a file path.

@@ -1,7 +1,7 @@
 package ImageProcessor;
 
 import Exceptions.XMLExeptions.XMLErrorInModelException;
-import AppInterface.DesignBuilder.DesignBuilder;
+import AppInterface.DesignBuilder;
 import AppInterface.InterfaceNode;
 import static ResourcesManager.XmlManager.getFloatAttribute;
 import static ResourcesManager.XmlManager.getStringAttribute;

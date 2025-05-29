@@ -1,4 +1,4 @@
-package AppInterface.DesignBuilder.SubElement;
+package AppInterface.DesignBuilderSubElement;
 
 import AppInterface.InterfaceNode;
 import Exeptions.ResourcesFileErrorException;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AutoSaveSubMenu extends Menu {
+public class AutoSaveDesignSelector extends Menu {
 
     @FXML
     private Menu loadMenu;
@@ -23,7 +23,7 @@ public class AutoSaveSubMenu extends Menu {
     
     private ArrayList<MenuItem> LoadItems=new ArrayList<>();
 
-    public AutoSaveSubMenu() {
+    public AutoSaveDesignSelector() {
         initialiseInterface();
     }
 
@@ -41,7 +41,7 @@ public class AutoSaveSubMenu extends Menu {
             deleteAllMenuItem.setOnAction(event -> deleteAll());
 
         } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
-            Logger.getLogger(AutoSaveSubMenu.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AutoSaveDesignSelector.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

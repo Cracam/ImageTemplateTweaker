@@ -4,7 +4,6 @@
  */
 package AppInterface;
 
-import AppInterface.DesignBuilder.DesignBuilder;
 import Exeptions.ResourcesFileErrorException;
 import ResourcesManager.XmlChild;
 import java.io.IOException;

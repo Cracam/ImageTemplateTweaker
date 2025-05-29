@@ -1,6 +1,5 @@
 package AppInterface;
 
-import AppInterface.DesignBuilder.DesignBuilder;
 import Exceptions.InvalidLinkbetweenNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ImageProcessor.DesignNode;

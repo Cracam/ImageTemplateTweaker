@@ -1,5 +1,6 @@
-package AppInterface.DesignBuilder;
+package AppInterface.DesignBuilderMainElements;
 
+import AppInterface.DesignBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -76,7 +77,7 @@ public final class ScheduledAutoSave {
                 if (DB.getModelName() != null) {
                         System.out.println("AutoSave:RUNNV2 " + rootPath + "    " + DB.getZipDesingName());
                         String designName = DB.getZipDesingName();
-                        Path saveDirPath = Paths.get(rootPath, designName);
+                        Path saveDirPath = Paths.get(rootPath,DB.getModelName(),designName);
                         System.out.println("AutoSave: CONSTRUCT PATH " + saveDirPath);
                         try {
                                 // Create the save directory if it doesn't exist

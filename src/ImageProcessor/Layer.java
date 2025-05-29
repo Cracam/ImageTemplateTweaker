@@ -7,7 +7,7 @@ import ImageProcessor.SubClasses.QuadrupletFloat;
 import ImageProcessor.SubClasses.QuadrupletInt;
 import ResourcesManager.XmlManager;
 import static ResourcesManager.XmlManager.getStringAttribute;
-import AppInterface.DesignBuilder.DesignBuilder;
+import AppInterface.DesignBuilder;
 import AppInterface.DesignInterfaceLinker;
 import AppInterface.InterfaceNode;
 import AppInterface.LayersContainer;

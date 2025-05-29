@@ -1,6 +1,6 @@
 package AppInterface.Interfaces;
 
-import AppInterface.DesignBuilder.DesignBuilder;
+import AppInterface.DesignBuilder;
 import AppInterface.InterfaceNode;
 import Exceptions.XMLExeptions.XMLErrorInModelException;
 import ResourcesManager.XmlChild;
