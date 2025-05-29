@@ -9,9 +9,9 @@ import javafx.scene.control.Menu;
  *
  * @author Camille LECOURT
  */
-public class AutoSaveMenu extends Menu {
+public class AutoSaveMenu extends AutoSaveElement {
 
-        private ArrayList<AutoSaveDesignSelector> autoSaveDesign = new ArrayList<>(); //represent each desing autosaved
+        private ArrayList<AutoSaveModelSelector> autoSaveDesign = new ArrayList<>(); //represent each desing autosaved
         
         private DesignBuilder DB;
         
@@ -33,10 +33,16 @@ public class AutoSaveMenu extends Menu {
                                 for (File subDir : subDirectories) {
                                         // Faire quelque chose avec chaque dossier
                                         System.out.println("Autosave Detected " + subDir.getName());
+                                       autoSaveDesign.add(new AutoSaveModelSelector(this,subDir));
                                 }
                         }
                 } else {
                         System.out.println("No Autosave are detected");
                 }
+        }
+
+        @Override
+        void initialiseInterface() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         }
 }

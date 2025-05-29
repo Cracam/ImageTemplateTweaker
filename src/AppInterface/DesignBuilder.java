@@ -157,7 +157,8 @@ public class DesignBuilder extends Application {
         private int totalUniqueNumber = 0;
 
         private final ScheduledAutoSave scheduledAutoSave = new ScheduledAutoSave(this);
-        private final AutoSaveMenu autoSaveMenu=new AutoSaveMenu(this);
+        private AutoSaveMenu autoSaveMenu;
+
         /**
          * @param args the command line arguments
          */
@@ -208,13 +209,10 @@ public class DesignBuilder extends Application {
                         scale.setPivotY(0); // Point de pivot pour la transformation (coin supérieur gauche)
                         scene.getRoot().getTransforms().add(scale);
 
-                        
+                        autoSaveMenu = new AutoSaveMenu(this);
                         autoSaveMenu.updateAutoSaveList();
                         //add the code to make the autosave menu inside the menu bar
-                        
-                        
-                        
-                        
+
                         scheduledAutoSave.pause();
                         ScheduledAutoSave scheduledAutoSaveTemp = this.scheduledAutoSave;
                         // Ajouter un gestionnaire d'événements pour l'événement WINDOW_CLOSE_REQUEST
@@ -247,8 +245,6 @@ public class DesignBuilder extends Application {
         public LocalFilesManagement getLocalFiles() {
                 return localFiles;
         }
-        
-        
 
         /**
          * Extracts the last part of a file path.
@@ -608,7 +604,7 @@ public class DesignBuilder extends Application {
                 if (!defaultDesign.isEmpty()) {
                         Consumer<String> onOK = selectedOption -> {
                                 loadNewDesign(modelResources.get(selectedOption));
-                                zipDesingName =scheduledAutoSave.getFormattedModelName(this);
+                                zipDesingName = scheduledAutoSave.getFormattedModelName(this);
                                 scheduledAutoSave.resume();
 
                                 System.out.println("Option Selected: " + selectedOption);
@@ -622,18 +618,17 @@ public class DesignBuilder extends Application {
 
                 if (defaultDesign.size() == 1) {
                         loadNewDesign(modelResources.get(defaultDesign.get(0)));
-                        zipDesingName =scheduledAutoSave.getFormattedModelName(this);
+                        zipDesingName = scheduledAutoSave.getFormattedModelName(this);
                         scheduledAutoSave.resume();
                         System.out.println(" Option Selected: 0");
                         return;
                 }
-                zipDesingName =scheduledAutoSave.getFormattedModelName(this);
+                zipDesingName = scheduledAutoSave.getFormattedModelName(this);
                 scheduledAutoSave.resume();
-               
+
                 System.out.println("No default Design");
         }
 
-            
         /**
          * Méthode pour enlever l'extension .zip d'un nom de fichier.
          *

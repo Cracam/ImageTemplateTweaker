@@ -2,6 +2,7 @@ package AppInterface.DesignBuilderSubElement;
 
 import AppInterface.InterfaceNode;
 import Exeptions.ResourcesFileErrorException;
+import java.io.File;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Menu;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AutoSaveDesignSelector extends Menu {
+public class AutoSaveDesignSelector extends AutoSaveElement {
 
     @FXML
     private Menu loadMenu;
@@ -22,8 +23,12 @@ public class AutoSaveDesignSelector extends Menu {
     private InterfaceNode upperIN;
     
     private ArrayList<MenuItem> LoadItems=new ArrayList<>();
+    private AutoSaveModelSelector autoSaveModelSelector;
+     private final File designDir;
 
-    public AutoSaveDesignSelector() {
+    public AutoSaveDesignSelector(AutoSaveModelSelector autoSaveModelSelector,File designDir) {
+            this.designDir=designDir;
+            this.autoSaveModelSelector=autoSaveModelSelector;
         initialiseInterface();
     }
 
@@ -50,6 +55,11 @@ public class AutoSaveDesignSelector extends Menu {
         // Implement the logic for deleting all items here
         System.out.println("Delete All action triggered");
     }
+
+        @Override
+        void updateAutoSaveList() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
 
 
 }
