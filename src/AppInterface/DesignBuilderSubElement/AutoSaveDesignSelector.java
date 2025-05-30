@@ -1,65 +1,71 @@
 package AppInterface.DesignBuilderSubElement;
 
 import AppInterface.InterfaceNode;
-import Exeptions.ResourcesFileErrorException;
 import java.io.File;
+import java.io.FilenameFilter;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class AutoSaveDesignSelector extends AutoSaveElement {
 
-    @FXML
-    private Menu loadMenu;
+        @FXML
+        private Menu menuVersion;
 
-    @FXML
-    private MenuItem deleteAllMenuItem;
+        @FXML
+        private MenuItem deleteAllMenuItem;
 
-    private InterfaceNode upperIN;
-    
-    private ArrayList<MenuItem> LoadItems=new ArrayList<>();
-    private AutoSaveModelSelector autoSaveModelSelector;
-     private final File designDir;
+        private InterfaceNode upperIN;
 
-    public AutoSaveDesignSelector(AutoSaveModelSelector autoSaveModelSelector,File designDir) {
-            this.designDir=designDir;
-            this.autoSaveModelSelector=autoSaveModelSelector;
-        initialiseInterface();
-    }
+        private final ArrayList<AutoSaveItem> loadItems = new ArrayList<>();
+        private final AutoSaveModelSelector autoSaveModelSelector;
 
-    protected void initialiseInterface() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/path/to/your/fxml/CustomMenuInterface.fxml"));
-            if (fxmlLoader == null) {
-                throw new ResourcesFileErrorException();
-            }
-            fxmlLoader.setRoot(this);
-            fxmlLoader.setController(this);
-            fxmlLoader.load();
-
-            // Add action handler for the "Delete All" menu item
-            deleteAllMenuItem.setOnAction(event -> deleteAll());
-
-        } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
-            Logger.getLogger(AutoSaveDesignSelector.class.getName()).log(Level.SEVERE, null, ex);
+        public AutoSaveDesignSelector(AutoSaveModelSelector autoSaveModelSelector, File designDir) {
+                super("/AutoSaveMenu.fxml", designDir);
+                this.autoSaveModelSelector = autoSaveModelSelector;
+                initialiseInterface();
         }
-    }
 
-    @FXML
-    private void deleteAll() {
-        // Implement the logic for deleting all items here
-        System.out.println("Delete All action triggered");
-    }
+        @FXML
+        private void deleteAll() {
+                // Implement the logic for deleting all items here
+                System.out.println("Delete All action triggered");
+        }
 
         @Override
-        void updateAutoSaveList() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        protected void updateAutoSaveList() {
+
+                // Filtre pour les fichiers .zip
+                FilenameFilter zipFilter = new FilenameFilter() {
+                        @Override
+                        public boolean accept(File dir, String name) {
+                                return name.toLowerCase().endsWith(".zip");
+                        }
+                };
+
+                // Vérifier si le chemin est un répertoire
+                if (elementDir.isDirectory()) {
+                        // Lister tous les fichiers .zip dans le répertoire
+                        File[] zipFiles = elementDir.listFiles(zipFilter);
+
+                        // Parcourir tous les fichiers .zip
+                        if (zipFiles != null) {
+                                for (File zipFile : zipFiles) {
+                                        // Faire quelque chose avec chaque fichier .zip
+                                        System.out.println("Fichier ZIP trouvé : " + zipFile.getName());
+                                        DRYupdateAutoSaveList(zipFile);
+                                }
+                        }
+                } else {
+                        System.out.println("No autosave Foud for " + elementDir);
+                }
         }
 
-
+        @Override
+        protected void DRYupdateAutoSaveList(File zipFile) {
+                loadItems.add(new AutoSaveItem(this, zipFile));
+                this.getItems().add(0,loadItems.getLast());
+                loadItems.getLast().updateAutoSaveList();
+        }
 }

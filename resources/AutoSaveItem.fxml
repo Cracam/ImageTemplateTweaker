@@ -4,10 +4,10 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 
-<fx:root fx:id="mainMenu" mnemonicParsing="false" text="Unspecified Menu" type="Menu" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="mainMenu" mnemonicParsing="false" text="MENU_ITEM" type="Menu" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <items>
-      <Menu fx:id="loadMenu" mnemonicParsing="false" text="Load" />
+      <MenuItem mnemonicParsing="false" onAction="#load" text="Load" />
       <SeparatorMenuItem mnemonicParsing="false" />
-    <MenuItem mnemonicParsing="false" onAction="#deleteAll" text="Delete All" />
+      <MenuItem mnemonicParsing="false" onAction="#deleteAll" text="Delete" />
   </items>
 </fx:root>

@@ -3,7 +3,6 @@ package AppInterface;
 import AppInterface.DesignBuilderMainElements.LocalFilesManagement;
 import AppInterface.DesignBuilderMainElements.ScheduledAutoSave;
 import AppInterface.DesignBuilderSubElement.AutoSaveMenu;
-import AppInterface.InterfacesManager;
 import AppInterface.Popups.AlertPopup;
 import AppInterface.Popups.ComboBoxPopup;
 import static AppInterface.Popups.ConfirmPopup.showConfirmationDialog;
@@ -35,9 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -52,6 +49,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
@@ -125,6 +123,10 @@ public class DesignBuilder extends Application {
 
         @FXML
         private SplitPane core;
+        
+        
+        @FXML
+        private MenuBar menuBar;
 
         @FXML
         private Menu NewModel;
@@ -210,7 +212,8 @@ public class DesignBuilder extends Application {
                         scene.getRoot().getTransforms().add(scale);
 
                         autoSaveMenu = new AutoSaveMenu(this);
-                        autoSaveMenu.updateAutoSaveList();
+                        autoSaveMenu.updateAutosaveMenu();
+                        menuBar.getMenus().add(autoSaveMenu);
                         //add the code to make the autosave menu inside the menu bar
 
                         scheduledAutoSave.pause();
