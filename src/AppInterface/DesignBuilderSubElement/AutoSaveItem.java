@@ -1,5 +1,6 @@
 package AppInterface.DesignBuilderSubElement;
 
+import static AppInterface.Popups.ConfirmPopup.showConfirmationDialog;
 import java.io.File;
 import javafx.fxml.FXML;
 
@@ -16,10 +17,15 @@ public class AutoSaveItem extends AutoSaveElement {
         // No implementation needed
     }
 
-    @FXML
+  @FXML
     private void deleteAll() {
-        // Implement the logic for deleting all items here
+         // Implement the logic for deleting all items here
+         Runnable ifYes = this::deleteElementDir;
+         showConfirmationDialog("Etes vous sûr de vouloir supprimer cette sauvgarde automatique ?", ifYes, null);
+
     }
+         
+         
 
     @FXML
     private void load() {
@@ -27,7 +33,7 @@ public class AutoSaveItem extends AutoSaveElement {
     }
 
     @Override
-    protected void DRYupdateAutoSaveList(File subDir) {
+    protected void DRYaddAutoSaveElement(File subDir) {
         // No implementation needed
     }
     

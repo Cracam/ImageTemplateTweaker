@@ -1,17 +1,14 @@
 package AppInterface.DesignBuilderSubElement;
 
 import AppInterface.DesignBuilder;
+import static AppInterface.Popups.PasswordPopup.showPasswordDialog;
 import java.io.File;
+import java.util.function.Consumer;
 import javafx.fxml.FXML;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 
 public class AutoSaveMenu extends AutoSaveElement {
 
-    @FXML
-    private SeparatorMenuItem sepItem;
-    @FXML
-    private MenuItem delItem;
+   
 
     private final DesignBuilder DB;
 
@@ -23,19 +20,29 @@ public class AutoSaveMenu extends AutoSaveElement {
 
     @FXML
     private void deleteAll() {
-        // Implement the logic for deleting all items here
-    }
 
+            Consumer<String> onOK = (String input) -> {
+            if ("DELETE".equals(input)) {
+                deleteElementDir();
+            } 
+        };
+          
+         showPasswordDialog("Etes vous sûr de vouloir supprimer toutes les sauvgardes automatiques ? \n Ecriver DELETE pour confirmer", onOK, null);
+    }
+    
+    
+    
     @Override
-    protected void DRYupdateAutoSaveList(File subDir) {
+    protected void DRYaddAutoSaveElement(File subDir) {
         AutoSaveModelSelector element = new AutoSaveModelSelector(this, subDir);
         addMenuElement(element);
         element.updateAutoSaveList();
     }
 
     public void updateAutosaveMenu() {
-        updateAutoSaveList();
+        refreshStructure();
     }
+    
 
         @Override
         protected void initialiseMenu() {

@@ -1,31 +1,25 @@
 package AppInterface.DesignBuilderSubElement;
 
+import static AppInterface.Popups.ConfirmPopup.showConfirmationDialog;
 import java.io.File;
 import javafx.fxml.FXML;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 
 public class AutoSaveModelSelector extends AutoSaveElement {
 
- @FXML
-    private SeparatorMenuItem sepItem;
-    @FXML
-    private MenuItem delItem;
-
-
-    public AutoSaveModelSelector(AutoSaveMenu autoSaveMenu, File elementDir) {
+        public AutoSaveModelSelector(AutoSaveMenu autoSaveMenu, File elementDir) {
         super("/AutoSaveMenu.fxml", elementDir,autoSaveMenu);
         initialiseInterface();
     }
 
-    @FXML
+  @FXML
     private void deleteAll() {
-        // Implement the logic for deleting all items here
-        System.out.println("Delete All action triggered");
+         // Implement the logic for deleting all items here
+         Runnable ifYes = this::deleteElementDir;
+         showConfirmationDialog("Etes vous sûr de vouloir supprimer toutes les sauvgardes automatiques de ce modèle ?", ifYes, null);
     }
 
     @Override
-    protected void DRYupdateAutoSaveList(File subDir) {
+    protected void DRYaddAutoSaveElement(File subDir) {
         AutoSaveDesignSelector element = new AutoSaveDesignSelector(this, subDir);
         addMenuElement(element);
         element.updateAutoSaveList();

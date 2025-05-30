@@ -215,8 +215,9 @@ public class DesignBuilder extends Application {
 
                         
                         menuFile.getItems().add(3,autoSaveMenu);
+                        
                         autoSaveMenu.updateAutosaveMenu();
-                        autoSaveMenu.updateAutosaveMenu();
+                        
                         //add the code to make the autosave menu inside the menu bar
 
                         scheduledAutoSave.pause();

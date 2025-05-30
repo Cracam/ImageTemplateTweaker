@@ -1,28 +1,23 @@
 package AppInterface.DesignBuilderSubElement;
 
+import static AppInterface.Popups.ConfirmPopup.showConfirmationDialog;
 import java.io.File;
 import java.io.FilenameFilter;
 import javafx.fxml.FXML;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 
 public class AutoSaveDesignSelector extends AutoSaveElement {
-
-        @FXML
-    private SeparatorMenuItem sepItem;
-    @FXML
-    private MenuItem delItem;
 
         public AutoSaveDesignSelector(AutoSaveModelSelector autoSaveModelSelector, File designDir) {
                 super("/AutoSaveMenu.fxml", designDir, autoSaveModelSelector);
                 initialiseInterface();
         }
 
-        @FXML
-        private void deleteAll() {
-                // Implement the logic for deleting all items here
-                System.out.println("Delete All action triggered");
-        }
+ @FXML
+    private void deleteAll() {
+         // Implement the logic for deleting all items here
+         Runnable ifYes = this::deleteElementDir;
+         showConfirmationDialog("Etes vous sûr de vouloir supprimer toutes les sauvgardes automatiques ?", ifYes, null);
+    }
 
         @Override
         protected void updateAutoSaveList() {
@@ -36,7 +31,7 @@ public class AutoSaveDesignSelector extends AutoSaveElement {
                                         System.out.println("Fichier ZIP trouvé : " + zipFile.getName());
                                         if (findMatchingAutoSaveElement(menuElements, zipFile) == null) {
 
-                                                DRYupdateAutoSaveList(zipFile);
+                                                DRYaddAutoSaveElement(zipFile);
                                         }
                                 }
                         }
@@ -46,7 +41,7 @@ public class AutoSaveDesignSelector extends AutoSaveElement {
         }
 
         @Override
-        protected void DRYupdateAutoSaveList(File zipFile) {
+        protected void DRYaddAutoSaveElement(File zipFile) {
                 AutoSaveItem element = new AutoSaveItem(this, zipFile);
                 addMenuElement(element);
                 element.updateAutoSaveList();
