@@ -9,101 +9,105 @@ import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Menu;
 
-/**
- *
- * @author Camille LECOURT
- */
 public abstract class AutoSaveElement extends Menu {
 
-        protected final String fxmlFileName;
-        protected final File elementDir;
-       protected final ArrayList<? extends AutoSaveElement> menuElement = new ArrayList<>();
+    protected final String fxmlFileName;
+    protected final File elementDir;
+    protected final ArrayList<AutoSaveElement> menuElements = new ArrayList<>();
+    protected final AutoSaveElement upperAutoSaveElement;
 
+    protected AutoSaveElement(String fxmlFileName, File elementDir,AutoSaveElement upperAutoSaveElement) {
+        this.fxmlFileName = fxmlFileName;
+        this.elementDir = elementDir;
+        this.upperAutoSaveElement=upperAutoSaveElement;
+        initialiseInterface();
+    }
 
-        // Constructeur de la classe abstraite
-        protected AutoSaveElement(String fxmlFileName, File elementDir) {
-                this.fxmlFileName = fxmlFileName;
-                this.elementDir = elementDir;
-                initialiseInterface();
+    protected void updateAutoSaveList() {
+        AutoSaveElement autoSaveElement;
+
+        if (elementDir.isDirectory()) {
+            File[] subDirectories = elementDir.listFiles(File::isDirectory);
+
+            if (subDirectories != null) {
+                for (File subDir : subDirectories) {
+                    System.out.println("Autosave Detected for " + this.getClass().getName() + "     dir  :  " + subDir.getName());
+                    autoSaveElement = findMatchingAutoSaveElement(menuElements, subDir);
+                    if (autoSaveElement != null) {
+                        autoSaveElement.updateAutoSaveList();
+                    } else {
+                        DRYupdateAutoSaveList(subDir);
+                    }
+                }
+            }
+        } else {
+            System.out.println("No Autosave are detected for " + this.getClass().getName());
+        }
+    }
+
+    protected abstract void DRYupdateAutoSaveList(File subDir);
+
+    protected void initialiseInterface() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlFileName));
+            if (fxmlLoader == null) {
+                throw new ResourcesFileErrorException();
+            }
+            fxmlLoader.setRoot(this);
+            fxmlLoader.setController(this);
+            fxmlLoader.load();
+            initialiseMenu();
+
+        } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
+            Logger.getLogger(AutoSaveElement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static <T extends AutoSaveElement> T findMatchingAutoSaveElement(ArrayList<T> autoSaveElements, File file) {
+        if (autoSaveElements == null || file == null) {
+            return null;
         }
 
-        /**
-         * This function will look in a folder to get every subDir and lauch
-         * custom action on it
-         */
-        protected void updateAutoSaveList() {
-                AutoSaveElement autoSaveElement;
-
-                // Vérifier si le chemin est un répertoire
-                if (elementDir.isDirectory()) {
-                        // Lister tous les fichiers et dossiers dans le répertoire
-                        File[] subDirectories = elementDir.listFiles(File::isDirectory);
-
-                        // Parcourir tous les dossiers
-                        if (subDirectories != null) {
-                                for (File subDir : subDirectories) {
-                                        // Faire quelque chose avec chaque dossier
-                                        System.out.println("Autosave Detected for " + this.getClass().getName() + "     dir  :  " + subDir.getName());
-                                      autoSaveElement=  findMatchingAutoSaveElement(menuElement,subDir);
-                                        if(autoSaveElement!=null){
-                                                autoSaveElement.updateAutoSaveList();
-                                        }else{
-                                                DRYupdateAutoSaveList(subDir);
-                                        }
-                                }
-                        }
-                } else {
-                        System.out.println("No Autosave are detected for " + this.getClass().getName());
-                }
+        for (T element : autoSaveElements) {
+            if (element != null && element.elementDir != null && element.elementDir.equals(file)) {
+                return element;
+            }
         }
 
-        /**
-         * This will be use to initilaise a new menu element
-         *
-         * @param subDir
-         */
-        protected abstract void DRYupdateAutoSaveList(File subDir);
+        return null;
+    }
 
-        /**
-         * will load the interface of the sub menu
-         */
-        protected void initialiseInterface() {
-                try {
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlFileName));
-                        if (fxmlLoader == null) {
-                                throw new ResourcesFileErrorException();
-                        }
-                        fxmlLoader.setRoot(this);
-                        fxmlLoader.setController(this);
-                        fxmlLoader.load();
-                       
-
-                } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
-                        Logger.getLogger(AutoSaveModelSelector.class.getName()).log(Level.SEVERE, null, ex);
-                }
+    protected void addMenuElement(AutoSaveElement element) {
+        menuElements.add(element);
+        this.getItems().add(0, element);
+    }
+    
+    protected abstract void initialiseMenu();
+    
+    
+    /**
+     * Removes all occurrences of a substring from a given string.
+     *
+     * @param original The original string
+     * @param toRemove The substring to remove
+     * @return The string with all occurrences of the substring removed
+     */
+    public static String removeAllOccurrences(String original, String toRemove) {
+        if (original == null || toRemove == null || toRemove.isEmpty()) {
+            return original;
         }
 
-        /**
-         * This function check if and Autosave element corresponf to one of the
-         * list
-         *
-         * @param <T> extended class of the Autosave element
-         * @param autoSaveElements
-         * @param file
-         * @return
-         */
-        public static <T extends AutoSaveElement> T findMatchingAutoSaveElement(ArrayList<T> autoSaveElements, File file) {
-                if (autoSaveElements == null || file == null) {
-                        return null;
-                }
+        return original.replace(toRemove, "");
+    }
+    
+    
+    protected String getName(){
+            return this.elementDir.getName();
+    }
 
-                for (T element : autoSaveElements) {
-                        if (element != null && element.elementDir != null && element.elementDir.equals(file)) {
-                                return element;
-                        }
-                }
-
-                return null;
+        public AutoSaveElement getUpperAutoSaveElement() {
+                return upperAutoSaveElement;
         }
-
+    
+  
 }

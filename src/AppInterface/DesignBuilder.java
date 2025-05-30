@@ -126,7 +126,7 @@ public class DesignBuilder extends Application {
         
         
         @FXML
-        private MenuBar menuBar;
+        private Menu menuFile;
 
         @FXML
         private Menu NewModel;
@@ -212,8 +212,11 @@ public class DesignBuilder extends Application {
                         scene.getRoot().getTransforms().add(scale);
 
                         autoSaveMenu = new AutoSaveMenu(this);
+
+                        
+                        menuFile.getItems().add(3,autoSaveMenu);
                         autoSaveMenu.updateAutosaveMenu();
-                        menuBar.getMenus().add(autoSaveMenu);
+                        autoSaveMenu.updateAutosaveMenu();
                         //add the code to make the autosave menu inside the menu bar
 
                         scheduledAutoSave.pause();
@@ -638,7 +641,7 @@ public class DesignBuilder extends Application {
          * @param fileName Le nom du fichier avec l'extension .zip.
          * @return Le nom du fichier sans l'extension .zip.
          */
-        private String removeZipExtension(String fileName) {
+        public static String removeZipExtension(String fileName) {
                 if (fileName.toLowerCase().endsWith(".zip")) {
                         return fileName.substring(0, fileName.length() - 4);
                 }

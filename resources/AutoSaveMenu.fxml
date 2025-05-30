@@ -4,7 +4,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 
-<fx:root fx:id="mainMenu" mnemonicParsing="false" text="Load AutoSave" type="Menu" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="mainMenu" mnemonicParsing="false" text="Restore AutoSave" type="Menu" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <items>
       <SeparatorMenuItem mnemonicParsing="false" />
       <MenuItem mnemonicParsing="false" onAction="#deleteAll" text="Delete All" />
