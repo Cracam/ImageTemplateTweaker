@@ -53,10 +53,14 @@ public abstract class AutoSaveElement extends Menu {
             if (fxmlLoader == null) {
                 throw new ResourcesFileErrorException();
             }
+            this.getItems().clear();
             fxmlLoader.setRoot(this);
             fxmlLoader.setController(this);
             fxmlLoader.load();
             initialiseMenu();
+          //  this.getItems().removeLast();
+          //   this.getItems().removeLast();
+       //     System.out.println(this.getItems());
 
         } catch (IOException | ResourcesFileErrorException | IllegalArgumentException ex) {
             Logger.getLogger(AutoSaveElement.class.getName()).log(Level.SEVERE, null, ex);

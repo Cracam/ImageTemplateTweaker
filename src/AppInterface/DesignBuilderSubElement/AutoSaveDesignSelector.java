@@ -3,16 +3,15 @@ package AppInterface.DesignBuilderSubElement;
 import java.io.File;
 import java.io.FilenameFilter;
 import javafx.fxml.FXML;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 
 public class AutoSaveDesignSelector extends AutoSaveElement {
 
         @FXML
-        private Menu menuVersion;
-
-        @FXML
-        private MenuItem deleteAllMenuItem;
+    private SeparatorMenuItem sepItem;
+    @FXML
+    private MenuItem delItem;
 
         public AutoSaveDesignSelector(AutoSaveModelSelector autoSaveModelSelector, File designDir) {
                 super("/AutoSaveMenu.fxml", designDir, autoSaveModelSelector);

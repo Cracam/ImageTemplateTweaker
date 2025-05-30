@@ -6,7 +6,7 @@
 
 <fx:root fx:id="mainMenu" mnemonicParsing="false" text="Restore AutoSave" type="Menu" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <items>
-      <SeparatorMenuItem mnemonicParsing="false" />
-      <MenuItem mnemonicParsing="false" onAction="#deleteAll" text="Delete All" />
+      <SeparatorMenuItem fx:id="sepItem" mnemonicParsing="false" />
+      <MenuItem fx:id="delItem" mnemonicParsing="false" onAction="#deleteAll" text="Delete All" />
   </items>
 </fx:root>

@@ -3,12 +3,15 @@ package AppInterface.DesignBuilderSubElement;
 import AppInterface.DesignBuilder;
 import java.io.File;
 import javafx.fxml.FXML;
-import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 
 public class AutoSaveMenu extends AutoSaveElement {
 
     @FXML
-    private Menu menuModel;
+    private SeparatorMenuItem sepItem;
+    @FXML
+    private MenuItem delItem;
 
     private final DesignBuilder DB;
 
